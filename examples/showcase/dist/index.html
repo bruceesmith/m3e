@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <title>app</title>
+
+        <script type="importmap">
+            {
+                "imports": {
+                    "lit": "https://cdn.jsdelivr.net/npm/lit@3.3.0/+esm",
+                    "@m3e/core": "./node_modules/@m3e/core/dist/index.min.js",
+                    "@m3e/core/a11y": "./node_modules/@m3e/core/dist/a11y.min.js",
+                    "@m3e/core/anchoring": "./node_modules/@m3e/core/dist/anchoring.min.js",
+                    "@m3e/core/platform": "./node_modules/@m3e/core/dist/platform.min.js"
+                }
+            }
+        </script>
+        <script
+            type="module"
+            src="./node_modules/@m3e/button/dist/index.min.js"
+        ></script>
+        <script
+            type="module"
+            src="./node_modules/@m3e/icon/dist/index.min.js"
+        ></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0"
+            rel="stylesheet"
+        />
+        <script
+            type="module"
+            src="./node_modules/@m3e/switch/dist/index.min.js"
+        ></script>
+        <script
+            type="module"
+            src="./node_modules/@m3e/theme/dist/index.js"
+        ></script>
+        <script
+            type="module"
+            src="./node_modules/@m3e/tooltip/dist/index.min.js"
+        ></script>
+        <script src="./app.js" type="module"></script>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+</html>

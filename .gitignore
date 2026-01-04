@@ -1,0 +1,8 @@
+*.beam
+*.ez
+/build
+/examples/showcase/.lustre
+/examples/showcase/build
+/examples/showcase/dist/node_modules
+/examples/showcase/dist/*.json
+erl_crash.dump

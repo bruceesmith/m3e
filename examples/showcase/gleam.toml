@@ -1,0 +1,21 @@
+name = "showcase"
+version = "1.0.0"
+description = "Showcase of muster capabilities"
+licences = ["MIT"]
+
+target = "javascript"
+
+[dependencies]
+gleam_stdlib = ">= 0.44.0 and < 2.0.0"
+lustre = ">= 5.4.0 and < 6.0.0"
+m3e = { path = "../../" }
+
+[dev-dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
+lustre_dev_tools = ">= 2.3.0 and < 3.0.0"
+
+[tool.lustre]
+entry = "app"
+
+[tools.lustre.bin]
+bun = "/home/bruce/.bun/bin/bun"
