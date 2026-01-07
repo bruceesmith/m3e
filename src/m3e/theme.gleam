@@ -5,8 +5,29 @@ import gleam/string.{is_empty}
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{clamp_with_default}
+import m3e/helpers.{boolean_attribute, clamp_with_default}
 
+/// Contrast is the contrast level in which to generate a color palette
+/// 
+pub type Contrast {
+  High
+  Medium
+  StandardContrast
+}
+
+fn contrast_to_string(c: Contrast) -> String {
+  case c {
+    High -> "high"
+    Medium -> "medium"
+    StandardContrast -> "standard"
+  }
+}
+
+/// Default Contrast
+///
+pub const default_contrast = StandardContrast
+
+///
 /// Density controls layout compactness across density-aware components within a theme
 ///
 pub type Density =
@@ -61,16 +82,55 @@ fn scheme_to_string(s: Scheme) -> String {
 ///
 pub const default_scheme = Auto
 
+/// Variant 
+/// "monochrome" | "neutral" | "tonal-spot" | "vibrant" | "expressive" | "fidelity" | "rainbow" | "fruit-salad" | "content"
 /// Theme is the basis for an m3e-theme component
 ///
 /// ## Fields:
 /// - color: a HEX color from which to derive color palettes
+/// - contrast: The contrast level of the theme
 /// - density: The density of the theme
 /// - motion: The motion of the theme
 /// - scheme: The scheme of the theme
+/// - strong_focus: Whether to enable strong focus indicators
 ///
 pub type Theme {
-  Theme(color: String, density: Density, motion: Motion, scheme: Scheme)
+  Theme(
+    color: String,
+    contrast: Contrast,
+    density: Density,
+    motion: Motion,
+    scheme: Scheme,
+    strong_focus: Bool,
+  )
+}
+
+/// theme constructs a Theme
+/// 
+/// ## Parameters:
+/// - color: a HEX color from which to derive color palettes
+/// - contrast: The contrast level of the theme
+/// - density: The density scale (0, -1, -2)
+/// - motion: The motion scheme
+/// - scheme: The color scheme of the theme
+/// - strong_focus: Whether to enable strong focus indicators
+/// 
+pub fn theme(
+  color: String,
+  contrast: Contrast,
+  density: Density,
+  motion: Motion,
+  scheme: Scheme,
+  strong_focus: Bool,
+) -> Theme {
+  Theme(
+    color: color,
+    contrast: contrast,
+    density: density_validate(density),
+    motion: motion,
+    scheme: scheme,
+    strong_focus: strong_focus,
+  )
 }
 
 /// basic constructs a Theme using default values
@@ -78,9 +138,11 @@ pub type Theme {
 pub fn basic(color: String) -> Theme {
   Theme(
     color: color,
+    contrast: default_contrast,
     density: default_density,
     motion: default_motion,
     scheme: default_scheme,
+    strong_focus: False,
   )
 }
 
@@ -91,9 +153,11 @@ pub fn element(t: Theme, children: List(Element(msg))) -> Element(msg) {
     "m3e-theme",
     [
       color_attr(t.color),
+      contrast_attr(t.contrast),
       density_attr(t.density),
       motion_attr(t.motion),
       scheme_attr(t.scheme),
+      boolean_attribute("strong-focus", t.strong_focus),
     ],
     children,
   )
@@ -110,6 +174,16 @@ pub fn color(t: Theme, hex_color: String) -> Theme {
 
 fn color_attr(color: String) -> Attribute(msg) {
   attribute("color", color)
+}
+
+/// contrast sets the `contrast` field
+/// 
+pub fn contrast(t: Theme, contrast: Contrast) -> Theme {
+  Theme(..t, contrast: contrast)
+}
+
+fn contrast_attr(contrast: Contrast) -> Attribute(msg) {
+  attribute("contrast", contrast_to_string(contrast))
 }
 
 /// density sets the `density` field
@@ -146,4 +220,10 @@ pub fn scheme(t: Theme, scheme: Scheme) -> Theme {
 
 fn scheme_attr(scheme: Scheme) -> Attribute(msg) {
   attribute("scheme", scheme_to_string(scheme))
+}
+
+/// strong_focus sets the `strong_focus` field
+///
+pub fn strong_focus(t: Theme, strong_focus: Bool) -> Theme {
+  Theme(..t, strong_focus: strong_focus)
 }
