@@ -2,14 +2,16 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element
 import m3e/theme.{
-  Auto, Dark, Expressive, Light, Standard, basic, color, default_density,
-  density, largest_density, motion, scheme, smallest_density,
+  Auto, Dark, Expressive, Light, Standard, StandardContrast, basic, color,
+  default_density, density, largest_density, motion, scheme, smallest_density,
 }
 
 pub fn basic_test() {
   let t = basic("#ff0000")
   t.color
   |> should.equal("#ff0000")
+  t.contrast
+  |> should.equal(StandardContrast)
   t.density
   |> should.equal(default_density)
   t.motion
@@ -29,6 +31,7 @@ pub fn element_test() {
       "m3e-theme",
       [
         attribute("color", "#ff0000"),
+        attribute("contrast", "standard"),
         attribute("density", "0"),
         attribute("motion", "standard"),
         attribute("scheme", "auto"),
