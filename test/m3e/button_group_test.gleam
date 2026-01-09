@@ -29,7 +29,7 @@ pub fn button_group_element_test() {
       [text("Child")],
     )
 
-  bg |> element([text("Child")]) |> should.equal(expected)
+  bg |> element([], [text("Child")]) |> should.equal(expected)
 
   // Default values check
   let bg_defaults = button_group(False, None, None)
@@ -39,7 +39,7 @@ pub fn button_group_element_test() {
       [attribute("size", "small"), attribute("variant", "standard")],
       [],
     )
-  bg_defaults |> element([]) |> should.equal(expected_defaults)
+  bg_defaults |> element([], []) |> should.equal(expected_defaults)
 }
 
 pub fn button_group_multi_test() {
@@ -56,7 +56,7 @@ pub fn button_group_multi_test() {
       ],
       [],
     )
-  bg |> element([]) |> should.equal(expected)
+  bg |> element([], []) |> should.equal(expected)
 }
 
 pub fn button_group_size_test() {
@@ -69,7 +69,7 @@ pub fn button_group_size_test() {
       [attribute("size", "large"), attribute("variant", "standard")],
       [],
     )
-  bg |> element([]) |> should.equal(expected)
+  bg |> element([], []) |> should.equal(expected)
 
   let bg2 =
     button_group(False, Some(Small), Some(Standard)) |> size(Some(ExtraSmall))
@@ -80,7 +80,7 @@ pub fn button_group_size_test() {
       [attribute("size", "extra-small"), attribute("variant", "standard")],
       [],
     )
-  bg2 |> element([]) |> should.equal(expected2)
+  bg2 |> element([], []) |> should.equal(expected2)
 }
 
 pub fn button_group_variant_test() {
@@ -94,5 +94,5 @@ pub fn button_group_variant_test() {
       [attribute("size", "small"), attribute("variant", "connected")],
       [],
     )
-  bg |> element([]) |> should.equal(expected)
+  bg |> element([], []) |> should.equal(expected)
 }
