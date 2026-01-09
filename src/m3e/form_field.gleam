@@ -104,3 +104,30 @@ pub fn element(f: FormField, children: List(Element(msg))) -> Element(msg) {
     children,
   )
 }
+
+/// float_label sets the float-label attribute of a FormField
+/// 
+pub fn float_label(f: FormField, float_label: FloatLabel) -> FormField {
+  FormField(..f, float_label: float_label)
+}
+
+/// hide_required_marker sets the hide-required-marker attribute of a FormField
+/// 
+pub fn hide_required_marker(
+  f: FormField,
+  hide_required_marker: Bool,
+) -> FormField {
+  FormField(..f, hide_required_marker: hide_required_marker)
+}
+
+/// hide_subscript sets the hide-subscript attribute of a FormField
+/// 
+pub fn hide_subscript(f: FormField, hide_subscript: HideSubscript) -> FormField {
+  FormField(..f, hide_subscript: hide_subscript)
+}
+
+/// variant sets the variant attribute of a FormField
+/// 
+pub fn variant(f: FormField, variant: Variant) -> FormField {
+  FormField(..f, variant: variant)
+}
