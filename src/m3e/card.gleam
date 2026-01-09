@@ -1,6 +1,6 @@
 //// card provides Lustre support for the [M3E Card component](https://matraic.github.io/m3e/#/components/card.html)
 
-import lustre/attribute.{attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -79,7 +79,16 @@ pub fn basic() -> Card {
 
 /// element creates a Lustre Element from a Card
 /// 
-pub fn element(c: Card, children: List(Element(msg))) -> Element(msg) {
+/// ## Parameters:
+/// - c: a Card
+/// - attributes: a list of additional Attributes
+/// - children: a list of child Elements
+/// 
+pub fn element(
+  c: Card,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-card",
     [
@@ -88,6 +97,7 @@ pub fn element(c: Card, children: List(Element(msg))) -> Element(msg) {
       boolean_attribute("inline", c.inline),
       attribute("orientation", orientation_to_string(c.orientation)),
       attribute("variant", variant_to_string(c.variant)),
+      ..attributes
     ],
     children,
   )

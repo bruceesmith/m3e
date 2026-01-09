@@ -24,7 +24,7 @@ pub fn basic_test() {
 
 pub fn element_test() {
   let c = card.card(True, False, True, card.Horizontal, card.Elevated)
-  let result = card.element(c, [html.text("Content")])
+  let result = card.element(c, [], [html.text("Content")])
 
   let expected =
     element.element(
@@ -44,7 +44,7 @@ pub fn element_test() {
 
 pub fn element_basic_test() {
   let c = card.basic()
-  let result = card.element(c, [])
+  let result = card.element(c, [], [])
 
   let expected =
     element.element(
