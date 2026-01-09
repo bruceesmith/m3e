@@ -35,7 +35,7 @@ pub fn form_field_element_test() {
       ],
       [text("Child")],
     )
-  f |> element([text("Child")]) |> should.equal(expected)
+  f |> element([], [text("Child")]) |> should.equal(expected)
 
   let f = form_field(Always, True, AlwaysHide, Filled)
   let expected =
@@ -49,7 +49,7 @@ pub fn form_field_element_test() {
       ],
       [text("Child")],
     )
-  f |> element([text("Child")]) |> should.equal(expected)
+  f |> element([], [text("Child")]) |> should.equal(expected)
 }
 
 pub fn form_field_setters_test() {

@@ -1,6 +1,6 @@
 //// button provides Lustre support for the [M3E Form Field component](https://matraic.github.io/m3e/#/components/form-field.html
 
-import lustre/attribute.{attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -59,6 +59,12 @@ pub const default_variant = Outlined
 /// FormField is a container for form controls that applies Material Design styling and behavior. 
 /// Supported controls include: input, select, textarea, and m3e-input-chip-set
 /// 
+/// ## Fields:
+/// - float_label: Specifies whether the label should float always or only when necessary
+/// - hide_required_marker: Whether the required marker should be hidden
+/// - hide_subscript: Whether subscript content is hidden
+/// - variant: The appearance variant of the field
+/// 
 pub type FormField {
   FormField(
     float_label: FloatLabel,
@@ -69,6 +75,12 @@ pub type FormField {
 }
 
 /// form_field creates a FormField
+/// 
+/// ## Parameters:
+/// - float_label: Specifies whether the label should float always or only when necessary
+/// - hide_required_marker: Whether the required marker should be hidden
+/// - hide_subscript: Whether subscript content is hidden
+/// - variant: The appearance variant of the field
 /// 
 pub fn form_field(
   float_label: FloatLabel,
@@ -92,7 +104,16 @@ pub fn basic() -> FormField {
 
 /// element creates a Lustre Element from a FormField
 /// 
-pub fn element(f: FormField, children: List(Element(msg))) -> Element(msg) {
+/// ## Parameters:
+/// - f: a FormField
+/// - attributes: a list of additional attributes
+/// - children: a list of child Elements
+/// 
+pub fn element(
+  f: FormField,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-form-field",
     [
@@ -100,6 +121,7 @@ pub fn element(f: FormField, children: List(Element(msg))) -> Element(msg) {
       boolean_attribute("hide-required-marker", f.hide_required_marker),
       attribute("hide-subscript", hide_subscript_to_string(f.hide_subscript)),
       attribute("variant", variant_to_string(f.variant)),
+      ..attributes
     ],
     children,
   )
