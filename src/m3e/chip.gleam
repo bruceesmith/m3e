@@ -159,7 +159,6 @@ pub fn suggestion(label: String) -> Chip {
 ///
 /// ## Parameters:
 /// - c: a Chip
-/// - icon: Icon associated with the Chip
 /// - attributes: any extra attributes, e.g. an event
 /// - children: a list of child elements
 ///
