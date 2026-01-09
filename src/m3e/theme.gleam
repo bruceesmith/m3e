@@ -148,7 +148,16 @@ pub fn basic(color: String) -> Theme {
 
 /// element creates a Lustre Element from a Theme
 ///
-pub fn element(t: Theme, children: List(Element(msg))) -> Element(msg) {
+/// ## Parameters:
+/// - t: a Theme
+/// - attributes: a list of additional Attributes
+/// - children: a list of child Elements
+/// 
+pub fn element(
+  t: Theme,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-theme",
     [
@@ -158,6 +167,7 @@ pub fn element(t: Theme, children: List(Element(msg))) -> Element(msg) {
       motion_attr(t.motion),
       scheme_attr(t.scheme),
       boolean_attribute("strong-focus", t.strong_focus),
+      ..attributes
     ],
     children,
   )

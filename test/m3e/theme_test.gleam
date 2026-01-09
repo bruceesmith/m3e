@@ -39,7 +39,7 @@ pub fn element_test() {
       [],
     )
   t
-  |> theme.element([])
+  |> theme.element([], [])
   |> should.equal(expected)
 }
 
