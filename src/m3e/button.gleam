@@ -174,6 +174,10 @@ pub fn basic(label: String, variant: Variant) -> Button(msg) {
 
 /// element creates a Lustre Element from a Button
 ///
+/// ## Parameters:
+/// - b: a Button
+/// - attributes: a list of additional Attributes
+///
 pub fn element(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-button",
