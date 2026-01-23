@@ -237,6 +237,18 @@ pub fn disabled(b: Button(msg), disabled: Bool) -> Button(msg) {
   Button(..b, disabled: disabled)
 }
 
+/// icons sets the `icons` field
+///
+pub fn icons(b: Button(msg), icons: List(Element(msg))) -> Button(msg) {
+  Button(..b, icons: icons)
+}
+
+/// label sets the `label` field
+///
+pub fn label(b: Button(msg), label: String) -> Button(msg) {
+  Button(..b, label: label)
+}
+
 ///
 /// key sets the`key` field of a Button
 ///
