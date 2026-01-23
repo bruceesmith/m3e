@@ -5,7 +5,7 @@ import lustre/element
 import lustre/element/html.{span, text}
 import m3e/button.{
   Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, element,
-  form, key, selected_label, set_type, shape, size, value, variant,
+  form, key, selected_label, set_type, shape, size, value, variant, icons, label,
 }
 
 pub fn button_creation_test() {
@@ -203,6 +203,41 @@ pub fn button_variant_test() {
         attribute("variant", "elevated"),
       ],
       [text("Variant"), element.none()],
+    )
+  b |> element([]) |> should.equal(expected)
+}
+
+pub fn button_icons_test() {
+  let icon = span([], [text("icon")])
+  let b = basic("Icon", Text) |> icons([icon])
+  b.icons |> should.equal([icon])
+
+  let expected =
+    element.element(
+      "m3e-button",
+      [
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        attribute("variant", "text"),
+      ],
+      [icon, text("Icon"), element.none()],
+    )
+  b |> element([]) |> should.equal(expected)
+}
+
+pub fn button_label_test() {
+  let b = basic("Original", Text) |> label("New Label")
+  b.label |> should.equal("New Label")
+
+  let expected =
+    element.element(
+      "m3e-button",
+      [
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        attribute("variant", "text"),
+      ],
+      [text("New Label"), element.none()],
     )
   b |> element([]) |> should.equal(expected)
 }
