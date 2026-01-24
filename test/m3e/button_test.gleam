@@ -1,11 +1,12 @@
 import gleam/option.{Some}
 import gleeunit/should
-import lustre/attribute.{attribute, name}
+import lustre/attribute.{attribute, disabled, name, selected}
 import lustre/element
 import lustre/element/html.{span, text}
 import m3e/button.{
   Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, element,
   form, key, selected_label, set_type, shape, size, value, variant, icons, label,
+  toggle,
 }
 
 pub fn button_creation_test() {
@@ -51,6 +52,8 @@ pub fn button_element_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("variant", "text"),
@@ -70,7 +73,9 @@ pub fn button_form_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
         name("k"),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("type", "submit"),
@@ -90,7 +95,9 @@ pub fn button_key_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
         name("my-key"),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("variant", "text"),
@@ -108,6 +115,8 @@ pub fn button_selected_label_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("variant", "outlined"),
@@ -128,6 +137,8 @@ pub fn button_shape_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "square"),
         attribute("size", "small"),
         attribute("variant", "text"),
@@ -145,6 +156,8 @@ pub fn button_size_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "large"),
         attribute("variant", "text"),
@@ -162,6 +175,8 @@ pub fn button_set_type_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("type", "reset"),
@@ -180,6 +195,8 @@ pub fn button_value_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("value", "123"),
@@ -198,6 +215,8 @@ pub fn button_variant_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("variant", "elevated"),
@@ -216,6 +235,8 @@ pub fn button_icons_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("variant", "text"),
@@ -233,11 +254,33 @@ pub fn button_label_test() {
     element.element(
       "m3e-button",
       [
+        disabled(False),
+        selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("variant", "text"),
       ],
       [text("New Label"), element.none()],
+    )
+  b |> element([]) |> should.equal(expected)
+}
+
+pub fn button_toggle_test() {
+  let b = basic("Toggle Me", Text) |> toggle(True)
+  b.toggle |> should.be_true()
+
+  let expected =
+    element.element(
+      "m3e-button",
+      [
+        disabled(False),
+        selected(False),
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        attribute("toggle", ""),
+        attribute("variant", "text"),
+      ],
+      [text("Toggle Me"), element.none()],
     )
   b |> element([]) |> should.equal(expected)
 }
