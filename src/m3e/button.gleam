@@ -202,8 +202,8 @@ pub fn element(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg)
           Some(default_size),
         ),
         boolean_attribute("toggle", b.toggle),
-        boolean_attribute("selected", b.selected),
-        boolean_attribute("disabled", b.disabled),
+        attribute.selected(b.selected),
+        attribute.disabled(b.disabled),
         option_attribute(b.type_, fn(_) { "type" }, type_to_string, None),
         option_attribute(b.key, fn(_) { "name" }, function.identity, None),
         option_attribute(b.value, fn(_) { "value" }, function.identity, None),
@@ -287,6 +287,13 @@ pub fn set_type(b: Button(msg), t: Type) -> Button(msg) {
   Button(..b, type_: Some(t))
 }
 
+/// toggle sets the`toggle` field of a Button
+///
+pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
+  Button(..b, toggle: t)
+}
+
+///
 /// value sets the`value` field of a Button
 ///
 pub fn value(b: Button(msg), v: Option(String)) -> Button(msg) {
