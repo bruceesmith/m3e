@@ -3,7 +3,7 @@ import lustre/attribute.{attribute}
 import lustre/element
 import lustre/element/html.{div, text}
 import m3e/drawer_container.{
-  Auto, Over, Push, Side, basic, drawcontainer, element, end, end_divider,
+  Auto, Over, Push, Side, basic, draw_container, element, end, end_divider,
   end_mode, start, start_divider, start_mode,
 }
 
@@ -16,7 +16,7 @@ pub fn drawer_container_creation_test() {
   c.start_divider |> should.be_false()
   c.start_mode |> should.equal(Auto)
 
-  let c = drawcontainer(True, True, Side, True, True, Push)
+  let c = draw_container(True, True, Side, True, True, Push)
   c.end |> should.be_true()
   c.end_divider |> should.be_true()
   c.end_mode |> should.equal(Side)
@@ -56,7 +56,8 @@ pub fn drawer_container_element_test() {
       "m3e-drawer-container",
       [
         attribute("end", ""),
-        attribute.none(), // end_divider is False
+        attribute.none(),
+        // end_divider is False
         attribute("end-mode", "push"),
       ],
       [],

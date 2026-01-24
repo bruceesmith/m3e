@@ -43,9 +43,9 @@ pub type DrawContainer {
   )
 }
 
-/// drawcontainer creates a DrawContainer
+/// draw_container creates a DrawContainer
 /// 
-pub fn drawcontainer(
+pub fn draw_container(
   end: Bool,
   end_divider: Bool,
   end_mode: Mode,
