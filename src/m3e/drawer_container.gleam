@@ -32,6 +32,14 @@ pub const default_mode = Auto
 
 /// DrawContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
+/// ## Fields:
+/// - end: Whether the end drawer is open
+/// - end_divider: Whether to show a divider between the end drawer and content for side mode
+/// - end_mode: The behavior mode of the end drawer
+/// - start: Whether the start drawer is open
+/// - start_divider: Whether to show a divider between the start drawer and content for side mode
+/// - start_mode: The behavior mode of the start drawer.
+///
 pub type DrawContainer {
   DrawContainer(
     end: Bool,
@@ -44,6 +52,17 @@ pub type DrawContainer {
 }
 
 /// draw_container creates a DrawContainer
+/// 
+/// ## Parameters:
+/// - end: Whether the end drawer is open
+/// - end_divider: Whether to show a divider between the end drawer and content for side mode
+/// - end_mode: The behavior mode of the end drawer
+/// - start: Whether the start drawer is open
+/// - start_divider: Whether to show a divider between the start drawer and content for side mode
+/// - start_mode: The behavior mode of the start drawer.
+/// 
+/// ## Returns:
+/// A DrawContainer
 /// 
 pub fn draw_container(
   end: Bool,
