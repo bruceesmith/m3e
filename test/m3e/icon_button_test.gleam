@@ -1,10 +1,12 @@
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute.{attribute, disabled, selected, value}
 import lustre/element
 import m3e/icon_button.{
-  Button, Default, ExtraLarge, Filled, Large, Narrow, Reset, Rounded, Small,
-  Square, Standard, Submit, Tonal, Wide, basic, disabled_interactive, element,
-  icon_button, key, shape, size, toggle, type_, variant, width,
+  Button, Default, ExtraLarge, Filled, Large, LeadingIcon, Narrow, Reset,
+  Rounded, Small, Square, Standard, Submit, Tonal, Wide, basic,
+  disabled_interactive, element, icon_button, key, purpose, shape, size, toggle,
+  type_, variant, width,
 }
 
 pub fn icon_button_creation_test() {
@@ -12,6 +14,7 @@ pub fn icon_button_creation_test() {
   b.disabled |> should.be_false()
   b.disabled_interactive |> should.be_false()
   b.key |> should.equal("")
+  b.purpose |> should.equal(None)
   b.selected |> should.be_false()
   b.shape |> should.equal(Rounded)
   b.size |> should.equal(Small)
@@ -26,6 +29,7 @@ pub fn icon_button_creation_test() {
       True,
       True,
       "key",
+      None,
       True,
       Square,
       Large,
@@ -38,6 +42,7 @@ pub fn icon_button_creation_test() {
   b.disabled |> should.be_true()
   b.disabled_interactive |> should.be_true()
   b.key |> should.equal("key")
+  b.purpose |> should.equal(None)
   b.selected |> should.be_true()
   b.shape |> should.equal(Square)
   b.size |> should.equal(Large)
@@ -56,6 +61,30 @@ pub fn icon_button_element_test() {
       [
         disabled(False),
         attribute("key", ""),
+        selected(False),
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        attribute("type", "button"),
+        value(""),
+        attribute("variant", "standard"),
+        attribute("width", "default"),
+      ],
+      [],
+    )
+  b |> element([], []) |> should.equal(expected)
+}
+
+pub fn icon_button_purpose_test() {
+  let b = basic() |> purpose(Some(LeadingIcon))
+  b.purpose |> should.equal(Some(LeadingIcon))
+
+  let expected =
+    element.element(
+      "m3e-icon-button",
+      [
+        disabled(False),
+        attribute("key", ""),
+        attribute("slot", "leading-icon"),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),

@@ -1,9 +1,27 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
+////// Purpose defines the intended purpose of the icon
 
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers.{boolean_attribute, option_attribute}
+
+/// Purpose defines the intended purpose of the icon
+///
+pub type Purpose {
+  LeadingIcon
+  TrailingButton
+  TrailingIcon
+}
+
+fn purpose_to_string(purpose: Purpose) -> String {
+  case purpose {
+    LeadingIcon -> "leading-icon"
+    TrailingButton -> "trailing-button"
+    TrailingIcon -> "trailing-icon"
+  }
+}
 
 /// Shape
 ///
@@ -116,6 +134,7 @@ pub const default_width = Default
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
 /// - key: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
+/// - purpose: An slot value defined by a parent element
 /// - selected: Whether the toggle button is selected
 /// - shape: The shape of the button
 /// - size: The size of the button
@@ -130,6 +149,7 @@ pub type IconButton {
     disabled: Bool,
     disabled_interactive: Bool,
     key: String,
+    purpose: Option(Purpose),
     selected: Bool,
     shape: Shape,
     size: Size,
@@ -160,6 +180,7 @@ pub fn icon_button(
   disabled: Bool,
   disabled_interactive: Bool,
   key: String,
+  purpose: Option(Purpose),
   selected: Bool,
   shape: Shape,
   size: Size,
@@ -173,6 +194,7 @@ pub fn icon_button(
     disabled: disabled,
     disabled_interactive: disabled_interactive,
     key: key,
+    purpose: purpose,
     selected: selected,
     shape: shape,
     size: size,
@@ -191,6 +213,7 @@ pub fn basic() -> IconButton {
     False,
     False,
     "",
+    None,
     False,
     default_shape,
     default_size,
@@ -221,6 +244,12 @@ pub fn disabled_interactive(
 /// 
 pub fn key(i: IconButton, key: String) -> IconButton {
   IconButton(..i, key: key)
+}
+
+/// purpose sets the purpose field
+/// 
+pub fn purpose(i: IconButton, purpose: Option(Purpose)) -> IconButton {
+  IconButton(..i, purpose: purpose)
 }
 
 /// selected sets the selected field
@@ -289,6 +318,7 @@ pub fn element(
       attribute.disabled(i.disabled),
       boolean_attribute("disabled-interactive", i.disabled_interactive),
       attribute.attribute("key", i.key),
+      option_attribute(i.purpose, fn(_) { "slot" }, purpose_to_string, None),
       attribute.selected(i.selected),
       attribute.attribute("shape", shape_to_string(i.shape)),
       attribute.attribute("size", size_to_string(i.size)),
