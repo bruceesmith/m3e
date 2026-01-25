@@ -3,22 +3,22 @@
 import lustre/attribute.{type Attribute, for}
 import lustre/element.{type Element}
 
-/// DrawToggle toggles the opened state of a drawer
+/// DrawerToggle toggles the opened state of a drawer
 /// 
 /// ## Fields:
 /// - for: the id of the drawer to toggle
 /// 
-pub type DrawToggle {
-  DrawToggle(for: String)
+pub type DrawerToggle {
+  DrawerToggle(for: String)
 }
 
-/// draw_toggle creates a DrawToggle
+/// drawer_toggle creates a DrawToggle
 /// 
 /// ## Parameters:
 /// - for: the id of the drawer to toggle
 /// 
-pub fn draw_toggle(for: String) -> DrawToggle {
-  DrawToggle(for: for)
+pub fn drawer_toggle(for: String) -> DrawerToggle {
+  DrawerToggle(for: for)
 }
 
 /// element creates a Lustre Element from a DrawToggle
@@ -29,7 +29,7 @@ pub fn draw_toggle(for: String) -> DrawToggle {
 /// - children: a list of child Elements
 ///
 pub fn element(
-  c: DrawToggle,
+  c: DrawerToggle,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
