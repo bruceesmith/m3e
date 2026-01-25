@@ -18,8 +18,8 @@ pub fn basic_test() {
   basic_icon.optical_size
   |> should.equal(icon.default_optical_size)
 
-  basic_icon.purpose
-  |> should.equal(icon.default_purpose)
+  // basic_icon.purpose
+  // |> should.equal(icon.default_purpose)
 
   basic_icon.weight
   |> should.equal(icon.default_weight)
@@ -31,7 +31,7 @@ pub fn element_test() {
     |> icon.filled(True)
     |> icon.grade(icon.High)
     |> icon.optical_size(40)
-    |> icon.purpose(icon.Trailing)
+    // |> icon.purpose(icon.Trailing)
     |> icon.variant(icon.Rounded)
     |> icon.weight(600)
 

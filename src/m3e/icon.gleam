@@ -43,25 +43,31 @@ pub const largest_optical_size = 48
 pub const default_optical_size = 24
 
 /// Purpose defines the intended purpose of the icon
+///
 pub type Purpose {
-  /// A standalone icon, or a leading icon on (for example) a button
+  Avatar
+  Default
   Leading
-  /// Alternate icon when its containing element is selected (e.g. on a toggle button)
+  LeadingIcon
   Selected
-  /// Trailing icon on (for example) a button
   Trailing
+  TrailingIcon
 }
 
 fn purpose_to_string(purpose: Purpose) -> String {
   case purpose {
-    Leading -> "icon"
-    Selected -> "selected-icon"
-    Trailing -> "trailing-icon"
+    Avatar -> "avatar"
+    Default -> "icon"
+    Leading -> "leading"
+    LeadingIcon -> "leading-icon"
+    Selected -> "selected"
+    Trailing -> "trailing"
+    TrailingIcon -> "trailing-icon"
   }
 }
 
-/// Default purpose
-pub const default_purpose = Leading
+// Default purpose
+pub const default_purpose = Default
 
 /// The Variant of the icon
 pub type Variant {
@@ -222,7 +228,7 @@ fn grade_attr(g: Grade) -> Attribute(msg) {
   attribute("grade", grade_to_string(g))
 }
 
-/// leading returns True if the Icon Puspose is Leading
+/// leading returns True if the Icon Purpose is Leading
 ///
 pub fn leading(i: Icon) -> Bool {
   case i.purpose {
