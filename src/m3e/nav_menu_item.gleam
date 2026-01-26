@@ -109,6 +109,10 @@ pub fn selected(item: NavMenuItem, selected: Bool) -> NavMenuItem {
 
 /// element creates a Lustre Element(msg) from a NavMenuItem
 ///
+/// ## Parameters:
+/// - item: a NavMenuItem
+/// - attributes: additional attributes
+/// 
 pub fn element(
   item: NavMenuItem,
   attributes: List(Attribute(msg)),
