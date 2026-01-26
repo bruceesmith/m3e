@@ -1,6 +1,6 @@
 //// heading provides Lustre support for the [M3E Heading component](https://matraic.github.io/m3e/#/components/heading.html)
 
-import lustre/attribute.{attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element}
 import lustre/element/html.{text}
 
@@ -74,13 +74,14 @@ pub fn basic(text: String) -> Heading {
 
 /// element creates a Lustre Element from a Heading
 /// 
-pub fn element(h: Heading) -> Element(msg) {
+pub fn element(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-heading",
     [
       boolean_attribute("emphasized", h.emphasized),
       attribute("size", size_to_string(h.size)),
       attribute("variant", variant_to_string(h.variant)),
+      ..attributes
     ],
     [text(h.text)],
   )

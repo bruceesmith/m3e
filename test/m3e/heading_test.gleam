@@ -22,7 +22,7 @@ pub fn basic_test() {
 
 pub fn element_test() {
   let h = heading.heading(True, heading.Small, heading.Title, "Test")
-  let result = heading.element(h)
+  let result = heading.element(h, [])
 
   let expected =
     element.element(
@@ -40,7 +40,7 @@ pub fn element_test() {
 
 pub fn element_basic_test() {
   let h = heading.basic("Basic Test")
-  let result = heading.element(h)
+  let result = heading.element(h, [])
 
   let expected =
     element.element(
@@ -103,4 +103,27 @@ pub fn variant_test() {
 
   let h4 = heading.variant(h3, heading.Title)
   h4.variant |> should.equal(heading.Title)
+}
+
+pub fn element_with_attributes_test() {
+  let h = heading.basic("Test with Attributes")
+  let custom_attributes = [
+    attribute.attribute("id", "my-heading"),
+    attribute.attribute("class", "custom-class"),
+  ]
+  let result = heading.element(h, custom_attributes)
+
+  let expected =
+    element.element(
+      "m3e-heading",
+      [
+        attribute.attribute("size", "medium"),
+        attribute.attribute("variant", "display"),
+        attribute.attribute("id", "my-heading"),
+        attribute.attribute("class", "custom-class"),
+      ],
+      [html.text("Test with Attributes")],
+    )
+
+  result |> should.equal(expected)
 }
