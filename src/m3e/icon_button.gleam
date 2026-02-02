@@ -1,8 +1,9 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
 ////// Purpose defines the intended purpose of the icon
 
+import gleam/list
 import gleam/option.{type Option, None}
-import lustre/attribute.{type Attribute}
+import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -144,7 +145,7 @@ pub const default_width = Default
 /// - variant: The appearance variant of the button
 /// - width: The width of the button
 /// 
-pub type IconButton {
+pub opaque type IconButton {
   IconButton(
     disabled: Bool,
     disabled_interactive: Bool,
@@ -328,7 +329,8 @@ pub fn element(
       attribute.attribute("variant", variant_to_string(i.variant)),
       attribute.attribute("width", width_to_string(i.width)),
       ..attributes
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
