@@ -1,5 +1,5 @@
-import gleam/list.{append}
-import lustre/attribute.{type Attribute, attribute}
+import gleam/list
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -20,7 +20,7 @@ fn type_to_string(t: Type) -> String {
   }
 }
 
-pub type ChipSet {
+pub opaque type ChipSet {
   ChipSet(
     disabled: Bool,
     hide_selection_indicator: Bool,
@@ -54,7 +54,7 @@ pub fn element(
 ) -> Element(msg) {
   element.element(
     type_to_string(s.type_),
-    append(
+    list.append(
       [
         disabled_attr(s.type_, s.disabled),
         hide_selection_indicator_attr(s.type_, s.hide_selection_indicator),
@@ -62,7 +62,8 @@ pub fn element(
         boolean_attribute("vertical", s.vertical),
       ],
       attributes,
-    ),
+    )
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
@@ -79,7 +80,7 @@ pub fn disabled(c: ChipSet, disabled: Bool) -> ChipSet {
 fn disabled_attr(t: Type, disabled: Bool) -> Attribute(msg) {
   case t, disabled {
     Input, True -> attribute("disabled", "")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
@@ -95,7 +96,7 @@ pub fn hide_selection_indicator(c: ChipSet, hsi: Bool) -> ChipSet {
 fn hide_selection_indicator_attr(t: Type, hsi: Bool) -> Attribute(msg) {
   case t, hsi {
     Filter, True -> attribute("hide-selection-indicator", "")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
@@ -111,7 +112,7 @@ pub fn multi(c: ChipSet, multi: Bool) -> ChipSet {
 fn multi_attr(t: Type, multi: Bool) -> Attribute(msg) {
   case t, multi {
     Filter, True -> attribute("multi", "")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
