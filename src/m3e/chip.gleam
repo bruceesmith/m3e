@@ -1,8 +1,8 @@
 //// chip provides Lustre support for the [M3E Chip components](https://matraic.github.io/m3e/#/components/chips.html)
 
-import gleam/list.{append}
+import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, name}
+import lustre/attribute.{type Attribute, attribute, name, none}
 import lustre/element.{type Element}
 import lustre/element/html.{text}
 import m3e/icon.{type Icon, leading}
@@ -56,7 +56,7 @@ pub const default_variant = Outlined
 /// - value: value in form submission
 /// - variant: variant of the chip
 ///
-pub type Chip {
+pub opaque type Chip {
   Chip(
     label: String,
     behaviour: Behaviour,
@@ -169,7 +169,7 @@ pub fn element(
 ) -> Element(msg) {
   element.element(
     type_to_string(c.type_),
-    append(
+    list.append(
       [
         behaviour_attr(c.type_, c.behaviour),
         disabled_attr(c.type_, c.disabled),
@@ -180,8 +180,9 @@ pub fn element(
         variant_attr(c.variant),
       ],
       attributes,
-    ),
-    append([icon_element(c.type_, c.icon), text(c.label)], children),
+    )
+      |> list.filter(fn(a) { a != none() }),
+    list.append([icon_element(c.type_, c.icon), text(c.label)], children),
   )
 }
 
@@ -198,7 +199,7 @@ fn behaviour_attr(t: Type, b: Behaviour) -> Attribute(msg) {
   case t, b {
     Assist, Reset | Suggestion, Reset -> attribute("type", "reset")
     Assist, Submit | Suggestion, Submit -> attribute("type", "submit")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
@@ -214,7 +215,7 @@ pub fn disabled(c: Chip, d: Bool) -> Chip {
 fn disabled_attr(t: Type, disabled: Bool) -> Attribute(msg) {
   case t, disabled {
     Assist, True | Filter, True | Suggestion, True -> attribute("disabled", "")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
@@ -251,7 +252,7 @@ fn icon_element(t: Type, icon: Option(Icon)) -> Element(msg) {
 fn key_attr(t: Type, key: Option(String)) -> Attribute(msg) {
   case t, key {
     Filter, Some(n) | Input, Some(n) -> name(n)
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
@@ -267,7 +268,7 @@ pub fn removable(c: Chip, removable: Bool) -> Chip {
 fn removable_attr(t: Type, removable: Bool) -> Attribute(msg) {
   case t, removable {
     Input, True -> attribute("removable", "")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
@@ -283,14 +284,14 @@ pub fn selected(c: Chip, s: Bool) -> Chip {
 fn selected_attr(t: Type, selected: Bool) -> Attribute(msg) {
   case t, selected {
     Filter, True -> attribute("selected", "")
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
 fn value_attr(t: Type, value: Option(String)) -> Attribute(msg) {
   case t, value {
     Filter, Some(v) | Input, Some(v) -> attribute("value", v)
-    _, _ -> attribute.none()
+    _, _ -> none()
   }
 }
 
