@@ -1,14 +1,16 @@
 //// button provides Lustre support for the [M3E Checkbox component](https://matraic.github.io/m3e/#/components/checkbox.html)
 
 import gleam/function
+import gleam/list
 import gleam/option.{type Option, None}
+import lustre/attribute.{none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
 /// Checkbox holds all the values necessary to construct am M3E Checkbox
 ///
-pub type Checkbox {
+pub opaque type Checkbox {
   Checkbox(
     checked: Bool,
     disabled: Bool,
@@ -54,7 +56,8 @@ pub fn element(checkbox: Checkbox) -> Element(msg) {
         function.identity,
         None,
       ),
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     [],
   )
 }
