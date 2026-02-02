@@ -3,23 +3,37 @@ import lustre/attribute.{attribute}
 import lustre/element
 import lustre/element/html.{text}
 import m3e/form_field.{
-  Always, AlwaysHide, Filled, NeverHide, basic, default_float_label,
-  default_hide_subscript, default_variant, element, float_label, form_field,
+  Always, AlwaysHide, Filled, NeverHide, basic, element, float_label, form_field,
   hide_required_marker, hide_subscript, variant,
 }
 
 pub fn form_field_creation_test() {
   let f = basic()
-  f.float_label |> should.equal(default_float_label)
-  f.hide_required_marker |> should.be_false()
-  f.hide_subscript |> should.equal(default_hide_subscript)
-  f.variant |> should.equal(default_variant)
+  let expected =
+    element.element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "auto"),
+        attribute("hide-subscript", "auto"),
+        attribute("variant", "outlined"),
+      ],
+      [],
+    )
+  element(f, [], []) |> should.equal(expected)
 
   let f = form_field(Always, True, NeverHide, Filled)
-  f.float_label |> should.equal(Always)
-  f.hide_required_marker |> should.be_true()
-  f.hide_subscript |> should.equal(NeverHide)
-  f.variant |> should.equal(Filled)
+  let expected =
+    element.element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "always"),
+        attribute("hide-required-marker", ""),
+        attribute("hide-subscript", "never"),
+        attribute("variant", "filled"),
+      ],
+      [],
+    )
+  element(f, [], []) |> should.equal(expected)
 }
 
 pub fn form_field_element_test() {
@@ -29,7 +43,6 @@ pub fn form_field_element_test() {
       "m3e-form-field",
       [
         attribute("float-label", "auto"),
-        attribute.none(),
         attribute("hide-subscript", "auto"),
         attribute("variant", "outlined"),
       ],
@@ -55,23 +68,56 @@ pub fn form_field_element_test() {
 pub fn form_field_setters_test() {
   let f = basic()
 
-  f
-  |> float_label(Always)
-  |> fn(f) { f.float_label }
-  |> should.equal(Always)
+  let f_float = f |> float_label(Always)
+  let expected_float =
+    element.element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "always"),
+        attribute("hide-subscript", "auto"),
+        attribute("variant", "outlined"),
+      ],
+      [],
+    )
+  element(f_float, [], []) |> should.equal(expected_float)
 
-  f
-  |> hide_required_marker(True)
-  |> fn(f) { f.hide_required_marker }
-  |> should.be_true()
+  let f_marker = f |> hide_required_marker(True)
+  let expected_marker =
+    element.element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "auto"),
+        attribute("hide-required-marker", ""),
+        attribute("hide-subscript", "auto"),
+        attribute("variant", "outlined"),
+      ],
+      [],
+    )
+  element(f_marker, [], []) |> should.equal(expected_marker)
 
-  f
-  |> hide_subscript(NeverHide)
-  |> fn(f) { f.hide_subscript }
-  |> should.equal(NeverHide)
+  let f_sub = f |> hide_subscript(NeverHide)
+  let expected_sub =
+    element.element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "auto"),
+        attribute("hide-subscript", "never"),
+        attribute("variant", "outlined"),
+      ],
+      [],
+    )
+  element(f_sub, [], []) |> should.equal(expected_sub)
 
-  f
-  |> variant(Filled)
-  |> fn(f) { f.variant }
-  |> should.equal(Filled)
+  let f_var = f |> variant(Filled)
+  let expected_var =
+    element.element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "auto"),
+        attribute("hide-subscript", "auto"),
+        attribute("variant", "filled"),
+      ],
+      [],
+    )
+  element(f_var, [], []) |> should.equal(expected_var)
 }

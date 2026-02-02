@@ -1,6 +1,7 @@
 //// button provides Lustre support for the [M3E Form Field component](https://matraic.github.io/m3e/#/components/form-field.html
 
-import lustre/attribute.{type Attribute, attribute}
+import gleam/list
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -65,7 +66,7 @@ pub const default_variant = Outlined
 /// - hide_subscript: Whether subscript content is hidden
 /// - variant: The appearance variant of the field
 /// 
-pub type FormField {
+pub opaque type FormField {
   FormField(
     float_label: FloatLabel,
     hide_required_marker: Bool,
@@ -122,7 +123,8 @@ pub fn element(
       attribute("hide-subscript", hide_subscript_to_string(f.hide_subscript)),
       attribute("variant", variant_to_string(f.variant)),
       ..attributes
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
