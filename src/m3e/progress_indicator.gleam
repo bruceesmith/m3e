@@ -1,9 +1,10 @@
 //// progress_indicator provides Lustre support for the [M3E Progress Indicator component](https://matraic.github.io/m3e/#/components/progress-indicator.html)
 
 import gleam/int
+import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
 import lustre/element/html.{text}
 
@@ -75,7 +76,7 @@ fn variant_to_string(variant: Variant) -> String {
 /// - stroke_width: The stroke width, in pixels, of the progress spinner
 /// - value: A fractional value, between 0 and max, indicating progress
 ///
-pub type ProgressIndicator {
+pub opaque type ProgressIndicator {
   ProgressIndicator(
     buffer_value: Value,
     content: Option(String),
@@ -163,7 +164,8 @@ pub fn element(pi: ProgressIndicator) -> Element(msg) {
       mode_attr(pi.variant, pi.mode),
       stroke_width_attr(pi.variant, pi.stroke_width),
       value_attr(pi.value),
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     [content_element(pi.variant, pi.content)],
   )
 }
