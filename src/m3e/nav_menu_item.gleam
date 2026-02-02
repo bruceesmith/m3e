@@ -18,7 +18,7 @@ import m3e/icon as ico
 /// - open: Whether the item is expanded
 /// - selected: Whether the element is selected
 ///
-pub type NavMenuItem {
+pub opaque type NavMenuItem {
   NavMenuItem(
     badge: Option(String),
     disabled: Bool,

@@ -10,7 +10,7 @@ import m3e/heading
 /// ## Fields:
 /// - heading: Renders the label of the group
 /// 
-pub type NavMenuItemGroup {
+pub opaque type NavMenuItemGroup {
   NavMenuItemGroup(heading: String)
 }
 

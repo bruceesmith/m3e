@@ -5,7 +5,7 @@ import lustre/element.{type Element}
 
 /// NavMenu provides Lustre support for the [M3E Nav Menu component](https://matraic.github.io/m3e/#/components/navmenu.html)
 /// 
-pub type NavMenu {
+pub opaque type NavMenu {
   NavMenu
 }
 
