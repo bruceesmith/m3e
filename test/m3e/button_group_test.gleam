@@ -10,14 +10,26 @@ import m3e/button_group.{
 
 pub fn button_group_creation_test() {
   let bg = button_group(True, Some(Medium), Some(Connected))
-  bg.multi |> should.be_true()
-  bg.size |> should.equal(Some(Medium))
-  bg.variant |> should.equal(Some(Connected))
+  let expected =
+    element.element(
+      "m3e-button-group",
+      [
+        attribute("multi", ""),
+        attribute("size", "medium"),
+        attribute("variant", "connected"),
+      ],
+      [],
+    )
+  element(bg, [], []) |> should.equal(expected)
 
   let bg2 = button_group(False, None, None)
-  bg2.multi |> should.be_false()
-  bg2.size |> should.equal(None)
-  bg2.variant |> should.equal(None)
+  let expected2 =
+    element.element(
+      "m3e-button-group",
+      [attribute("size", "small"), attribute("variant", "standard")],
+      [],
+    )
+  element(bg2, [], []) |> should.equal(expected2)
 }
 
 pub fn button_group_element_test() {
@@ -44,7 +56,6 @@ pub fn button_group_element_test() {
 
 pub fn button_group_multi_test() {
   let bg = button_group(False, Some(Small), Some(Standard)) |> multi(True)
-  bg.multi |> should.be_true()
 
   let expected =
     element.element(
@@ -61,7 +72,6 @@ pub fn button_group_multi_test() {
 
 pub fn button_group_size_test() {
   let bg = button_group(False, Some(Small), Some(Standard)) |> size(Some(Large))
-  bg.size |> should.equal(Some(Large))
 
   let expected =
     element.element(
@@ -73,7 +83,6 @@ pub fn button_group_size_test() {
 
   let bg2 =
     button_group(False, Some(Small), Some(Standard)) |> size(Some(ExtraSmall))
-  bg2.size |> should.equal(Some(ExtraSmall))
   let expected2 =
     element.element(
       "m3e-button-group",
@@ -86,7 +95,6 @@ pub fn button_group_size_test() {
 pub fn button_group_variant_test() {
   let bg =
     button_group(False, Some(Small), Some(Standard)) |> variant(Some(Connected))
-  bg.variant |> should.equal(Some(Connected))
 
   let expected =
     element.element(

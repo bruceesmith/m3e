@@ -1,9 +1,9 @@
 //// button provides Lustre support for the [M3E Button component](https://matraic.github.io/m3e/#/components/button.html)
 
 import gleam/function
-import gleam/list.{append}
+import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute, attribute, none as attr_none, selected}
 import lustre/element.{type Element, none}
 import lustre/element/html.{span, text}
 
@@ -86,7 +86,7 @@ pub const default_variant = Text
 
 // Button holds all the values necessary to construct am M3E Button
 //
-pub type Button(msg) {
+pub opaque type Button(msg) {
   Button(
     label: String,
     variant: Option(Variant),
@@ -181,7 +181,7 @@ pub fn basic(label: String, variant: Variant) -> Button(msg) {
 pub fn element(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-button",
-    append(
+    list.append(
       [
         option_attribute(
           b.variant,
@@ -202,15 +202,16 @@ pub fn element(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg)
           Some(default_size),
         ),
         boolean_attribute("toggle", b.toggle),
-        attribute.selected(b.selected),
+        selected(b.selected),
         attribute.disabled(b.disabled),
         option_attribute(b.type_, fn(_) { "type" }, type_to_string, None),
         option_attribute(b.key, fn(_) { "name" }, function.identity, None),
         option_attribute(b.value, fn(_) { "value" }, function.identity, None),
       ],
       attributes,
-    ),
-    append(b.icons, [text(b.label), selected_label_elt(b.selected_label)]),
+    )
+      |> list.filter(fn(a) { a != attr_none() }),
+    list.append(b.icons, [text(b.label), selected_label_elt(b.selected_label)]),
   )
 }
 

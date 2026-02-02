@@ -5,20 +5,27 @@ import lustre/element
 import lustre/element/html.{span, text}
 import m3e/button.{
   Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, element,
-  form, key, selected_label, set_type, shape, size, value, variant, icons, label,
-  toggle,
+  form, icons, key, label, selected_label, set_type, shape, size, toggle, value,
+  variant,
 }
 
 pub fn button_creation_test() {
   let b = basic("Click me", Text)
-  b.label |> should.equal("Click me")
-  b.variant |> should.equal(Some(Text))
-  b.disabled |> should.be_false()
-  b.selected |> should.be_false()
-  b.toggle |> should.be_false()
-  b.icons |> should.equal([])
+  let expected_basic =
+    element.element(
+      "m3e-button",
+      [
+        attribute("variant", "text"),
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        selected(False),
+        disabled(False),
+      ],
+      [text("Click me"), element.none()],
+    )
+  element(b, []) |> should.equal(expected_basic)
 
-  let b =
+  let b_full =
     button.button(
       "Full",
       Some(Filled),
@@ -33,17 +40,24 @@ pub fn button_creation_test() {
       Some("key"),
       Some("val"),
     )
-  b.label |> should.equal("Full")
-  b.variant |> should.equal(Some(Filled))
-  b.shape |> should.equal(Some(Square))
-  b.size |> should.equal(Some(Large))
-  b.selected_label |> should.equal(Some("Selected"))
-  b.toggle |> should.be_true()
-  b.selected |> should.be_true()
-  b.disabled |> should.be_true()
-  b.type_ |> should.equal(Some(Submit))
-  b.key |> should.equal(Some("key"))
-  b.value |> should.equal(Some("val"))
+
+  let expected_full =
+    element.element(
+      "m3e-button",
+      [
+        attribute("variant", "filled"),
+        attribute("shape", "square"),
+        attribute("size", "large"),
+        attribute("toggle", ""),
+        selected(True),
+        disabled(True),
+        attribute("type", "submit"),
+        attribute("name", "key"),
+        attribute("value", "val"),
+      ],
+      [text("Full"), span([attribute("slot", "selected")], [text("Selected")])],
+    )
+  element(b_full, []) |> should.equal(expected_full)
 }
 
 pub fn button_element_test() {
@@ -52,11 +66,11 @@ pub fn button_element_test() {
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
       ],
       [text("Basic"), element.none()],
     )
@@ -65,22 +79,19 @@ pub fn button_element_test() {
 
 pub fn button_form_test() {
   let b = basic("Submit", Filled) |> form(Some(Submit), Some("k"), Some("v"))
-  b.type_ |> should.equal(Some(Submit))
-  b.key |> should.equal(Some("k"))
-  b.value |> should.equal(Some("v"))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        name("k"),
-        selected(False),
+        attribute("variant", "filled"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
+        selected(False),
+        disabled(False),
         attribute("type", "submit"),
+        name("k"),
         attribute("value", "v"),
-        attribute("variant", "filled"),
       ],
       [text("Submit"), element.none()],
     )
@@ -89,18 +100,17 @@ pub fn button_form_test() {
 
 pub fn button_key_test() {
   let b = basic("Key", Text) |> key(Some("my-key"))
-  b.key |> should.equal(Some("my-key"))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        name("my-key"),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
+        name("my-key"),
       ],
       [text("Key"), element.none()],
     )
@@ -109,17 +119,16 @@ pub fn button_key_test() {
 
 pub fn button_selected_label_test() {
   let b = basic("Toggle", Outlined) |> selected_label("On")
-  b.selected_label |> should.equal(Some("On"))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "outlined"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("variant", "outlined"),
+        selected(False),
+        disabled(False),
       ],
       [
         text("Toggle"),
@@ -131,17 +140,16 @@ pub fn button_selected_label_test() {
 
 pub fn button_shape_test() {
   let b = basic("Shape", Text) |> shape(Square)
-  b.shape |> should.equal(Some(Square))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "square"),
         attribute("size", "small"),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
       ],
       [text("Shape"), element.none()],
     )
@@ -150,17 +158,16 @@ pub fn button_shape_test() {
 
 pub fn button_size_test() {
   let b = basic("Size", Text) |> size(Large)
-  b.size |> should.equal(Some(Large))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "large"),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
       ],
       [text("Size"), element.none()],
     )
@@ -169,18 +176,17 @@ pub fn button_size_test() {
 
 pub fn button_set_type_test() {
   let b = basic("Reset", Text) |> set_type(Reset)
-  b.type_ |> should.equal(Some(Reset))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
+        selected(False),
+        disabled(False),
         attribute("type", "reset"),
-        attribute("variant", "text"),
       ],
       [text("Reset"), element.none()],
     )
@@ -189,18 +195,17 @@ pub fn button_set_type_test() {
 
 pub fn button_value_test() {
   let b = basic("Value", Text) |> value(Some("123"))
-  b.value |> should.equal(Some("123"))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
+        selected(False),
+        disabled(False),
         attribute("value", "123"),
-        attribute("variant", "text"),
       ],
       [text("Value"), element.none()],
     )
@@ -209,17 +214,16 @@ pub fn button_value_test() {
 
 pub fn button_variant_test() {
   let b = basic("Variant", Text) |> variant(Elevated)
-  b.variant |> should.equal(Some(Elevated))
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "elevated"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("variant", "elevated"),
+        selected(False),
+        disabled(False),
       ],
       [text("Variant"), element.none()],
     )
@@ -229,17 +233,16 @@ pub fn button_variant_test() {
 pub fn button_icons_test() {
   let icon = span([], [text("icon")])
   let b = basic("Icon", Text) |> icons([icon])
-  b.icons |> should.equal([icon])
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
       ],
       [icon, text("Icon"), element.none()],
     )
@@ -248,17 +251,16 @@ pub fn button_icons_test() {
 
 pub fn button_label_test() {
   let b = basic("Original", Text) |> label("New Label")
-  b.label |> should.equal("New Label")
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
       ],
       [text("New Label"), element.none()],
     )
@@ -267,18 +269,17 @@ pub fn button_label_test() {
 
 pub fn button_toggle_test() {
   let b = basic("Toggle Me", Text) |> toggle(True)
-  b.toggle |> should.be_true()
 
   let expected =
     element.element(
       "m3e-button",
       [
-        disabled(False),
-        selected(False),
+        attribute("variant", "text"),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("toggle", ""),
-        attribute("variant", "text"),
+        selected(False),
+        disabled(False),
       ],
       [text("Toggle Me"), element.none()],
     )

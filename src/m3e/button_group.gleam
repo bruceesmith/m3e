@@ -1,7 +1,8 @@
 //// button group provides Lustre support for the [M3E Button Group component](https://matraic.github.io/m3e/#/components/button-group.html)
 
+import gleam/list
 import gleam/option.{type Option, Some}
-import lustre/attribute.{type Attribute}
+import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -46,7 +47,7 @@ pub const default_variant = Standard
 
 /// Button Group component arranges multiple into a unified, expressive layout
 ///
-pub type ButtonGroup {
+pub opaque type ButtonGroup {
   ButtonGroup(multi: Bool, size: Option(Size), variant: Option(Variant))
 }
 
@@ -94,7 +95,8 @@ pub fn element(
         Some(default_variant),
       ),
       ..attributes
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
