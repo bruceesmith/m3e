@@ -1,80 +1,168 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
+import lustre/attribute.{attribute, none}
 import lustre/element
 import lustre/element/html.{div, text}
+import m3e/drawer
 import m3e/drawer_container.{
-  Auto, Over, Push, Side, basic, draw_container, element, end, end_divider,
-  end_mode, start, start_divider, start_mode,
+  drawer_container, element, end, start, toggle_end, toggle_start,
 }
 
 pub fn drawer_container_creation_test() {
-  let c = basic()
-  c.end |> should.be_false()
-  c.end_divider |> should.be_false()
-  c.end_mode |> should.equal(Auto)
-  c.start |> should.be_false()
-  c.start_divider |> should.be_false()
-  c.start_mode |> should.equal(Auto)
+  let start_d = drawer.empty()
+  let end_d = drawer.empty()
+  let main = div([], [text("Main")])
 
-  let c = draw_container(True, True, Side, True, True, Push)
-  c.end |> should.be_true()
-  c.end_divider |> should.be_true()
-  c.end_mode |> should.equal(Side)
-  c.start |> should.be_true()
-  c.start_divider |> should.be_true()
-  c.start_mode |> should.equal(Push)
-}
+  let c = drawer_container(start_d, main, end_d)
 
-pub fn drawer_container_helpers_test() {
-  let c =
-    basic()
-    |> end(True)
-    |> end_divider(True)
-    |> end_mode(Over)
-    |> start(True)
-    |> start_divider(True)
-    |> start_mode(Side)
+  let expected =
+    element.element("m3e-drawer-container", [], [
+      element.none(),
+      main,
+      element.none(),
+    ])
 
-  c.end |> should.be_true()
-  c.end_divider |> should.be_true()
-  c.end_mode |> should.equal(Over)
-  c.start |> should.be_true()
-  c.start_divider |> should.be_true()
-  c.start_mode |> should.equal(Side)
+  element(c, []) |> should.equal(expected)
 }
 
 pub fn drawer_container_element_test() {
-  let c = basic()
-  let expected =
-    element.element("m3e-drawer-container", [], [div([], [text("content")])])
-  c |> element([], [div([], [text("content")])]) |> should.equal(expected)
+  let start_d =
+    drawer.drawer(drawer.Start, drawer.Side, True, "s", True, text("S"))
+  let end_d =
+    drawer.drawer(drawer.End, drawer.Over, False, "e", False, text("E"))
+  let main = text("M")
 
-  // Test with 'end' enabled
-  let c = basic() |> end(True) |> end_mode(Push)
-  let expected =
-    element.element(
-      "m3e-drawer-container",
-      [
-        attribute("end", ""),
-        attribute.none(),
-        // end_divider is False
-        attribute("end-mode", "push"),
-      ],
-      [],
-    )
-  c |> element([], []) |> should.equal(expected)
+  let c = drawer_container(start_d, main, end_d)
 
-  // Test with 'start' enabled
-  let c = basic() |> start(True) |> start_divider(True) |> start_mode(Side)
+  let expected_attrs = [
+    attribute("start", ""),
+    attribute("start-divider", ""),
+    attribute("start-mode", "side"),
+    attribute("end-mode", "over"),
+    attribute("class", "test"),
+  ]
+
+  let expected_children = [
+    div([attribute("slot", "start"), attribute("id", "s")], [text("S")]),
+    main,
+    div([attribute("slot", "end"), attribute("id", "e")], [text("E")]),
+  ]
+
   let expected =
+    element.element("m3e-drawer-container", expected_attrs, expected_children)
+
+  element(c, [attribute("class", "test")]) |> should.equal(expected)
+}
+
+pub fn drawer_container_setters_test() {
+  let d_empty = drawer.empty()
+  let main = text("main")
+  let c = drawer_container(d_empty, main, d_empty)
+
+  let start_d =
+    drawer.drawer(drawer.Start, drawer.Auto, True, "", False, text("S"))
+  let c2 = c |> start(start_d)
+
+  let expected_start =
     element.element(
       "m3e-drawer-container",
       [
         attribute("start", ""),
-        attribute("start-divider", ""),
-        attribute("start-mode", "side"),
+        attribute("start-mode", "auto"),
       ],
-      [],
+      [
+        div([attribute("slot", "start"), none()], [text("S")]),
+        main,
+        element.none(),
+      ],
     )
-  c |> element([], []) |> should.equal(expected)
+
+  element(c2, []) |> should.equal(expected_start)
+
+  let end_d = drawer.drawer(drawer.End, drawer.Push, True, "", True, text("E"))
+  let c3 = c2 |> end(end_d)
+
+  let expected_full =
+    element.element(
+      "m3e-drawer-container",
+      [
+        attribute("start", ""),
+        attribute("start-mode", "auto"),
+        attribute("end", ""),
+        attribute("end-divider", ""),
+        attribute("end-mode", "push"),
+      ],
+      [
+        div([attribute("slot", "start"), none()], [text("S")]),
+        main,
+        div([attribute("slot", "end"), none()], [text("E")]),
+      ],
+    )
+
+  element(c3, []) |> should.equal(expected_full)
+}
+
+pub fn drawer_container_toggle_test() {
+  let start_d =
+    drawer.drawer(drawer.Start, drawer.Side, False, "s", False, text("S"))
+  let end_d =
+    drawer.drawer(drawer.End, drawer.Side, False, "e", False, text("E"))
+  let main = text("M")
+
+  let c = drawer_container(start_d, main, end_d)
+
+  // Toggle Start -> Open
+  let c2 = c |> toggle_start()
+
+  let expected_start_open =
+    element.element(
+      "m3e-drawer-container",
+      [
+        attribute("start", ""),
+        attribute("start-mode", "side"),
+        attribute("end-mode", "side"),
+      ],
+      [
+        div([attribute("slot", "start"), attribute("id", "s")], [text("S")]),
+        main,
+        div([attribute("slot", "end"), attribute("id", "e")], [text("E")]),
+      ],
+    )
+
+  element(c2, []) |> should.equal(expected_start_open)
+
+  // Toggle Start -> Closed
+  let c3 = c2 |> toggle_start()
+
+  let expected_closed =
+    element.element(
+      "m3e-drawer-container",
+      [attribute("start-mode", "side"), attribute("end-mode", "side")],
+      [
+        div([attribute("slot", "start"), attribute("id", "s")], [text("S")]),
+        main,
+        div([attribute("slot", "end"), attribute("id", "e")], [text("E")]),
+      ],
+    )
+
+  element(c3, []) |> should.equal(expected_closed)
+
+  // Toggle End -> Open
+  let c4 = c3 |> toggle_end()
+
+  let expected_end_open =
+    element.element(
+      "m3e-drawer-container",
+      [
+        attribute("start-mode", "side"),
+        attribute("end", ""),
+        attribute("end-mode", "side"),
+      ],
+      [
+        div([attribute("slot", "start"), attribute("id", "s")], [text("S")]),
+        main,
+        div([attribute("slot", "end"), attribute("id", "e")], [text("E")]),
+      ],
+    )
+
+  element(c4, []) |> should.equal(expected_end_open)
 }

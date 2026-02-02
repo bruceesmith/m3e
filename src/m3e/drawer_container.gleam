@@ -1,160 +1,92 @@
 //// drawer_container provides Lustre support for the [M3E DrawerContainer component](https://matraic.github.io/m3e/#/components/drawer_container.html)
 
-import gleam/list.{append}
-import lustre/attribute.{type Attribute, attribute}
+import gleam/list
+import gleam/string
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
+import lustre/element/html
 
+import m3e/drawer.{type Drawer}
 import m3e/helpers.{boolean_attribute}
 
-/// Mode is the behaviour of the container
-/// 
-pub type Mode {
-  Auto
-  Over
-  Push
-  Side
-}
-
-/// Convert a Mode to a string
-/// 
-fn mode_to_string(m: Mode) -> String {
-  case m {
-    Auto -> "auto"
-    Over -> "over"
-    Push -> "push"
-    Side -> "side"
-  }
-}
-
-/// Default Mode
-/// 
-pub const default_mode = Auto
-
-/// DrawContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
+/// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
 /// ## Fields:
-/// - end: Whether the end drawer is open
-/// - end_divider: Whether to show a divider between the end drawer and content for side mode
-/// - end_mode: The behavior mode of the end drawer
-/// - start: Whether the start drawer is open
-/// - start_divider: Whether to show a divider between the start drawer and content for side mode
-/// - start_mode: The behavior mode of the start drawer.
+/// - start: the start drawer
+/// - main: the main content
+/// - end: the end drawer
 ///
-pub type DrawContainer {
-  DrawContainer(
-    end: Bool,
-    end_divider: Bool,
-    end_mode: Mode,
-    start: Bool,
-    start_divider: Bool,
-    start_mode: Mode,
-  )
+pub opaque type DrawerContainer(msg) {
+  DrawerContainer(start: Drawer(msg), main: Element(msg), end: Drawer(msg))
 }
 
-/// draw_container creates a DrawContainer
+/// drawer_container creates a DrawerContainer
 /// 
 /// ## Parameters:
-/// - end: Whether the end drawer is open
-/// - end_divider: Whether to show a divider between the end drawer and content for side mode
-/// - end_mode: The behavior mode of the end drawer
 /// - start: Whether the start drawer is open
-/// - start_divider: Whether to show a divider between the start drawer and content for side mode
-/// - start_mode: The behavior mode of the start drawer.
+/// - main: the main content
+/// - end: Whether the end drawer is open
 /// 
 /// ## Returns:
-/// A DrawContainer
+/// A DrawerContainer
 /// 
-pub fn draw_container(
-  end: Bool,
-  end_divider: Bool,
-  end_mode: Mode,
-  start: Bool,
-  start_divider: Bool,
-  start_mode: Mode,
-) -> DrawContainer {
-  DrawContainer(
-    end: end,
-    end_divider: end_divider,
-    end_mode: end_mode,
-    start: start,
-    start_divider: start_divider,
-    start_mode: start_mode,
-  )
+pub fn drawer_container(
+  start: Drawer(msg),
+  main: Element(msg),
+  end: Drawer(msg),
+) -> DrawerContainer(msg) {
+  DrawerContainer(start: start, main: main, end: end)
 }
 
-/// basic creates a DrawContainer with default values
-/// 
-pub fn basic() -> DrawContainer {
-  DrawContainer(False, False, default_mode, False, False, default_mode)
-}
-
-/// element creates a Lustre Element from a DrawContainer
+/// element creates a Lustre Element from a DrawerContainer
 ///
 /// ## Parameters:
-/// - c: a DrawContainer
+/// - c: a DrawerContainer
 /// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
 ///
 pub fn element(
-  c: DrawContainer,
+  c: DrawerContainer(msg),
   attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
 ) -> Element(msg) {
-  let end_attrs = case c.end {
-    True -> [
-      boolean_attribute("end", c.end),
-      boolean_attribute("end-divider", c.end_divider),
-      attribute("end-mode", mode_to_string(c.end_mode)),
-    ]
-    False -> []
-  }
-  let start_attrs = case c.start {
-    True -> [
-      boolean_attribute("start", c.start),
-      boolean_attribute("start-divider", c.start_divider),
-      attribute("start-mode", mode_to_string(c.start_mode)),
-    ]
-    False -> []
-  }
+  let #(start_attrs, start_drawer) = drawer.element(c.start)
+  let #(end_attrs, end_drawer) = drawer.element(c.end)
+
   element.element(
     "m3e-drawer-container",
-    append(end_attrs, start_attrs) |> append(attributes),
-    children,
+    list.append(start_attrs, end_attrs)
+      |> list.append(attributes)
+      |> list.filter(fn(a) { a != none() }),
+    [
+      start_drawer,
+      c.main,
+      end_drawer,
+    ],
   )
 }
 
 /// end sets the `end` field
 /// 
-pub fn end(c: DrawContainer, end: Bool) -> DrawContainer {
-  DrawContainer(..c, end: end)
-}
-
-/// end_divider sets the `end_divider` field
-/// 
-pub fn end_divider(c: DrawContainer, end_divider: Bool) -> DrawContainer {
-  DrawContainer(..c, end_divider: end_divider)
-}
-
-/// end_mode sets the `end_mode` field
-/// 
-pub fn end_mode(c: DrawContainer, end_mode: Mode) -> DrawContainer {
-  DrawContainer(..c, end_mode: end_mode)
+pub fn end(c: DrawerContainer(msg), end: Drawer(msg)) -> DrawerContainer(msg) {
+  DrawerContainer(..c, end: end)
 }
 
 /// start sets the `start` field
 /// 
-pub fn start(c: DrawContainer, start: Bool) -> DrawContainer {
-  DrawContainer(..c, start: start)
+pub fn start(
+  c: DrawerContainer(msg),
+  start: Drawer(msg),
+) -> DrawerContainer(msg) {
+  DrawerContainer(..c, start: start)
 }
 
-/// start_divider sets the `start_divider` field
+/// toggle_start toggles the open state of the start drawer
 /// 
-pub fn start_divider(c: DrawContainer, start_divider: Bool) -> DrawContainer {
-  DrawContainer(..c, start_divider: start_divider)
+pub fn toggle_start(c: DrawerContainer(msg)) -> DrawerContainer(msg) {
+  DrawerContainer(..c, start: drawer.toggle(c.start))
 }
 
-/// start_mode sets the `start_mode` field
+/// toggle_end toggles the open state of the end drawer
 /// 
-pub fn start_mode(c: DrawContainer, start_mode: Mode) -> DrawContainer {
-  DrawContainer(..c, start_mode: start_mode)
+pub fn toggle_end(c: DrawerContainer(msg)) -> DrawerContainer(msg) {
+  DrawerContainer(..c, end: drawer.toggle(c.end))
 }
