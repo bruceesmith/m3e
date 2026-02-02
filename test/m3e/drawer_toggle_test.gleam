@@ -6,7 +6,11 @@ import m3e/drawer_toggle.{drawer_toggle, element}
 
 pub fn drawer_toggle_creation_test() {
   let dt = drawer_toggle("my-drawer")
-  dt.for |> should.equal("my-drawer")
+  let expected =
+    element.element("m3e-drawer-toggle", [attribute.for("my-drawer")], [])
+  dt
+  |> element([], [])
+  |> should.equal(expected)
 }
 
 pub fn drawer_toggle_element_test() {
