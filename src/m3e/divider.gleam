@@ -1,6 +1,8 @@
 //// button provides Lustre support for the [M3E Divider component](https://matraic.github.io/m3e/#/components/divider.html)
 
+import gleam/list
 import gleam/option.{type Option, None}
+import lustre/attribute.{none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -23,7 +25,7 @@ fn inset_to_string(inset: Inset) -> String {
 
 /// Divider holds all the values necessary to construct am M3E Divider
 ///
-pub type Divider {
+pub opaque type Divider {
   Divider(inset: Option(Inset), vertical: Bool)
 }
 
@@ -41,7 +43,8 @@ pub fn element(divider: Divider) -> Element(msg) {
     [
       option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
       boolean_attribute("vertical", divider.vertical),
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     [],
   )
 }
