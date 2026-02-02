@@ -1,6 +1,7 @@
 //// view constructs the HTML for the SPA
 
-import lustre/attribute.{class}
+import gleam/option.{Some}
+import lustre/attribute.{attribute, class}
 import lustre/element.{type Element}
 import lustre/element/html
 import lustre/event.{on_click}
@@ -11,12 +12,27 @@ import msg.{
 }
 
 import m3e/button
+import m3e/card
+import m3e/drawer.{drawer}
+import m3e/drawer_container.{drawer_container} as dc
+import m3e/drawer_toggle
 import m3e/icon
+import m3e/icon_button as ib
 import m3e/switch
 import m3e/theme
 
+// <m3e-icon-button slot="leading-icon" aria-label="Menu" toggle>
+//   <m3e-icon name="menu"></m3e-icon>
+//   <m3e-icon slot="selected" name="menu_open"></m3e-icon>
+//   <m3e-drawer-toggle for="nav-drawer"></m3e-drawer-toggle>
+// </m3e-icon-button>
+
 pub fn view(model: Model) -> Element(Msg) {
-  let body = case model.state {
+  // let nav =
+  //   html.div([attribute("slot", "start"), id("nav-drawer")], [
+  //     html.text("Start drawer"),
+  //   ])
+  let main = case model.state {
     Home -> home()
     model.Button -> button()
     Icon -> icon()
@@ -26,14 +42,45 @@ pub fn view(model: Model) -> Element(Msg) {
     html.div([class("grid justify-center")], [
       html.text("Gleam/Lustre Material 3 Expression demonstration"),
     ])
-  // html.div([class("light")], [title, body])
+  let body = [
+    card.basic()
+    |> card.variant(card.Outlined)
+    |> card.element([], [
+      html.div([attribute("slot", "content")], [
+        ib.basic()
+          |> ib.toggle(True)
+          |> ib.purpose(Some(ib.LeadingIcon))
+          |> ib.variant(ib.Filled)
+          |> ib.element([], [
+            icon.basic("menu") |> icon.element([], []),
+            icon.basic("menu_open")
+              |> icon.purpose(icon.Selected)
+              |> icon.element([], []),
+            drawer_toggle.drawer_toggle("nav-drawer")
+              |> drawer_toggle.element([], []),
+          ]),
+        drawer_container(
+          drawer(
+            drawer.Start,
+            drawer.Over,
+            True,
+            "nav-drawer",
+            False,
+            html.text("Start drawer"),
+          ),
+          main,
+          drawer.empty(),
+        )
+          |> dc.element([]),
+        // drawer-container
+      ]),
+    ]),
+  ]
   theme.element(
-    theme.basic("app-theme") |> theme.color("#34eb67"),
-    [class("grid gap-5")],
-    [
-      title,
-      body,
-    ],
+    theme.basic("app-theme") |> theme.color("#09022e"),
+    // [class("grid gap-5")],
+    [],
+    [title, ..body],
   )
 }
 

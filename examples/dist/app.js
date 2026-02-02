@@ -1334,6 +1334,9 @@ function each(loop$list, loop$f) {
 }
 
 // build/dev/javascript/gleam_stdlib/gleam/string.mjs
+function is_empty2(str) {
+  return str === "";
+}
 function concat_loop(loop$strings, loop$accumulator) {
   while (true) {
     let strings = loop$strings;
@@ -1392,6 +1395,28 @@ var Nil = undefined;
 var NOT_FOUND = {};
 function to_string(term) {
   return term.toString();
+}
+function string_length(string2) {
+  if (string2 === "") {
+    return 0;
+  }
+  const iterator = graphemes_iterator(string2);
+  if (iterator) {
+    let i = 0;
+    for (const _ of iterator) {
+      i++;
+    }
+    return i;
+  } else {
+    return string2.match(/./gsu).length;
+  }
+}
+var segmenter = undefined;
+function graphemes_iterator(string2) {
+  if (globalThis.Intl && Intl.Segmenter) {
+    segmenter ||= new Intl.Segmenter;
+    return segmenter.segment(string2)[Symbol.iterator]();
+  }
 }
 function starts_with(haystack, needle) {
   return haystack.startsWith(needle);
@@ -1736,6 +1761,12 @@ class Never extends CustomType {
     this.kind = kind;
   }
 }
+var attribute_kind = 0;
+var property_kind = 1;
+var event_kind = 2;
+var never_kind = 0;
+var never = /* @__PURE__ */ new Never(never_kind);
+var always_kind = 2;
 function merge(loop$attributes, loop$merged) {
   while (true) {
     let attributes = loop$attributes;
@@ -1861,21 +1892,15 @@ function prepare(attributes) {
     }
   }
 }
-var attribute_kind = 0;
 function attribute(name, value) {
   return new Attribute(attribute_kind, name, value);
 }
-var property_kind = 1;
 function property(name, value) {
   return new Property(property_kind, name, value);
 }
-var event_kind = 2;
 function event(name, handler, include, prevent_default, stop_propagation, debounce, throttle) {
   return new Event2(event_kind, name, handler, include, prevent_default, stop_propagation, debounce, throttle);
 }
-var never_kind = 0;
-var never = /* @__PURE__ */ new Never(never_kind);
-var always_kind = 2;
 
 // build/dev/javascript/lustre/lustre/attribute.mjs
 function attribute2(name, value) {
@@ -1900,8 +1925,11 @@ function none() {
 function id(value) {
   return attribute2("id", value);
 }
-function checked(is_checked) {
-  return boolean_attribute("checked", is_checked);
+function href(url) {
+  return attribute2("href", url);
+}
+function target(value) {
+  return attribute2("target", value);
 }
 function disabled(is_disabled) {
   return boolean_attribute("disabled", is_disabled);
@@ -1911,6 +1939,9 @@ function for$(id2) {
 }
 function name(element_name) {
   return attribute2("name", element_name);
+}
+function selected(is_selected) {
+  return boolean_attribute("selected", is_selected);
 }
 function value(control_value) {
   return attribute2("value", control_value);
@@ -1936,13 +1967,13 @@ class Actions extends CustomType {
     this.provide = provide;
   }
 }
+var empty = /* @__PURE__ */ new Effect(/* @__PURE__ */ toList([]), /* @__PURE__ */ toList([]), /* @__PURE__ */ toList([]));
 function perform(effect, dispatch, emit, select, root2, provide) {
   let actions = new Actions(dispatch, emit, select, root2, provide);
   return each(effect.synchronous, (run2) => {
     return run2(actions);
   });
 }
-var empty = /* @__PURE__ */ new Effect(/* @__PURE__ */ toList([]), /* @__PURE__ */ toList([]), /* @__PURE__ */ toList([]));
 function none2() {
   return empty;
 }
@@ -1996,6 +2027,10 @@ class Index extends CustomType {
     this.parent = parent;
   }
 }
+var root2 = /* @__PURE__ */ new Root;
+var separator_element = "\t";
+var separator_event = `
+`;
 function do_matches(loop$path, loop$candidates) {
   while (true) {
     let path = loop$path;
@@ -2022,8 +2057,6 @@ function add2(parent, index3, key) {
     return new Key(key, parent);
   }
 }
-var root2 = /* @__PURE__ */ new Root;
-var separator_element = "\t";
 function do_to_string(loop$path, loop$acc) {
   while (true) {
     let path = loop$path;
@@ -2058,8 +2091,6 @@ function matches(path, candidates) {
     return do_matches(to_string2(path), candidates);
   }
 }
-var separator_event = `
-`;
 function event2(path, event3) {
   return do_to_string(path, toList([separator_event, event3]));
 }
@@ -2111,6 +2142,10 @@ class UnsafeInnerHtml extends CustomType {
     this.inner_html = inner_html;
   }
 }
+var fragment_kind = 0;
+var element_kind = 1;
+var text_kind = 2;
+var unsafe_inner_html_kind = 3;
 function is_void_html_element(tag, namespace) {
   if (namespace === "") {
     if (tag === "area") {
@@ -2159,19 +2194,15 @@ function to_keyed(key, node) {
     return new UnsafeInnerHtml(node.kind, key, node.mapper, node.namespace, node.tag, node.attributes, node.inner_html);
   }
 }
-var fragment_kind = 0;
 function fragment(key, mapper, children, keyed_children) {
   return new Fragment(fragment_kind, key, mapper, children, keyed_children);
 }
-var element_kind = 1;
 function element(key, mapper, namespace, tag, attributes, children, keyed_children, self_closing, void$) {
   return new Element(element_kind, key, mapper, namespace, tag, prepare(attributes), children, keyed_children, self_closing, void$);
 }
-var text_kind = 2;
 function text(key, mapper, content) {
   return new Text(text_kind, key, mapper, content);
 }
-var unsafe_inner_html_kind = 3;
 
 // build/dev/javascript/lustre/lustre/internals/equals.ffi.mjs
 var isReferenceEqual = (a, b) => a === b;
@@ -2461,6 +2492,9 @@ function text3(content) {
 function div(attrs, children) {
   return element2("div", attrs, children);
 }
+function p(attrs, children) {
+  return element2("p", attrs, children);
+}
 function br(attrs) {
   return element2("br", attrs, empty_list);
 }
@@ -2534,34 +2568,34 @@ class Insert extends CustomType {
     this.before = before;
   }
 }
+var replace_text_kind = 0;
+var replace_inner_html_kind = 1;
+var update_kind = 2;
+var move_kind = 3;
+var remove_kind = 4;
+var replace_kind = 5;
+var insert_kind = 6;
 function new$5(index3, removed, changes, children) {
   return new Patch(index3, removed, changes, children);
 }
-var replace_text_kind = 0;
 function replace_text(content) {
   return new ReplaceText(replace_text_kind, content);
 }
-var replace_inner_html_kind = 1;
 function replace_inner_html(inner_html) {
   return new ReplaceInnerHtml(replace_inner_html_kind, inner_html);
 }
-var update_kind = 2;
 function update(added, removed) {
   return new Update(update_kind, added, removed);
 }
-var move_kind = 3;
 function move(key, before) {
   return new Move(move_kind, key, before);
 }
-var remove_kind = 4;
 function remove2(index3) {
   return new Remove(remove_kind, index3);
 }
-var replace_kind = 5;
 function replace2(index3, with$) {
   return new Replace(replace_kind, index3, with$);
 }
-var insert_kind = 6;
 function insert3(children, before) {
   return new Insert(insert_kind, children, before);
 }
@@ -2644,18 +2678,18 @@ class ContextProvided extends CustomType {
   }
 }
 var mount_kind = 0;
+var reconcile_kind = 1;
+var emit_kind = 2;
+var provide_kind = 3;
 function mount(open_shadow_root, will_adopt_styles, observed_attributes, observed_properties, requested_contexts, provided_contexts, vdom) {
   return new Mount(mount_kind, open_shadow_root, will_adopt_styles, observed_attributes, observed_properties, requested_contexts, provided_contexts, vdom);
 }
-var reconcile_kind = 1;
 function reconcile(patch) {
   return new Reconcile(reconcile_kind, patch);
 }
-var emit_kind = 2;
 function emit(name2, data) {
   return new Emit(emit_kind, name2, data);
 }
-var provide_kind = 3;
 function provide(key, value2) {
   return new Provide(provide_kind, key, value2);
 }
@@ -3130,13 +3164,13 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
         if ($ instanceof Fragment) {
           let $1 = new$6.head;
           if ($1 instanceof Fragment) {
-            let prev$1 = $;
+            let prev2 = $;
             let old$1 = old.tail;
-            let next$1 = $1;
+            let next2 = $1;
             let new$1 = new$6.tail;
-            let composed_mapper = compose_mapper(mapper, next$1.mapper);
-            let child_path = add2(path, node_index, next$1.key);
-            let child = do_diff(prev$1.children, prev$1.keyed_children, next$1.children, next$1.keyed_children, empty2(), 0, 0, 0, node_index, child_path, empty_list, empty_list, composed_mapper, events);
+            let composed_mapper = compose_mapper(mapper, next2.mapper);
+            let child_path = add2(path, node_index, next2.key);
+            let child = do_diff(prev2.children, prev2.keyed_children, next2.children, next2.keyed_children, empty2(), 0, 0, 0, node_index, child_path, empty_list, empty_list, composed_mapper, events);
             let _block;
             let $2 = child.patch;
             let $3 = $2.changes;
@@ -3171,15 +3205,15 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
             loop$mapper = mapper;
             loop$events = child.events;
           } else {
-            let prev$1 = $;
+            let prev2 = $;
             let old_remaining = old.tail;
-            let next$1 = $1;
+            let next2 = $1;
             let new_remaining = new$6.tail;
-            let change = replace2(node_index - moved_offset, next$1);
+            let change = replace2(node_index - moved_offset, next2);
             let _block;
             let _pipe = events;
-            let _pipe$1 = remove_child(_pipe, path, node_index, prev$1);
-            _block = add_child(_pipe$1, mapper, path, node_index, next$1);
+            let _pipe$1 = remove_child(_pipe, path, node_index, prev2);
+            _block = add_child(_pipe$1, mapper, path, node_index, next2);
             let events$1 = _block;
             loop$old = old_remaining;
             loop$old_keyed = old_keyed;
@@ -3199,15 +3233,15 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
         } else if ($ instanceof Element) {
           let $1 = new$6.head;
           if ($1 instanceof Element) {
-            let prev$1 = $;
-            let next$1 = $1;
-            if (prev$1.namespace === next$1.namespace && prev$1.tag === next$1.tag) {
+            let prev2 = $;
+            let next2 = $1;
+            if (prev2.namespace === next2.namespace && prev2.tag === next2.tag) {
               let old$1 = old.tail;
               let new$1 = new$6.tail;
-              let composed_mapper = compose_mapper(mapper, next$1.mapper);
-              let child_path = add2(path, node_index, next$1.key);
-              let controlled = is_controlled(events, next$1.namespace, next$1.tag, child_path);
-              let $2 = diff_attributes(controlled, child_path, composed_mapper, events, prev$1.attributes, next$1.attributes, empty_list, empty_list);
+              let composed_mapper = compose_mapper(mapper, next2.mapper);
+              let child_path = add2(path, node_index, next2.key);
+              let controlled = is_controlled(events, next2.namespace, next2.tag, child_path);
+              let $2 = diff_attributes(controlled, child_path, composed_mapper, events, prev2.attributes, next2.attributes, empty_list, empty_list);
               let added_attrs;
               let removed_attrs;
               let events$1;
@@ -3221,7 +3255,7 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
                 _block = toList([update(added_attrs, removed_attrs)]);
               }
               let initial_child_changes = _block;
-              let child = do_diff(prev$1.children, prev$1.keyed_children, next$1.children, next$1.keyed_children, empty2(), 0, 0, 0, node_index, child_path, initial_child_changes, empty_list, composed_mapper, events$1);
+              let child = do_diff(prev2.children, prev2.keyed_children, next2.children, next2.keyed_children, empty2(), 0, 0, 0, node_index, child_path, initial_child_changes, empty_list, composed_mapper, events$1);
               let _block$1;
               let $3 = child.patch;
               let $4 = $3.changes;
@@ -3256,15 +3290,15 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
               loop$mapper = mapper;
               loop$events = child.events;
             } else {
-              let prev$2 = $;
+              let prev3 = $;
               let old_remaining = old.tail;
-              let next$2 = $1;
+              let next3 = $1;
               let new_remaining = new$6.tail;
-              let change = replace2(node_index - moved_offset, next$2);
+              let change = replace2(node_index - moved_offset, next3);
               let _block;
               let _pipe = events;
-              let _pipe$1 = remove_child(_pipe, path, node_index, prev$2);
-              _block = add_child(_pipe$1, mapper, path, node_index, next$2);
+              let _pipe$1 = remove_child(_pipe, path, node_index, prev3);
+              _block = add_child(_pipe$1, mapper, path, node_index, next3);
               let events$1 = _block;
               loop$old = old_remaining;
               loop$old_keyed = old_keyed;
@@ -3282,15 +3316,15 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
               loop$events = events$1;
             }
           } else {
-            let prev$1 = $;
+            let prev2 = $;
             let old_remaining = old.tail;
-            let next$1 = $1;
+            let next2 = $1;
             let new_remaining = new$6.tail;
-            let change = replace2(node_index - moved_offset, next$1);
+            let change = replace2(node_index - moved_offset, next2);
             let _block;
             let _pipe = events;
-            let _pipe$1 = remove_child(_pipe, path, node_index, prev$1);
-            _block = add_child(_pipe$1, mapper, path, node_index, next$1);
+            let _pipe$1 = remove_child(_pipe, path, node_index, prev2);
+            _block = add_child(_pipe$1, mapper, path, node_index, next2);
             let events$1 = _block;
             loop$old = old_remaining;
             loop$old_keyed = old_keyed;
@@ -3310,9 +3344,9 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
         } else if ($ instanceof Text) {
           let $1 = new$6.head;
           if ($1 instanceof Text) {
-            let prev$1 = $;
-            let next$1 = $1;
-            if (prev$1.content === next$1.content) {
+            let prev2 = $;
+            let next2 = $1;
+            if (prev2.content === next2.content) {
               let old$1 = old.tail;
               let new$1 = new$6.tail;
               loop$old = old$1;
@@ -3331,9 +3365,9 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
               loop$events = events;
             } else {
               let old$1 = old.tail;
-              let next$2 = $1;
+              let next3 = $1;
               let new$1 = new$6.tail;
-              let child = new$5(node_index, 0, toList([replace_text(next$2.content)]), empty_list);
+              let child = new$5(node_index, 0, toList([replace_text(next3.content)]), empty_list);
               loop$old = old$1;
               loop$old_keyed = old_keyed;
               loop$new = new$1;
@@ -3350,15 +3384,15 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
               loop$events = events;
             }
           } else {
-            let prev$1 = $;
+            let prev2 = $;
             let old_remaining = old.tail;
-            let next$1 = $1;
+            let next2 = $1;
             let new_remaining = new$6.tail;
-            let change = replace2(node_index - moved_offset, next$1);
+            let change = replace2(node_index - moved_offset, next2);
             let _block;
             let _pipe = events;
-            let _pipe$1 = remove_child(_pipe, path, node_index, prev$1);
-            _block = add_child(_pipe$1, mapper, path, node_index, next$1);
+            let _pipe$1 = remove_child(_pipe, path, node_index, prev2);
+            _block = add_child(_pipe$1, mapper, path, node_index, next2);
             let events$1 = _block;
             loop$old = old_remaining;
             loop$old_keyed = old_keyed;
@@ -3378,13 +3412,13 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
         } else {
           let $1 = new$6.head;
           if ($1 instanceof UnsafeInnerHtml) {
-            let prev$1 = $;
+            let prev2 = $;
             let old$1 = old.tail;
-            let next$1 = $1;
+            let next2 = $1;
             let new$1 = new$6.tail;
-            let composed_mapper = compose_mapper(mapper, next$1.mapper);
-            let child_path = add2(path, node_index, next$1.key);
-            let $2 = diff_attributes(false, child_path, composed_mapper, events, prev$1.attributes, next$1.attributes, empty_list, empty_list);
+            let composed_mapper = compose_mapper(mapper, next2.mapper);
+            let child_path = add2(path, node_index, next2.key);
+            let $2 = diff_attributes(false, child_path, composed_mapper, events, prev2.attributes, next2.attributes, empty_list, empty_list);
             let added_attrs;
             let removed_attrs;
             let events$1;
@@ -3399,11 +3433,11 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
             }
             let child_changes = _block;
             let _block$1;
-            let $3 = prev$1.inner_html === next$1.inner_html;
+            let $3 = prev2.inner_html === next2.inner_html;
             if ($3) {
               _block$1 = child_changes;
             } else {
-              _block$1 = prepend(replace_inner_html(next$1.inner_html), child_changes);
+              _block$1 = prepend(replace_inner_html(next2.inner_html), child_changes);
             }
             let child_changes$1 = _block$1;
             let _block$2;
@@ -3428,15 +3462,15 @@ function do_diff(loop$old, loop$old_keyed, loop$new, loop$new_keyed, loop$moved,
             loop$mapper = mapper;
             loop$events = events$1;
           } else {
-            let prev$1 = $;
+            let prev2 = $;
             let old_remaining = old.tail;
-            let next$1 = $1;
+            let next2 = $1;
             let new_remaining = new$6.tail;
-            let change = replace2(node_index - moved_offset, next$1);
+            let change = replace2(node_index - moved_offset, next2);
             let _block;
             let _pipe = events;
-            let _pipe$1 = remove_child(_pipe, path, node_index, prev$1);
-            _block = add_child(_pipe$1, mapper, path, node_index, next$1);
+            let _pipe$1 = remove_child(_pipe, path, node_index, prev2);
+            _block = add_child(_pipe$1, mapper, path, node_index, next2);
             let events$1 = _block;
             loop$old = old_remaining;
             loop$old_keyed = old_keyed;
@@ -3997,16 +4031,16 @@ var virtualiseNode = (meta2, node, key, index3) => {
 var INPUT_ELEMENTS = ["input", "select", "textarea"];
 var virtualiseInputEvents = (tag, node) => {
   const value2 = node.value;
-  const checked2 = node.checked;
-  if (tag === "input" && node.type === "checkbox" && !checked2)
+  const checked = node.checked;
+  if (tag === "input" && node.type === "checkbox" && !checked)
     return;
-  if (tag === "input" && node.type === "radio" && !checked2)
+  if (tag === "input" && node.type === "radio" && !checked)
     return;
   if (node.type !== "checkbox" && node.type !== "radio" && !value2)
     return;
   queueMicrotask(() => {
     node.value = value2;
-    node.checked = checked2;
+    node.checked = checked;
     node.dispatchEvent(new Event("input", { bubbles: true }));
     node.dispatchEvent(new Event("change", { bubbles: true }));
     if (document().activeElement !== node) {
@@ -4117,8 +4151,8 @@ class Runtime {
     }
   }
   emit(event3, data) {
-    const target = this.root.host ?? this.root;
-    target.dispatchEvent(new CustomEvent(event3, {
+    const target2 = this.root.host ?? this.root;
+    target2.dispatchEvent(new CustomEvent(event3, {
       detail: data,
       bubbles: true,
       composed: true
@@ -4603,8 +4637,32 @@ function on(name2, handler) {
 function on_click(msg) {
   return on("click", success(msg));
 }
+// build/dev/javascript/m3e/m3e/helpers.mjs
+function boolean_attribute2(name2, value2) {
+  if (value2) {
+    return attribute2(name2, "");
+  } else {
+    return none();
+  }
+}
+function option_attribute(option, attribute_name_func, attribute_value_func, default_value) {
+  if (option instanceof Some) {
+    let v = option[0];
+    return attribute2(attribute_name_func(v), attribute_value_func(v));
+  } else {
+    if (default_value instanceof Some) {
+      let dv = default_value[0];
+      return attribute2(attribute_name_func(dv), attribute_value_func(dv));
+    } else {
+      return none();
+    }
+  }
+}
+
 // build/dev/javascript/m3e/m3e/button.mjs
 class Rounded extends CustomType {
+}
+class Square extends CustomType {
 }
 class ExtraSmall extends CustomType {
 }
@@ -4613,6 +4671,8 @@ class Small extends CustomType {
 class Medium extends CustomType {
 }
 class Large extends CustomType {
+}
+class ExtraLarge extends CustomType {
 }
 class Reset extends CustomType {
 }
@@ -4624,8 +4684,10 @@ class Outlined extends CustomType {
 }
 class Text2 extends CustomType {
 }
+class Tonal extends CustomType {
+}
 class Button2 extends CustomType {
-  constructor(label2, variant, shape, size2, icons, selected_label, toggle, selected, disabled2, type_, key, value2) {
+  constructor(label2, variant, shape, size2, icons, selected_label, toggle, selected2, disabled2, type_, key, value2) {
     super();
     this.label = label2;
     this.variant = variant;
@@ -4634,30 +4696,67 @@ class Button2 extends CustomType {
     this.icons = icons;
     this.selected_label = selected_label;
     this.toggle = toggle;
-    this.selected = selected;
+    this.selected = selected2;
     this.disabled = disabled2;
     this.type_ = type_;
     this.key = key;
     this.value = value2;
   }
 }
-function basic(label2) {
-  return new Button2(label2, new None, new None, new None, toList([]), new None, false, false, false, new None, new None, new None);
-}
-function boolean_attribute2(name2, value2) {
-  if (value2) {
-    return attribute2(name2, "");
+var default_shape = /* @__PURE__ */ new Rounded;
+var default_size = /* @__PURE__ */ new Small;
+var default_variant = /* @__PURE__ */ new Text2;
+function shape_to_string(shape) {
+  if (shape instanceof Rounded) {
+    return "rounded";
   } else {
-    return none();
+    return "square";
   }
 }
-function key_attr(fk) {
-  if (fk instanceof Some) {
-    let n = fk[0];
-    return name(n);
+function size_to_string(size2) {
+  if (size2 instanceof ExtraSmall) {
+    return "extra-small";
+  } else if (size2 instanceof Small) {
+    return "small";
+  } else if (size2 instanceof Medium) {
+    return "medium";
+  } else if (size2 instanceof Large) {
+    return "large";
   } else {
-    return none();
+    return "extra-large";
   }
+}
+function type_to_string(t) {
+  if (t instanceof Reset) {
+    return "reset";
+  } else {
+    return "submit";
+  }
+}
+function variant_to_string(v) {
+  if (v instanceof Elevated) {
+    return "elevated";
+  } else if (v instanceof Filled) {
+    return "filled";
+  } else if (v instanceof Outlined) {
+    return "outlined";
+  } else if (v instanceof Text2) {
+    return "text";
+  } else {
+    return "tonal";
+  }
+}
+function basic(label2, variant) {
+  return new Button2(label2, new Some(variant), new None, new None, toList([]), new None, false, false, false, new None, new None, new None);
+}
+function disabled2(b, disabled3) {
+  return new Button2(b.label, b.variant, b.shape, b.size, b.icons, b.selected_label, b.toggle, b.selected, disabled3, b.type_, b.key, b.value);
+}
+function icons(b, icons2) {
+  return new Button2(b.label, b.variant, b.shape, b.size, icons2, b.selected_label, b.toggle, b.selected, b.disabled, b.type_, b.key, b.value);
+}
+function selected_label(b, lab) {
+  return new Button2(b.label, b.variant, b.shape, b.size, b.icons, new Some(lab), b.toggle, b.selected, b.disabled, b.type_, b.key, b.value);
 }
 function selected_label_elt(sl) {
   if (sl instanceof Some) {
@@ -4667,86 +4766,212 @@ function selected_label_elt(sl) {
     return none3();
   }
 }
-function shape_attr(sh) {
-  if (sh instanceof Some) {
-    let s = sh[0];
-    if (s instanceof Rounded) {
-      return attribute2("shape", "rounded");
-    } else {
-      return attribute2("shape", "square");
-    }
-  } else {
-    return attribute2("shape", "rounded");
-  }
+function shape(b, s) {
+  return new Button2(b.label, b.variant, new Some(s), b.size, b.icons, b.selected_label, b.toggle, b.selected, b.disabled, b.type_, b.key, b.value);
 }
-function size_attr(siz) {
-  if (siz instanceof Some) {
-    let s = siz[0];
-    if (s instanceof ExtraSmall) {
-      return attribute2("size", "extra-small");
-    } else if (s instanceof Small) {
-      return attribute2("size", "small");
-    } else if (s instanceof Medium) {
-      return attribute2("size", "medium");
-    } else if (s instanceof Large) {
-      return attribute2("size", "large");
-    } else {
-      return attribute2("size", "extra-large");
-    }
-  } else {
-    return attribute2("size", "small");
-  }
+function size2(b, s) {
+  return new Button2(b.label, b.variant, b.shape, new Some(s), b.icons, b.selected_label, b.toggle, b.selected, b.disabled, b.type_, b.key, b.value);
 }
-function type_attr(typ) {
-  if (typ instanceof Some) {
-    let t = typ[0];
-    if (t instanceof Reset) {
-      return attribute2("type", "reset");
-    } else {
-      return attribute2("type", "submit");
-    }
-  } else {
-    return none();
-  }
-}
-function value_attr(fv) {
-  if (fv instanceof Some) {
-    let n = fv[0];
-    return attribute2("value", n);
-  } else {
-    return none();
-  }
-}
-function variant_attr(v) {
-  if (v instanceof Some) {
-    let v$1 = v[0];
-    if (v$1 instanceof Elevated) {
-      return attribute2("variant", "elevated");
-    } else if (v$1 instanceof Filled) {
-      return attribute2("variant", "filled");
-    } else if (v$1 instanceof Outlined) {
-      return attribute2("variant", "outlined");
-    } else if (v$1 instanceof Text2) {
-      return attribute2("variant", "text");
-    } else {
-      return attribute2("variant", "tonal");
-    }
-  } else {
-    return attribute2("variant", "text");
-  }
+function toggle(b, t) {
+  return new Button2(b.label, b.variant, b.shape, b.size, b.icons, b.selected_label, t, b.selected, b.disabled, b.type_, b.key, b.value);
 }
 function element4(b, attributes) {
   return element2("m3e-button", append(toList([
-    variant_attr(b.variant),
-    shape_attr(b.shape),
-    size_attr(b.size),
+    option_attribute(b.variant, (_) => {
+      return "variant";
+    }, variant_to_string, new Some(default_variant)),
+    option_attribute(b.shape, (_) => {
+      return "shape";
+    }, shape_to_string, new Some(default_shape)),
+    option_attribute(b.size, (_) => {
+      return "size";
+    }, size_to_string, new Some(default_size)),
     boolean_attribute2("toggle", b.toggle),
-    boolean_attribute2("selected", b.selected),
-    boolean_attribute2("disabled", b.disabled),
-    type_attr(b.type_),
-    key_attr(b.key),
-    value_attr(b.value)
+    selected(b.selected),
+    disabled(b.disabled),
+    option_attribute(b.type_, (_) => {
+      return "type";
+    }, type_to_string, new None),
+    option_attribute(b.key, (_) => {
+      return "name";
+    }, identity2, new None),
+    option_attribute(b.value, (_) => {
+      return "value";
+    }, identity2, new None)
   ]), attributes), append(b.icons, toList([text3(b.label), selected_label_elt(b.selected_label)])));
+}
+
+// build/dev/javascript/m3e/m3e/card.mjs
+class Horizontal extends CustomType {
+}
+class Vertical extends CustomType {
+}
+class Elevated2 extends CustomType {
+}
+class Filled2 extends CustomType {
+}
+class Outlined2 extends CustomType {
+}
+class Card extends CustomType {
+  constructor(actionable, disabled3, inline, orientation, variant) {
+    super();
+    this.actionable = actionable;
+    this.disabled = disabled3;
+    this.inline = inline;
+    this.orientation = orientation;
+    this.variant = variant;
+  }
+}
+var default_orientation = /* @__PURE__ */ new Vertical;
+var default_variant2 = /* @__PURE__ */ new Filled2;
+function orientation_to_string(o) {
+  if (o instanceof Horizontal) {
+    return "horizontal";
+  } else {
+    return "vertical";
+  }
+}
+function variant_to_string2(v) {
+  if (v instanceof Elevated2) {
+    return "elevated";
+  } else if (v instanceof Filled2) {
+    return "filled";
+  } else {
+    return "outlined";
+  }
+}
+function element5(c, attributes, children) {
+  return element2("m3e-card", prepend(boolean_attribute2("actionable", c.actionable), prepend(boolean_attribute2("disabled", c.disabled), prepend(boolean_attribute2("inline", c.inline), prepend(attribute2("orientation", orientation_to_string(c.orientation)), prepend(attribute2("variant", variant_to_string2(c.variant)), attributes))))), children);
+}
+function variant(c, v) {
+  return new Card(c.actionable, c.disabled, c.inline, c.orientation, v);
+}
+function basic2() {
+  return new Card(false, false, false, default_orientation, default_variant2);
+}
+
+// build/dev/javascript/m3e/m3e/drawer.mjs
+class Auto extends CustomType {
+}
+class Over extends CustomType {
+}
+class Push extends CustomType {
+}
+class Start extends CustomType {
+}
+class End extends CustomType {
+}
+class Vacant extends CustomType {
+}
+class Drawer extends CustomType {
+  constructor(usage, mode, open, id2, divider, content) {
+    super();
+    this.usage = usage;
+    this.mode = mode;
+    this.open = open;
+    this.id = id2;
+    this.divider = divider;
+    this.content = content;
+  }
+}
+function mode_to_string(m) {
+  if (m instanceof Auto) {
+    return "auto";
+  } else if (m instanceof Over) {
+    return "over";
+  } else if (m instanceof Push) {
+    return "push";
+  } else {
+    return "side";
+  }
+}
+function drawer(usage, mode, open, id2, divider, content) {
+  return new Drawer(usage, mode, open, id2, divider, content);
+}
+function element6(dc) {
+  let _block;
+  let $ = string_length(dc.id);
+  if ($ === 0) {
+    _block = none();
+  } else {
+    _block = attribute2("id", dc.id);
+  }
+  let id$1 = _block;
+  let _block$1;
+  let $1 = dc.usage;
+  if ($1 instanceof Start) {
+    _block$1 = toList([
+      boolean_attribute2("start", dc.open),
+      boolean_attribute2("start-divider", dc.divider),
+      attribute2("start-mode", mode_to_string(dc.mode))
+    ]);
+  } else if ($1 instanceof End) {
+    _block$1 = toList([
+      boolean_attribute2("end", dc.open),
+      boolean_attribute2("end-divider", dc.divider),
+      attribute2("end-mode", mode_to_string(dc.mode))
+    ]);
+  } else {
+    _block$1 = toList([none()]);
+  }
+  let attributes = _block$1;
+  let _block$2;
+  let $2 = dc.usage;
+  if ($2 instanceof Start) {
+    _block$2 = div(toList([attribute2("slot", "start"), id$1]), toList([dc.content]));
+  } else if ($2 instanceof End) {
+    _block$2 = div(toList([attribute2("slot", "end"), id$1]), toList([dc.content]));
+  } else {
+    _block$2 = none3();
+  }
+  let elt = _block$2;
+  return [attributes, elt];
+}
+function empty3() {
+  return new Drawer(new Vacant, new Auto, false, "", false, none3());
+}
+
+// build/dev/javascript/m3e/m3e/drawer_container.mjs
+class DrawerContainer extends CustomType {
+  constructor(start4, main, end) {
+    super();
+    this.start = start4;
+    this.main = main;
+    this.end = end;
+  }
+}
+function drawer_container(start4, main, end) {
+  return new DrawerContainer(start4, main, end);
+}
+function element7(c, attributes) {
+  let $ = element6(c.start);
+  let start_attrs;
+  let start_drawer;
+  start_attrs = $[0];
+  start_drawer = $[1];
+  let $1 = element6(c.end);
+  let end_attrs;
+  let end_drawer;
+  end_attrs = $1[0];
+  end_drawer = $1[1];
+  return element2("m3e-drawer-container", (() => {
+    let _pipe = append(start_attrs, end_attrs);
+    return append(_pipe, attributes);
+  })(), toList([start_drawer, c.main, end_drawer]));
+}
+
+// build/dev/javascript/m3e/m3e/drawer_toggle.mjs
+class DrawerToggle extends CustomType {
+  constructor(for$2) {
+    super();
+    this.for = for$2;
+  }
+}
+function drawer_toggle(for$2) {
+  return new DrawerToggle(for$2);
+}
+function element8(c, attributes, children) {
+  return element2("m3e-drawer-toggle", prepend(for$(c.for), attributes), children);
 }
 
 // build/dev/javascript/m3e/m3e/icon.mjs
@@ -4754,24 +4979,72 @@ class Low extends CustomType {
 }
 class Medium2 extends CustomType {
 }
+class Avatar extends CustomType {
+}
+class Default extends CustomType {
+}
 class Leading extends CustomType {
+}
+class LeadingIcon extends CustomType {
 }
 class Selected extends CustomType {
 }
-class Outlined2 extends CustomType {
+class Trailing extends CustomType {
+}
+class Outlined3 extends CustomType {
 }
 class Rounded2 extends CustomType {
 }
 class Icon2 extends CustomType {
-  constructor(name2, filled, grade, optical_size, purpose, variant, weight) {
+  constructor(name2, filled, grade, optical_size, purpose, variant2, weight) {
     super();
     this.name = name2;
     this.filled = filled;
     this.grade = grade;
     this.optical_size = optical_size;
     this.purpose = purpose;
-    this.variant = variant;
+    this.variant = variant2;
     this.weight = weight;
+  }
+}
+var default_grade = /* @__PURE__ */ new Medium2;
+var default_optical_size = 24;
+var default_purpose = /* @__PURE__ */ new Default;
+var default_variant3 = /* @__PURE__ */ new Outlined3;
+var default_weight = 400;
+function grade_to_string(grade) {
+  if (grade instanceof Low) {
+    return "low";
+  } else if (grade instanceof Medium2) {
+    return "medium";
+  } else {
+    return "high";
+  }
+}
+function purpose_to_string(purpose) {
+  if (purpose instanceof Avatar) {
+    return "avatar";
+  } else if (purpose instanceof Default) {
+    return "icon";
+  } else if (purpose instanceof Leading) {
+    return "leading";
+  } else if (purpose instanceof LeadingIcon) {
+    return "leading-icon";
+  } else if (purpose instanceof Selected) {
+    return "selected";
+  } else if (purpose instanceof Trailing) {
+    return "trailing";
+  } else {
+    return "trailing-icon";
+  }
+}
+function variant_to_string3(variant2) {
+  if (variant2 instanceof Outlined3) {
+    return "outlined";
+  } else if (variant2 instanceof Rounded2) {
+    return "rounded";
+  } else {
+    return "sharp";
   }
 }
 function filled_attr(f) {
@@ -4782,153 +5055,255 @@ function filled_attr(f) {
   }
 }
 function grade_attr(g) {
-  if (g instanceof Low) {
-    return attribute2("grade", "low");
-  } else if (g instanceof Medium2) {
-    return attribute2("grade", "medium");
-  } else {
-    return attribute2("grade", "high");
-  }
+  return attribute2("grade", grade_to_string(g));
 }
 function optical_size_attr(os) {
   return attribute2("optical-size", to_string(os));
 }
-function purpose_attr(p) {
-  if (p instanceof Leading) {
-    return attribute2("slot", "icon");
-  } else if (p instanceof Selected) {
-    return attribute2("slot", "selected-icon");
-  } else {
-    return attribute2("slot", "trailing-icon");
-  }
+function purpose(i, p2) {
+  return new Icon2(i.name, i.filled, i.grade, i.optical_size, p2, i.variant, i.weight);
 }
-function variant_attr2(v) {
-  if (v instanceof Outlined2) {
-    return attribute2("variant", "outlined");
-  } else if (v instanceof Rounded2) {
-    return attribute2("variant", "rounded");
-  } else {
-    return attribute2("variant", "sharp");
-  }
+function purpose_attr(p2) {
+  return attribute2("slot", purpose_to_string(p2));
+}
+function variant_attr(v) {
+  return attribute2("variant", variant_to_string3(v));
 }
 function weight_attr(w) {
   return attribute2("weight", to_string(w));
 }
-function element5(i, attributes, children) {
+function element9(i, attributes, children) {
   return element2("m3e-icon", append(toList([
     name(i.name),
     filled_attr(i.filled),
     grade_attr(i.grade),
     optical_size_attr(i.optical_size),
     purpose_attr(i.purpose),
-    variant_attr2(i.variant),
+    variant_attr(i.variant),
     weight_attr(i.weight)
   ]), attributes), children);
 }
-var default_grade = /* @__PURE__ */ new Medium2;
-var default_optical_size = 24;
-var default_purpose = /* @__PURE__ */ new Leading;
-var default_variant = /* @__PURE__ */ new Outlined2;
-var default_weight = 400;
-function basic2(name2) {
-  return new Icon2(name2, false, default_grade, default_optical_size, default_purpose, default_variant, default_weight);
+function basic3(name2) {
+  return new Icon2(name2, false, default_grade, default_optical_size, default_purpose, default_variant3, default_weight);
+}
+
+// build/dev/javascript/m3e/m3e/icon_button.mjs
+class LeadingIcon2 extends CustomType {
+}
+class TrailingButton extends CustomType {
+}
+class Rounded3 extends CustomType {
+}
+class ExtraSmall2 extends CustomType {
+}
+class Small2 extends CustomType {
+}
+class Medium3 extends CustomType {
+}
+class Large2 extends CustomType {
+}
+class Button3 extends CustomType {
+}
+class Submit extends CustomType {
+}
+class Filled3 extends CustomType {
+}
+class Tonal2 extends CustomType {
+}
+class Outlined4 extends CustomType {
+}
+class Standard extends CustomType {
+}
+class Default2 extends CustomType {
+}
+class Narrow extends CustomType {
+}
+class IconButton extends CustomType {
+  constructor(disabled3, disabled_interactive, key, purpose2, selected2, shape2, size3, toggle2, type_, value2, variant2, width) {
+    super();
+    this.disabled = disabled3;
+    this.disabled_interactive = disabled_interactive;
+    this.key = key;
+    this.purpose = purpose2;
+    this.selected = selected2;
+    this.shape = shape2;
+    this.size = size3;
+    this.toggle = toggle2;
+    this.type_ = type_;
+    this.value = value2;
+    this.variant = variant2;
+    this.width = width;
+  }
+}
+var default_shape2 = /* @__PURE__ */ new Rounded3;
+var default_size2 = /* @__PURE__ */ new Small2;
+var default_type = /* @__PURE__ */ new Button3;
+var default_variant4 = /* @__PURE__ */ new Standard;
+var default_width = /* @__PURE__ */ new Default2;
+function purpose_to_string2(purpose2) {
+  if (purpose2 instanceof LeadingIcon2) {
+    return "leading-icon";
+  } else if (purpose2 instanceof TrailingButton) {
+    return "trailing-button";
+  } else {
+    return "trailing-icon";
+  }
+}
+function shape_to_string2(s) {
+  if (s instanceof Rounded3) {
+    return "rounded";
+  } else {
+    return "square";
+  }
+}
+function size_to_string2(s) {
+  if (s instanceof ExtraSmall2) {
+    return "extra-small";
+  } else if (s instanceof Small2) {
+    return "small";
+  } else if (s instanceof Medium3) {
+    return "medium";
+  } else if (s instanceof Large2) {
+    return "large";
+  } else {
+    return "extra-large";
+  }
+}
+function type_to_string2(t) {
+  if (t instanceof Button3) {
+    return "button";
+  } else if (t instanceof Submit) {
+    return "submit";
+  } else {
+    return "reset";
+  }
+}
+function variant_to_string4(v) {
+  if (v instanceof Filled3) {
+    return "filled";
+  } else if (v instanceof Tonal2) {
+    return "tonal";
+  } else if (v instanceof Outlined4) {
+    return "outlined";
+  } else {
+    return "standard";
+  }
+}
+function width_to_string(w) {
+  if (w instanceof Default2) {
+    return "default";
+  } else if (w instanceof Narrow) {
+    return "narrow";
+  } else {
+    return "wide";
+  }
+}
+function purpose2(i, purpose3) {
+  return new IconButton(i.disabled, i.disabled_interactive, i.key, purpose3, i.selected, i.shape, i.size, i.toggle, i.type_, i.value, i.variant, i.width);
+}
+function toggle2(i, toggle3) {
+  return new IconButton(i.disabled, i.disabled_interactive, i.key, i.purpose, i.selected, i.shape, i.size, toggle3, i.type_, i.value, i.variant, i.width);
+}
+function variant2(i, variant3) {
+  return new IconButton(i.disabled, i.disabled_interactive, i.key, i.purpose, i.selected, i.shape, i.size, i.toggle, i.type_, i.value, variant3, i.width);
+}
+function element10(i, attributes, children) {
+  return element2("m3e-icon-button", prepend(disabled(i.disabled), prepend(boolean_attribute2("disabled-interactive", i.disabled_interactive), prepend(attribute2("key", i.key), prepend(option_attribute(i.purpose, (_) => {
+    return "slot";
+  }, purpose_to_string2, new None), prepend(selected(i.selected), prepend(attribute2("shape", shape_to_string2(i.shape)), prepend(attribute2("size", size_to_string2(i.size)), prepend(boolean_attribute2("toggle", i.toggle), prepend(attribute2("type", type_to_string2(i.type_)), prepend(value(i.value), prepend(attribute2("variant", variant_to_string4(i.variant)), prepend(attribute2("width", width_to_string(i.width)), attributes)))))))))))), children);
+}
+function basic4() {
+  return new IconButton(false, false, "", new None, false, default_shape2, default_size2, false, default_type, "", default_variant4, default_width);
 }
 
 // build/dev/javascript/m3e/m3e/switch.mjs
+class Both extends CustomType {
+}
 class Neither extends CustomType {
 }
 class Switch2 extends CustomType {
-  constructor(id2, label2, icons, checked2, disabled2, key, value2) {
+  constructor(id2, label2, icons2, checked, disabled3, key, value2) {
     super();
     this.id = id2;
     this.label = label2;
-    this.icons = icons;
-    this.checked = checked2;
-    this.disabled = disabled2;
+    this.icons = icons2;
+    this.checked = checked;
+    this.disabled = disabled3;
     this.key = key;
     this.value = value2;
   }
 }
-function basic3(id2, label2) {
+function icons_to_string(i) {
+  if (i instanceof Both) {
+    return "both";
+  } else if (i instanceof Neither) {
+    return "none";
+  } else {
+    return "selected";
+  }
+}
+function basic5(id2, label2) {
   return new Switch2(id2, label2, new Neither, false, false, new None, new None);
 }
-function checked_attr(c) {
-  return checked(c);
-}
-function disabled_attr(c) {
-  return disabled(c);
-}
 function icon_attr(i) {
-  if (i instanceof Neither) {
-    return none();
-  } else {
-    return attribute2("icons", "");
-  }
+  return attribute2("icons", icons_to_string(i));
 }
-function key_attr2(k) {
-  if (k instanceof Some) {
-    let n = k[0];
-    return name(n);
-  } else {
-    return none();
-  }
-}
-function value_attr2(v) {
-  if (v instanceof Some) {
-    let n = v[0];
-    return value(n);
-  } else {
-    return none();
-  }
-}
-function element6(s, attributes) {
+function element11(s, attributes) {
   return toList([
     element2("m3e-switch", append(toList([
       id(s.id),
       icon_attr(s.icons),
-      checked_attr(s.checked),
-      disabled_attr(s.disabled),
-      key_attr2(s.key),
-      value_attr2(s.value)
+      boolean_attribute2("checked", s.checked),
+      boolean_attribute2("disabled", s.disabled),
+      option_attribute(s.key, (_) => {
+        return "name";
+      }, identity2, new None),
+      option_attribute(s.value, (_) => {
+        return "value";
+      }, identity2, new None)
     ]), attributes), toList([])),
-    label(toList([for$(s.id)]), toList([text3(s.label)]))
+    label(toList([for$(s.id)]), toList([text2(s.label)]))
   ]);
 }
 
 // build/dev/javascript/m3e/m3e/theme.mjs
+class High extends CustomType {
+}
+class Medium4 extends CustomType {
+}
+class StandardContrast extends CustomType {
+}
 class Expressive extends CustomType {
 }
-class Standard extends CustomType {
+class Standard2 extends CustomType {
 }
-class Auto extends CustomType {
+class Auto2 extends CustomType {
 }
 class Dark extends CustomType {
 }
 class Theme extends CustomType {
-  constructor(color, density, motion, scheme) {
+  constructor(color, contrast, density, motion, scheme, strong_focus) {
     super();
     this.color = color;
+    this.contrast = contrast;
     this.density = density;
     this.motion = motion;
     this.scheme = scheme;
+    this.strong_focus = strong_focus;
   }
 }
-function make_attr(value2, fun, name2) {
-  if (value2 instanceof Some) {
-    let v = value2[0];
-    return attribute2(name2, fun(v));
+var default_contrast = /* @__PURE__ */ new StandardContrast;
+var default_density = 0;
+var default_motion = /* @__PURE__ */ new Standard2;
+var default_scheme = /* @__PURE__ */ new Auto2;
+function contrast_to_string(c) {
+  if (c instanceof High) {
+    return "high";
+  } else if (c instanceof Medium4) {
+    return "medium";
   } else {
-    return none();
+    return "standard";
   }
-}
-function color(t, hex_color) {
-  return new Theme(hex_color, t.density, t.motion, t.scheme);
-}
-function color_attr(color2) {
-  return make_attr(color2, identity2, "color");
-}
-function density_attr(density) {
-  return make_attr(density, to_string, "density");
 }
 function motion_to_string(m) {
   if (m instanceof Expressive) {
@@ -4937,11 +5312,8 @@ function motion_to_string(m) {
     return "standard";
   }
 }
-function motion_attr(motion) {
-  return make_attr(motion, motion_to_string, "motion");
-}
 function scheme_to_string(s) {
-  if (s instanceof Auto) {
+  if (s instanceof Auto2) {
     return "auto";
   } else if (s instanceof Dark) {
     return "dark";
@@ -4949,22 +5321,34 @@ function scheme_to_string(s) {
     return "light";
   }
 }
+function color(t, hex_color) {
+  let $ = is_empty2(hex_color);
+  if ($) {
+    return t;
+  } else {
+    return new Theme(hex_color, t.contrast, t.density, t.motion, t.scheme, t.strong_focus);
+  }
+}
+function color_attr(color2) {
+  return attribute2("color", color2);
+}
+function contrast_attr(contrast) {
+  return attribute2("contrast", contrast_to_string(contrast));
+}
+function density_attr(density) {
+  return attribute2("density", to_string(density));
+}
+function motion_attr(motion) {
+  return attribute2("motion", motion_to_string(motion));
+}
 function scheme_attr(scheme) {
-  return make_attr(scheme, scheme_to_string, "scheme");
+  return attribute2("scheme", scheme_to_string(scheme));
 }
-function element7(t, children) {
-  return element2("m3e-theme", toList([
-    color_attr(t.color),
-    density_attr(t.density),
-    motion_attr(t.motion),
-    scheme_attr(t.scheme)
-  ]), children);
+function element12(t, attributes, children) {
+  return element2("m3e-theme", prepend(color_attr(t.color), prepend(contrast_attr(t.contrast), prepend(density_attr(t.density), prepend(motion_attr(t.motion), prepend(scheme_attr(t.scheme), prepend(boolean_attribute2("strong-focus", t.strong_focus), attributes)))))), children);
 }
-var default_density = 0;
-var default_motion = /* @__PURE__ */ new Standard;
-var default_scheme = /* @__PURE__ */ new Auto;
-function basic4(color2) {
-  return new Theme(color2, new Some(default_density), new Some(default_motion), new Some(default_scheme));
+function basic6(color2) {
+  return new Theme(color2, default_contrast, default_density, default_motion, default_scheme, false);
 }
 
 // build/dev/javascript/showcase/view.mjs
@@ -4979,30 +5363,174 @@ function home() {
     div(toList([on_click(new SwitchPageSelected)]), toList([text3("Switch")]))
   ]));
 }
-function button() {
-  return div(toList([]), toList([
-    div(toList([on_click(new HomeSelected)]), toList([text3("Home")])),
-    br(toList([])),
-    div(toList([]), toList([
-      (() => {
-        let _pipe = basic("One");
-        return element4(_pipe, toList([]));
-      })()
-    ])),
-    br(toList([]))
-  ]));
-}
 function icon() {
   return div(toList([]), toList([
     div(toList([on_click(new HomeSelected)]), toList([text3("Home")])),
     br(toList([])),
     div(toList([]), toList([
       (() => {
-        let _pipe = basic2("home");
-        return element5(_pipe, toList([]), toList([]));
+        let _pipe = basic3("home");
+        return element9(_pipe, toList([]), toList([]));
       })()
     ])),
     br(toList([]))
+  ]));
+}
+function button() {
+  return div(toList([class$("grid grid-cols-[5fr_5fr_5fr] gap-5")]), toList([
+    (() => {
+      let _pipe = basic("Home", new Outlined);
+      return element4(_pipe, toList([class$("col-2"), on_click(new HomeSelected)]));
+    })(),
+    div(toList([
+      class$("grid grid-rows-1 grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-center  gap-5 col-2")
+    ]), toList([
+      p(toList([]), toList([text3("Variants")])),
+      (() => {
+        let _pipe = basic("Elevated", new Elevated);
+        return element4(_pipe, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Filled", new Filled);
+        return element4(_pipe, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Tonal", new Tonal);
+        return element4(_pipe, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Outlined", new Outlined);
+        return element4(_pipe, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Text", new Text2);
+        return element4(_pipe, toList([]));
+      })()
+    ])),
+    div(toList([
+      class$("grid grid-rows-1 grid-cols-4 items-center  gap-5 col-2")
+    ]), toList([
+      p(toList([]), toList([text3("Shapes")])),
+      (() => {
+        let _pipe = basic("Rounded Filled", new Filled);
+        return element4(_pipe, toList([class$("justify-self-center")]));
+      })(),
+      (() => {
+        let _pipe = basic("Square Filled", new Filled);
+        let _pipe$1 = shape(_pipe, new Square);
+        return element4(_pipe$1, toList([class$("justify-self-center")]));
+      })()
+    ])),
+    div(toList([
+      class$("grid grid-rows-1 grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr] items-center gap-5 col-2")
+    ]), toList([
+      p(toList([]), toList([text3("Sizes")])),
+      (() => {
+        let _pipe = basic("Extra Small", new Tonal);
+        let _pipe$1 = size2(_pipe, new ExtraSmall);
+        return element4(_pipe$1, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Small", new Tonal);
+        let _pipe$1 = size2(_pipe, new Small);
+        return element4(_pipe$1, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Medium", new Tonal);
+        let _pipe$1 = size2(_pipe, new Medium);
+        return element4(_pipe$1, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Large", new Tonal);
+        let _pipe$1 = size2(_pipe, new Large);
+        return element4(_pipe$1, toList([]));
+      })(),
+      (() => {
+        let _pipe = basic("Extra Large", new Tonal);
+        let _pipe$1 = size2(_pipe, new ExtraLarge);
+        return element4(_pipe$1, toList([]));
+      })()
+    ])),
+    div(toList([class$("grid grid-rows-1 grid-cols-4 items-center gap-5 col-2")]), toList([
+      p(toList([]), toList([text3("Icons")])),
+      (() => {
+        let _pipe = basic("Send", new Tonal);
+        let _pipe$1 = icons(_pipe, toList([
+          (() => {
+            let _pipe$12 = basic3("send");
+            return element9(_pipe$12, toList([]), toList([]));
+          })()
+        ]));
+        return element4(_pipe$1, toList([class$("justify-self-center")]));
+      })(),
+      (() => {
+        let _pipe = basic("Open", new Tonal);
+        let _pipe$1 = icons(_pipe, toList([
+          (() => {
+            let _pipe$12 = basic3("open_in_new_window");
+            let _pipe$2 = purpose(_pipe$12, new Trailing);
+            return element9(_pipe$2, toList([]), toList([]));
+          })()
+        ]));
+        return element4(_pipe$1, toList([class$("justify-self-center")]));
+      })()
+    ])),
+    div(toList([class$("grid grid-rows-1 grid-cols-4 items-center gap-5 col-2")]), toList([
+      p(toList([]), toList([text3("Toggle")])),
+      (() => {
+        let _pipe = basic("Tonal toggle", new Tonal);
+        let _pipe$1 = toggle(_pipe, true);
+        return element4(_pipe$1, toList([class$("justify-self-center")]));
+      })(),
+      (() => {
+        let _pipe = basic("Start", new Tonal);
+        let _pipe$1 = toggle(_pipe, true);
+        let _pipe$2 = icons(_pipe$1, toList([
+          (() => {
+            let _pipe$22 = basic3("play_arrow");
+            return element9(_pipe$22, toList([]), toList([]));
+          })(),
+          (() => {
+            let _pipe$22 = basic3("stop");
+            let _pipe$32 = purpose(_pipe$22, new Selected);
+            return element9(_pipe$32, toList([]), toList([]));
+          })()
+        ]));
+        let _pipe$3 = selected_label(_pipe$2, "Stop");
+        return element4(_pipe$3, toList([class$("justify-self-center")]));
+      })()
+    ])),
+    div(toList([class$("grid grid-rows-1 grid-cols-4 items-center gap-5 col-2")]), toList([
+      p(toList([]), toList([text3("Disabling")])),
+      (() => {
+        let _pipe = basic("Disabled", new Filled);
+        let _pipe$1 = disabled2(_pipe, true);
+        return element4(_pipe$1, toList([class$("justify-self-center")]));
+      })(),
+      (() => {
+        let _pipe = basic("Disabled interactive", new Filled);
+        let _pipe$1 = disabled2(_pipe, true);
+        return element4(_pipe$1, toList([class$("justify-self-center")]));
+      })()
+    ])),
+    div(toList([class$("grid grid-rows-1 grid-cols-4 items-center gap-5 col-2")]), toList([
+      p(toList([]), toList([text3("Links")])),
+      (() => {
+        let _pipe = basic("Google", new Tonal);
+        let _pipe$1 = icons(_pipe, toList([
+          (() => {
+            let _pipe$12 = basic3("open_in_new_window");
+            let _pipe$2 = purpose(_pipe$12, new Trailing);
+            return element9(_pipe$2, toList([]), toList([]));
+          })()
+        ]));
+        return element4(_pipe$1, toList([
+          class$("justify-self-center"),
+          href("https://google.com"),
+          target("_blank")
+        ]));
+      })()
+    ]))
   ]));
 }
 function switch_() {
@@ -5010,8 +5538,8 @@ function switch_() {
     div(toList([on_click(new HomeSelected)]), toList([text3("Home")])),
     br(toList([])),
     div(toList([]), (() => {
-      let _pipe = basic3("my-switch", "My choice");
-      return element6(_pipe, toList([]));
+      let _pipe = basic5("my-switch", "My choice");
+      return element11(_pipe, toList([]));
     })()),
     br(toList([]))
   ]));
@@ -5028,12 +5556,47 @@ function view(model) {
   } else {
     _block = switch_();
   }
-  let body = _block;
-  let title = text3("M3E demonstration");
-  return element7((() => {
-    let _pipe = basic4(new None);
-    return color(_pipe, new Some("#34eb67"));
-  })(), toList([title, body]));
+  let main = _block;
+  let title = div(toList([class$("grid justify-center")]), toList([text3("Gleam/Lustre Material 3 Expression demonstration")]));
+  let body = toList([
+    (() => {
+      let _pipe = basic2();
+      let _pipe$1 = variant(_pipe, new Outlined2);
+      return element5(_pipe$1, toList([]), toList([
+        div(toList([attribute2("slot", "content")]), toList([
+          (() => {
+            let _pipe$2 = basic4();
+            let _pipe$3 = toggle2(_pipe$2, true);
+            let _pipe$4 = purpose2(_pipe$3, new Some(new LeadingIcon2));
+            let _pipe$5 = variant2(_pipe$4, new Filled3);
+            return element10(_pipe$5, toList([]), toList([
+              (() => {
+                let _pipe$6 = basic3("menu");
+                return element9(_pipe$6, toList([]), toList([]));
+              })(),
+              (() => {
+                let _pipe$6 = basic3("menu_open");
+                let _pipe$7 = purpose(_pipe$6, new Selected);
+                return element9(_pipe$7, toList([]), toList([]));
+              })(),
+              (() => {
+                let _pipe$6 = drawer_toggle("nav-drawer");
+                return element8(_pipe$6, toList([]), toList([]));
+              })()
+            ]));
+          })(),
+          (() => {
+            let _pipe$2 = drawer_container(drawer(new Start, new Over, true, "nav-drawer", false, text3("Start drawer")), main, empty3());
+            return element7(_pipe$2, toList([]));
+          })()
+        ]))
+      ]));
+    })()
+  ]);
+  return element12((() => {
+    let _pipe = basic6("app-theme");
+    return color(_pipe, "#09022e");
+  })(), toList([]), prepend(title, body));
 }
 
 // build/dev/javascript/showcase/app.mjs
