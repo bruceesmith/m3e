@@ -1,6 +1,7 @@
 //// card provides Lustre support for the [M3E Card component](https://matraic.github.io/m3e/#/components/card.html)
 
-import lustre/attribute.{type Attribute, attribute}
+import gleam/list
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -43,7 +44,7 @@ pub const default_variant = Filled
 
 /// Card is a flexible, expressive container for presenting a unified subject
 /// 
-pub type Card {
+pub opaque type Card {
   Card(
     actionable: Bool,
     disabled: Bool,
@@ -98,7 +99,8 @@ pub fn element(
       attribute("orientation", orientation_to_string(c.orientation)),
       attribute("variant", variant_to_string(c.variant)),
       ..attributes
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
