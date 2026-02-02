@@ -6,23 +6,21 @@ import m3e/icon
 pub fn basic_test() {
   let basic_icon = icon.basic("home")
 
-  basic_icon.name
-  |> should.equal("home")
-
-  basic_icon.filled
-  |> should.be_false()
-
-  basic_icon.grade
-  |> should.equal(icon.default_grade)
-
-  basic_icon.optical_size
-  |> should.equal(icon.default_optical_size)
-
-  // basic_icon.purpose
-  // |> should.equal(icon.default_purpose)
-
-  basic_icon.weight
-  |> should.equal(icon.default_weight)
+  let expected =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(basic_icon, [], []) |> should.equal(expected)
 }
 
 pub fn element_test() {
@@ -59,8 +57,21 @@ pub fn filled_test() {
     icon.basic("home")
     |> icon.filled(True)
 
-  i.filled
-  |> should.be_true()
+  let expected =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "1"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(i, [], []) |> should.equal(expected)
 }
 
 pub fn filled_attr_test() {
@@ -114,8 +125,21 @@ pub fn grade_test() {
     icon.basic("home")
     |> icon.grade(icon.Low)
 
-  i.grade
-  |> should.equal(icon.Low)
+  let expected =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "low"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(i, [], []) |> should.equal(expected)
 }
 
 pub fn grade_attr_test() {
@@ -207,33 +231,83 @@ pub fn optical_size_test() {
 
   // Valid cases
   let icon_os_20 = i |> icon.optical_size(20)
-  icon_os_20.optical_size
-  |> should.equal(20)
+  let expected_20 =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "20"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(icon_os_20, [], []) |> should.equal(expected_20)
 
   let icon_os_30 = i |> icon.optical_size(30)
-  icon_os_30.optical_size
-  |> should.equal(30)
+  let expected_30 =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "30"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(icon_os_30, [], []) |> should.equal(expected_30)
 
   let icon_os_48 = i |> icon.optical_size(48)
-  icon_os_48.optical_size
-  |> should.equal(48)
+  let expected_48 =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "48"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(icon_os_48, [], []) |> should.equal(expected_48)
 
   // Invalid cases
+  let expected_default =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+
   let icon_os_19 = i |> icon.optical_size(19)
-  icon_os_19.optical_size
-  |> should.equal(icon.default_optical_size)
+  icon.element(icon_os_19, [], []) |> should.equal(expected_default)
 
   let icon_os_49 = i |> icon.optical_size(49)
-  icon_os_49.optical_size
-  |> should.equal(icon.default_optical_size)
+  icon.element(icon_os_49, [], []) |> should.equal(expected_default)
 
   let icon_os_0 = i |> icon.optical_size(0)
-  icon_os_0.optical_size
-  |> should.equal(icon.default_optical_size)
+  icon.element(icon_os_0, [], []) |> should.equal(expected_default)
 
   let icon_os_100 = i |> icon.optical_size(100)
-  icon_os_100.optical_size
-  |> should.equal(icon.default_optical_size)
+  icon.element(icon_os_100, [], []) |> should.equal(expected_default)
 }
 
 pub fn optical_size_attr_test() {
@@ -265,8 +339,21 @@ pub fn purpose_test() {
     icon.basic("home")
     |> icon.purpose(icon.Selected)
 
-  i.purpose
-  |> should.equal(icon.Selected)
+  let expected =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "selected-icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(i, [], []) |> should.equal(expected)
 }
 
 pub fn purpose_attr_test() {
@@ -342,8 +429,21 @@ pub fn variant_test() {
     icon.basic("home")
     |> icon.variant(icon.Sharp)
 
-  i.variant
-  |> should.equal(icon.Sharp)
+  let expected =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "sharp"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(i, [], []) |> should.equal(expected)
 }
 
 pub fn variant_attr_test() {
@@ -419,33 +519,83 @@ pub fn weight_test() {
 
   // Valid cases
   let icon_w_100 = i |> icon.weight(100)
-  icon_w_100.weight
-  |> should.equal(100)
+  let expected_100 =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "100"),
+      ],
+      [],
+    )
+  icon.element(icon_w_100, [], []) |> should.equal(expected_100)
 
   let icon_w_400 = i |> icon.weight(400)
-  icon_w_400.weight
-  |> should.equal(400)
+  let expected_400 =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+  icon.element(icon_w_400, [], []) |> should.equal(expected_400)
 
   let icon_w_700 = i |> icon.weight(700)
-  icon_w_700.weight
-  |> should.equal(700)
+  let expected_700 =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "700"),
+      ],
+      [],
+    )
+  icon.element(icon_w_700, [], []) |> should.equal(expected_700)
 
   // Invalid cases
+  let expected_default =
+    element(
+      "m3e-icon",
+      [
+        name("home"),
+        attribute("filled", "0"),
+        attribute("grade", "medium"),
+        attribute("optical-size", "24"),
+        attribute("slot", "icon"),
+        attribute("variant", "outlined"),
+        attribute("weight", "400"),
+      ],
+      [],
+    )
+
   let icon_w_99 = i |> icon.weight(99)
-  icon_w_99.weight
-  |> should.equal(icon.default_weight)
+  icon.element(icon_w_99, [], []) |> should.equal(expected_default)
 
   let icon_w_701 = i |> icon.weight(701)
-  icon_w_701.weight
-  |> should.equal(icon.default_weight)
+  icon.element(icon_w_701, [], []) |> should.equal(expected_default)
 
   let icon_w_0 = i |> icon.weight(0)
-  icon_w_0.weight
-  |> should.equal(icon.default_weight)
+  icon.element(icon_w_0, [], []) |> should.equal(expected_default)
 
   let icon_w_800 = i |> icon.weight(800)
-  icon_w_800.weight
-  |> should.equal(icon.default_weight)
+  icon.element(icon_w_800, [], []) |> should.equal(expected_default)
 }
 
 pub fn weight_attr_test() {

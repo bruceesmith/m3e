@@ -1,8 +1,8 @@
 //// icon provides Lustre support for the [M3E Icon component](https://matraic.github.io/m3e/#/components/icon.html)
 
 import gleam/int.{to_string}
-import gleam/list.{append}
-import lustre/attribute.{type Attribute, attribute, name}
+import gleam/list
+import lustre/attribute.{type Attribute, attribute, name, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{clamp_with_default}
@@ -114,7 +114,7 @@ pub const default_weight = 400
 /// - variant:  the visual style of the icon
 /// - weight: the thickness and boldness of the icon's strokes. Between 100 and 700
 ///
-pub type Icon {
+pub opaque type Icon {
   Icon(
     name: String,
     filled: Bool,
@@ -189,7 +189,7 @@ pub fn element(
 ) -> Element(msg) {
   element.element(
     "m3e-icon",
-    append(
+    list.append(
       [
         name(i.name),
         filled_attr(i.filled),
@@ -200,7 +200,8 @@ pub fn element(
         weight_attr(i.weight),
       ],
       attributes,
-    ),
+    )
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
