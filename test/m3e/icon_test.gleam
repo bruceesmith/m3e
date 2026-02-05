@@ -29,7 +29,7 @@ pub fn element_test() {
     |> icon.filled(True)
     |> icon.grade(icon.High)
     |> icon.optical_size(40)
-    // |> icon.purpose(icon.Trailing)
+    |> icon.purpose(icon.Trailing)
     |> icon.variant(icon.Rounded)
     |> icon.weight(600)
 
@@ -41,7 +41,7 @@ pub fn element_test() {
         attribute("filled", "1"),
         attribute("grade", "high"),
         attribute("optical-size", "40"),
-        attribute("slot", "trailing-icon"),
+        attribute("slot", "trailing"),
         attribute("variant", "rounded"),
         attribute("weight", "600"),
       ],
@@ -211,7 +211,9 @@ pub fn grade_attr_test() {
 }
 
 pub fn leading_test() {
-  let i = icon.basic("home")
+  let i =
+    icon.basic("home")
+    |> icon.purpose(icon.Leading)
 
   i
   |> icon.leading
@@ -347,7 +349,7 @@ pub fn purpose_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "selected-icon"),
+        attribute("slot", "selected"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -369,7 +371,7 @@ pub fn purpose_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
+        attribute("slot", "leading"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -391,7 +393,7 @@ pub fn purpose_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "selected-icon"),
+        attribute("slot", "selected"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -413,7 +415,7 @@ pub fn purpose_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "trailing-icon"),
+        attribute("slot", "trailing"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
