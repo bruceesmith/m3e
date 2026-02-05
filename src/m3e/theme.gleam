@@ -1,8 +1,9 @@
 //// theme provides Lustre support for the [M3E Theme component](https://matraic.github.io/m3e/#/components/theme.html)
 
 import gleam/int
+import gleam/list
 import gleam/string.{is_empty}
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
@@ -94,7 +95,7 @@ pub const default_scheme = Auto
 /// - scheme: The scheme of the theme
 /// - strong_focus: Whether to enable strong focus indicators
 ///
-pub type Theme {
+pub opaque type Theme {
   Theme(
     color: String,
     contrast: Contrast,
@@ -160,15 +161,21 @@ pub fn element(
 ) -> Element(msg) {
   element.element(
     "m3e-theme",
-    [
-      color_attr(t.color),
-      contrast_attr(t.contrast),
-      density_attr(t.density),
-      motion_attr(t.motion),
-      scheme_attr(t.scheme),
-      boolean_attribute("strong-focus", t.strong_focus),
-      ..attributes
-    ],
+    list.append(
+      [
+        attribute("color", t.color),
+        attribute("contrast", contrast_to_string(t.contrast)),
+        attribute("density", int.to_string(t.density)),
+        attribute("motion", motion_to_string(t.motion)),
+        attribute("scheme", scheme_to_string(t.scheme)),
+        attribute("density", int.to_string(t.density)),
+        attribute("motion", motion_to_string(t.motion)),
+        attribute("scheme", scheme_to_string(t.scheme)),
+        boolean_attribute("strong-focus", t.strong_focus),
+      ],
+      attributes,
+    )
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
@@ -182,28 +189,16 @@ pub fn color(t: Theme, hex_color: String) -> Theme {
   }
 }
 
-fn color_attr(color: String) -> Attribute(msg) {
-  attribute("color", color)
-}
-
 /// contrast sets the `contrast` field
 /// 
 pub fn contrast(t: Theme, contrast: Contrast) -> Theme {
   Theme(..t, contrast: contrast)
 }
 
-fn contrast_attr(contrast: Contrast) -> Attribute(msg) {
-  attribute("contrast", contrast_to_string(contrast))
-}
-
 /// density sets the `density` field
 ///
 pub fn density(t: Theme, density: Density) -> Theme {
   Theme(..t, density: density_validate(density))
-}
-
-fn density_attr(density: Density) -> Attribute(msg) {
-  attribute("density", int.to_string(density))
 }
 
 /// density_validate ensures a number is within the valid density range
@@ -218,18 +213,10 @@ pub fn motion(t: Theme, motion: Motion) -> Theme {
   Theme(..t, motion: motion)
 }
 
-fn motion_attr(motion: Motion) -> Attribute(msg) {
-  attribute("motion", motion_to_string(motion))
-}
-
 /// scheme sets the `scheme` field
 ///
 pub fn scheme(t: Theme, scheme: Scheme) -> Theme {
   Theme(..t, scheme: scheme)
-}
-
-fn scheme_attr(scheme: Scheme) -> Attribute(msg) {
-  attribute("scheme", scheme_to_string(scheme))
 }
 
 /// strong_focus sets the `strong_focus` field
