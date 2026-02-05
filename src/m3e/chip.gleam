@@ -5,7 +5,7 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, name, none}
 import lustre/element.{type Element}
 import lustre/element/html.{text}
-import m3e/icon.{type Icon, leading}
+import m3e/icon.{type Icon}
 
 /// Behaviour controls the behavior of an assist or suggestion chip
 ///
@@ -239,11 +239,7 @@ pub fn icon(c: Chip, i: Icon) -> Chip {
 
 fn icon_element(t: Type, icon: Option(Icon)) -> Element(msg) {
   case t, icon {
-    Assist, Some(i) | Suggestion, Some(i) ->
-      case leading(i) {
-        True -> icon.element(i, [], [])
-        False -> element.none()
-      }
+    Assist, Some(i) | Suggestion, Some(i) -> icon.element(i, [], [])
     Filter, Some(i) | Information, Some(i) -> icon.element(i, [], [])
     _, _ -> element.none()
   }
