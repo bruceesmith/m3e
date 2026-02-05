@@ -4,7 +4,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers.{boolean_attribute, slot}
 
 /// Mode is the behaviour of a drawer
 /// 
@@ -164,8 +164,8 @@ pub fn element(dc: Drawer(msg)) -> #(List(Attribute(msg)), Element(msg)) {
   }
 
   let elt = case dc.usage {
-    Start -> html.div([attribute("slot", "start"), id], [dc.content])
-    End -> html.div([attribute("slot", "end"), id], [dc.content])
+    Start -> html.div([slot("start"), id], [dc.content])
+    End -> html.div([slot("end"), id], [dc.content])
     Vacant -> element.none()
   }
   #(attributes, elt)

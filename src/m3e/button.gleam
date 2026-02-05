@@ -3,11 +3,11 @@
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, none as attr_none, selected}
+import lustre/attribute.{type Attribute, none as attr_none, selected}
 import lustre/element.{type Element, none}
 import lustre/element/html.{span, text}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers.{boolean_attribute, option_attribute, slot}
 
 /// The visual shape of the button.
 pub type Shape {
@@ -265,7 +265,7 @@ pub fn selected_label(b: Button(msg), lab: String) -> Button(msg) {
 
 fn selected_label_elt(sl: Option(String)) -> Element(msg) {
   case sl {
-    Some(lab) -> span([attribute("slot", "selected")], [text(lab)])
+    Some(lab) -> span([slot("selected")], [text(lab)])
     None -> none()
   }
 }

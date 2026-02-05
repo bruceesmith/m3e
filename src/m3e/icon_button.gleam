@@ -2,11 +2,11 @@
 ////// Purpose defines the intended purpose of the icon
 
 import gleam/list
-import gleam/option.{type Option, None}
+import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers.{boolean_attribute, slot}
 
 /// Purpose defines the intended purpose of the icon
 ///
@@ -319,7 +319,10 @@ pub fn element(
       attribute.disabled(i.disabled),
       boolean_attribute("disabled-interactive", i.disabled_interactive),
       attribute.attribute("key", i.key),
-      option_attribute(i.purpose, fn(_) { "slot" }, purpose_to_string, None),
+      case i.purpose {
+        Some(p) -> slot(purpose_to_string(p))
+        None -> none()
+      },
       attribute.selected(i.selected),
       attribute.attribute("shape", shape_to_string(i.shape)),
       attribute.attribute("size", size_to_string(i.size)),

@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute, attribute, name, none}
 import lustre/element.{type Element}
 
-import m3e/helpers.{clamp_with_default}
+import m3e/helpers.{clamp_with_default, slot}
 
 /// The Grade of the variable font icon
 /// [Refer](https://m3.material.io/styles/icons/applying-icons)
@@ -264,7 +264,7 @@ pub fn purpose(i: Icon, p: Purpose) -> Icon {
 }
 
 fn purpose_attr(p: Purpose) -> Attribute(msg) {
-  attribute("slot", purpose_to_string(p))
+  slot(purpose_to_string(p))
 }
 
 /// variant sets the `variant` field

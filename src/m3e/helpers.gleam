@@ -44,3 +44,9 @@ pub fn option_attribute(
       }
   }
 }
+
+/// slot is a shorthand for attribute("slot", name)
+///
+pub fn slot(name: String) -> Attribute(msg) {
+  attribute("slot", name)
+}

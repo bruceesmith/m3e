@@ -3,11 +3,11 @@
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, id, none}
+import lustre/attribute.{type Attribute, id, none}
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers.{boolean_attribute, option_attribute, slot}
 
 /// Dialog component
 /// 
@@ -89,15 +89,15 @@ pub fn element(
     ]
       |> list.filter(fn(a) { a != none() }),
     list.flatten([
-      [html.span([attribute("slot", "header")], [html.text(d.headline)])],
+      [html.span([slot("header")], [html.text(d.headline)])],
       case d.close_icon {
-        Some(i) -> [html.div([attribute("slot", "close-icon")], [i])]
+        Some(i) -> [html.div([slot("close-icon")], [i])]
         None -> []
       },
       children,
       case d.actions {
         [] -> []
-        items -> [html.div([attribute("slot", "actions")], items)]
+        items -> [html.div([slot("actions")], items)]
       },
     ]),
   )

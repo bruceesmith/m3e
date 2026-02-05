@@ -1,11 +1,11 @@
 //// nav_menu_item provides Lustre support for the [M3E Nav Menu Item component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers.{boolean_attribute, slot}
 import m3e/icon as ico
 
 /// nav_menu_item provides Lustre support for the [M3E Nav Menu Item component](https://matraic.github.io/m3e/#/components/nav-menu.html)
@@ -66,7 +66,7 @@ pub fn badge(item: NavMenuItem, badge: Option(String)) -> NavMenuItem {
 fn badge_elt(badge: Option(String)) -> Element(msg) {
   case badge {
     None -> element.none()
-    Some(s) -> html.span([attribute("slot", "badge")], [html.text(s)])
+    Some(s) -> html.span([slot("badge")], [html.text(s)])
   }
 }
 
@@ -128,7 +128,7 @@ pub fn element(
     [
       badge_elt(item.badge),
       icon_elt(item.icon_name),
-      html.span([attribute("slot", "label")], [html.text(item.label)]),
+      html.span([slot("label")], [html.text(item.label)]),
     ],
   )
 }
