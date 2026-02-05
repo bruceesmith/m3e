@@ -339,7 +339,7 @@ pub fn optical_size_attr_test() {
 pub fn purpose_test() {
   let i =
     icon.basic("home")
-    |> icon.purpose(icon.Selected)
+    |> icon.purpose(icon.SelectedIcon)
 
   let expected =
     element(
@@ -349,7 +349,7 @@ pub fn purpose_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "selected"),
+        attribute("slot", "selected-icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -383,7 +383,7 @@ pub fn purpose_attr_test() {
 
   let i =
     icon.basic("home")
-    |> icon.purpose(icon.Selected)
+    |> icon.purpose(icon.SelectedIcon)
 
   let expected =
     element(
@@ -393,7 +393,7 @@ pub fn purpose_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "selected"),
+        attribute("slot", "selected-icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
