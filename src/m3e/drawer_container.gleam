@@ -1,13 +1,10 @@
 //// drawer_container provides Lustre support for the [M3E DrawerContainer component](https://matraic.github.io/m3e/#/components/drawer_container.html)
 
 import gleam/list
-import gleam/string
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element}
-import lustre/element/html
 
 import m3e/drawer.{type Drawer}
-import m3e/helpers.{boolean_attribute}
 
 /// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
