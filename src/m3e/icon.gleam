@@ -46,6 +46,7 @@ pub const default_optical_size = 24
 ///
 pub type Purpose {
   Avatar
+  CloseIcon
   Default
   Leading
   LeadingIcon
@@ -58,6 +59,7 @@ pub type Purpose {
 fn purpose_to_string(purpose: Purpose) -> String {
   case purpose {
     Avatar -> "avatar"
+    CloseIcon -> "close-icon"
     Default -> "icon"
     Leading -> "leading"
     LeadingIcon -> "leading-icon"
