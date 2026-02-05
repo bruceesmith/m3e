@@ -99,7 +99,7 @@ pub fn element_linear_test() {
         attribute("mode", "determinate"),
         attribute("value", "25"),
       ],
-      [element.none()],
+      [],
     )
   element(pi) |> should.equal(expected_element)
 }

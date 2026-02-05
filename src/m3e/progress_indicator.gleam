@@ -166,7 +166,8 @@ pub fn element(pi: ProgressIndicator) -> Element(msg) {
       value_attr(pi.value),
     ]
       |> list.filter(fn(a) { a != none() }),
-    [content_element(pi.variant, pi.content)],
+    [content_element(pi.variant, pi.content)]
+      |> list.filter(fn(e) { e != element.none() }),
   )
 }
 
@@ -254,16 +255,27 @@ fn indeterminate_attr(variant: Variant, indeterminate: Bool) -> Attribute(msg) {
 
 /// max sets the `max` field
 ///
-pub fn max(pi: ProgressIndicator, max: Maximum) -> ProgressIndicator {
+pub fn max(pi: ProgressIndicator, new_max: Maximum) -> ProgressIndicator {
+  let validated_max = max_validate(new_max)
   case pi.variant {
     Circular ->
       case pi.indeterminate {
-        False -> ProgressIndicator(..pi, max: max_validate(max))
+        False ->
+          ProgressIndicator(
+            ..pi,
+            max: validated_max,
+            value: value_validate(validated_max, pi.value),
+          )
         _ -> pi
       }
     Linear ->
       case pi.mode {
-        Determinate -> ProgressIndicator(..pi, max: max_validate(max))
+        Determinate ->
+          ProgressIndicator(
+            ..pi,
+            max: validated_max,
+            value: value_validate(validated_max, pi.value),
+          )
         _ -> pi
       }
   }
