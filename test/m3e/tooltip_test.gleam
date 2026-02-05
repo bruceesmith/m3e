@@ -19,13 +19,19 @@ pub fn tooltip_test() {
       tooltip.On,
     )
 
-  t.tip |> should.equal(tip_text)
-  t.for_id |> should.equal(for_id_text)
-  t.position |> should.equal(tooltip.Above)
-  t.hide_delay |> should.equal(100)
-  t.show_delay |> should.equal(200)
-  t.disabled |> should.be_false
-  t.gestures |> should.equal(tooltip.On)
+  let expected =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "on"),
+        attribute("hide-delay", "100"),
+        attribute("position", "above"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected)
 }
 
 pub fn tooltip_validation_test() {
@@ -40,8 +46,19 @@ pub fn tooltip_validation_test() {
       tooltip.Auto,
     )
 
-  t.hide_delay |> should.equal(tooltip.default_hide_delay)
-  t.show_delay |> should.equal(tooltip.default_show_delay)
+  let expected =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "1500"),
+        attribute("position", "below"),
+        attribute("show-delay", "0"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected)
 
   let t_neg =
     tooltip.tooltip(
@@ -53,20 +70,19 @@ pub fn tooltip_validation_test() {
       False,
       tooltip.Auto,
     )
-  t_neg.hide_delay |> should.equal(tooltip.default_hide_delay)
-  t_neg.show_delay |> should.equal(tooltip.default_show_delay)
+  tooltip.element(t_neg) |> should.equal(expected)
 }
 
 pub fn element_test() {
   let t =
-    tooltip.Tooltip(
-      tip: tip_text,
-      for_id: for_id_text,
-      position: tooltip.After,
-      hide_delay: 100,
-      show_delay: 200,
-      disabled: True,
-      gestures: tooltip.Off,
+    tooltip.tooltip(
+      tip_text,
+      for_id_text,
+      tooltip.After,
+      100,
+      200,
+      True,
+      tooltip.Off,
     )
 
   let expected =
@@ -116,9 +132,35 @@ pub fn disabled_test() {
     )
 
   let t = t |> tooltip.disabled(True)
-  t.disabled |> should.be_true
+  let expected_true =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("disabled", ""),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_true)
+
   let t = t |> tooltip.disabled(False)
-  t.disabled |> should.be_false
+  let expected_false =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_false)
 }
 
 pub fn gestures_test() {
@@ -133,11 +175,49 @@ pub fn gestures_test() {
       tooltip.Auto,
     )
   let t = t |> tooltip.gestures(tooltip.On)
-  t.gestures |> should.equal(tooltip.On)
+  let expected_on =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "on"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_on)
+
   let t = t |> tooltip.gestures(tooltip.Off)
-  t.gestures |> should.equal(tooltip.Off)
+  let expected_off =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "off"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_off)
+
   let t = t |> tooltip.gestures(tooltip.Auto)
-  t.gestures |> should.equal(tooltip.Auto)
+  let expected_auto =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_auto)
 }
 
 pub fn hide_delay_test() {
@@ -152,11 +232,37 @@ pub fn hide_delay_test() {
       tooltip.Auto,
     )
   let t = t |> tooltip.hide_delay(500)
-  t.hide_delay |> should.equal(500)
+  let expected_500 =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "500"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_500)
+
   let t = t |> tooltip.hide_delay(-1)
-  t.hide_delay |> should.equal(tooltip.default_hide_delay)
+  let expected_default =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "1500"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_default)
+
   let t = t |> tooltip.hide_delay(9999)
-  t.hide_delay |> should.equal(tooltip.default_hide_delay)
+  tooltip.element(t) |> should.equal(expected_default)
 }
 
 pub fn position_test() {
@@ -171,13 +277,64 @@ pub fn position_test() {
       tooltip.Auto,
     )
   let t = t |> tooltip.position(tooltip.Above)
-  t.position |> should.equal(tooltip.Above)
+  let expected_above =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "above"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_above)
+
   let t = t |> tooltip.position(tooltip.After)
-  t.position |> should.equal(tooltip.After)
+  let expected_after =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "after"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_after)
+
   let t = t |> tooltip.position(tooltip.Before)
-  t.position |> should.equal(tooltip.Before)
+  let expected_before =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "before"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_before)
+
   let t = t |> tooltip.position(tooltip.Below)
-  t.position |> should.equal(tooltip.Below)
+  let expected_below =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "200"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_below)
 }
 
 pub fn show_delay_test() {
@@ -192,9 +349,35 @@ pub fn show_delay_test() {
       tooltip.Auto,
     )
   let t = t |> tooltip.show_delay(300)
-  t.show_delay |> should.equal(300)
+  let expected_300 =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "300"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_300)
+
   let t = t |> tooltip.show_delay(-1)
-  t.show_delay |> should.equal(0)
+  let expected_0 =
+    lustre_element(
+      "m3e-tooltip",
+      [
+        for(for_id_text),
+        attribute("touch-gestures", "auto"),
+        attribute("hide-delay", "100"),
+        attribute("position", "below"),
+        attribute("show-delay", "0"),
+      ],
+      [text(tip_text)],
+    )
+  tooltip.element(t) |> should.equal(expected_0)
+
   let t = t |> tooltip.show_delay(9999)
-  t.show_delay |> should.equal(tooltip.default_show_delay)
+  tooltip.element(t) |> should.equal(expected_0)
 }

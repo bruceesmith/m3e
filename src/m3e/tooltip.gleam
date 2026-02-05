@@ -2,7 +2,8 @@
 //// https://matraic.github.io/m3e/#/components/tooltip.html
 
 import gleam/int.{to_string}
-import lustre/attribute.{type Attribute, attribute, for}
+import gleam/list
+import lustre/attribute.{type Attribute, attribute, for, none}
 import lustre/element.{type Element, text}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
@@ -75,7 +76,7 @@ pub const default_position = Below
 /// - disabled: the tooltip is disabled (or not)
 /// - gestures: behaviour on touch devices
 ///
-pub type Tooltip {
+pub opaque type Tooltip {
   Tooltip(
     tip: String,
     for_id: String,
@@ -133,7 +134,8 @@ pub fn element(t: Tooltip) -> Element(msg) {
       hide_delay_attr(t.hide_delay),
       position_attr(t.position),
       show_delay_attr(t.show_delay),
-    ],
+    ]
+      |> list.filter(fn(a) { a != none() }),
     [
       text(t.tip),
     ],
