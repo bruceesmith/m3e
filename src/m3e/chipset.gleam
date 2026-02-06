@@ -20,6 +20,15 @@ fn type_to_string(t: Type) -> String {
   }
 }
 
+/// Chipset contains all the information for a ChipSet
+/// 
+/// ## Fields:
+/// - disabled: disable the chip set in its entirety
+/// - hide_selection_indicator: hide selection indicators
+/// - multi: Whether multiple chips can be selected
+/// - type_: the chipset type
+/// - vertical: Whether the element is oriented vertically
+///
 pub opaque type ChipSet {
   ChipSet(
     disabled: Bool,
@@ -30,12 +39,12 @@ pub opaque type ChipSet {
   )
 }
 
-/// chipset creates a new ChipSet
+/// new creates a new ChipSet
 ///
 /// ## Parameters:
 /// - hide_selection_indicator: whether to hide the leading tick when selected
 ///
-pub fn chipset(t: Type) -> ChipSet {
+pub fn new(t: Type) -> ChipSet {
   ChipSet(
     disabled: False,
     hide_selection_indicator: False,
