@@ -65,3 +65,21 @@ pub fn render(a: AppBar, children: List(Element(msg))) -> Element(msg) {
     children,
   )
 }
+
+/// centered sets the centered attribute
+/// 
+pub fn centered(a: AppBar, centered: Bool) -> AppBar {
+  AppBar(..a, centered: centered)
+}
+
+/// for sets the for attribute
+/// 
+pub fn for(a: AppBar, for: Option(String)) -> AppBar {
+  AppBar(..a, for: for)
+}
+
+/// size sets the size attribute
+/// 
+pub fn size(a: AppBar, size: Size) -> AppBar {
+  AppBar(..a, size: size)
+}
