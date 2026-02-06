@@ -29,9 +29,9 @@ pub opaque type Divider {
   Divider(inset: Option(Inset), vertical: Bool)
 }
 
-/// divider creates a new Divider
+/// new creates a new Divider
 ///
-pub fn divider(inset: Option(Inset), vertical: Bool) -> Divider {
+pub fn new(inset: Option(Inset), vertical: Bool) -> Divider {
   Divider(inset: inset, vertical: vertical)
 }
 
