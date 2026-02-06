@@ -13,12 +13,12 @@ pub opaque type DrawerToggle {
   DrawerToggle(for: String)
 }
 
-/// drawer_toggle creates a DrawToggle
+/// new creates a DrawToggle
 /// 
 /// ## Parameters:
 /// - for: the id of the drawer to toggle
 /// 
-pub fn drawer_toggle(for: String) -> DrawerToggle {
+pub fn new(for: String) -> DrawerToggle {
   DrawerToggle(for: for)
 }
 
