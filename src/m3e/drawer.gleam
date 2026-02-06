@@ -59,7 +59,7 @@ pub opaque type Drawer(msg) {
   )
 }
 
-/// drawer creates a Drawer
+/// new creates a Drawer
 /// 
 /// ## Parameters:
 /// - usage: whether the drawer is at the start or end, or is unused
@@ -72,7 +72,7 @@ pub opaque type Drawer(msg) {
 /// ## Returns:
 /// A Drawer
 ///
-pub fn drawer(
+pub fn new(
   usage: Usage,
   mode: Mode,
   open: Bool,

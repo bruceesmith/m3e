@@ -24,9 +24,8 @@ pub fn drawer_container_creation_test() {
 
 pub fn drawer_container_element_test() {
   let start_d =
-    drawer.drawer(drawer.Start, drawer.Side, True, "s", True, text("S"))
-  let end_d =
-    drawer.drawer(drawer.End, drawer.Over, False, "e", False, text("E"))
+    drawer.new(drawer.Start, drawer.Side, True, "s", True, text("S"))
+  let end_d = drawer.new(drawer.End, drawer.Over, False, "e", False, text("E"))
   let main = text("M")
 
   let c = new(start_d, main, end_d)
@@ -57,7 +56,7 @@ pub fn drawer_container_setters_test() {
   let c = new(d_empty, main, d_empty)
 
   let start_d =
-    drawer.drawer(drawer.Start, drawer.Auto, True, "", False, text("S"))
+    drawer.new(drawer.Start, drawer.Auto, True, "", False, text("S"))
   let c2 = c |> start(start_d)
 
   let expected_start =
@@ -76,7 +75,7 @@ pub fn drawer_container_setters_test() {
 
   render(c2, []) |> should.equal(expected_start)
 
-  let end_d = drawer.drawer(drawer.End, drawer.Push, True, "", True, text("E"))
+  let end_d = drawer.new(drawer.End, drawer.Push, True, "", True, text("E"))
   let c3 = c2 |> end(end_d)
 
   let expected_full =
@@ -101,9 +100,8 @@ pub fn drawer_container_setters_test() {
 
 pub fn drawer_container_toggle_test() {
   let start_d =
-    drawer.drawer(drawer.Start, drawer.Side, False, "s", False, text("S"))
-  let end_d =
-    drawer.drawer(drawer.End, drawer.Side, False, "e", False, text("E"))
+    drawer.new(drawer.Start, drawer.Side, False, "s", False, text("S"))
+  let end_d = drawer.new(drawer.End, drawer.Side, False, "e", False, text("E"))
   let main = text("M")
 
   let c = new(start_d, main, end_d)

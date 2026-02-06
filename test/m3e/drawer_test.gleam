@@ -3,7 +3,7 @@ import lustre/attribute.{attribute, none}
 import lustre/element
 import lustre/element/html.{div, text}
 import m3e/drawer.{
-  End, Over, Push, Side, Start, content, divider, drawer, empty, id, mode, open,
+  End, Over, Push, Side, Start, content, divider, empty, id, mode, new, open,
   render, usage,
 }
 
@@ -16,7 +16,7 @@ pub fn drawer_creation_test() {
 
 pub fn drawer_start_test() {
   let content_elt = div([], [text("Start Content")])
-  let d = drawer(Start, Side, True, "start-id", True, content_elt)
+  let d = new(Start, Side, True, "start-id", True, content_elt)
 
   let #(attrs, elt) = render(d)
 
@@ -34,7 +34,7 @@ pub fn drawer_start_test() {
 
 pub fn drawer_end_test() {
   let content_elt = div([], [text("End Content")])
-  let d = drawer(End, Push, False, "", False, content_elt)
+  let d = new(End, Push, False, "", False, content_elt)
 
   let #(attrs, elt) = render(d)
 
