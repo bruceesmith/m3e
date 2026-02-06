@@ -13,7 +13,7 @@ pub fn main() {
 pub fn basic_render_test() {
   let label = "Home"
   let item =
-    nav_menu_item.nav_menu_item(
+    nav_menu_item.new(
       option.None,
       False,
       option.None,
@@ -45,7 +45,7 @@ pub fn properties_test() {
   let badge_text = "3"
 
   let item =
-    nav_menu_item.nav_menu_item(
+    nav_menu_item.new(
       option.None,
       False,
       option.None,

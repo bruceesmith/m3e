@@ -33,7 +33,7 @@ pub opaque type NavMenuItem {
   )
 }
 
-/// nav_menu_item creates a nav-menu-item
+/// new creates a nav-menu-item
 ///
 /// ## Parameters:
 /// - badge: Renders the badge of the item
@@ -45,7 +45,7 @@ pub opaque type NavMenuItem {
 /// - selected_icon_name: Renders the icon of the item when selected
 /// - toggle_icon_name: Renders the toggle icon
 /// 
-pub fn nav_menu_item(
+pub fn new(
   badge: Option(String),
   disabled: Bool,
   leading_icon_name: Option(String),
