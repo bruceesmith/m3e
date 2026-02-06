@@ -52,6 +52,13 @@ pub const default_variant = Outlined
 
 /// Chip is the basis for a m3e-chip element
 ///
+/// - label: text on the chip
+/// - behaviour: behaviour of an Assist or Suggestion chip
+/// - disabled: whether the Chip is disabled or not
+/// - icon: associated Icon
+/// - key: `name` slot in form submission
+/// - removable: whether the chip can be removed
+/// - selected: whether the chip is selected or not
 /// - type_: the type of Chip
 /// - value: value in form submission
 /// - variant: variant of the chip
@@ -68,45 +75,6 @@ pub opaque type Chip {
     type_: Type,
     value: Option(String),
     variant: Variant,
-  )
-}
-
-/// chip creates a new Chip
-///
-/// ## Parameters:
-/// - label: text on the chip
-/// - behaviour: behaviour of an Assist or Suggestion chip
-/// - disabled: whether the Chip is disabled or not
-/// - icon: associated Icon
-/// - key: `name` slot in form submission
-/// - selected: whether the chip is selected or not
-/// - type_: tje ype of Chip
-/// - value: value in form submission
-/// - variant: variant of the chip
-///
-pub fn chip(
-  label: String,
-  behaviour: Behaviour,
-  disabled: Bool,
-  icon: Option(Icon),
-  key: Option(String),
-  removable: Bool,
-  selected: Bool,
-  type_: Type,
-  value: Option(String),
-  variant: Variant,
-) -> Chip {
-  Chip(
-    label: label,
-    behaviour: behaviour,
-    disabled: disabled,
-    icon: icon,
-    key: key,
-    removable: removable,
-    selected: selected,
-    type_: type_,
-    value: value,
-    variant: variant,
   )
 }
 
