@@ -11,12 +11,12 @@ pub opaque type DialogTrigger {
   DialogTrigger(for: String)
 }
 
-/// dialog_trigger creates a DialogTrigger
+/// new creates a DialogTrigger
 /// 
 /// ## Parameters:
 /// - for: The identifier of the interactive control to which this element is attached
 /// 
-pub fn dialog_trigger(for: String) -> DialogTrigger {
+pub fn new(for: String) -> DialogTrigger {
   DialogTrigger(for)
 }
 

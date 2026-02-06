@@ -9,7 +9,7 @@ pub fn main() {
 }
 
 pub fn render_test() {
-  dialog_trigger.dialog_trigger("my-dialog-id")
+  dialog_trigger.new("my-dialog-id")
   |> dialog_trigger.render
   |> should.equal(
     element(
