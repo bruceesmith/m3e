@@ -22,9 +22,9 @@ pub opaque type Checkbox {
 
 pub const default_value = "on"
 
-/// checkbox creates an HTML m3e-checkbox component
+/// new creates a new Checkbox
 ///
-pub fn checkbox(
+pub fn new(
   checked: Bool,
   disabled: Bool,
   key: Option(String),
