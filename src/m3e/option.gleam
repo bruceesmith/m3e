@@ -1,4 +1,4 @@
-//// button provides Lustre support for the [M3E Option component](https://matraic.github.io/m3e/#/components/option.html)
+//// option provides Lustre support for the [M3E Option component](https://matraic.github.io/m3e/#/components/option.html)
 
 import gleam/function
 import gleam/list.{filter}
