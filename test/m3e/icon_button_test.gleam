@@ -4,12 +4,12 @@ import lustre/attribute.{attribute, disabled, selected, value}
 import lustre/element.{element}
 import m3e/icon_button.{
   ExtraLarge, Filled, Large, LeadingIcon, Narrow, Reset, Square, Submit, Tonal,
-  Wide, basic, disabled_interactive, icon_button, key, purpose, render, shape,
-  size, toggle, type_, variant, width,
+  Wide, disabled_interactive, key, new, purpose, render, shape, size, toggle,
+  type_, variant, width,
 }
 
 pub fn icon_button_creation_test() {
-  let b = basic()
+  let b = new()
   let expected =
     element(
       "m3e-icon-button",
@@ -29,20 +29,20 @@ pub fn icon_button_creation_test() {
   render(b, [], []) |> should.equal(expected)
 
   let b =
-    icon_button(
-      True,
-      True,
-      "key",
-      None,
-      True,
-      Square,
-      Large,
-      True,
-      Submit,
-      "val",
-      Filled,
-      Narrow,
-    )
+    new()
+    |> icon_button.disabled(True)
+    |> disabled_interactive(True)
+    |> key("key")
+    |> purpose(None)
+    |> icon_button.selected(True)
+    |> shape(Square)
+    |> size(Large)
+    |> toggle(True)
+    |> type_(Submit)
+    |> icon_button.value("val")
+    |> variant(Filled)
+    |> width(Narrow)
+
   let expected_full =
     element(
       "m3e-icon-button",
@@ -65,7 +65,7 @@ pub fn icon_button_creation_test() {
 }
 
 pub fn icon_button_element_test() {
-  let b = basic()
+  let b = new()
   let expected =
     element(
       "m3e-icon-button",
@@ -86,7 +86,7 @@ pub fn icon_button_element_test() {
 }
 
 pub fn icon_button_purpose_test() {
-  let b = basic() |> purpose(Some(LeadingIcon))
+  let b = new() |> purpose(Some(LeadingIcon))
 
   let expected =
     element(
@@ -109,7 +109,7 @@ pub fn icon_button_purpose_test() {
 }
 
 pub fn icon_button_disabled_test() {
-  let b = basic() |> icon_button.disabled(True)
+  let b = new() |> icon_button.disabled(True)
 
   let expected =
     element(
@@ -131,7 +131,7 @@ pub fn icon_button_disabled_test() {
 }
 
 pub fn icon_button_disabled_interactive_test() {
-  let b = basic() |> disabled_interactive(True)
+  let b = new() |> disabled_interactive(True)
 
   let expected =
     element(
@@ -154,7 +154,7 @@ pub fn icon_button_disabled_interactive_test() {
 }
 
 pub fn icon_button_key_test() {
-  let b = basic() |> key("my-key")
+  let b = new() |> key("my-key")
 
   let expected =
     element(
@@ -176,7 +176,7 @@ pub fn icon_button_key_test() {
 }
 
 pub fn icon_button_selected_test() {
-  let b = basic() |> icon_button.selected(True)
+  let b = new() |> icon_button.selected(True)
 
   let expected =
     element(
@@ -198,7 +198,7 @@ pub fn icon_button_selected_test() {
 }
 
 pub fn icon_button_shape_test() {
-  let b = basic() |> shape(Square)
+  let b = new() |> shape(Square)
 
   let expected =
     element(
@@ -220,7 +220,7 @@ pub fn icon_button_shape_test() {
 }
 
 pub fn icon_button_size_test() {
-  let b = basic() |> size(ExtraLarge)
+  let b = new() |> size(ExtraLarge)
 
   let expected =
     element(
@@ -242,7 +242,7 @@ pub fn icon_button_size_test() {
 }
 
 pub fn icon_button_toggle_test() {
-  let b = basic() |> toggle(True)
+  let b = new() |> toggle(True)
 
   let expected =
     element(
@@ -265,7 +265,7 @@ pub fn icon_button_toggle_test() {
 }
 
 pub fn icon_button_type_test() {
-  let b = basic() |> type_(Reset)
+  let b = new() |> type_(Reset)
 
   let expected =
     element(
@@ -287,7 +287,7 @@ pub fn icon_button_type_test() {
 }
 
 pub fn icon_button_value_test() {
-  let b = basic() |> icon_button.value("123")
+  let b = new() |> icon_button.value("123")
 
   let expected =
     element(
@@ -309,7 +309,7 @@ pub fn icon_button_value_test() {
 }
 
 pub fn icon_button_variant_test() {
-  let b = basic() |> variant(Tonal)
+  let b = new() |> variant(Tonal)
 
   let expected =
     element(
@@ -331,7 +331,7 @@ pub fn icon_button_variant_test() {
 }
 
 pub fn icon_button_width_test() {
-  let b = basic() |> width(Wide)
+  let b = new() |> width(Wide)
 
   let expected =
     element(

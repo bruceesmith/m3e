@@ -161,54 +161,9 @@ pub opaque type IconButton {
   )
 }
 
-/// icon_button creates an IconButton
+/// new creates an icon button with default values
 /// 
-/// ## Parameters:
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
-/// - key: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
-/// - selected: Whether the toggle button is selected
-/// - shape: The shape of the button
-/// - size: The size of the button
-/// - toggle: Whether the button will toggle between selected and unselected states
-/// - type_: The type of the element
-/// - value: The value associated with the element's name when it's submitted with form data
-/// - variant: The appearance variant of the button
-/// - width: The width of the button
-/// 
-pub fn icon_button(
-  disabled: Bool,
-  disabled_interactive: Bool,
-  key: String,
-  purpose: Option(Purpose),
-  selected: Bool,
-  shape: Shape,
-  size: Size,
-  toggle: Bool,
-  type_: Type,
-  value: String,
-  variant: Variant,
-  width: Width,
-) -> IconButton {
-  IconButton(
-    disabled: disabled,
-    disabled_interactive: disabled_interactive,
-    key: key,
-    purpose: purpose,
-    selected: selected,
-    shape: shape,
-    size: size,
-    toggle: toggle,
-    type_: type_,
-    value: value,
-    variant: variant,
-    width: width,
-  )
-}
-
-/// basic creates an icon button with default values
-/// 
-pub fn basic() -> IconButton {
+pub fn new() -> IconButton {
   IconButton(
     False,
     False,
