@@ -15,7 +15,7 @@ pub fn basic_render_test() {
   let content = [html.text("Item 1"), html.text("Item 2")]
 
   let expected_heading =
-    heading.basic(heading_text)
+    heading.new(heading_text)
     |> heading.size(heading.Large)
     |> heading.variant(heading.Label)
     |> heading.render([attribute.attribute("slot", "label")])
@@ -32,7 +32,7 @@ pub fn heading_update_test() {
   let updated = "Updated"
 
   let expected_heading =
-    heading.basic(updated)
+    heading.new(updated)
     |> heading.size(heading.Large)
     |> heading.variant(heading.Label)
     |> heading.render([attribute.attribute("slot", "label")])

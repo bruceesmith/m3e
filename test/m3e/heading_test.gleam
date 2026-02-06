@@ -2,10 +2,12 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
-import m3e/heading
+import m3e/heading.{
+  Headline, Large, Small, Title, emphasized, new, render, size, variant,
+}
 
 pub fn heading_test() {
-  let h = heading.heading(False, heading.Large, heading.Display, "Hello")
+  let h = new("Hello") |> size(Large)
   let expected =
     element(
       "m3e-heading",
@@ -15,11 +17,11 @@ pub fn heading_test() {
       ],
       [html.text("Hello")],
     )
-  heading.render(h, []) |> should.equal(expected)
+  render(h, []) |> should.equal(expected)
 }
 
 pub fn basic_test() {
-  let h = heading.basic("World")
+  let h = new("World")
   let expected =
     element(
       "m3e-heading",
@@ -29,12 +31,17 @@ pub fn basic_test() {
       ],
       [html.text("World")],
     )
-  heading.render(h, []) |> should.equal(expected)
+  render(h, []) |> should.equal(expected)
 }
 
 pub fn element_test() {
-  let h = heading.heading(True, heading.Small, heading.Title, "Test")
-  let result = heading.render(h, [])
+  let h =
+    new("Test")
+    |> emphasized(True)
+    |> size(Small)
+    |> variant(Title)
+
+  let result = render(h, [])
 
   let expected =
     element(
@@ -51,8 +58,8 @@ pub fn element_test() {
 }
 
 pub fn element_basic_test() {
-  let h = heading.basic("Basic Test")
-  let result = heading.render(h, [])
+  let h = new("Basic Test")
+  let result = render(h, [])
 
   let expected =
     element(
@@ -68,7 +75,7 @@ pub fn element_basic_test() {
 }
 
 pub fn emphasized_test() {
-  let h = heading.basic("Emphasized")
+  let h = new("Emphasized")
   let expected_basic =
     element(
       "m3e-heading",
@@ -78,9 +85,9 @@ pub fn emphasized_test() {
       ],
       [html.text("Emphasized")],
     )
-  heading.render(h, []) |> should.equal(expected_basic)
+  render(h, []) |> should.equal(expected_basic)
 
-  let h2 = heading.emphasized(h, True)
+  let h2 = emphasized(h, True)
   let expected_emphasized =
     element(
       "m3e-heading",
@@ -91,12 +98,12 @@ pub fn emphasized_test() {
       ],
       [html.text("Emphasized")],
     )
-  heading.render(h2, []) |> should.equal(expected_emphasized)
+  render(h2, []) |> should.equal(expected_emphasized)
 }
 
 pub fn size_test() {
-  let h = heading.basic("Size")
-  let h2 = heading.size(h, heading.Large)
+  let h = new("Size")
+  let h2 = size(h, Large)
   let expected =
     element(
       "m3e-heading",
@@ -106,9 +113,9 @@ pub fn size_test() {
       ],
       [html.text("Size")],
     )
-  heading.render(h2, []) |> should.equal(expected)
+  render(h2, []) |> should.equal(expected)
 
-  let h3 = heading.size(h2, heading.Small)
+  let h3 = size(h2, Small)
   let expected_small =
     element(
       "m3e-heading",
@@ -118,12 +125,12 @@ pub fn size_test() {
       ],
       [html.text("Size")],
     )
-  heading.render(h3, []) |> should.equal(expected_small)
+  render(h3, []) |> should.equal(expected_small)
 }
 
 pub fn variant_test() {
-  let h = heading.basic("Variant")
-  let h2 = heading.variant(h, heading.Headline)
+  let h = new("Variant")
+  let h2 = variant(h, Headline)
   let expected =
     element(
       "m3e-heading",
@@ -133,16 +140,16 @@ pub fn variant_test() {
       ],
       [html.text("Variant")],
     )
-  heading.render(h2, []) |> should.equal(expected)
+  render(h2, []) |> should.equal(expected)
 }
 
 pub fn element_with_attributes_test() {
-  let h = heading.basic("Test with Attributes")
+  let h = new("Test with Attributes")
   let custom_attributes = [
     attribute.attribute("id", "my-heading"),
     attribute.attribute("class", "custom-class"),
   ]
-  let result = heading.render(h, custom_attributes)
+  let result = render(h, custom_attributes)
 
   let expected =
     element(

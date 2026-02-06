@@ -43,7 +43,7 @@ pub fn render(
   children: List(Element(msg)),
 ) -> Element(msg) {
   element("m3e-nav-menu-item-group", attributes, [
-    heading.basic(group.heading)
+    heading.new(group.heading)
       |> heading.size(heading.Large)
       |> heading.variant(heading.Label)
       |> heading.render([slot("label")]),
