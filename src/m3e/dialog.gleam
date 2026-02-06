@@ -36,35 +36,9 @@ pub opaque type Dialog(msg) {
   )
 }
 
-/// dialog creates a Dialog
+/// new creates a Dialog with default values
 /// 
-pub fn dialog(
-  id: String,
-  alert: Bool,
-  close_label: Option(String),
-  no_focus_trap: Bool,
-  disable_close: Bool,
-  dismissible: Bool,
-  header: String,
-  close_icon_name: Option(String),
-  actions: List(Element(msg)),
-) -> Dialog(msg) {
-  Dialog(
-    id,
-    alert,
-    close_label,
-    no_focus_trap,
-    disable_close,
-    dismissible,
-    header,
-    close_icon_name,
-    actions,
-  )
-}
-
-/// basic creates a Dialog with default values
-/// 
-pub fn basic(id: String, header: String) -> Dialog(msg) {
+pub fn new(id: String, header: String) -> Dialog(msg) {
   Dialog(id, False, None, False, False, False, header, None, [])
 }
 

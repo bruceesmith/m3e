@@ -15,7 +15,7 @@ pub fn basic_render_test() {
   let id = "test-dialog"
   let header = "Test Header"
 
-  dialog.basic(id, header)
+  dialog.new(id, header)
   |> dialog.render([], content)
   |> should.equal(
     element("m3e-dialog", [attribute.id(id)], [
@@ -29,7 +29,7 @@ pub fn properties_test() {
   let content = [html.text("Content")]
   let id = "prop-dialog"
 
-  dialog.basic(id, "Initial")
+  dialog.new(id, "Initial")
   |> dialog.header("Confirmation")
   |> dialog.alert(True)
   |> dialog.render([], content)
@@ -55,7 +55,7 @@ pub fn full_attributes_test() {
   let id = "full-dialog"
   let action = html.button([], [html.text("OK")])
 
-  dialog.basic(id, "Headline")
+  dialog.new(id, "Headline")
   |> dialog.alert(True)
   |> dialog.close_label(option.Some("Close"))
   |> dialog.no_focus_trap(True)
