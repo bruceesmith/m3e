@@ -51,14 +51,14 @@ pub opaque type ButtonGroup {
   ButtonGroup(multi: Bool, size: Option(Size), variant: Option(Variant))
 }
 
-/// button_group creats a new ButtonGroup
+/// new creats a new ButtonGroup
 ///
 /// ## Parameters:
 /// - multi: Whether multiple toggle buttons can be selected
 /// - size: The size of the group
 /// - variant: The appearance variant of the group
 ///
-pub fn button_group(
+pub fn new(
   multi: Bool,
   size: Option(Size),
   variant: Option(Variant),
