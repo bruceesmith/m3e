@@ -2,7 +2,7 @@
 
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element, none}
 import lustre/element/html
 
 import m3e/helpers.{boolean_attribute, slot}
@@ -75,7 +75,7 @@ pub fn badge(item: NavMenuItem, badge: Option(String)) -> NavMenuItem {
 
 fn badge_elt(badge: Option(String)) -> Element(msg) {
   case badge {
-    None -> element.none()
+    None -> none()
     Some(s) -> html.span([slot("badge")], [html.text(s)])
   }
 }
@@ -97,9 +97,9 @@ pub fn leading_icon_name(
 
 fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
   case leading_icon_name {
-    None -> element.none()
+    None -> none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.Default) |> icon.element([], [])
+      icon.basic(s) |> icon.purpose(icon.Default) |> icon.render([], [])
   }
 }
 
@@ -132,9 +132,9 @@ pub fn selected_icon_name(
 
 fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
   case selected_icon_name {
-    None -> element.none()
+    None -> none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.SelectedIcon) |> icon.element([], [])
+      icon.basic(s) |> icon.purpose(icon.SelectedIcon) |> icon.render([], [])
   }
 }
 
@@ -149,23 +149,23 @@ pub fn toggle_icon_name(
 
 fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
   case toggle_icon_name {
-    None -> element.none()
+    None -> none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.ToggleIcon) |> icon.element([], [])
+      icon.basic(s) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
   }
 }
 
-/// element creates a Lustre Element(msg) from a NavMenuItem
+/// render creates a Lustre Element(msg) from a NavMenuItem
 ///
 /// ## Parameters:
 /// - item: a NavMenuItem
 /// - attributes: additional attributes
 /// 
-pub fn element(
+pub fn render(
   item: NavMenuItem,
   attributes: List(Attribute(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     "m3e-nav-menu-item",
     [
       boolean_attribute("disabled", item.disabled),

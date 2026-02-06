@@ -45,9 +45,9 @@ pub fn chipset(t: Type) -> ChipSet {
   )
 }
 
-/// element creates a Lustre Element from a ChipSet
+/// render creates a Lustre Element from a ChipSet
 ///
-pub fn element(
+pub fn render(
   s: ChipSet,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

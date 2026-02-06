@@ -2,14 +2,14 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html.{text}
-import m3e/drawer_toggle.{drawer_toggle, element}
+import m3e/drawer_toggle.{drawer_toggle, render}
 
 pub fn drawer_toggle_creation_test() {
   let dt = drawer_toggle("my-drawer")
   let expected =
     element.element("m3e-drawer-toggle", [attribute.for("my-drawer")], [])
   dt
-  |> element([], [])
+  |> render([], [])
   |> should.equal(expected)
 }
 
@@ -21,7 +21,7 @@ pub fn drawer_toggle_element_test() {
     ])
 
   dt
-  |> element([], [text("Toggle")])
+  |> render([], [text("Toggle")])
   |> should.equal(expected)
 }
 
@@ -35,6 +35,6 @@ pub fn drawer_toggle_element_with_attributes_test() {
     )
 
   dt
-  |> element([attribute.class("extra-class")], [])
+  |> render([attribute.class("extra-class")], [])
   |> should.equal(expected)
 }

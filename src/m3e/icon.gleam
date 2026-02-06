@@ -181,14 +181,14 @@ pub fn basic(name: String) -> Icon {
   )
 }
 
-/// element creates an m3e-icon Lustre custom element from an Icon
+/// render creates an m3e-icon Lustre custom element from an Icon
 ///
 /// ## Parameters:
 /// - i: the Icon on which the element is based
 /// - attributes: additional HTML attributes
 /// - children: child HTML elements
 ///
-pub fn element(
+pub fn render(
   i: Icon,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

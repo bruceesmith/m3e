@@ -22,14 +22,14 @@ pub fn drawer_toggle(for: String) -> DrawerToggle {
   DrawerToggle(for: for)
 }
 
-/// element creates a Lustre Element from a DrawToggle
+/// render creates a Lustre Element from a DrawToggle
 ///
 /// ## Parameters:
 /// - c: a DrawToggle
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 ///
-pub fn element(
+pub fn render(
   c: DrawerToggle,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

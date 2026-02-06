@@ -73,10 +73,7 @@ pub fn disabled(s: Switch, disabled: Bool) -> Switch {
   Switch(..s, disabled: disabled)
 }
 
-pub fn element(
-  s: Switch,
-  attributes: List(Attribute(msg)),
-) -> List(Element(msg)) {
+pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg)) {
   [
     element.element(
       "m3e-switch",

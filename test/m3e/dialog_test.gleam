@@ -2,7 +2,7 @@ import gleam/option
 import gleeunit
 import gleeunit/should
 import lustre/attribute
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html
 import m3e/dialog
 
@@ -16,9 +16,9 @@ pub fn basic_render_test() {
   let header = "Test Header"
 
   dialog.basic(id, header)
-  |> dialog.element([], content)
+  |> dialog.render([], content)
   |> should.equal(
-    element.element("m3e-dialog", [attribute.id(id)], [
+    element("m3e-dialog", [attribute.id(id)], [
       html.span([attribute.attribute("slot", "header")], [html.text(header)]),
       html.text("This is the dialog content."),
     ]),
@@ -32,9 +32,9 @@ pub fn properties_test() {
   dialog.basic(id, "Initial")
   |> dialog.header("Confirmation")
   |> dialog.alert(True)
-  |> dialog.element([], content)
+  |> dialog.render([], content)
   |> should.equal(
-    element.element(
+    element(
       "m3e-dialog",
       [
         attribute.id(id),
@@ -62,9 +62,9 @@ pub fn full_attributes_test() {
   |> dialog.disable_close(True)
   |> dialog.dismissible(True)
   |> dialog.actions([action])
-  |> dialog.element([], content)
+  |> dialog.render([], content)
   |> should.equal(
-    element.element(
+    element(
       "m3e-dialog",
       [
         attribute.id(id),

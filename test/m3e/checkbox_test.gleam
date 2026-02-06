@@ -3,14 +3,14 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element
 import m3e/checkbox.{
-  checkbox, checked, disabled, element, form, key, required, value,
+  checkbox, checked, disabled, form, key, render, required, value,
 }
 
 pub fn checkbox_basic_test() {
   let c = checkbox(False, False, None, False, None)
   let expected = element.element("m3e-checkbox", [], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -18,7 +18,7 @@ pub fn checkbox_element_test() {
   let c = checkbox(False, False, None, False, None)
   let expected = element.element("m3e-checkbox", [], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -27,7 +27,7 @@ pub fn checkbox_checked_test() {
 
   let expected = element.element("m3e-checkbox", [attribute("checked", "")], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -37,7 +37,7 @@ pub fn checkbox_disabled_test() {
   let expected =
     element.element("m3e-checkbox", [attribute("disabled", "")], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -53,7 +53,7 @@ pub fn checkbox_form_test() {
       [],
     )
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -63,7 +63,7 @@ pub fn checkbox_key_test() {
   let expected =
     element.element("m3e-checkbox", [attribute("name", "test_key")], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -73,7 +73,7 @@ pub fn checkbox_required_test() {
   let expected =
     element.element("m3e-checkbox", [attribute("required", "")], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }
 
@@ -83,6 +83,6 @@ pub fn checkbox_value_test() {
   let expected =
     element.element("m3e-checkbox", [attribute("value", "test_value")], [])
   c
-  |> element()
+  |> render()
   |> should.equal(expected)
 }

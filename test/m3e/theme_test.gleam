@@ -20,7 +20,7 @@ pub fn basic_test() {
       ],
       [],
     )
-  theme.element(t, [], []) |> should.equal(expected)
+  theme.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn element_test() {
@@ -38,7 +38,7 @@ pub fn element_test() {
       [],
     )
   t
-  |> theme.element([], [])
+  |> theme.render([], [])
   |> should.equal(expected)
 }
 
@@ -57,7 +57,7 @@ pub fn color_test() {
       ],
       [],
     )
-  theme.element(t_new, [], []) |> should.equal(expected)
+  theme.render(t_new, [], []) |> should.equal(expected)
 }
 
 pub fn density_test() {
@@ -75,7 +75,7 @@ pub fn density_test() {
       ],
       [],
     )
-  theme.element(t_1, [], []) |> should.equal(expected_1)
+  theme.render(t_1, [], []) |> should.equal(expected_1)
 
   let t_small = density(t, smallest_density - 1)
   let expected_default =
@@ -90,10 +90,10 @@ pub fn density_test() {
       ],
       [],
     )
-  theme.element(t_small, [], []) |> should.equal(expected_default)
+  theme.render(t_small, [], []) |> should.equal(expected_default)
 
   let t_large = density(t, largest_density + 1)
-  theme.element(t_large, [], []) |> should.equal(expected_default)
+  theme.render(t_large, [], []) |> should.equal(expected_default)
 }
 
 pub fn motion_test() {
@@ -111,7 +111,7 @@ pub fn motion_test() {
       ],
       [],
     )
-  theme.element(t_expr, [], []) |> should.equal(expected)
+  theme.render(t_expr, [], []) |> should.equal(expected)
 }
 
 pub fn scheme_test() {
@@ -129,7 +129,7 @@ pub fn scheme_test() {
       ],
       [],
     )
-  theme.element(t_dark, [], []) |> should.equal(expected_dark)
+  theme.render(t_dark, [], []) |> should.equal(expected_dark)
 
   let t_light = scheme(t, Light)
   let expected_light =
@@ -144,7 +144,7 @@ pub fn scheme_test() {
       ],
       [],
     )
-  theme.element(t_light, [], []) |> should.equal(expected_light)
+  theme.render(t_light, [], []) |> should.equal(expected_light)
 }
 // Private functions are not directly testable,
 // but we can test their effects through the public API.

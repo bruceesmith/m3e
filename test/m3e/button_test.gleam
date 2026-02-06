@@ -4,9 +4,9 @@ import lustre/attribute.{attribute, disabled, name, selected}
 import lustre/element
 import lustre/element/html.{span, text}
 import m3e/button.{
-  Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, element,
-  form, icons, key, label, selected_label, set_type, shape, size, toggle, value,
-  variant,
+  Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, form,
+  icons, key, label, render, selected_label, set_type, shape, size, toggle,
+  value, variant,
 }
 
 pub fn button_creation_test() {
@@ -23,7 +23,7 @@ pub fn button_creation_test() {
       ],
       [text("Click me"), element.none()],
     )
-  element(b, []) |> should.equal(expected_basic)
+  render(b, []) |> should.equal(expected_basic)
 
   let b_full =
     button.button(
@@ -57,7 +57,7 @@ pub fn button_creation_test() {
       ],
       [text("Full"), span([attribute("slot", "selected")], [text("Selected")])],
     )
-  element(b_full, []) |> should.equal(expected_full)
+  render(b_full, []) |> should.equal(expected_full)
 }
 
 pub fn button_element_test() {
@@ -74,7 +74,7 @@ pub fn button_element_test() {
       ],
       [text("Basic"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_form_test() {
@@ -95,7 +95,7 @@ pub fn button_form_test() {
       ],
       [text("Submit"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_key_test() {
@@ -114,7 +114,7 @@ pub fn button_key_test() {
       ],
       [text("Key"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_selected_label_test() {
@@ -135,7 +135,7 @@ pub fn button_selected_label_test() {
         span([attribute("slot", "selected")], [text("On")]),
       ],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_shape_test() {
@@ -153,7 +153,7 @@ pub fn button_shape_test() {
       ],
       [text("Shape"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_size_test() {
@@ -171,7 +171,7 @@ pub fn button_size_test() {
       ],
       [text("Size"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_set_type_test() {
@@ -190,7 +190,7 @@ pub fn button_set_type_test() {
       ],
       [text("Reset"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_value_test() {
@@ -209,7 +209,7 @@ pub fn button_value_test() {
       ],
       [text("Value"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_variant_test() {
@@ -227,7 +227,7 @@ pub fn button_variant_test() {
       ],
       [text("Variant"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_icons_test() {
@@ -246,7 +246,7 @@ pub fn button_icons_test() {
       ],
       [icon, text("Icon"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_label_test() {
@@ -264,7 +264,7 @@ pub fn button_label_test() {
       ],
       [text("New Label"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_toggle_test() {
@@ -283,5 +283,5 @@ pub fn button_toggle_test() {
       ],
       [text("Toggle Me"), element.none()],
     )
-  b |> element([]) |> should.equal(expected)
+  b |> render([]) |> should.equal(expected)
 }

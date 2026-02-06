@@ -138,13 +138,13 @@ pub fn content(c: Drawer(msg), content: Element(msg)) -> Drawer(msg) {
   Drawer(..c, content: content)
 }
 
-/// element returns attributes for the enclosing DrawerContainer that are related to
+/// render returns attributes for the enclosing DrawerContainer that are related to
 /// this Drawer, plus the Element(msg) for the drawer itself
 /// 
 /// ## Parameters:
 /// - dc: a Drawer
 /// 
-pub fn element(dc: Drawer(msg)) -> #(List(Attribute(msg)), Element(msg)) {
+pub fn render(dc: Drawer(msg)) -> #(List(Attribute(msg)), Element(msg)) {
   let id = case string.length(dc.id) {
     0 -> none()
     _ -> attribute("id", dc.id)

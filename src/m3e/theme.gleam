@@ -147,14 +147,14 @@ pub fn basic(color: String) -> Theme {
   )
 }
 
-/// element creates a Lustre Element from a Theme
+/// render creates a Lustre Element from a Theme
 ///
 /// ## Parameters:
 /// - t: a Theme
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 /// 
-pub fn element(
+pub fn render(
   t: Theme,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

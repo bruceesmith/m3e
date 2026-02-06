@@ -119,12 +119,12 @@ pub fn tooltip(
   )
 }
 
-/// element creates a Lustre Element from a Tooltip
+/// render creates a Lustre Element from a Tooltip
 ///
 /// ## Parameter:
 /// - t: a Tooltip
 ///
-pub fn element(t: Tooltip) -> Element(msg) {
+pub fn render(t: Tooltip) -> Element(msg) {
   element.element(
     "m3e-tooltip",
     [
@@ -158,7 +158,7 @@ pub fn basic(tip: String, for_id: String) -> Element(msg) {
     False,
     Auto,
   )
-  |> element
+  |> render
 }
 
 /// disabled sets the `disabled` field of a tooltip

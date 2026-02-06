@@ -1,7 +1,7 @@
 //// nav_menu provides Lustre support for the [M3E Nav Menu component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 
 import lustre/attribute.{type Attribute}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 /// NavMenu provides Lustre support for the [M3E Nav Menu component](https://matraic.github.io/m3e/#/components/navmenu.html)
 /// 
@@ -15,12 +15,12 @@ pub fn nav_menu() -> NavMenu {
   NavMenu
 }
 
-/// element creates an HTML m3e-nav-menu component from a NavMenu
+/// render creates an HTML m3e-nav-menu component from a NavMenu
 ///
-pub fn element(
+pub fn render(
   _nav_menu: NavMenu,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element("m3e-nav-menu", attributes, children)
+  element("m3e-nav-menu", attributes, children)
 }

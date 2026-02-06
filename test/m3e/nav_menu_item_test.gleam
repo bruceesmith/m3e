@@ -2,7 +2,7 @@ import gleam/option
 import gleeunit
 import gleeunit/should
 import lustre/attribute
-import lustre/element
+import lustre/element.{element, none}
 import lustre/element/html
 import m3e/nav_menu_item
 
@@ -24,17 +24,17 @@ pub fn basic_render_test() {
       option.None,
     )
 
-  nav_menu_item.element(item, [])
+  nav_menu_item.render(item, [])
   |> should.equal(
-    element.element(
+    element(
       "m3e-nav-menu-item",
       [attribute.none(), attribute.none(), attribute.none()],
       [
-        element.none(),
-        element.none(),
+        none(),
+        none(),
         html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        element.none(),
-        element.none(),
+        none(),
+        none(),
       ],
     ),
   )
@@ -60,9 +60,9 @@ pub fn properties_test() {
     |> nav_menu_item.open(True)
     |> nav_menu_item.selected(True)
 
-  nav_menu_item.element(item, [])
+  nav_menu_item.render(item, [])
   |> should.equal(
-    element.element(
+    element(
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
@@ -73,10 +73,10 @@ pub fn properties_test() {
         html.span([attribute.attribute("slot", "badge")], [
           html.text(badge_text),
         ]),
-        element.none(),
+        none(),
         html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        element.none(),
-        element.none(),
+        none(),
+        none(),
       ],
     ),
   )

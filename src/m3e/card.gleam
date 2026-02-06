@@ -78,14 +78,14 @@ pub fn basic() -> Card {
   Card(False, False, False, default_orientation, default_variant)
 }
 
-/// element creates a Lustre Element from a Card
+/// render creates a Lustre Element from a Card
 /// 
 /// ## Parameters:
 /// - c: a Card
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 /// 
-pub fn element(
+pub fn render(
   c: Card,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

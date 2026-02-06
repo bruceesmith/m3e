@@ -300,14 +300,14 @@ pub fn width(i: IconButton, width: Width) -> IconButton {
   IconButton(..i, width: width)
 }
 
-/// element creates a Lustre Element from an IconButton
+/// render creates a Lustre Element from an IconButton
 ///
 /// ## Parameters:
 /// - i: an IconButton
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 ///
-pub fn element(
+pub fn render(
   i: IconButton,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

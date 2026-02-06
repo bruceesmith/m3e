@@ -1,7 +1,7 @@
 import gleeunit
 import gleeunit/should
 import lustre/attribute
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html
 import m3e/nav_menu
 
@@ -14,6 +14,6 @@ pub fn basic_render_test() {
   let id = "test-nav-menu"
 
   nav_menu.nav_menu()
-  |> nav_menu.element([attribute.id(id)], content)
-  |> should.equal(element.element("m3e-nav-menu", [attribute.id(id)], content))
+  |> nav_menu.render([attribute.id(id)], content)
+  |> should.equal(element("m3e-nav-menu", [attribute.id(id)], content))
 }

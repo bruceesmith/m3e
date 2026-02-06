@@ -4,7 +4,7 @@ import lustre/element
 import lustre/element/html.{div, text}
 import m3e/drawer
 import m3e/drawer_container.{
-  drawer_container, element, end, start, toggle_end, toggle_start,
+  drawer_container, end, render, start, toggle_end, toggle_start,
 }
 
 pub fn drawer_container_creation_test() {
@@ -21,7 +21,7 @@ pub fn drawer_container_creation_test() {
       element.none(),
     ])
 
-  element(c, []) |> should.equal(expected)
+  render(c, []) |> should.equal(expected)
 }
 
 pub fn drawer_container_element_test() {
@@ -50,7 +50,7 @@ pub fn drawer_container_element_test() {
   let expected =
     element.element("m3e-drawer-container", expected_attrs, expected_children)
 
-  element(c, [attribute("class", "test")]) |> should.equal(expected)
+  render(c, [attribute("class", "test")]) |> should.equal(expected)
 }
 
 pub fn drawer_container_setters_test() {
@@ -76,7 +76,7 @@ pub fn drawer_container_setters_test() {
       ],
     )
 
-  element(c2, []) |> should.equal(expected_start)
+  render(c2, []) |> should.equal(expected_start)
 
   let end_d = drawer.drawer(drawer.End, drawer.Push, True, "", True, text("E"))
   let c3 = c2 |> end(end_d)
@@ -98,7 +98,7 @@ pub fn drawer_container_setters_test() {
       ],
     )
 
-  element(c3, []) |> should.equal(expected_full)
+  render(c3, []) |> should.equal(expected_full)
 }
 
 pub fn drawer_container_toggle_test() {
@@ -128,7 +128,7 @@ pub fn drawer_container_toggle_test() {
       ],
     )
 
-  element(c2, []) |> should.equal(expected_start_open)
+  render(c2, []) |> should.equal(expected_start_open)
 
   // Toggle Start -> Closed
   let c3 = c2 |> toggle_start()
@@ -144,7 +144,7 @@ pub fn drawer_container_toggle_test() {
       ],
     )
 
-  element(c3, []) |> should.equal(expected_closed)
+  render(c3, []) |> should.equal(expected_closed)
 
   // Toggle End -> Open
   let c4 = c3 |> toggle_end()
@@ -164,5 +164,5 @@ pub fn drawer_container_toggle_test() {
       ],
     )
 
-  element(c4, []) |> should.equal(expected_end_open)
+  render(c4, []) |> should.equal(expected_end_open)
 }

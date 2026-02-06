@@ -10,7 +10,7 @@ pub fn main() {
 
 pub fn render_test() {
   dialog_trigger.dialog_trigger("my-dialog-id")
-  |> dialog_trigger.element
+  |> dialog_trigger.render
   |> should.equal(
     element.element(
       "m3e-dialog-trigger",

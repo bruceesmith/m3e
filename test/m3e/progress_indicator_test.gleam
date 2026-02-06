@@ -3,8 +3,8 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element
 import m3e/progress_indicator.{
-  Buffer, Determinate, Query, buffer_value, circular, content, diameter, element,
-  indeterminate, linear, max, mode, stroke_width, value,
+  Buffer, Determinate, Query, buffer_value, circular, content, diameter,
+  indeterminate, linear, max, mode, render, stroke_width, value,
 }
 
 pub fn circular_test() {
@@ -21,7 +21,7 @@ pub fn circular_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 }
 
 pub fn circular_default_values_test() {
@@ -36,7 +36,7 @@ pub fn circular_default_values_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 }
 
 pub fn linear_test() {
@@ -52,7 +52,7 @@ pub fn linear_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 }
 
 pub fn linear_default_values_test() {
@@ -68,7 +68,7 @@ pub fn linear_default_values_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 }
 
 pub fn element_circular_test() {
@@ -85,7 +85,7 @@ pub fn element_circular_test() {
       ],
       [element.text("50%")],
     )
-  element(pi) |> should.equal(expected_element)
+  render(pi) |> should.equal(expected_element)
 }
 
 pub fn element_linear_test() {
@@ -101,7 +101,7 @@ pub fn element_linear_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_element)
+  render(pi) |> should.equal(expected_element)
 }
 
 pub fn buffer_value_test() {
@@ -117,7 +117,7 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should be capped by max
   let pi = linear(10, 100, Buffer, 25) |> buffer_value(150)
@@ -132,7 +132,7 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_capped)
+  render(pi) |> should.equal(expected_capped)
 
   // Should be capped at 0
   let pi = linear(10, 100, Buffer, 25) |> buffer_value(-50)
@@ -147,7 +147,7 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_zero)
+  render(pi) |> should.equal(expected_zero)
 
   // Should not apply to Circular
   let pi = circular(None, 50, True, 100, 5, 25) |> buffer_value(50)
@@ -163,7 +163,7 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_circular)
+  render(pi) |> should.equal(expected_circular)
 }
 
 pub fn content_test() {
@@ -180,7 +180,7 @@ pub fn content_test() {
       ],
       [element.text("New Content")],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should not apply to Linear
   let pi = linear(10, 100, Buffer, 25) |> content(Some("New Content"))
@@ -195,7 +195,7 @@ pub fn content_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_linear)
+  render(pi) |> should.equal(expected_linear)
 }
 
 pub fn diameter_test() {
@@ -212,7 +212,7 @@ pub fn diameter_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should be capped at 0
   let pi = circular(None, 50, True, 100, 5, 25) |> diameter(-10)
@@ -228,7 +228,7 @@ pub fn diameter_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_zero)
+  render(pi) |> should.equal(expected_zero)
 
   // Should not apply to Linear
   let pi = linear(10, 100, Buffer, 25) |> diameter(60)
@@ -243,7 +243,7 @@ pub fn diameter_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_linear)
+  render(pi) |> should.equal(expected_linear)
 }
 
 pub fn indeterminate_test() {
@@ -259,7 +259,7 @@ pub fn indeterminate_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should not apply to Linear
   let pi = linear(10, 100, Buffer, 25) |> indeterminate(True)
@@ -274,7 +274,7 @@ pub fn indeterminate_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_linear)
+  render(pi) |> should.equal(expected_linear)
 }
 
 pub fn max_test() {
@@ -290,7 +290,7 @@ pub fn max_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should be capped at 0
   let pi = circular(None, 50, False, 100, 5, 25) |> max(-10)
@@ -306,7 +306,7 @@ pub fn max_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_zero)
+  render(pi) |> should.equal(expected_zero)
 
   // Should not apply to Circular if indeterminate
   let pi = circular(None, 50, True, 100, 5, 25) |> max(200)
@@ -322,7 +322,7 @@ pub fn max_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_indet)
+  render(pi) |> should.equal(expected_indet)
 
   let pi = linear(10, 100, Determinate, 25) |> max(200)
   let expected_linear =
@@ -336,7 +336,7 @@ pub fn max_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_linear)
+  render(pi) |> should.equal(expected_linear)
 
   // Should not apply to Linear if mode is not Determinate
   let pi = linear(10, 100, Buffer, 25) |> max(200)
@@ -351,7 +351,7 @@ pub fn max_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_buffer)
+  render(pi) |> should.equal(expected_buffer)
 }
 
 pub fn mode_test() {
@@ -367,7 +367,7 @@ pub fn mode_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should not apply to Circular
   let pi = circular(None, 50, True, 100, 5, 25) |> mode(Query)
@@ -383,7 +383,7 @@ pub fn mode_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_circular)
+  render(pi) |> should.equal(expected_circular)
 }
 
 pub fn stroke_width_test() {
@@ -400,7 +400,7 @@ pub fn stroke_width_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should be capped at 0
   let pi = circular(None, 50, True, 100, 5, 25) |> stroke_width(-5)
@@ -416,7 +416,7 @@ pub fn stroke_width_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_zero)
+  render(pi) |> should.equal(expected_zero)
 
   // Should not apply to Linear
   let pi = linear(10, 100, Buffer, 25) |> stroke_width(10)
@@ -431,7 +431,7 @@ pub fn stroke_width_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_linear)
+  render(pi) |> should.equal(expected_linear)
 }
 
 pub fn value_test() {
@@ -447,7 +447,7 @@ pub fn value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected)
+  render(pi) |> should.equal(expected)
 
   // Should be capped by max
   let pi = circular(None, 50, False, 100, 5, 25) |> value(150)
@@ -462,7 +462,7 @@ pub fn value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_capped)
+  render(pi) |> should.equal(expected_capped)
 
   // Should be capped at 0
   let pi = circular(None, 50, False, 100, 5, 25) |> value(-50)
@@ -477,7 +477,7 @@ pub fn value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_zero)
+  render(pi) |> should.equal(expected_zero)
 
   // Should not apply to Circular if indeterminate
   let pi = circular(None, 50, True, 100, 5, 25) |> value(75)
@@ -493,7 +493,7 @@ pub fn value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_indet)
+  render(pi) |> should.equal(expected_indet)
 
   let pi = linear(10, 100, Determinate, 25) |> value(75)
   let expected_linear =
@@ -507,7 +507,7 @@ pub fn value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_linear)
+  render(pi) |> should.equal(expected_linear)
 
   // Should not apply to Linear if mode is not Buffer or Determinate
   let pi = linear(10, 100, Query, 25) |> value(75)
@@ -522,5 +522,5 @@ pub fn value_test() {
       ],
       [],
     )
-  element(pi) |> should.equal(expected_query)
+  render(pi) |> should.equal(expected_query)
 }

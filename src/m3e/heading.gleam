@@ -73,9 +73,9 @@ pub fn basic(text: String) -> Heading {
   )
 }
 
-/// element creates a Lustre Element from a Heading
+/// render creates a Lustre Element from a Heading
 /// 
-pub fn element(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-heading",
     [

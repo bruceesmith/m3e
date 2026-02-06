@@ -40,9 +40,9 @@ pub fn checkbox(
   )
 }
 
-/// element creates an HTML m3e-checkbox component from a Checkbox
+/// render creates an HTML m3e-checkbox component from a Checkbox
 ///
-pub fn element(checkbox: Checkbox) -> Element(msg) {
+pub fn render(checkbox: Checkbox) -> Element(msg) {
   element.element(
     "m3e-checkbox",
     [

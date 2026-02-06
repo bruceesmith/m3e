@@ -103,14 +103,14 @@ pub fn basic() -> FormField {
   FormField(default_float_label, False, default_hide_subscript, default_variant)
 }
 
-/// element creates a Lustre Element from a FormField
+/// render creates a Lustre Element from a FormField
 /// 
 /// ## Parameters:
 /// - f: a FormField
 /// - attributes: a list of additional attributes
 /// - children: a list of child Elements
 /// 
-pub fn element(
+pub fn render(
   f: FormField,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),

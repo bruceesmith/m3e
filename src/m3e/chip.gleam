@@ -239,8 +239,8 @@ pub fn icon(c: Chip, i: Icon) -> Chip {
 
 fn icon_element(t: Type, icon: Option(Icon)) -> Element(msg) {
   case t, icon {
-    Assist, Some(i) | Suggestion, Some(i) -> icon.element(i, [], [])
-    Filter, Some(i) | Information, Some(i) -> icon.element(i, [], [])
+    Assist, Some(i) | Suggestion, Some(i) -> icon.render(i, [], [])
+    Filter, Some(i) | Information, Some(i) -> icon.render(i, [], [])
     _, _ -> element.none()
   }
 }

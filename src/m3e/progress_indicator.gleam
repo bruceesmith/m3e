@@ -148,12 +148,12 @@ pub fn linear(
   )
 }
 
-/// element creates a Lustra Element from a ProgressIndicator
+/// render creates a Lustra Element from a ProgressIndicator
 ///
 /// ## Patameter:
 /// - pi: a ProgressIndicator
 ///
-pub fn element(pi: ProgressIndicator) -> Element(msg) {
+pub fn render(pi: ProgressIndicator) -> Element(msg) {
   element.element(
     variant_to_string(pi.variant),
     [

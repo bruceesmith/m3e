@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute.{attribute, for, id}
 import lustre/element
 import m3e/switch.{
-  Both, Selected, basic, checked, disabled, element, form, icon, key, switch,
+  Both, Selected, basic, checked, disabled, form, icon, key, render, switch,
   value,
 }
 
@@ -17,7 +17,7 @@ pub fn switch_basic_test() {
     ),
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
-  element(s, []) |> should.equal(expected)
+  render(s, []) |> should.equal(expected)
 }
 
 pub fn switch_full_test() {
@@ -46,7 +46,7 @@ pub fn switch_full_test() {
     ),
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
-  element(s, []) |> should.equal(expected)
+  render(s, []) |> should.equal(expected)
 }
 
 pub fn switch_element_test() {
@@ -60,7 +60,7 @@ pub fn switch_element_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }
 
@@ -80,7 +80,7 @@ pub fn switch_checked_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }
 
@@ -100,7 +100,7 @@ pub fn switch_disabled_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }
 
@@ -123,7 +123,7 @@ pub fn switch_form_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }
 
@@ -139,7 +139,7 @@ pub fn switch_icon_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 
   let s = s |> icon(Selected)
@@ -152,7 +152,7 @@ pub fn switch_icon_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }
 
@@ -172,7 +172,7 @@ pub fn switch_key_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }
 
@@ -192,6 +192,6 @@ pub fn switch_value_test() {
     element.element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
-  |> element([])
+  |> render([])
   |> should.equal(expected)
 }

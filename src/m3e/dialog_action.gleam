@@ -20,9 +20,9 @@ pub fn dialog_action(return_value: String) -> DialogAction {
   DialogAction(return_value)
 }
 
-/// element creates a Lustre Element from a DialogAction
+/// render creates a Lustre Element from a DialogAction
 ///
-pub fn element(d: DialogAction) -> Element(msg) {
+pub fn render(d: DialogAction) -> Element(msg) {
   element.element(
     "m3e-dialog-action",
     [attribute("return-value", d.return_value)],

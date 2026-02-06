@@ -139,7 +139,7 @@ pub fn chip_icon_test() {
 
   let expected =
     element.element("m3e-assist-chip", [attribute("variant", "outlined")], [
-      icon.element(i, [], []),
+      icon.render(i, [], []),
       text("Icon"),
     ])
   c |> element([], []) |> should.equal(expected)

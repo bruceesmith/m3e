@@ -31,7 +31,7 @@ pub fn tooltip_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected)
+  tooltip.render(t) |> should.equal(expected)
 }
 
 pub fn tooltip_validation_test() {
@@ -58,7 +58,7 @@ pub fn tooltip_validation_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected)
+  tooltip.render(t) |> should.equal(expected)
 
   let t_neg =
     tooltip.tooltip(
@@ -70,7 +70,7 @@ pub fn tooltip_validation_test() {
       False,
       tooltip.Auto,
     )
-  tooltip.element(t_neg) |> should.equal(expected)
+  tooltip.render(t_neg) |> should.equal(expected)
 }
 
 pub fn element_test() {
@@ -99,7 +99,7 @@ pub fn element_test() {
       [text(tip_text)],
     )
 
-  tooltip.element(t) |> should.equal(expected)
+  tooltip.render(t) |> should.equal(expected)
 }
 
 pub fn basic_test() {
@@ -145,7 +145,7 @@ pub fn disabled_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_true)
+  tooltip.render(t) |> should.equal(expected_true)
 
   let t = t |> tooltip.disabled(False)
   let expected_false =
@@ -160,7 +160,7 @@ pub fn disabled_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_false)
+  tooltip.render(t) |> should.equal(expected_false)
 }
 
 pub fn gestures_test() {
@@ -187,7 +187,7 @@ pub fn gestures_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_on)
+  tooltip.render(t) |> should.equal(expected_on)
 
   let t = t |> tooltip.gestures(tooltip.Off)
   let expected_off =
@@ -202,7 +202,7 @@ pub fn gestures_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_off)
+  tooltip.render(t) |> should.equal(expected_off)
 
   let t = t |> tooltip.gestures(tooltip.Auto)
   let expected_auto =
@@ -217,7 +217,7 @@ pub fn gestures_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_auto)
+  tooltip.render(t) |> should.equal(expected_auto)
 }
 
 pub fn hide_delay_test() {
@@ -244,7 +244,7 @@ pub fn hide_delay_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_500)
+  tooltip.render(t) |> should.equal(expected_500)
 
   let t = t |> tooltip.hide_delay(-1)
   let expected_default =
@@ -259,10 +259,10 @@ pub fn hide_delay_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_default)
+  tooltip.render(t) |> should.equal(expected_default)
 
   let t = t |> tooltip.hide_delay(9999)
-  tooltip.element(t) |> should.equal(expected_default)
+  tooltip.render(t) |> should.equal(expected_default)
 }
 
 pub fn position_test() {
@@ -289,7 +289,7 @@ pub fn position_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_above)
+  tooltip.render(t) |> should.equal(expected_above)
 
   let t = t |> tooltip.position(tooltip.After)
   let expected_after =
@@ -304,7 +304,7 @@ pub fn position_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_after)
+  tooltip.render(t) |> should.equal(expected_after)
 
   let t = t |> tooltip.position(tooltip.Before)
   let expected_before =
@@ -319,7 +319,7 @@ pub fn position_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_before)
+  tooltip.render(t) |> should.equal(expected_before)
 
   let t = t |> tooltip.position(tooltip.Below)
   let expected_below =
@@ -334,7 +334,7 @@ pub fn position_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_below)
+  tooltip.render(t) |> should.equal(expected_below)
 }
 
 pub fn show_delay_test() {
@@ -361,7 +361,7 @@ pub fn show_delay_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_300)
+  tooltip.render(t) |> should.equal(expected_300)
 
   let t = t |> tooltip.show_delay(-1)
   let expected_0 =
@@ -376,8 +376,8 @@ pub fn show_delay_test() {
       ],
       [text(tip_text)],
     )
-  tooltip.element(t) |> should.equal(expected_0)
+  tooltip.render(t) |> should.equal(expected_0)
 
   let t = t |> tooltip.show_delay(9999)
-  tooltip.element(t) |> should.equal(expected_0)
+  tooltip.render(t) |> should.equal(expected_0)
 }

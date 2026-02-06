@@ -20,7 +20,8 @@ pub fn dialog_trigger(for: String) -> DialogTrigger {
   DialogTrigger(for)
 }
 
-/// element creates a Lustre Element from a DialogTrigger
-pub fn element(d: DialogTrigger) -> Element(msg) {
+/// render creates a Lustre Element from a DialogTrigger
+/// 
+pub fn render(d: DialogTrigger) -> Element(msg) {
   element.element("m3e-dialog-trigger", [for(d.for)], [])
 }

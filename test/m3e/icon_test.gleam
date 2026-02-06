@@ -20,7 +20,7 @@ pub fn basic_test() {
       ],
       [],
     )
-  icon.element(basic_icon, [], []) |> should.equal(expected)
+  icon.render(basic_icon, [], []) |> should.equal(expected)
 }
 
 pub fn element_test() {
@@ -48,7 +48,7 @@ pub fn element_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }
 
@@ -71,7 +71,7 @@ pub fn filled_test() {
       ],
       [],
     )
-  icon.element(i, [], []) |> should.equal(expected)
+  icon.render(i, [], []) |> should.equal(expected)
 }
 
 pub fn filled_attr_test() {
@@ -94,7 +94,7 @@ pub fn filled_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -116,7 +116,7 @@ pub fn filled_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }
 
@@ -139,7 +139,7 @@ pub fn grade_test() {
       ],
       [],
     )
-  icon.element(i, [], []) |> should.equal(expected)
+  icon.render(i, [], []) |> should.equal(expected)
 }
 
 pub fn grade_attr_test() {
@@ -162,7 +162,7 @@ pub fn grade_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -184,7 +184,7 @@ pub fn grade_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -206,7 +206,7 @@ pub fn grade_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }
 
@@ -247,7 +247,7 @@ pub fn optical_size_test() {
       ],
       [],
     )
-  icon.element(icon_os_20, [], []) |> should.equal(expected_20)
+  icon.render(icon_os_20, [], []) |> should.equal(expected_20)
 
   let icon_os_30 = i |> icon.optical_size(30)
   let expected_30 =
@@ -264,7 +264,7 @@ pub fn optical_size_test() {
       ],
       [],
     )
-  icon.element(icon_os_30, [], []) |> should.equal(expected_30)
+  icon.render(icon_os_30, [], []) |> should.equal(expected_30)
 
   let icon_os_48 = i |> icon.optical_size(48)
   let expected_48 =
@@ -281,7 +281,7 @@ pub fn optical_size_test() {
       ],
       [],
     )
-  icon.element(icon_os_48, [], []) |> should.equal(expected_48)
+  icon.render(icon_os_48, [], []) |> should.equal(expected_48)
 
   // Invalid cases
   let expected_default =
@@ -300,16 +300,16 @@ pub fn optical_size_test() {
     )
 
   let icon_os_19 = i |> icon.optical_size(19)
-  icon.element(icon_os_19, [], []) |> should.equal(expected_default)
+  icon.render(icon_os_19, [], []) |> should.equal(expected_default)
 
   let icon_os_49 = i |> icon.optical_size(49)
-  icon.element(icon_os_49, [], []) |> should.equal(expected_default)
+  icon.render(icon_os_49, [], []) |> should.equal(expected_default)
 
   let icon_os_0 = i |> icon.optical_size(0)
-  icon.element(icon_os_0, [], []) |> should.equal(expected_default)
+  icon.render(icon_os_0, [], []) |> should.equal(expected_default)
 
   let icon_os_100 = i |> icon.optical_size(100)
-  icon.element(icon_os_100, [], []) |> should.equal(expected_default)
+  icon.render(icon_os_100, [], []) |> should.equal(expected_default)
 }
 
 pub fn optical_size_attr_test() {
@@ -332,7 +332,7 @@ pub fn optical_size_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }
 
@@ -355,7 +355,7 @@ pub fn purpose_test() {
       ],
       [],
     )
-  icon.element(i, [], []) |> should.equal(expected)
+  icon.render(i, [], []) |> should.equal(expected)
 }
 
 pub fn purpose_attr_test() {
@@ -378,7 +378,7 @@ pub fn purpose_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -400,7 +400,7 @@ pub fn purpose_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -422,7 +422,7 @@ pub fn purpose_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }
 
@@ -445,7 +445,7 @@ pub fn variant_test() {
       ],
       [],
     )
-  icon.element(i, [], []) |> should.equal(expected)
+  icon.render(i, [], []) |> should.equal(expected)
 }
 
 pub fn variant_attr_test() {
@@ -468,7 +468,7 @@ pub fn variant_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -490,7 +490,7 @@ pub fn variant_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 
   let i =
@@ -512,7 +512,7 @@ pub fn variant_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }
 
@@ -535,7 +535,7 @@ pub fn weight_test() {
       ],
       [],
     )
-  icon.element(icon_w_100, [], []) |> should.equal(expected_100)
+  icon.render(icon_w_100, [], []) |> should.equal(expected_100)
 
   let icon_w_400 = i |> icon.weight(400)
   let expected_400 =
@@ -552,7 +552,7 @@ pub fn weight_test() {
       ],
       [],
     )
-  icon.element(icon_w_400, [], []) |> should.equal(expected_400)
+  icon.render(icon_w_400, [], []) |> should.equal(expected_400)
 
   let icon_w_700 = i |> icon.weight(700)
   let expected_700 =
@@ -569,7 +569,7 @@ pub fn weight_test() {
       ],
       [],
     )
-  icon.element(icon_w_700, [], []) |> should.equal(expected_700)
+  icon.render(icon_w_700, [], []) |> should.equal(expected_700)
 
   // Invalid cases
   let expected_default =
@@ -588,16 +588,16 @@ pub fn weight_test() {
     )
 
   let icon_w_99 = i |> icon.weight(99)
-  icon.element(icon_w_99, [], []) |> should.equal(expected_default)
+  icon.render(icon_w_99, [], []) |> should.equal(expected_default)
 
   let icon_w_701 = i |> icon.weight(701)
-  icon.element(icon_w_701, [], []) |> should.equal(expected_default)
+  icon.render(icon_w_701, [], []) |> should.equal(expected_default)
 
   let icon_w_0 = i |> icon.weight(0)
-  icon.element(icon_w_0, [], []) |> should.equal(expected_default)
+  icon.render(icon_w_0, [], []) |> should.equal(expected_default)
 
   let icon_w_800 = i |> icon.weight(800)
-  icon.element(icon_w_800, [], []) |> should.equal(expected_default)
+  icon.render(icon_w_800, [], []) |> should.equal(expected_default)
 }
 
 pub fn weight_attr_test() {
@@ -620,6 +620,6 @@ pub fn weight_attr_test() {
       [],
     )
 
-  icon.element(i, [], [])
+  icon.render(i, [], [])
   |> should.equal(expected)
 }

@@ -35,18 +35,18 @@ pub fn drawer_container(
   DrawerContainer(start: start, main: main, end: end)
 }
 
-/// element creates a Lustre Element from a DrawerContainer
+/// render creates a Lustre Element from a DrawerContainer
 ///
 /// ## Parameters:
 /// - c: a DrawerContainer
 /// - attributes: a list of additional Attributes
 ///
-pub fn element(
+pub fn render(
   c: DrawerContainer(msg),
   attributes: List(Attribute(msg)),
 ) -> Element(msg) {
-  let #(start_attrs, start_drawer) = drawer.element(c.start)
-  let #(end_attrs, end_drawer) = drawer.element(c.end)
+  let #(start_attrs, start_drawer) = drawer.render(c.start)
+  let #(end_attrs, end_drawer) = drawer.render(c.end)
 
   element.element(
     "m3e-drawer-container",

@@ -15,7 +15,7 @@ pub fn heading_test() {
       ],
       [html.text("Hello")],
     )
-  heading.element(h, []) |> should.equal(expected)
+  heading.render(h, []) |> should.equal(expected)
 }
 
 pub fn basic_test() {
@@ -29,12 +29,12 @@ pub fn basic_test() {
       ],
       [html.text("World")],
     )
-  heading.element(h, []) |> should.equal(expected)
+  heading.render(h, []) |> should.equal(expected)
 }
 
 pub fn element_test() {
   let h = heading.heading(True, heading.Small, heading.Title, "Test")
-  let result = heading.element(h, [])
+  let result = heading.render(h, [])
 
   let expected =
     element.element(
@@ -52,7 +52,7 @@ pub fn element_test() {
 
 pub fn element_basic_test() {
   let h = heading.basic("Basic Test")
-  let result = heading.element(h, [])
+  let result = heading.render(h, [])
 
   let expected =
     element.element(
@@ -78,7 +78,7 @@ pub fn emphasized_test() {
       ],
       [html.text("Emphasized")],
     )
-  heading.element(h, []) |> should.equal(expected_basic)
+  heading.render(h, []) |> should.equal(expected_basic)
 
   let h2 = heading.emphasized(h, True)
   let expected_emphasized =
@@ -91,7 +91,7 @@ pub fn emphasized_test() {
       ],
       [html.text("Emphasized")],
     )
-  heading.element(h2, []) |> should.equal(expected_emphasized)
+  heading.render(h2, []) |> should.equal(expected_emphasized)
 }
 
 pub fn size_test() {
@@ -106,7 +106,7 @@ pub fn size_test() {
       ],
       [html.text("Size")],
     )
-  heading.element(h2, []) |> should.equal(expected)
+  heading.render(h2, []) |> should.equal(expected)
 
   let h3 = heading.size(h2, heading.Small)
   let expected_small =
@@ -118,7 +118,7 @@ pub fn size_test() {
       ],
       [html.text("Size")],
     )
-  heading.element(h3, []) |> should.equal(expected_small)
+  heading.render(h3, []) |> should.equal(expected_small)
 }
 
 pub fn variant_test() {
@@ -133,7 +133,7 @@ pub fn variant_test() {
       ],
       [html.text("Variant")],
     )
-  heading.element(h2, []) |> should.equal(expected)
+  heading.render(h2, []) |> should.equal(expected)
 }
 
 pub fn element_with_attributes_test() {
@@ -142,7 +142,7 @@ pub fn element_with_attributes_test() {
     attribute.attribute("id", "my-heading"),
     attribute.attribute("class", "custom-class"),
   ]
-  let result = heading.element(h, custom_attributes)
+  let result = heading.render(h, custom_attributes)
 
   let expected =
     element.element(

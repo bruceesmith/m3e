@@ -4,7 +4,7 @@ import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element, none as element_none}
 import lustre/element/html
 
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
@@ -68,14 +68,14 @@ pub fn basic(id: String, header: String) -> Dialog(msg) {
   Dialog(id, False, None, False, False, False, header, None, [])
 }
 
-/// element creates a Lustre Element from a Dialog
+/// render creates a Lustre Element from a Dialog
 /// 
-pub fn element(
+pub fn render(
   d: Dialog(msg),
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     "m3e-dialog",
     [
       attribute.id(d.id),
@@ -98,7 +98,7 @@ pub fn element(
       actions_elt(d.actions),
       ..children
     ]
-      |> list.filter(fn(a) { a != element.none() }),
+      |> list.filter(fn(a) { a != element_none() }),
   )
 }
 
@@ -110,7 +110,7 @@ pub fn actions(d: Dialog(msg), actions: List(Element(msg))) -> Dialog(msg) {
 
 fn actions_elt(actions: List(Element(msg))) -> Element(msg) {
   case actions {
-    [] -> element.none()
+    [] -> element_none()
     items -> html.div([slot("actions")], items)
   }
 }
@@ -123,9 +123,9 @@ pub fn alert(d: Dialog(msg), alert: Bool) -> Dialog(msg) {
 
 fn close_icon_elt(close_icon_name: Option(String)) -> Element(msg) {
   case close_icon_name {
-    None -> element.none()
+    None -> element_none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.CloseIcon) |> icon.element([], [])
+      icon.basic(s) |> icon.purpose(icon.CloseIcon) |> icon.render([], [])
   }
 }
 

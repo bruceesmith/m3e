@@ -10,7 +10,7 @@ pub fn main() {
 
 pub fn basic_render_test() {
   dialog_action.dialog_action("Confirm")
-  |> dialog_action.element
+  |> dialog_action.render
   |> should.equal(
     element.element(
       "m3e-dialog-action",

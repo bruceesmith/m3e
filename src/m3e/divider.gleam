@@ -35,9 +35,9 @@ pub fn divider(inset: Option(Inset), vertical: Bool) -> Divider {
   Divider(inset: inset, vertical: vertical)
 }
 
-/// element creates an HTML m3e-divider component
+/// render creates an HTML m3e-divider component
 ///
-pub fn element(divider: Divider) -> Element(msg) {
+pub fn render(divider: Divider) -> Element(msg) {
   element.element(
     "m3e-divider",
     [

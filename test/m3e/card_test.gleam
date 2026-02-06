@@ -4,7 +4,7 @@ import lustre/element
 import lustre/element/html.{text}
 import m3e/card.{
   Elevated, Filled, Horizontal, Outlined, Vertical, actionable, basic, card,
-  disabled, element, inline, orientation, variant,
+  disabled, inline, orientation, render, variant,
 }
 
 pub fn card_creation_test() {
@@ -23,7 +23,7 @@ pub fn card_creation_test() {
       [],
     )
 
-  element(c, [], []) |> should.equal(expected)
+  render(c, [], []) |> should.equal(expected)
 }
 
 pub fn card_element_test() {
@@ -45,7 +45,7 @@ pub fn card_element_test() {
       [text("Content")],
     )
 
-  element(c, [], [text("Content")]) |> should.equal(expected)
+  render(c, [], [text("Content")]) |> should.equal(expected)
 }
 
 pub fn card_setters_test() {
@@ -70,5 +70,5 @@ pub fn card_setters_test() {
       [],
     )
 
-  element(c, [], []) |> should.equal(expected)
+  render(c, [], []) |> should.equal(expected)
 }

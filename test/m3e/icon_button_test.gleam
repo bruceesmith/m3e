@@ -4,7 +4,7 @@ import lustre/attribute.{attribute, disabled, selected, value}
 import lustre/element
 import m3e/icon_button.{
   ExtraLarge, Filled, Large, LeadingIcon, Narrow, Reset, Square, Submit, Tonal,
-  Wide, basic, disabled_interactive, element, icon_button, key, purpose, shape,
+  Wide, basic, disabled_interactive, icon_button, key, purpose, render, shape,
   size, toggle, type_, variant, width,
 }
 
@@ -26,7 +26,7 @@ pub fn icon_button_creation_test() {
       ],
       [],
     )
-  element(b, [], []) |> should.equal(expected)
+  render(b, [], []) |> should.equal(expected)
 
   let b =
     icon_button(
@@ -61,7 +61,7 @@ pub fn icon_button_creation_test() {
       ],
       [],
     )
-  element(b, [], []) |> should.equal(expected_full)
+  render(b, [], []) |> should.equal(expected_full)
 }
 
 pub fn icon_button_element_test() {
@@ -82,7 +82,7 @@ pub fn icon_button_element_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_purpose_test() {
@@ -105,7 +105,7 @@ pub fn icon_button_purpose_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_disabled_test() {
@@ -127,7 +127,7 @@ pub fn icon_button_disabled_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_disabled_interactive_test() {
@@ -150,7 +150,7 @@ pub fn icon_button_disabled_interactive_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_key_test() {
@@ -172,7 +172,7 @@ pub fn icon_button_key_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_selected_test() {
@@ -194,7 +194,7 @@ pub fn icon_button_selected_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_shape_test() {
@@ -216,7 +216,7 @@ pub fn icon_button_shape_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_size_test() {
@@ -238,7 +238,7 @@ pub fn icon_button_size_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_toggle_test() {
@@ -261,7 +261,7 @@ pub fn icon_button_toggle_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_type_test() {
@@ -283,7 +283,7 @@ pub fn icon_button_type_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_value_test() {
@@ -305,7 +305,7 @@ pub fn icon_button_value_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_variant_test() {
@@ -327,7 +327,7 @@ pub fn icon_button_variant_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_width_test() {
@@ -349,5 +349,5 @@ pub fn icon_button_width_test() {
       ],
       [],
     )
-  b |> element([], []) |> should.equal(expected)
+  b |> render([], []) |> should.equal(expected)
 }

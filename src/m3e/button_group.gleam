@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, Some}
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
@@ -66,19 +66,19 @@ pub fn button_group(
   ButtonGroup(multi: multi, size: size, variant: variant)
 }
 
-/// element creates a Lustre Element from a Button Group
+/// render creates a Lustre Element from a Button Group
 ///
 /// ## Parameters:
 /// - bg: a ButtonGroup
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 ///
-pub fn element(
+pub fn render(
   bg: ButtonGroup,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     "m3e-button-group",
     [
       boolean_attribute("multi", bg.multi),
