@@ -3,7 +3,7 @@
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, none as attr_none, selected}
+import lustre/attribute.{type Attribute, none as attr_none}
 import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
@@ -103,59 +103,13 @@ pub opaque type Button(msg) {
   )
 }
 
-/// button returns a m3e-button element and a associated label
-///
-/// ## Parameters:
-/// - label: the text on the button
-/// - variant: the visual style of the button
-/// - shape: the shape of the button
-/// - size: button size
-/// - icons: a of icons, empty if none are required. One is for each state (selected or not).
-/// - selected_label: alternate label text when the button is selected
-/// - toggle: a toggle button (or not)
-/// - selected: initially selected (or not)
-/// - disabled (or not)
-/// - type_: type of button when used in a form
-/// - key: the key under which the component's value is submitted in a form
-/// - value: the value when the form is submitted
-///
-pub fn button(
-  label: String,
-  variant: Option(Variant),
-  shape: Option(Shape),
-  size: Option(Size),
-  icons: List(Element(msg)),
-  selected_label: Option(String),
-  toggle: Bool,
-  selected: Bool,
-  disabled: Bool,
-  type_: Option(Type),
-  key: Option(String),
-  value: Option(String),
-) -> Button(msg) {
-  Button(
-    label: label,
-    variant: variant,
-    shape: shape,
-    size: size,
-    icons: icons,
-    selected_label: selected_label,
-    toggle: toggle,
-    selected: selected,
-    disabled: disabled,
-    type_: type_,
-    key: key,
-    value: value,
-  )
-}
-
-/// basic is a wrapper for the case of a button which uses default values fpr many parameters
-///
+/// new creates a new Button
+/// 
 /// ## Parameters:
 /// - label`: the text on the button
 /// - variant: the button variety
 ///
-pub fn basic(label: String, variant: Variant) -> Button(msg) {
+pub fn new(label: String, variant: Variant) -> Button(msg) {
   Button(
     label,
     Some(variant),
@@ -202,7 +156,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
           Some(default_size),
         ),
         boolean_attribute("toggle", b.toggle),
-        selected(b.selected),
+        attribute.selected(b.selected),
         attribute.disabled(b.disabled),
         option_attribute(b.type_, fn(_) { "type" }, type_to_string, None),
         option_attribute(b.key, fn(_) { "name" }, function.identity, None),
@@ -294,7 +248,12 @@ pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
   Button(..b, toggle: t)
 }
 
+/// selected sets the`selected` field of a Button
 ///
+pub fn selected(b: Button(msg), s: Bool) -> Button(msg) {
+  Button(..b, selected: s)
+}
+
 /// value sets the`value` field of a Button
 ///
 pub fn value(b: Button(msg), v: Option(String)) -> Button(msg) {

@@ -4,13 +4,13 @@ import lustre/attribute.{attribute, disabled, name, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
-  Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, form,
-  icons, key, label, render, selected_label, set_type, shape, size, toggle,
-  value, variant,
+  Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, form, icons,
+  key, label, new, render, selected_label, set_type, shape, size, toggle, value,
+  variant,
 }
 
 pub fn button_creation_test() {
-  let b = basic("Click me", Text)
+  let b = new("Click me", Text)
   let expected_basic =
     element(
       "m3e-button",
@@ -26,20 +26,16 @@ pub fn button_creation_test() {
   render(b, []) |> should.equal(expected_basic)
 
   let b_full =
-    button.button(
-      "Full",
-      Some(Filled),
-      Some(Square),
-      Some(Large),
-      [],
-      Some("Selected"),
-      True,
-      True,
-      True,
-      Some(Submit),
-      Some("key"),
-      Some("val"),
-    )
+    new("Full", Filled)
+    |> shape(Square)
+    |> size(Large)
+    |> selected_label("Selected")
+    |> toggle(True)
+    |> button.selected(True)
+    |> button.disabled(True)
+    |> set_type(Submit)
+    |> key(Some("key"))
+    |> value(Some("val"))
 
   let expected_full =
     element(
@@ -61,7 +57,7 @@ pub fn button_creation_test() {
 }
 
 pub fn button_element_test() {
-  let b = basic("Basic", Text)
+  let b = new("Basic", Text)
   let expected =
     element(
       "m3e-button",
@@ -78,7 +74,7 @@ pub fn button_element_test() {
 }
 
 pub fn button_form_test() {
-  let b = basic("Submit", Filled) |> form(Some(Submit), Some("k"), Some("v"))
+  let b = new("Submit", Filled) |> form(Some(Submit), Some("k"), Some("v"))
 
   let expected =
     element(
@@ -99,7 +95,7 @@ pub fn button_form_test() {
 }
 
 pub fn button_key_test() {
-  let b = basic("Key", Text) |> key(Some("my-key"))
+  let b = new("Key", Text) |> key(Some("my-key"))
 
   let expected =
     element(
@@ -118,7 +114,7 @@ pub fn button_key_test() {
 }
 
 pub fn button_selected_label_test() {
-  let b = basic("Toggle", Outlined) |> selected_label("On")
+  let b = new("Toggle", Outlined) |> selected_label("On")
 
   let expected =
     element(
@@ -139,7 +135,7 @@ pub fn button_selected_label_test() {
 }
 
 pub fn button_shape_test() {
-  let b = basic("Shape", Text) |> shape(Square)
+  let b = new("Shape", Text) |> shape(Square)
 
   let expected =
     element(
@@ -157,7 +153,7 @@ pub fn button_shape_test() {
 }
 
 pub fn button_size_test() {
-  let b = basic("Size", Text) |> size(Large)
+  let b = new("Size", Text) |> size(Large)
 
   let expected =
     element(
@@ -175,7 +171,7 @@ pub fn button_size_test() {
 }
 
 pub fn button_set_type_test() {
-  let b = basic("Reset", Text) |> set_type(Reset)
+  let b = new("Reset", Text) |> set_type(Reset)
 
   let expected =
     element(
@@ -194,7 +190,7 @@ pub fn button_set_type_test() {
 }
 
 pub fn button_value_test() {
-  let b = basic("Value", Text) |> value(Some("123"))
+  let b = new("Value", Text) |> value(Some("123"))
 
   let expected =
     element(
@@ -213,7 +209,7 @@ pub fn button_value_test() {
 }
 
 pub fn button_variant_test() {
-  let b = basic("Variant", Text) |> variant(Elevated)
+  let b = new("Variant", Text) |> variant(Elevated)
 
   let expected =
     element(
@@ -232,7 +228,7 @@ pub fn button_variant_test() {
 
 pub fn button_icons_test() {
   let icon = span([], [text("icon")])
-  let b = basic("Icon", Text) |> icons([icon])
+  let b = new("Icon", Text) |> icons([icon])
 
   let expected =
     element(
@@ -250,7 +246,7 @@ pub fn button_icons_test() {
 }
 
 pub fn button_label_test() {
-  let b = basic("Original", Text) |> label("New Label")
+  let b = new("Original", Text) |> label("New Label")
 
   let expected =
     element(
@@ -268,7 +264,7 @@ pub fn button_label_test() {
 }
 
 pub fn button_toggle_test() {
-  let b = basic("Toggle Me", Text) |> toggle(True)
+  let b = new("Toggle Me", Text) |> toggle(True)
 
   let expected =
     element(
