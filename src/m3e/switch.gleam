@@ -44,40 +44,9 @@ pub opaque type Switch {
   )
 }
 
-/// switch creates a Switch
+/// new creates a Switch with default values
 ///
-/// ## Parameters:
-/// - id: id of the switch,
-/// - label: label on the switch
-/// - icons: The icons to present
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
-/// - key: the key under which the component's value is submitted in a form
-/// - value: the value which is submitted in a form
-/// 
-pub fn switch(
-  id: String,
-  label: String,
-  icons: Icons,
-  checked: Bool,
-  disabled: Bool,
-  key: Option(String),
-  value: Option(String),
-) -> Switch {
-  Switch(
-    id: id,
-    label: label,
-    icons: icons,
-    checked: checked,
-    disabled: disabled,
-    key: key,
-    value: value,
-  )
-}
-
-/// basic creates a Switch with default values
-///
-pub fn basic(id: String, label: String) -> Switch {
+pub fn new(id: String, label: String) -> Switch {
   Switch(
     id: id,
     label: label,
