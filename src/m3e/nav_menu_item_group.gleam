@@ -15,12 +15,12 @@ pub opaque type NavMenuItemGroup {
   NavMenuItemGroup(heading: String)
 }
 
-/// nav_menu_item_group creates a nav-menu-item-group
+/// new creates a nav-menu-item-group
 ///
 /// ## Parameters:
 /// - heading: Renders the label of the group
 /// 
-pub fn nav_menu_item_group(heading: String) -> NavMenuItemGroup {
+pub fn new(heading: String) -> NavMenuItemGroup {
   NavMenuItemGroup(heading: heading)
 }
 

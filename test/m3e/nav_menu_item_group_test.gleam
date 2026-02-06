@@ -20,7 +20,7 @@ pub fn basic_render_test() {
     |> heading.variant(heading.Label)
     |> heading.render([attribute.attribute("slot", "label")])
 
-  nav_menu_item_group.nav_menu_item_group(heading_text)
+  nav_menu_item_group.new(heading_text)
   |> nav_menu_item_group.render([], content)
   |> should.equal(
     element("m3e-nav-menu-item-group", [], [expected_heading, ..content]),
@@ -37,7 +37,7 @@ pub fn heading_update_test() {
     |> heading.variant(heading.Label)
     |> heading.render([attribute.attribute("slot", "label")])
 
-  nav_menu_item_group.nav_menu_item_group(initial)
+  nav_menu_item_group.new(initial)
   |> nav_menu_item_group.heading(updated)
   |> nav_menu_item_group.render([], [])
   |> should.equal(element("m3e-nav-menu-item-group", [], [expected_heading]))
