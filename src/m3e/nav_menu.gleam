@@ -9,9 +9,9 @@ pub opaque type NavMenu {
   NavMenu
 }
 
-/// nav_menu creates an HTML m3e-nav-menu component
+/// new creates an HTML m3e-nav-menu component
 ///
-pub fn nav_menu() -> NavMenu {
+pub fn new() -> NavMenu {
   NavMenu
 }
 
