@@ -2,12 +2,12 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/theme.{
-  Dark, Expressive, Light, basic, color, density, largest_density, motion,
-  scheme, smallest_density,
+  Dark, Expressive, Light, color, density, largest_density, motion, new, scheme,
+  smallest_density,
 }
 
 pub fn basic_test() {
-  let t = basic("#ff0000")
+  let t = new("#ff0000")
   let expected =
     element(
       "m3e-theme",
@@ -24,7 +24,7 @@ pub fn basic_test() {
 }
 
 pub fn element_test() {
-  let t = basic("#ff0000")
+  let t = new("#ff0000")
   let expected =
     element(
       "m3e-theme",
@@ -43,7 +43,7 @@ pub fn element_test() {
 }
 
 pub fn color_test() {
-  let t = basic("#abcfde")
+  let t = new("#abcfde")
   let t_new = color(t, "#00ff00")
   let expected =
     element(
@@ -61,7 +61,7 @@ pub fn color_test() {
 }
 
 pub fn density_test() {
-  let t = basic("#abcfde")
+  let t = new("#abcfde")
   let t_1 = density(t, 1)
   let expected_1 =
     element(
@@ -97,7 +97,7 @@ pub fn density_test() {
 }
 
 pub fn motion_test() {
-  let t = basic("#abcfde")
+  let t = new("#abcfde")
   let t_expr = motion(t, Expressive)
   let expected =
     element(
@@ -115,7 +115,7 @@ pub fn motion_test() {
 }
 
 pub fn scheme_test() {
-  let t = basic("#abcfde")
+  let t = new("#abcfde")
   let t_dark = scheme(t, Dark)
   let expected_dark =
     element(

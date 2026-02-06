@@ -106,37 +106,9 @@ pub opaque type Theme {
   )
 }
 
-/// theme constructs a Theme
-/// 
-/// ## Parameters:
-/// - color: a HEX color from which to derive color palettes
-/// - contrast: The contrast level of the theme
-/// - density: The density scale (0, -1, -2)
-/// - motion: The motion scheme
-/// - scheme: The color scheme of the theme
-/// - strong_focus: Whether to enable strong focus indicators
-/// 
-pub fn theme(
-  color: String,
-  contrast: Contrast,
-  density: Density,
-  motion: Motion,
-  scheme: Scheme,
-  strong_focus: Bool,
-) -> Theme {
-  Theme(
-    color: color,
-    contrast: contrast,
-    density: density_validate(density),
-    motion: motion,
-    scheme: scheme,
-    strong_focus: strong_focus,
-  )
-}
-
-/// basic constructs a Theme using default values
+/// new constructs a Theme using default values
 ///
-pub fn basic(color: String) -> Theme {
+pub fn new(color: String) -> Theme {
   Theme(
     color: color,
     contrast: default_contrast,
