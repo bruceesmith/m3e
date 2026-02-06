@@ -9,7 +9,7 @@ pub fn main() {
 }
 
 pub fn basic_render_test() {
-  dialog_action.dialog_action("Confirm")
+  dialog_action.new("Confirm")
   |> dialog_action.render
   |> should.equal(
     element(

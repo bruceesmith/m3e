@@ -11,12 +11,12 @@ pub opaque type DialogAction {
   DialogAction(return_value: String)
 }
 
-/// dialog_action creates a DialogAction
+/// new creates a DialogAction
 /// 
 /// ## Fields:
 /// - return_value: The return value of the dialog action
 /// 
-pub fn dialog_action(return_value: String) -> DialogAction {
+pub fn new(return_value: String) -> DialogAction {
   DialogAction(return_value)
 }
 
