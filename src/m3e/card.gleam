@@ -44,6 +44,13 @@ pub const default_variant = Filled
 
 /// Card is a flexible, expressive container for presenting a unified subject
 /// 
+/// ## Fields:
+/// - actionable: Whether the card is "actionable" and will respond to use interaction
+/// - disabled: Whether the element is disabled
+/// - inline: Whether to present the card inline with surrounding content
+/// - orientation: The orientation of the card
+/// - variant: The appearance variant of the card
+/// 
 pub opaque type Card {
   Card(
     actionable: Bool,
@@ -54,27 +61,9 @@ pub opaque type Card {
   )
 }
 
-/// card creates a Card
+/// new creates a Card with default values
 /// 
-pub fn card(
-  actionable: Bool,
-  disabled: Bool,
-  inline: Bool,
-  orientation: Orientation,
-  variant: Variant,
-) -> Card {
-  Card(
-    actionable: actionable,
-    disabled: disabled,
-    inline: inline,
-    orientation: orientation,
-    variant: variant,
-  )
-}
-
-/// basic creates a Card with default values
-/// 
-pub fn basic() -> Card {
+pub fn new() -> Card {
   Card(False, False, False, default_orientation, default_variant)
 }
 

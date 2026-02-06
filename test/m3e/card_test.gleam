@@ -3,12 +3,18 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/card.{
-  Elevated, Filled, Horizontal, Outlined, Vertical, actionable, basic, card,
-  disabled, inline, orientation, render, variant,
+  Elevated, Filled, Horizontal, Outlined, Vertical, actionable, disabled, inline,
+  new, orientation, render, variant,
 }
 
 pub fn card_creation_test() {
-  let c = card(True, True, True, Horizontal, Outlined)
+  let c =
+    card.new()
+    |> card.actionable(True)
+    |> card.disabled(True)
+    |> card.inline(True)
+    |> card.orientation(Horizontal)
+    |> card.variant(Outlined)
 
   let expected =
     element(
@@ -28,7 +34,7 @@ pub fn card_creation_test() {
 
 pub fn card_element_test() {
   let c =
-    basic()
+    new()
     |> actionable(False)
     |> disabled(False)
     |> inline(False)
@@ -50,7 +56,7 @@ pub fn card_element_test() {
 
 pub fn card_setters_test() {
   let c =
-    basic()
+    new()
     |> actionable(True)
     |> disabled(True)
     |> inline(True)
