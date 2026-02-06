@@ -6,26 +6,30 @@ import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/helpers.{boolean_attribute, slot}
-import m3e/icon as ico
+import m3e/icon
 
 /// nav_menu_item provides Lustre support for the [M3E Nav Menu Item component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 /// 
 /// ## Fields:
 /// - badge: Renders the badge of the item
 /// - disabled: Whether the element is disabled
-/// - icon: Renders the icon of the item
+/// - leading_icon_name: Renders the icon of the item
 /// - label: Renders the label of the item
 /// - open: Whether the item is expanded
 /// - selected: Whether the element is selected
+/// - selected_icon_name: Renders the icon of the item when selected
+/// - toggle_icon_name: Renders the toggle icon
 ///
 pub opaque type NavMenuItem {
   NavMenuItem(
     badge: Option(String),
     disabled: Bool,
-    icon_name: Option(String),
+    leading_icon_name: Option(String),
     label: String,
     open: Bool,
     selected: Bool,
+    selected_icon_name: Option(String),
+    toggle_icon_name: Option(String),
   )
 }
 
@@ -34,26 +38,32 @@ pub opaque type NavMenuItem {
 /// ## Parameters:
 /// - badge: Renders the badge of the item
 /// - disabled: Whether the element is disabled
-/// - icon: Renders the icon of the item
+/// - leading_icon_name: Renders the icon of the item
 /// - label: Renders the label of the item
 /// - open: Whether the item is expanded
 /// - selected: Whether the element is selected
+/// - selected_icon_name: Renders the icon of the item when selected
+/// - toggle_icon_name: Renders the toggle icon
 /// 
 pub fn nav_menu_item(
   badge: Option(String),
   disabled: Bool,
-  icon_name: Option(String),
+  leading_icon_name: Option(String),
   label: String,
   open: Bool,
   selected: Bool,
+  selected_icon_name: Option(String),
+  toggle_icon_name: Option(String),
 ) -> NavMenuItem {
   NavMenuItem(
     badge: badge,
     disabled: disabled,
-    icon_name: icon_name,
+    leading_icon_name: leading_icon_name,
     label: label,
     open: open,
     selected: selected,
+    selected_icon_name: selected_icon_name,
+    toggle_icon_name: toggle_icon_name,
   )
 }
 
@@ -76,16 +86,20 @@ pub fn disabled(item: NavMenuItem, disabled: Bool) -> NavMenuItem {
   NavMenuItem(..item, disabled: disabled)
 }
 
-/// icon_name sets the icon_name field
+/// leading_icon_name sets the icon_name field
 /// 
-pub fn icon_name(item: NavMenuItem, icon_name: Option(String)) -> NavMenuItem {
-  NavMenuItem(..item, icon_name: icon_name)
+pub fn leading_icon_name(
+  item: NavMenuItem,
+  leading_icon_name: Option(String),
+) -> NavMenuItem {
+  NavMenuItem(..item, leading_icon_name: leading_icon_name)
 }
 
-fn icon_elt(icon_name: Option(String)) -> Element(msg) {
-  case icon_name {
+fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
+  case leading_icon_name {
     None -> element.none()
-    Some(s) -> ico.basic(s) |> ico.element([], [])
+    Some(s) ->
+      icon.basic(s) |> icon.purpose(icon.Default) |> icon.element([], [])
   }
 }
 
@@ -105,6 +119,40 @@ pub fn open(item: NavMenuItem, open: Bool) -> NavMenuItem {
 /// 
 pub fn selected(item: NavMenuItem, selected: Bool) -> NavMenuItem {
   NavMenuItem(..item, selected: selected)
+}
+
+/// selected_icon_name sets the selected_icon_name field
+/// 
+pub fn selected_icon_name(
+  item: NavMenuItem,
+  selected_icon_name: Option(String),
+) -> NavMenuItem {
+  NavMenuItem(..item, selected_icon_name: selected_icon_name)
+}
+
+fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
+  case selected_icon_name {
+    None -> element.none()
+    Some(s) ->
+      icon.basic(s) |> icon.purpose(icon.SelectedIcon) |> icon.element([], [])
+  }
+}
+
+/// toggle_icon_name sets the toggle_icon_name field
+///
+pub fn toggle_icon_name(
+  item: NavMenuItem,
+  toggle_icon_name: Option(String),
+) -> NavMenuItem {
+  NavMenuItem(..item, toggle_icon_name: toggle_icon_name)
+}
+
+fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
+  case toggle_icon_name {
+    None -> element.none()
+    Some(s) ->
+      icon.basic(s) |> icon.purpose(icon.ToggleIcon) |> icon.element([], [])
+  }
 }
 
 /// element creates a Lustre Element(msg) from a NavMenuItem
@@ -127,8 +175,10 @@ pub fn element(
     ],
     [
       badge_elt(item.badge),
-      icon_elt(item.icon_name),
+      leading_icon_elt(item.leading_icon_name),
       html.span([slot("label")], [html.text(item.label)]),
+      selected_icon_elt(item.selected_icon_name),
+      toggle_icon_elt(item.toggle_icon_name),
     ],
   )
 }
