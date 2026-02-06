@@ -88,7 +88,7 @@ pub opaque type Tooltip {
   )
 }
 
-/// tooltip returns a Tooltip
+/// new returns a Tooltip
 ///
 /// ## Parameters:
 /// - tip: text of the tool tip
@@ -99,7 +99,7 @@ pub opaque type Tooltip {
 /// - disabled: the tooltip is disabled (or not)
 /// - gestures: behaviour on touch devices
 ///
-pub fn tooltip(
+pub fn new(
   tip: String,
   for_id: String,
   position: Position,
@@ -149,7 +149,7 @@ pub fn render(t: Tooltip) -> Element(msg) {
 /// - for_id: the ID of the element to which the tip is associated
 ///
 pub fn basic(tip: String, for_id: String) -> Element(msg) {
-  tooltip(
+  new(
     tip,
     for_id,
     default_position,

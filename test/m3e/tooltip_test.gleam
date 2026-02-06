@@ -9,7 +9,7 @@ const for_id_text = "element-id"
 
 pub fn tooltip_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Above,
@@ -36,7 +36,7 @@ pub fn tooltip_test() {
 
 pub fn tooltip_validation_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
@@ -61,7 +61,7 @@ pub fn tooltip_validation_test() {
   tooltip.render(t) |> should.equal(expected)
 
   let t_neg =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
@@ -75,7 +75,7 @@ pub fn tooltip_validation_test() {
 
 pub fn element_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.After,
@@ -121,7 +121,7 @@ pub fn basic_test() {
 
 pub fn disabled_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
@@ -165,7 +165,7 @@ pub fn disabled_test() {
 
 pub fn gestures_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
@@ -222,7 +222,7 @@ pub fn gestures_test() {
 
 pub fn hide_delay_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
@@ -267,7 +267,7 @@ pub fn hide_delay_test() {
 
 pub fn position_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
@@ -339,7 +339,7 @@ pub fn position_test() {
 
 pub fn show_delay_test() {
   let t =
-    tooltip.tooltip(
+    tooltip.new(
       tip_text,
       for_id_text,
       tooltip.Below,
