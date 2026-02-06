@@ -75,31 +75,9 @@ pub opaque type FormField {
   )
 }
 
-/// form_field creates a FormField
+/// new creates a FormField with default values
 /// 
-/// ## Parameters:
-/// - float_label: Specifies whether the label should float always or only when necessary
-/// - hide_required_marker: Whether the required marker should be hidden
-/// - hide_subscript: Whether subscript content is hidden
-/// - variant: The appearance variant of the field
-/// 
-pub fn form_field(
-  float_label: FloatLabel,
-  hide_required_marker: Bool,
-  hide_subscript: HideSubscript,
-  variant: Variant,
-) -> FormField {
-  FormField(
-    float_label: float_label,
-    hide_required_marker: hide_required_marker,
-    hide_subscript: hide_subscript,
-    variant: variant,
-  )
-}
-
-/// basic creates a FormField with default values
-/// 
-pub fn basic() -> FormField {
+pub fn new() -> FormField {
   FormField(default_float_label, False, default_hide_subscript, default_variant)
 }
 
