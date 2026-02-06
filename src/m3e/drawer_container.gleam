@@ -17,7 +17,7 @@ pub opaque type DrawerContainer(msg) {
   DrawerContainer(start: Drawer(msg), main: Element(msg), end: Drawer(msg))
 }
 
-/// drawer_container creates a DrawerContainer
+/// new creates a DrawerContainer
 /// 
 /// ## Parameters:
 /// - start: Whether the start drawer is open
@@ -27,7 +27,7 @@ pub opaque type DrawerContainer(msg) {
 /// ## Returns:
 /// A DrawerContainer
 /// 
-pub fn drawer_container(
+pub fn new(
   start: Drawer(msg),
   main: Element(msg),
   end: Drawer(msg),

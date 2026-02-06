@@ -3,16 +3,14 @@ import lustre/attribute.{attribute, none}
 import lustre/element.{element}
 import lustre/element/html.{div, text}
 import m3e/drawer
-import m3e/drawer_container.{
-  drawer_container, end, render, start, toggle_end, toggle_start,
-}
+import m3e/drawer_container.{end, new, render, start, toggle_end, toggle_start}
 
 pub fn drawer_container_creation_test() {
   let start_d = drawer.empty()
   let end_d = drawer.empty()
   let main = div([], [text("Main")])
 
-  let c = drawer_container(start_d, main, end_d)
+  let c = new(start_d, main, end_d)
 
   let expected =
     element("m3e-drawer-container", [], [
@@ -31,7 +29,7 @@ pub fn drawer_container_element_test() {
     drawer.drawer(drawer.End, drawer.Over, False, "e", False, text("E"))
   let main = text("M")
 
-  let c = drawer_container(start_d, main, end_d)
+  let c = new(start_d, main, end_d)
 
   let expected_attrs = [
     attribute("start", ""),
@@ -56,7 +54,7 @@ pub fn drawer_container_element_test() {
 pub fn drawer_container_setters_test() {
   let d_empty = drawer.empty()
   let main = text("main")
-  let c = drawer_container(d_empty, main, d_empty)
+  let c = new(d_empty, main, d_empty)
 
   let start_d =
     drawer.drawer(drawer.Start, drawer.Auto, True, "", False, text("S"))
@@ -108,7 +106,7 @@ pub fn drawer_container_toggle_test() {
     drawer.drawer(drawer.End, drawer.Side, False, "e", False, text("E"))
   let main = text("M")
 
-  let c = drawer_container(start_d, main, end_d)
+  let c = new(start_d, main, end_d)
 
   // Toggle Start -> Open
   let c2 = c |> toggle_start()
