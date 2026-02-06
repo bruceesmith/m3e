@@ -1,5 +1,4 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
-////// Purpose defines the intended purpose of the icon
 
 import gleam/list
 import gleam/option.{type Option, None, Some}
