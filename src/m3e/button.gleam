@@ -4,7 +4,7 @@ import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none as attr_none, selected}
-import lustre/element.{type Element, none}
+import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
@@ -179,7 +179,7 @@ pub fn basic(label: String, variant: Variant) -> Button(msg) {
 /// - attributes: a list of additional Attributes
 ///
 pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
-  element.element(
+  element(
     "m3e-button",
     list.append(
       [

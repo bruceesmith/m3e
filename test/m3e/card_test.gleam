@@ -1,6 +1,6 @@
 import gleeunit/should
 import lustre/attribute.{attribute}
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/card.{
   Elevated, Filled, Horizontal, Outlined, Vertical, actionable, basic, card,
@@ -11,7 +11,7 @@ pub fn card_creation_test() {
   let c = card(True, True, True, Horizontal, Outlined)
 
   let expected =
-    element.element(
+    element(
       "m3e-card",
       [
         attribute("actionable", ""),
@@ -36,7 +36,7 @@ pub fn card_element_test() {
     |> variant(Elevated)
 
   let expected =
-    element.element(
+    element(
       "m3e-card",
       [
         attribute("orientation", "vertical"),
@@ -58,7 +58,7 @@ pub fn card_setters_test() {
     |> variant(Filled)
 
   let expected =
-    element.element(
+    element(
       "m3e-card",
       [
         attribute("actionable", ""),

@@ -1,6 +1,6 @@
 import gleeunit/should
 import lustre/attribute.{attribute}
-import lustre/element
+import lustre/element.{element}
 import m3e/theme.{
   Dark, Expressive, Light, basic, color, density, largest_density, motion,
   scheme, smallest_density,
@@ -9,7 +9,7 @@ import m3e/theme.{
 pub fn basic_test() {
   let t = basic("#ff0000")
   let expected =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#ff0000"),
@@ -26,7 +26,7 @@ pub fn basic_test() {
 pub fn element_test() {
   let t = basic("#ff0000")
   let expected =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#ff0000"),
@@ -46,7 +46,7 @@ pub fn color_test() {
   let t = basic("#abcfde")
   let t_new = color(t, "#00ff00")
   let expected =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#00ff00"),
@@ -64,7 +64,7 @@ pub fn density_test() {
   let t = basic("#abcfde")
   let t_1 = density(t, 1)
   let expected_1 =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#abcfde"),
@@ -79,7 +79,7 @@ pub fn density_test() {
 
   let t_small = density(t, smallest_density - 1)
   let expected_default =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#abcfde"),
@@ -100,7 +100,7 @@ pub fn motion_test() {
   let t = basic("#abcfde")
   let t_expr = motion(t, Expressive)
   let expected =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#abcfde"),
@@ -118,7 +118,7 @@ pub fn scheme_test() {
   let t = basic("#abcfde")
   let t_dark = scheme(t, Dark)
   let expected_dark =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#abcfde"),
@@ -133,7 +133,7 @@ pub fn scheme_test() {
 
   let t_light = scheme(t, Light)
   let expected_light =
-    element.element(
+    element(
       "m3e-theme",
       [
         attribute("color", "#abcfde"),

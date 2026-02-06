@@ -2,7 +2,7 @@
 
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 
 import m3e/helpers.{boolean_attribute}
@@ -76,7 +76,7 @@ pub fn basic(text: String) -> Heading {
 /// render creates a Lustre Element from a Heading
 /// 
 pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
-  element.element(
+  element(
     "m3e-heading",
     [
       boolean_attribute("emphasized", h.emphasized),

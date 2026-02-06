@@ -4,7 +4,7 @@
 import gleam/int.{to_string}
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, for, none}
-import lustre/element.{type Element, text}
+import lustre/element.{type Element, element, text}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
 
@@ -125,7 +125,7 @@ pub fn tooltip(
 /// - t: a Tooltip
 ///
 pub fn render(t: Tooltip) -> Element(msg) {
-  element.element(
+  element(
     "m3e-tooltip",
     [
       for(t.for_id),

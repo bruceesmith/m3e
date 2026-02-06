@@ -1,6 +1,6 @@
 import gleeunit/should
 import lustre/attribute.{attribute, none}
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html.{div, text}
 import m3e/drawer
 import m3e/drawer_container.{
@@ -15,7 +15,7 @@ pub fn drawer_container_creation_test() {
   let c = drawer_container(start_d, main, end_d)
 
   let expected =
-    element.element("m3e-drawer-container", [], [
+    element("m3e-drawer-container", [], [
       element.none(),
       main,
       element.none(),
@@ -48,7 +48,7 @@ pub fn drawer_container_element_test() {
   ]
 
   let expected =
-    element.element("m3e-drawer-container", expected_attrs, expected_children)
+    element("m3e-drawer-container", expected_attrs, expected_children)
 
   render(c, [attribute("class", "test")]) |> should.equal(expected)
 }
@@ -63,7 +63,7 @@ pub fn drawer_container_setters_test() {
   let c2 = c |> start(start_d)
 
   let expected_start =
-    element.element(
+    element(
       "m3e-drawer-container",
       [
         attribute("start", ""),
@@ -82,7 +82,7 @@ pub fn drawer_container_setters_test() {
   let c3 = c2 |> end(end_d)
 
   let expected_full =
-    element.element(
+    element(
       "m3e-drawer-container",
       [
         attribute("start", ""),
@@ -114,7 +114,7 @@ pub fn drawer_container_toggle_test() {
   let c2 = c |> toggle_start()
 
   let expected_start_open =
-    element.element(
+    element(
       "m3e-drawer-container",
       [
         attribute("start", ""),
@@ -134,7 +134,7 @@ pub fn drawer_container_toggle_test() {
   let c3 = c2 |> toggle_start()
 
   let expected_closed =
-    element.element(
+    element(
       "m3e-drawer-container",
       [attribute("start-mode", "side"), attribute("end-mode", "side")],
       [
@@ -150,7 +150,7 @@ pub fn drawer_container_toggle_test() {
   let c4 = c3 |> toggle_end()
 
   let expected_end_open =
-    element.element(
+    element(
       "m3e-drawer-container",
       [
         attribute("start-mode", "side"),

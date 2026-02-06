@@ -1,7 +1,7 @@
 import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute, for, id}
-import lustre/element
+import lustre/element.{element}
 import m3e/switch.{
   Both, Selected, basic, checked, disabled, form, icon, key, render, switch,
   value,
@@ -10,12 +10,12 @@ import m3e/switch.{
 pub fn switch_basic_test() {
   let s = basic("test_id", "Test Label")
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [id("test_id"), attribute("icons", "none")],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   render(s, []) |> should.equal(expected)
 }
@@ -32,7 +32,7 @@ pub fn switch_full_test() {
       Some("value"),
     )
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [
         id("test_id"),
@@ -44,7 +44,7 @@ pub fn switch_full_test() {
       ],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   render(s, []) |> should.equal(expected)
 }
@@ -52,12 +52,12 @@ pub fn switch_full_test() {
 pub fn switch_element_test() {
   let s = basic("test_id", "Test Label")
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [id("test_id"), attribute("icons", "none")],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -68,7 +68,7 @@ pub fn switch_checked_test() {
   let s = basic("test_id", "Test Label") |> checked(True)
 
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [
         id("test_id"),
@@ -77,7 +77,7 @@ pub fn switch_checked_test() {
       ],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -88,7 +88,7 @@ pub fn switch_disabled_test() {
   let s = basic("test_id", "Test Label") |> disabled(True)
 
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [
         id("test_id"),
@@ -97,7 +97,7 @@ pub fn switch_disabled_test() {
       ],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -110,7 +110,7 @@ pub fn switch_form_test() {
     |> form(Some("some_key"), Some("some_value"))
 
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [
         id("test_id"),
@@ -120,7 +120,7 @@ pub fn switch_form_test() {
       ],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -131,12 +131,12 @@ pub fn switch_icon_test() {
   let s = basic("test_id", "Test Label") |> icon(Both)
 
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [id("test_id"), attribute("icons", "both")],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -144,12 +144,12 @@ pub fn switch_icon_test() {
 
   let s = s |> icon(Selected)
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [id("test_id"), attribute("icons", "selected")],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -160,7 +160,7 @@ pub fn switch_key_test() {
   let s = basic("test_id", "Test Label") |> key(Some("test_key"))
 
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [
         id("test_id"),
@@ -169,7 +169,7 @@ pub fn switch_key_test() {
       ],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])
@@ -180,7 +180,7 @@ pub fn switch_value_test() {
   let s = basic("test_id", "Test Label") |> value(Some("test_value"))
 
   let expected = [
-    element.element(
+    element(
       "m3e-switch",
       [
         id("test_id"),
@@ -189,7 +189,7 @@ pub fn switch_value_test() {
       ],
       [],
     ),
-    element.element("label", [for("test_id")], [element.text("Test Label")]),
+    element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
   |> render([])

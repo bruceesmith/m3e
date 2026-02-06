@@ -1,6 +1,6 @@
 /// dialog_action is an element, nested within a clickable element, used to close a parenting dialog
 import lustre/attribute.{attribute}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 /// Dialog Action component
 /// 
@@ -23,9 +23,5 @@ pub fn dialog_action(return_value: String) -> DialogAction {
 /// render creates a Lustre Element from a DialogAction
 ///
 pub fn render(d: DialogAction) -> Element(msg) {
-  element.element(
-    "m3e-dialog-action",
-    [attribute("return-value", d.return_value)],
-    [],
-  )
+  element("m3e-dialog-action", [attribute("return-value", d.return_value)], [])
 }

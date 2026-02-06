@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute.{attribute, disabled, selected, value}
-import lustre/element
+import lustre/element.{element}
 import m3e/icon_button.{
   ExtraLarge, Filled, Large, LeadingIcon, Narrow, Reset, Square, Submit, Tonal,
   Wide, basic, disabled_interactive, icon_button, key, purpose, render, shape,
@@ -11,7 +11,7 @@ import m3e/icon_button.{
 pub fn icon_button_creation_test() {
   let b = basic()
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -44,7 +44,7 @@ pub fn icon_button_creation_test() {
       Narrow,
     )
   let expected_full =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(True),
@@ -67,7 +67,7 @@ pub fn icon_button_creation_test() {
 pub fn icon_button_element_test() {
   let b = basic()
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -89,7 +89,7 @@ pub fn icon_button_purpose_test() {
   let b = basic() |> purpose(Some(LeadingIcon))
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -112,7 +112,7 @@ pub fn icon_button_disabled_test() {
   let b = basic() |> icon_button.disabled(True)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(True),
@@ -134,7 +134,7 @@ pub fn icon_button_disabled_interactive_test() {
   let b = basic() |> disabled_interactive(True)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -157,7 +157,7 @@ pub fn icon_button_key_test() {
   let b = basic() |> key("my-key")
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -179,7 +179,7 @@ pub fn icon_button_selected_test() {
   let b = basic() |> icon_button.selected(True)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -201,7 +201,7 @@ pub fn icon_button_shape_test() {
   let b = basic() |> shape(Square)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -223,7 +223,7 @@ pub fn icon_button_size_test() {
   let b = basic() |> size(ExtraLarge)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -245,7 +245,7 @@ pub fn icon_button_toggle_test() {
   let b = basic() |> toggle(True)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -268,7 +268,7 @@ pub fn icon_button_type_test() {
   let b = basic() |> type_(Reset)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -290,7 +290,7 @@ pub fn icon_button_value_test() {
   let b = basic() |> icon_button.value("123")
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -312,7 +312,7 @@ pub fn icon_button_variant_test() {
   let b = basic() |> variant(Tonal)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),
@@ -334,7 +334,7 @@ pub fn icon_button_width_test() {
   let b = basic() |> width(Wide)
 
   let expected =
-    element.element(
+    element(
       "m3e-icon-button",
       [
         disabled(False),

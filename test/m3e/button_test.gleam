@@ -1,7 +1,7 @@
 import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute, disabled, name, selected}
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
   Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, basic, form,
@@ -12,7 +12,7 @@ import m3e/button.{
 pub fn button_creation_test() {
   let b = basic("Click me", Text)
   let expected_basic =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -42,7 +42,7 @@ pub fn button_creation_test() {
     )
 
   let expected_full =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "filled"),
@@ -63,7 +63,7 @@ pub fn button_creation_test() {
 pub fn button_element_test() {
   let b = basic("Basic", Text)
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -81,7 +81,7 @@ pub fn button_form_test() {
   let b = basic("Submit", Filled) |> form(Some(Submit), Some("k"), Some("v"))
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "filled"),
@@ -102,7 +102,7 @@ pub fn button_key_test() {
   let b = basic("Key", Text) |> key(Some("my-key"))
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -121,7 +121,7 @@ pub fn button_selected_label_test() {
   let b = basic("Toggle", Outlined) |> selected_label("On")
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "outlined"),
@@ -142,7 +142,7 @@ pub fn button_shape_test() {
   let b = basic("Shape", Text) |> shape(Square)
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -160,7 +160,7 @@ pub fn button_size_test() {
   let b = basic("Size", Text) |> size(Large)
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -178,7 +178,7 @@ pub fn button_set_type_test() {
   let b = basic("Reset", Text) |> set_type(Reset)
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -197,7 +197,7 @@ pub fn button_value_test() {
   let b = basic("Value", Text) |> value(Some("123"))
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -216,7 +216,7 @@ pub fn button_variant_test() {
   let b = basic("Variant", Text) |> variant(Elevated)
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "elevated"),
@@ -235,7 +235,7 @@ pub fn button_icons_test() {
   let b = basic("Icon", Text) |> icons([icon])
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -253,7 +253,7 @@ pub fn button_label_test() {
   let b = basic("Original", Text) |> label("New Label")
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),
@@ -271,7 +271,7 @@ pub fn button_toggle_test() {
   let b = basic("Toggle Me", Text) |> toggle(True)
 
   let expected =
-    element.element(
+    element(
       "m3e-button",
       [
         attribute("variant", "text"),

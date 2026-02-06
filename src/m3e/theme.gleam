@@ -4,7 +4,7 @@ import gleam/int
 import gleam/list
 import gleam/string.{is_empty}
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
 
@@ -159,7 +159,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     "m3e-theme",
     list.append(
       [

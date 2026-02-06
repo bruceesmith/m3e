@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, slot}
 
@@ -312,7 +312,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     "m3e-icon-button",
     [
       attribute.disabled(i.disabled),

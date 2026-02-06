@@ -1,13 +1,13 @@
 import gleeunit/should
 import lustre/attribute
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html
 import m3e/heading
 
 pub fn heading_test() {
   let h = heading.heading(False, heading.Large, heading.Display, "Hello")
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "large"),
@@ -21,7 +21,7 @@ pub fn heading_test() {
 pub fn basic_test() {
   let h = heading.basic("World")
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -37,7 +37,7 @@ pub fn element_test() {
   let result = heading.render(h, [])
 
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
@@ -55,7 +55,7 @@ pub fn element_basic_test() {
   let result = heading.render(h, [])
 
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -70,7 +70,7 @@ pub fn element_basic_test() {
 pub fn emphasized_test() {
   let h = heading.basic("Emphasized")
   let expected_basic =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -82,7 +82,7 @@ pub fn emphasized_test() {
 
   let h2 = heading.emphasized(h, True)
   let expected_emphasized =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
@@ -98,7 +98,7 @@ pub fn size_test() {
   let h = heading.basic("Size")
   let h2 = heading.size(h, heading.Large)
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "large"),
@@ -110,7 +110,7 @@ pub fn size_test() {
 
   let h3 = heading.size(h2, heading.Small)
   let expected_small =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "small"),
@@ -125,7 +125,7 @@ pub fn variant_test() {
   let h = heading.basic("Variant")
   let h2 = heading.variant(h, heading.Headline)
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -145,7 +145,7 @@ pub fn element_with_attributes_test() {
   let result = heading.render(h, custom_attributes)
 
   let expected =
-    element.element(
+    element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),

@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
-import lustre/element
+import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/button_group.{
   Connected, ExtraSmall, Large, Medium, Small, Standard, button_group, multi,
@@ -11,7 +11,7 @@ import m3e/button_group.{
 pub fn button_group_creation_test() {
   let bg = button_group(True, Some(Medium), Some(Connected))
   let expected =
-    element.element(
+    element(
       "m3e-button-group",
       [
         attribute("multi", ""),
@@ -24,7 +24,7 @@ pub fn button_group_creation_test() {
 
   let bg2 = button_group(False, None, None)
   let expected2 =
-    element.element(
+    element(
       "m3e-button-group",
       [attribute("size", "small"), attribute("variant", "standard")],
       [],
@@ -35,7 +35,7 @@ pub fn button_group_creation_test() {
 pub fn button_group_element_test() {
   let bg = button_group(False, Some(Small), Some(Standard))
   let expected =
-    element.element(
+    element(
       "m3e-button-group",
       [attribute("size", "small"), attribute("variant", "standard")],
       [text("Child")],
@@ -46,7 +46,7 @@ pub fn button_group_element_test() {
   // Default values check
   let bg_defaults = button_group(False, None, None)
   let expected_defaults =
-    element.element(
+    element(
       "m3e-button-group",
       [attribute("size", "small"), attribute("variant", "standard")],
       [],
@@ -58,7 +58,7 @@ pub fn button_group_multi_test() {
   let bg = button_group(False, Some(Small), Some(Standard)) |> multi(True)
 
   let expected =
-    element.element(
+    element(
       "m3e-button-group",
       [
         attribute("multi", ""),
@@ -74,7 +74,7 @@ pub fn button_group_size_test() {
   let bg = button_group(False, Some(Small), Some(Standard)) |> size(Some(Large))
 
   let expected =
-    element.element(
+    element(
       "m3e-button-group",
       [attribute("size", "large"), attribute("variant", "standard")],
       [],
@@ -84,7 +84,7 @@ pub fn button_group_size_test() {
   let bg2 =
     button_group(False, Some(Small), Some(Standard)) |> size(Some(ExtraSmall))
   let expected2 =
-    element.element(
+    element(
       "m3e-button-group",
       [attribute("size", "extra-small"), attribute("variant", "standard")],
       [],
@@ -97,7 +97,7 @@ pub fn button_group_variant_test() {
     button_group(False, Some(Small), Some(Standard)) |> variant(Some(Connected))
 
   let expected =
-    element.element(
+    element(
       "m3e-button-group",
       [attribute("size", "small"), attribute("variant", "connected")],
       [],

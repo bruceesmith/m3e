@@ -2,7 +2,7 @@
 
 import gleam/list
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 import m3e/drawer.{type Drawer}
 
@@ -48,7 +48,7 @@ pub fn render(
   let #(start_attrs, start_drawer) = drawer.render(c.start)
   let #(end_attrs, end_drawer) = drawer.render(c.end)
 
-  element.element(
+  element(
     "m3e-drawer-container",
     list.append(start_attrs, end_attrs)
       |> list.append(attributes)

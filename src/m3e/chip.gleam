@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, name, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 import m3e/icon.{type Icon}
 
@@ -155,19 +155,19 @@ pub fn suggestion(label: String) -> Chip {
   default(label, Suggestion)
 }
 
-/// element creates a Lustre Element from a Chip
+/// render creates a Lustre Element from a Chip
 ///
 /// ## Parameters:
 /// - c: a Chip
 /// - attributes: any extra attributes, e.g. an event
 /// - children: a list of child elements
 ///
-pub fn element(
+pub fn render(
   c: Chip,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     type_to_string(c.type_),
     list.append(
       [

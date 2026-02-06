@@ -5,7 +5,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 
 /// Diameter is an alias to Int for clarity
@@ -154,7 +154,7 @@ pub fn linear(
 /// - pi: a ProgressIndicator
 ///
 pub fn render(pi: ProgressIndicator) -> Element(msg) {
-  element.element(
+  element(
     variant_to_string(pi.variant),
     [
       buffer_value_attr(pi.variant, pi.buffer_value),

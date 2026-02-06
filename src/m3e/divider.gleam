@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None}
 import lustre/attribute.{none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
@@ -38,7 +38,7 @@ pub fn divider(inset: Option(Inset), vertical: Bool) -> Divider {
 /// render creates an HTML m3e-divider component
 ///
 pub fn render(divider: Divider) -> Element(msg) {
-  element.element(
+  element(
     "m3e-divider",
     [
       option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),

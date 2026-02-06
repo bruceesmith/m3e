@@ -3,7 +3,7 @@
 import gleam/int.{to_string}
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, name, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 import m3e/helpers.{clamp_with_default, slot}
 
@@ -193,7 +193,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
+  element(
     "m3e-icon",
     list.append(
       [

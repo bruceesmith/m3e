@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 import m3e/helpers.{boolean_attribute}
 
@@ -21,6 +21,17 @@ fn icons_to_string(i: Icons) -> String {
   }
 }
 
+/// Switch is a configuration type representing an M3E Switch
+/// 
+/// ## Fields:
+/// - id: id of the switch,
+/// - label: label on the switch
+/// - icons: The icons to present
+/// - checked: Whether the element is checked
+/// - disabled: Whether the element is disabled
+/// - key: the key under which the component's value is submitted in a form
+/// - value: the value which is submitted in a form
+/// 
 pub opaque type Switch {
   Switch(
     id: String,
@@ -33,6 +44,17 @@ pub opaque type Switch {
   )
 }
 
+/// switch creates a Switch
+///
+/// ## Parameters:
+/// - id: id of the switch,
+/// - label: label on the switch
+/// - icons: The icons to present
+/// - checked: Whether the element is checked
+/// - disabled: Whether the element is disabled
+/// - key: the key under which the component's value is submitted in a form
+/// - value: the value which is submitted in a form
+/// 
 pub fn switch(
   id: String,
   label: String,
@@ -53,6 +75,8 @@ pub fn switch(
   )
 }
 
+/// basic creates a Switch with default values
+///
 pub fn basic(id: String, label: String) -> Switch {
   Switch(
     id: id,
@@ -65,17 +89,23 @@ pub fn basic(id: String, label: String) -> Switch {
   )
 }
 
+/// checked sets the checked field
+///
 pub fn checked(s: Switch, checked: Bool) -> Switch {
   Switch(..s, checked: checked)
 }
 
+/// disabled sets the disabled field
+///
 pub fn disabled(s: Switch, disabled: Bool) -> Switch {
   Switch(..s, disabled: disabled)
 }
 
+/// render creates a list of Lustre Elements from a Switch
+///
 pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg)) {
   [
-    element.element(
+    element(
       "m3e-switch",
       list.append(
         [
@@ -97,22 +127,30 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
         |> list.filter(fn(a) { a != none() }),
       [],
     ),
-    element.element("label", [attribute.for(s.id)], [text(s.label)]),
+    element("label", [attribute.for(s.id)], [text(s.label)]),
   ]
 }
 
+/// form sets the key and value fields
+///
 pub fn form(s: Switch, key: Option(String), value: Option(String)) -> Switch {
   Switch(..s, key: key, value: value)
 }
 
+/// icon sets the icons field
+///
 pub fn icon(s: Switch, icons: Icons) -> Switch {
   Switch(..s, icons: icons)
 }
 
+/// key sets the key field
+///
 pub fn key(s: Switch, key: Option(String)) -> Switch {
   Switch(..s, key: key)
 }
 
+/// value sets the value field
+///
 pub fn value(s: Switch, value: Option(String)) -> Switch {
   Switch(..s, value: value)
 }

@@ -1,6 +1,6 @@
 /// dialog_trigger is an element, nested within a clickable element, used to open a dialog
 import lustre/attribute.{for}
-import lustre/element.{type Element}
+import lustre/element.{type Element, element}
 
 /// Dialog Trigger component
 /// 
@@ -23,5 +23,5 @@ pub fn dialog_trigger(for: String) -> DialogTrigger {
 /// render creates a Lustre Element from a DialogTrigger
 /// 
 pub fn render(d: DialogTrigger) -> Element(msg) {
-  element.element("m3e-dialog-trigger", [for(d.for)], [])
+  element("m3e-dialog-trigger", [for(d.for)], [])
 }
