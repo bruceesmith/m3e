@@ -99,7 +99,7 @@ fn close_icon_elt(close_icon_name: Option(String)) -> Element(msg) {
   case close_icon_name {
     None -> element_none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.CloseIcon) |> icon.render([], [])
+      icon.new(s) |> icon.purpose(icon.CloseIcon) |> icon.render([], [])
   }
 }
 

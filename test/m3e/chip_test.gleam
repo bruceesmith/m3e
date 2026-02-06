@@ -132,7 +132,7 @@ pub fn chip_form_test() {
 }
 
 pub fn chip_icon_test() {
-  let i = icon.basic("star")
+  let i = icon.new("star")
 
   // Assist supports icon
   let c = assist("Icon") |> icon(i)

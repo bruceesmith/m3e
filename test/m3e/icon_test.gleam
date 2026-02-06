@@ -4,7 +4,7 @@ import lustre/element.{element}
 import m3e/icon
 
 pub fn basic_test() {
-  let basic_icon = icon.basic("home")
+  let basic_icon = icon.new("home")
 
   let expected =
     element(
@@ -25,7 +25,7 @@ pub fn basic_test() {
 
 pub fn element_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.filled(True)
     |> icon.grade(icon.High)
     |> icon.optical_size(40)
@@ -54,7 +54,7 @@ pub fn element_test() {
 
 pub fn filled_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.filled(True)
 
   let expected =
@@ -76,7 +76,7 @@ pub fn filled_test() {
 
 pub fn filled_attr_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.filled(True)
 
   let expected =
@@ -98,7 +98,7 @@ pub fn filled_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.filled(False)
 
   let expected =
@@ -122,7 +122,7 @@ pub fn filled_attr_test() {
 
 pub fn grade_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.grade(icon.Low)
 
   let expected =
@@ -144,7 +144,7 @@ pub fn grade_test() {
 
 pub fn grade_attr_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.grade(icon.Low)
 
   let expected =
@@ -166,7 +166,7 @@ pub fn grade_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.grade(icon.Medium)
 
   let expected =
@@ -188,7 +188,7 @@ pub fn grade_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.grade(icon.High)
 
   let expected =
@@ -212,7 +212,7 @@ pub fn grade_attr_test() {
 
 pub fn leading_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.purpose(icon.Leading)
 
   i
@@ -229,7 +229,7 @@ pub fn leading_test() {
 }
 
 pub fn optical_size_test() {
-  let i = icon.basic("home")
+  let i = icon.new("home")
 
   // Valid cases
   let icon_os_20 = i |> icon.optical_size(20)
@@ -314,7 +314,7 @@ pub fn optical_size_test() {
 
 pub fn optical_size_attr_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.optical_size(36)
 
   let expected =
@@ -338,7 +338,7 @@ pub fn optical_size_attr_test() {
 
 pub fn purpose_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.purpose(icon.SelectedIcon)
 
   let expected =
@@ -360,7 +360,7 @@ pub fn purpose_test() {
 
 pub fn purpose_attr_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.purpose(icon.Leading)
 
   let expected =
@@ -382,7 +382,7 @@ pub fn purpose_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.purpose(icon.SelectedIcon)
 
   let expected =
@@ -404,7 +404,7 @@ pub fn purpose_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.purpose(icon.Trailing)
 
   let expected =
@@ -428,7 +428,7 @@ pub fn purpose_attr_test() {
 
 pub fn variant_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.variant(icon.Sharp)
 
   let expected =
@@ -450,7 +450,7 @@ pub fn variant_test() {
 
 pub fn variant_attr_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.variant(icon.Outlined)
 
   let expected =
@@ -472,7 +472,7 @@ pub fn variant_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.variant(icon.Rounded)
 
   let expected =
@@ -494,7 +494,7 @@ pub fn variant_attr_test() {
   |> should.equal(expected)
 
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.variant(icon.Sharp)
 
   let expected =
@@ -517,7 +517,7 @@ pub fn variant_attr_test() {
 }
 
 pub fn weight_test() {
-  let i = icon.basic("home")
+  let i = icon.new("home")
 
   // Valid cases
   let icon_w_100 = i |> icon.weight(100)
@@ -602,7 +602,7 @@ pub fn weight_test() {
 
 pub fn weight_attr_test() {
   let i =
-    icon.basic("home")
+    icon.new("home")
     |> icon.weight(600)
 
   let expected =

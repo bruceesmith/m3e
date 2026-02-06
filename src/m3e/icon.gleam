@@ -132,44 +132,12 @@ pub opaque type Icon {
   )
 }
 
-/// icon creates an Icon
-///
-/// ## Parameters:
-/// - name: The icon to load,
-///     Refer to [Material Symbols](https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0)
-/// - filled: is the icon filled or not (the FILL axis of the variable font)
-/// - grade:  the stroke thickness of an icon (the GRAD axis of the variable font)
-/// - optical_size:  the optical size of the icon. Between 20 and 48
-/// - purpose: the role of the icon
-/// - variant:  the visual style of the icon
-/// - weight: the thickness and boldness of the icon's strokes. Between 100 and 700
-///
-pub fn icon(
-  name: String,
-  filled: Bool,
-  grade: Grade,
-  optical_size: OpticalSize,
-  purpose: Purpose,
-  variant: Variant,
-  weight: Weight,
-) -> Icon {
-  Icon(
-    name: name,
-    filled: filled,
-    grade: grade,
-    optical_size: optical_size_validate(optical_size),
-    purpose: purpose,
-    variant: variant,
-    weight: weight_validate(weight),
-  )
-}
-
-/// basic constructs an Icon for the named Material Symbol. All fields are set to defaults
+/// new constructs an Icon for the named Material Symbol. All fields are set to defaults
 ///
 /// ## Parameter:
 /// - name: the name of the Material Symbol used in this Icon
 ///
-pub fn basic(name: String) -> Icon {
+pub fn new(name: String) -> Icon {
   Icon(
     name,
     False,

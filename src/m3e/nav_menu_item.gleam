@@ -98,8 +98,7 @@ pub fn leading_icon_name(
 fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
   case leading_icon_name {
     None -> none()
-    Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.Default) |> icon.render([], [])
+    Some(s) -> icon.new(s) |> icon.purpose(icon.Default) |> icon.render([], [])
   }
 }
 
@@ -134,7 +133,7 @@ fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
   case selected_icon_name {
     None -> none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.SelectedIcon) |> icon.render([], [])
+      icon.new(s) |> icon.purpose(icon.SelectedIcon) |> icon.render([], [])
   }
 }
 
@@ -151,7 +150,7 @@ fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
   case toggle_icon_name {
     None -> none()
     Some(s) ->
-      icon.basic(s) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
+      icon.new(s) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
   }
 }
 
