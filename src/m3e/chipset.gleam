@@ -1,3 +1,5 @@
+//// chipset provides Lustre support for the [M3E Chip Set component](https://matraic.github.io/m3e/#/components/chip-set.html)
+
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -41,15 +43,12 @@ pub opaque type ChipSet {
 
 /// new creates a new ChipSet
 ///
-/// ## Parameters:
-/// - hide_selection_indicator: whether to hide the leading tick when selected
-///
-pub fn new(t: Type) -> ChipSet {
+pub fn new() -> ChipSet {
   ChipSet(
     disabled: False,
     hide_selection_indicator: False,
     multi: False,
-    type_: t,
+    type_: Information,
     vertical: False,
   )
 }
@@ -123,6 +122,12 @@ fn multi_attr(t: Type, multi: Bool) -> Attribute(msg) {
     Filter, True -> attribute("multi", "")
     _, _ -> none()
   }
+}
+
+/// type_ sets the `type_` field
+///
+pub fn type_(c: ChipSet, t: Type) -> ChipSet {
+  ChipSet(..c, type_: t)
 }
 
 /// vertical sets the `vertical` field
