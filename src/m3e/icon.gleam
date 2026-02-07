@@ -33,7 +33,7 @@ pub const default_grade = Medium
 pub type OpticalSize =
   Int
 
-/// The snakkest optical size of the icon
+/// The smallest optical size of the icon
 pub const smallest_optical_size = 20
 
 /// The largest optical size
@@ -72,7 +72,7 @@ fn purpose_to_string(purpose: Purpose) -> String {
   }
 }
 
-// Default purpose
+/// Default purpose
 pub const default_purpose = Default
 
 /// The Variant of the icon
@@ -91,7 +91,7 @@ fn variant_to_string(variant: Variant) -> String {
 }
 
 /// Default variant
-const default_variant = Outlined
+pub const default_variant = Outlined
 
 /// The Weight of the variable font icon
 /// [Refer](https://m3.material.io/styles/icons/applying-icons)
@@ -134,7 +134,7 @@ pub opaque type Icon {
 
 /// new constructs an Icon for the named Material Symbol. All fields are set to defaults
 ///
-/// ## Parameter:
+/// ## Parameters:
 /// - name: the name of the Material Symbol used in this Icon
 ///
 pub fn new(name: String) -> Icon {
@@ -180,7 +180,7 @@ pub fn render(
   )
 }
 
-/// filled sets the filled`field
+/// filled sets the `filled` field
 ///
 pub fn filled(i: Icon, f: Bool) -> Icon {
   Icon(..i, filled: f)
