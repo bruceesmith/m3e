@@ -1,4 +1,4 @@
-//// button provides Lustre support for the [M3E Form Field component](https://matraic.github.io/m3e/#/components/form-field.html
+//// form_field provides Lustre support for the [M3E Form Field component](https://matraic.github.io/m3e/#/components/form-field.html)
 
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
