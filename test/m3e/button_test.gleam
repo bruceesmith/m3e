@@ -1,11 +1,11 @@
 import gleam/option.{Some}
 import gleeunit/should
-import lustre/attribute.{attribute, disabled, name, selected}
+import lustre/attribute.{attribute, disabled, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
   Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, form, icons,
-  key, label, new, render, selected_label, set_type, shape, size, toggle, value,
+  label, name, new, render, selected_label, set_type, shape, size, toggle, value,
   variant,
 }
 
@@ -34,7 +34,7 @@ pub fn button_creation_test() {
     |> button.selected(True)
     |> button.disabled(True)
     |> set_type(Submit)
-    |> key(Some("key"))
+    |> name(Some("key"))
     |> value(Some("val"))
 
   let expected_full =
@@ -86,7 +86,7 @@ pub fn button_form_test() {
         selected(False),
         disabled(False),
         attribute("type", "submit"),
-        name("k"),
+        attribute.name("k"),
         attribute("value", "v"),
       ],
       [text("Submit"), element.none()],
@@ -94,8 +94,8 @@ pub fn button_form_test() {
   b |> render([]) |> should.equal(expected)
 }
 
-pub fn button_key_test() {
-  let b = new("Key", Text) |> key(Some("my-key"))
+pub fn button_name_test() {
+  let b = new("Key", Text) |> name(Some("my-key"))
 
   let expected =
     element(
@@ -106,7 +106,7 @@ pub fn button_key_test() {
         attribute("size", "small"),
         selected(False),
         disabled(False),
-        name("my-key"),
+        attribute.name("my-key"),
       ],
       [text("Key"), element.none()],
     )
