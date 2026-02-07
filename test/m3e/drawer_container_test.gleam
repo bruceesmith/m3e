@@ -10,7 +10,7 @@ pub fn drawer_container_creation_test() {
   let end_d = drawer.empty()
   let main = div([], [text("Main")])
 
-  let c = new(start_d, main, end_d)
+  let c = new() |> start(start_d) |> end(end_d)
 
   let expected =
     element("m3e-drawer-container", [], [
@@ -19,7 +19,7 @@ pub fn drawer_container_creation_test() {
       element.none(),
     ])
 
-  render(c, []) |> should.equal(expected)
+  render(c, [], [main]) |> should.equal(expected)
 }
 
 pub fn drawer_container_element_test() {
@@ -28,7 +28,7 @@ pub fn drawer_container_element_test() {
   let end_d = drawer.new(drawer.End, drawer.Over, False, "e", False, text("E"))
   let main = text("M")
 
-  let c = new(start_d, main, end_d)
+  let c = new() |> start(start_d) |> end(end_d)
 
   let expected_attrs = [
     attribute("start", ""),
@@ -47,13 +47,12 @@ pub fn drawer_container_element_test() {
   let expected =
     element("m3e-drawer-container", expected_attrs, expected_children)
 
-  render(c, [attribute("class", "test")]) |> should.equal(expected)
+  render(c, [attribute("class", "test")], [main]) |> should.equal(expected)
 }
 
 pub fn drawer_container_setters_test() {
-  let d_empty = drawer.empty()
   let main = text("main")
-  let c = new(d_empty, main, d_empty)
+  let c = new()
 
   let start_d =
     drawer.new(drawer.Start, drawer.Auto, True, "", False, text("S"))
@@ -73,7 +72,7 @@ pub fn drawer_container_setters_test() {
       ],
     )
 
-  render(c2, []) |> should.equal(expected_start)
+  render(c2, [], [main]) |> should.equal(expected_start)
 
   let end_d = drawer.new(drawer.End, drawer.Push, True, "", True, text("E"))
   let c3 = c2 |> end(end_d)
@@ -95,7 +94,7 @@ pub fn drawer_container_setters_test() {
       ],
     )
 
-  render(c3, []) |> should.equal(expected_full)
+  render(c3, [], [main]) |> should.equal(expected_full)
 }
 
 pub fn drawer_container_toggle_test() {
@@ -104,7 +103,7 @@ pub fn drawer_container_toggle_test() {
   let end_d = drawer.new(drawer.End, drawer.Side, False, "e", False, text("E"))
   let main = text("M")
 
-  let c = new(start_d, main, end_d)
+  let c = new() |> start(start_d) |> end(end_d)
 
   // Toggle Start -> Open
   let c2 = c |> toggle_start()
@@ -124,7 +123,7 @@ pub fn drawer_container_toggle_test() {
       ],
     )
 
-  render(c2, []) |> should.equal(expected_start_open)
+  render(c2, [], [main]) |> should.equal(expected_start_open)
 
   // Toggle Start -> Closed
   let c3 = c2 |> toggle_start()
@@ -140,7 +139,7 @@ pub fn drawer_container_toggle_test() {
       ],
     )
 
-  render(c3, []) |> should.equal(expected_closed)
+  render(c3, [], [main]) |> should.equal(expected_closed)
 
   // Toggle End -> Open
   let c4 = c3 |> toggle_end()
@@ -160,5 +159,5 @@ pub fn drawer_container_toggle_test() {
       ],
     )
 
-  render(c4, []) |> should.equal(expected_end_open)
+  render(c4, [], [main]) |> should.equal(expected_end_open)
 }

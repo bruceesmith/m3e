@@ -4,35 +4,22 @@ import gleam/list
 import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/drawer.{type Drawer}
+import m3e/drawer.{type Drawer, empty}
 
 /// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
 /// ## Fields:
 /// - start: the start drawer
-/// - main: the main content
 /// - end: the end drawer
 ///
 pub opaque type DrawerContainer(msg) {
-  DrawerContainer(start: Drawer(msg), main: Element(msg), end: Drawer(msg))
+  DrawerContainer(start: Drawer(msg), end: Drawer(msg))
 }
 
 /// new creates a DrawerContainer
 /// 
-/// ## Parameters:
-/// - start: Whether the start drawer is open
-/// - main: the main content
-/// - end: Whether the end drawer is open
-/// 
-/// ## Returns:
-/// A DrawerContainer
-/// 
-pub fn new(
-  start: Drawer(msg),
-  main: Element(msg),
-  end: Drawer(msg),
-) -> DrawerContainer(msg) {
-  DrawerContainer(start: start, main: main, end: end)
+pub fn new() -> DrawerContainer(msg) {
+  DrawerContainer(start: empty(), end: empty())
 }
 
 /// render creates a Lustre Element from a DrawerContainer
@@ -40,10 +27,12 @@ pub fn new(
 /// ## Parameters:
 /// - c: a DrawerContainer
 /// - attributes: a list of additional Attributes
+/// - children: the main content
 ///
 pub fn render(
   c: DrawerContainer(msg),
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
   let #(start_attrs, start_drawer) = drawer.render(c.start)
   let #(end_attrs, end_drawer) = drawer.render(c.end)
@@ -53,11 +42,9 @@ pub fn render(
     list.append(start_attrs, end_attrs)
       |> list.append(attributes)
       |> list.filter(fn(a) { a != none() }),
-    [
-      start_drawer,
-      c.main,
-      end_drawer,
-    ],
+    [start_drawer]
+      |> list.append(children)
+      |> list.append([end_drawer]),
   )
 }
 
