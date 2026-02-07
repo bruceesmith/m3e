@@ -13,12 +13,13 @@ import m3e/icon
 /// Dialog component
 /// 
 /// ## Fields:
+/// - id: The unique identifier for the dialog
 /// - alert: Whether the dialog is an alert
 /// - close_label: The accessible label given to the button used to dismiss the dialog
 /// - no_focus_trap: Whether to disable focus trapping, which keeps keyboard Tab navigation within the dialog
 /// - disable_close: Whether users cannot click the backdrop or press ESC to dismiss the dialog
 /// - dismissible: Whether a button is presented that can be used to close the dialog
-/// - headline: The headline of the dialog
+/// - header: The headline of the dialog
 /// - close_icon_name: The "close" icon of the dialog
 /// - actions: The actions of the dialog
 /// 
@@ -30,7 +31,7 @@ pub opaque type Dialog(msg) {
     no_focus_trap: Bool,
     disable_close: Bool,
     dismissible: Bool,
-    headline: String,
+    header: String,
     close_icon_name: Option(String),
     actions: List(Element(msg)),
   )
@@ -38,6 +39,10 @@ pub opaque type Dialog(msg) {
 
 /// new creates a Dialog with default values
 /// 
+/// ## Parameters:
+/// - id: The unique identifier for the dialog
+/// - header: The headline of the dialog
+///
 pub fn new(id: String, header: String) -> Dialog(msg) {
   Dialog(id, False, None, False, False, False, header, None, [])
 }
@@ -67,7 +72,7 @@ pub fn render(
     ]
       |> list.filter(fn(a) { a != none() }),
     [
-      html.span([slot("header")], [html.text(d.headline)]),
+      html.span([slot("header")], [html.text(d.header)]),
       close_icon_elt(d.close_icon_name),
       actions_elt(d.actions),
       ..children
@@ -130,10 +135,10 @@ pub fn dismissible(d: Dialog(msg), dismissible: Bool) -> Dialog(msg) {
   Dialog(..d, dismissible: dismissible)
 }
 
-/// header sets the `headline` field
+/// header sets the `header` field
 /// 
-pub fn header(d: Dialog(msg), headline: String) -> Dialog(msg) {
-  Dialog(..d, headline: headline)
+pub fn header(d: Dialog(msg), header: String) -> Dialog(msg) {
+  Dialog(..d, header: header)
 }
 
 /// id sets the `id` field
