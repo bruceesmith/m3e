@@ -56,7 +56,7 @@ pub const default_variant = Outlined
 /// - behaviour: behaviour of an Assist or Suggestion chip
 /// - disabled: whether the Chip is disabled or not
 /// - icon: associated Icon
-/// - key: `name` slot in form submission
+/// - name: `name` slot in form submission
 /// - removable: whether the chip can be removed
 /// - selected: whether the chip is selected or not
 /// - type_: the type of Chip
@@ -69,7 +69,7 @@ pub opaque type Chip {
     behaviour: Behaviour,
     disabled: Bool,
     icon: Option(Icon),
-    key: Option(String),
+    name: Option(String),
     removable: Bool,
     selected: Bool,
     type_: Type,
@@ -84,7 +84,7 @@ fn default(label: String, type_: Type) -> Chip {
     behaviour: Normal,
     disabled: False,
     icon: None,
-    key: None,
+    name: None,
     removable: False,
     selected: False,
     type_: type_,
@@ -93,31 +93,31 @@ fn default(label: String, type_: Type) -> Chip {
   )
 }
 
-/// assist creats a basic Assist Chip
+/// assist creates a basic Assist Chip
 ///
 pub fn assist(label: String) -> Chip {
   default(label, Assist)
 }
 
-/// filter creats a basic Filter Chip
+/// filter creates a basic Filter Chip
 ///
 pub fn filter(label: String) -> Chip {
   default(label, Filter)
 }
 
-/// information creats a basic Information Chip
+/// information creates a basic Information Chip
 ///
 pub fn information(label: String) -> Chip {
   default(label, Information)
 }
 
-/// input creats a basic Input Chip
+/// input creates a basic Input Chip
 ///
 pub fn input(label: String) -> Chip {
   default(label, Input)
 }
 
-/// suggestion creats a basic Suggestion Chip
+/// suggestion creates a basic Suggestion Chip
 ///
 pub fn suggestion(label: String) -> Chip {
   default(label, Suggestion)
@@ -141,7 +141,7 @@ pub fn render(
       [
         behaviour_attr(c.type_, c.behaviour),
         disabled_attr(c.type_, c.disabled),
-        key_attr(c.type_, c.key),
+        name_attr(c.type_, c.name),
         removable_attr(c.type_, c.removable),
         selected_attr(c.type_, c.selected),
         value_attr(c.type_, c.value),
@@ -191,7 +191,7 @@ fn disabled_attr(t: Type, disabled: Bool) -> Attribute(msg) {
 ///
 pub fn form(c: Chip, name: Option(String), value: Option(String)) -> Chip {
   case c.type_ {
-    Filter | Input -> Chip(..c, key: name, value: value)
+    Filter | Input -> Chip(..c, name: name, value: value)
     _ -> c
   }
 }
@@ -213,8 +213,8 @@ fn icon_element(t: Type, icon: Option(Icon)) -> Element(msg) {
   }
 }
 
-fn key_attr(t: Type, key: Option(String)) -> Attribute(msg) {
-  case t, key {
+fn name_attr(t: Type, val: Option(String)) -> Attribute(msg) {
+  case t, val {
     Filter, Some(n) | Input, Some(n) -> name(n)
     _, _ -> none()
   }
