@@ -1,4 +1,4 @@
-//// button provides Lustre support for the [M3E Checkbox component](https://matraic.github.io/m3e/#/components/checkbox.html)
+//// checkbox provides Lustre support for the [M3E Checkbox component](https://matraic.github.io/m3e/#/components/checkbox.html)
 
 import gleam/function
 import gleam/list
@@ -14,7 +14,7 @@ pub opaque type Checkbox {
   Checkbox(
     checked: Bool,
     disabled: Bool,
-    key: Option(String),
+    name: Option(String),
     required: Bool,
     value: Option(String),
   )
@@ -24,19 +24,13 @@ pub const default_value = "on"
 
 /// new creates a new Checkbox
 ///
-pub fn new(
-  checked: Bool,
-  disabled: Bool,
-  key: Option(String),
-  required: Bool,
-  value: Option(String),
-) {
+pub fn new() -> Checkbox {
   Checkbox(
-    checked: checked,
-    disabled: disabled,
-    key: key,
-    required: required,
-    value: value,
+    checked: False,
+    disabled: False,
+    name: None,
+    required: False,
+    value: None,
   )
 }
 
@@ -48,7 +42,7 @@ pub fn render(checkbox: Checkbox) -> Element(msg) {
     [
       boolean_attribute("checked", checkbox.checked),
       boolean_attribute("disabled", checkbox.disabled),
-      option_attribute(checkbox.key, fn(_) { "name" }, function.identity, None),
+      option_attribute(checkbox.name, fn(_) { "name" }, function.identity, None),
       boolean_attribute("required", checkbox.required),
       option_attribute(
         checkbox.value,
@@ -78,21 +72,21 @@ pub fn disabled(checkbox: Checkbox, disabled: Bool) -> Checkbox {
 ///
 /// ## Parameters:
 /// - checkbox: a Checkbox
-/// - key: the name of the checkbox when the form is submitted
+/// - name: the name of the checkbox when the form is submitted
 /// - value: the value of the checkbox when the form is submitted
 ///
 pub fn form(
   checkbox: Checkbox,
-  key: Option(String),
+  name: Option(String),
   value: Option(String),
 ) -> Checkbox {
-  Checkbox(..checkbox, key: key, value: value)
+  Checkbox(..checkbox, name: name, value: value)
 }
 
-/// key sets the`key` field
+/// name sets the `name` field
 ///
-pub fn key(checkbox: Checkbox, key: Option(String)) -> Checkbox {
-  Checkbox(..checkbox, key: key)
+pub fn name(checkbox: Checkbox, name: Option(String)) -> Checkbox {
+  Checkbox(..checkbox, name: name)
 }
 
 /// required sets the `required` field

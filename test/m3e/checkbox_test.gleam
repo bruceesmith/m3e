@@ -1,11 +1,11 @@
-import gleam/option.{None, Some}
+import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
-import m3e/checkbox.{checked, disabled, form, key, new, render, required, value}
+import m3e/checkbox.{checked, disabled, form, name, new, render, required, value}
 
 pub fn checkbox_basic_test() {
-  let c = new(False, False, None, False, None)
+  let c = new()
   let expected = element("m3e-checkbox", [], [])
   c
   |> render()
@@ -13,7 +13,7 @@ pub fn checkbox_basic_test() {
 }
 
 pub fn checkbox_element_test() {
-  let c = new(False, False, None, False, None)
+  let c = new()
   let expected = element("m3e-checkbox", [], [])
   c
   |> render()
@@ -21,7 +21,7 @@ pub fn checkbox_element_test() {
 }
 
 pub fn checkbox_checked_test() {
-  let c = new(False, False, None, False, None) |> checked(True)
+  let c = new() |> checked(True)
 
   let expected = element("m3e-checkbox", [attribute("checked", "")], [])
   c
@@ -30,7 +30,7 @@ pub fn checkbox_checked_test() {
 }
 
 pub fn checkbox_disabled_test() {
-  let c = new(False, False, None, False, None) |> disabled(True)
+  let c = new() |> disabled(True)
 
   let expected = element("m3e-checkbox", [attribute("disabled", "")], [])
   c
@@ -40,7 +40,7 @@ pub fn checkbox_disabled_test() {
 
 pub fn checkbox_form_test() {
   let c =
-    new(False, False, None, False, None)
+    new()
     |> form(Some("some_key"), Some("some_value"))
 
   let expected =
@@ -54,8 +54,8 @@ pub fn checkbox_form_test() {
   |> should.equal(expected)
 }
 
-pub fn checkbox_key_test() {
-  let c = new(False, False, None, False, None) |> key(Some("test_key"))
+pub fn checkbox_name_test() {
+  let c = new() |> name(Some("test_key"))
 
   let expected = element("m3e-checkbox", [attribute("name", "test_key")], [])
   c
@@ -64,7 +64,7 @@ pub fn checkbox_key_test() {
 }
 
 pub fn checkbox_required_test() {
-  let c = new(False, False, None, False, None) |> required(True)
+  let c = new() |> required(True)
 
   let expected = element("m3e-checkbox", [attribute("required", "")], [])
   c
@@ -73,7 +73,7 @@ pub fn checkbox_required_test() {
 }
 
 pub fn checkbox_value_test() {
-  let c = new(False, False, None, False, None) |> value(Some("test_value"))
+  let c = new() |> value(Some("test_value"))
 
   let expected = element("m3e-checkbox", [attribute("value", "test_value")], [])
   c
