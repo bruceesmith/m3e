@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute.{attribute, for, id}
 import lustre/element.{element}
 import m3e/switch.{
-  Both, Selected, checked, disabled, form, icon, key, new, render, value,
+  Both, Selected, checked, disabled, form, icon, name, new, render, value,
 }
 
 pub fn switch_basic_test() {
@@ -22,7 +22,7 @@ pub fn switch_full_test() {
     |> disabled(True)
     |> form(Some("key"), Some("value"))
     |> icon(Both)
-    |> key(Some("key"))
+    |> name(Some("key"))
     |> value(Some("value"))
 
   let expected = [
@@ -138,8 +138,8 @@ pub fn switch_icon_test() {
   |> should.equal(expected)
 }
 
-pub fn switch_key_test() {
-  let s = new("test_id", "Test Label") |> key(Some("test_key"))
+pub fn switch_name_test() {
+  let s = new("test_id", "Test Label") |> name(Some("test_key"))
 
   let expected = [
     element(
