@@ -51,19 +51,11 @@ pub opaque type Heading {
   Heading(emphasized: Bool, size: Size, variant: Variant, text: String)
 }
 
-// /// heading creates a Heading
-// /// 
-// pub fn heading(
-//   emphasized: Bool,
-//   size: Size,
-//   variant: Variant,
-//   text: String,
-// ) -> Heading {
-//   Heading(emphasized: emphasized, size: size, variant: variant, text: text)
-// }
-
 /// new creates a Heading using default values
 /// 
+/// ## Parameters:
+/// - text: The text content of the heading
+///
 pub fn new(text: String) -> Heading {
   Heading(
     emphasized: False,
