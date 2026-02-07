@@ -1,8 +1,8 @@
-//// button provides Lustre support for the [M3E Divider component](https://matraic.github.io/m3e/#/components/divider.html)
+//// divider provides Lustre support for the [M3E Divider component](https://matraic.github.io/m3e/#/components/divider.html)
 
 import gleam/list
 import gleam/option.{type Option, None}
-import lustre/attribute.{none}
+import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -31,20 +31,26 @@ pub opaque type Divider {
 
 /// new creates a new Divider
 ///
-pub fn new(inset: Option(Inset), vertical: Bool) -> Divider {
-  Divider(inset: inset, vertical: vertical)
+pub fn new() -> Divider {
+  Divider(inset: None, vertical: False)
 }
 
 /// render creates an HTML m3e-divider component
 ///
-pub fn render(divider: Divider) -> Element(msg) {
+pub fn render(
+  divider: Divider,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
   element(
     "m3e-divider",
-    [
-      option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
-      boolean_attribute("vertical", divider.vertical),
-    ]
-      |> list.filter(fn(a) { a != none() }),
+    list.append(
+      [
+        option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
+        boolean_attribute("vertical", divider.vertical),
+      ]
+        |> list.filter(fn(a) { a != none() }),
+      attributes,
+    ),
     [],
   )
 }
