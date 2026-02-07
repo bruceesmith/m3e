@@ -20,6 +20,8 @@ pub const default_diameter = 40
 pub type Maximum =
   Int
 
+pub const default_max = 1
+
 /// Mode of a linear indicator
 ///
 pub type Mode {
@@ -69,7 +71,7 @@ fn variant_to_string(variant: Variant) -> String {
 /// ## Fields:
 /// - buffer_value: A fractional value, between 0 and max, indicating buffer progress
 /// - content: Optional content displayed inside the circle when determinate
-/// - diameter:The diameter, in pixels, of the progress spinner
+/// - diameter: The diameter, in pixels, of the progress spinner
 /// - indeterminate: Whether to show something is happening without conveying progress
 /// - max: The maximum progress value
 /// - mode: The mode of the progress bar
@@ -92,79 +94,60 @@ pub opaque type ProgressIndicator {
 
 /// circular builds a Circular ProgressIndicator
 ///
-/// ## Parameters:
-/// - content: Optional content displayed inside the circle when determinate
-/// - diameter:The diameter, in pixels, of the progress spinner
-/// - indeterminate: Whether to show something is happening without conveying progress
-/// - max: The maximum progress value
-/// - stroke_width: The stroke width, in pixels, of the progress spinner
-/// - value: A fractional value, between 0 and max, indicating progress
-///
-pub fn circular(
-  content: Option(String),
-  diameter: Diameter,
-  indeterminate: Bool,
-  max: Maximum,
-  stroke_width: StrokeWidth,
-  value: Value,
-) -> ProgressIndicator {
+pub fn circular() -> ProgressIndicator {
   ProgressIndicator(
     buffer_value: 0,
-    content: content,
-    diameter: diameter_validate(diameter),
-    indeterminate: indeterminate,
-    max: max_validate(max),
+    content: None,
+    diameter: default_diameter,
+    indeterminate: False,
+    max: default_max,
     mode: Determinate,
-    stroke_width: stroke_width_validate(stroke_width),
-    value: value_validate(max, value),
+    stroke_width: default_stroke_width,
+    value: 0,
     variant: Circular,
   )
 }
 
 /// linear builds a Linear ProgressIndicator
 ///
-/// ## Parameters:
-/// - buffer_value: A fractional value, between 0 and max, indicating buffer progress
-/// - max: The maximum progress value
-/// - mode: The mode of the progress bar
-/// - value: A fractional value, between 0 and max, indicating progress
-///
-pub fn linear(
-  buffer_value: Value,
-  max: Maximum,
-  mode: Mode,
-  value: Value,
-) -> ProgressIndicator {
+pub fn linear() -> ProgressIndicator {
   ProgressIndicator(
-    buffer_value: buffer_value_validate(max, buffer_value),
+    buffer_value: 0,
     content: None,
     diameter: default_diameter,
     indeterminate: False,
-    max: max_validate(max),
-    mode: mode,
+    max: default_max,
+    mode: Determinate,
     stroke_width: default_stroke_width,
-    value: value_validate(max, value),
+    value: 0,
     variant: Linear,
   )
 }
 
-/// render creates a Lustra Element from a ProgressIndicator
+/// render creates a Lustre Element from a ProgressIndicator
 ///
-/// ## Patameter:
+/// ## Parameters:
 /// - pi: a ProgressIndicator
+/// - attributes: a list of additional Attributes
 ///
-pub fn render(pi: ProgressIndicator) -> Element(msg) {
+pub fn render(
+  pi: ProgressIndicator,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
   element(
     variant_to_string(pi.variant),
-    [
-      buffer_value_attr(pi.variant, pi.buffer_value),
-      diameter_attr(pi.variant, pi.diameter),
-      indeterminate_attr(pi.variant, pi.indeterminate),
-      max_attr(pi.max),
-      mode_attr(pi.variant, pi.mode),
-      stroke_width_attr(pi.variant, pi.stroke_width),
-      value_attr(pi.value),
-    ]
+    list.append(
+      [
+        buffer_value_attr(pi.variant, pi.buffer_value),
+        diameter_attr(pi.variant, pi.diameter),
+        indeterminate_attr(pi.variant, pi.indeterminate),
+        max_attr(pi.max),
+        mode_attr(pi.variant, pi.mode),
+        stroke_width_attr(pi.variant, pi.stroke_width),
+        value_attr(pi.value),
+      ],
+      attributes,
+    )
       |> list.filter(fn(a) { a != none() }),
     [content_element(pi.variant, pi.content)]
       |> list.filter(fn(e) { e != element.none() }),

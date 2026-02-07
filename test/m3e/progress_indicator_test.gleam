@@ -1,4 +1,4 @@
-import gleam/option.{None, Some}
+import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
@@ -8,7 +8,13 @@ import m3e/progress_indicator.{
 }
 
 pub fn circular_test() {
-  let pi = circular(None, 50, True, 100, 5, 25)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -21,26 +27,31 @@ pub fn circular_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 }
 
 pub fn circular_default_values_test() {
-  let pi = circular(None, 0, False, 0, 0, 0)
+  let pi = circular()
   let expected =
     element(
       "m3e-circular-progress-indicator",
       [
-        attribute("max", "0"),
-        attribute("stroke-width", "0"),
+        attribute("max", "1"),
+        attribute("stroke-width", "10"),
         attribute("value", "0"),
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 }
 
 pub fn linear_test() {
-  let pi = linear(10, 100, Buffer, 25)
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(10)
   let expected =
     element(
       "m3e-linear-progress-indicator",
@@ -52,11 +63,11 @@ pub fn linear_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 }
 
 pub fn linear_default_values_test() {
-  let pi = linear(0, 0, Determinate, 0)
+  let pi = linear() |> max(0)
   let expected =
     element(
       "m3e-linear-progress-indicator",
@@ -68,11 +79,18 @@ pub fn linear_default_values_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 }
 
 pub fn element_circular_test() {
-  let pi = circular(Some("50%"), 50, True, 100, 5, 50)
+  let pi =
+    circular()
+    |> content(Some("50%"))
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(50)
   let expected_element =
     element(
       "m3e-circular-progress-indicator",
@@ -85,11 +103,15 @@ pub fn element_circular_test() {
       ],
       [element.text("50%")],
     )
-  render(pi) |> should.equal(expected_element)
+  render(pi, []) |> should.equal(expected_element)
 }
 
 pub fn element_linear_test() {
-  let pi = linear(10, 100, Determinate, 25)
+  let pi =
+    linear()
+    |> max(100)
+    |> value(25)
+    |> buffer_value(10)
   let expected_element =
     element(
       "m3e-linear-progress-indicator",
@@ -101,11 +123,16 @@ pub fn element_linear_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_element)
+  render(pi, []) |> should.equal(expected_element)
 }
 
 pub fn buffer_value_test() {
-  let pi = linear(10, 100, Buffer, 25) |> buffer_value(50)
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(50)
   let expected =
     element(
       "m3e-linear-progress-indicator",
@@ -117,10 +144,15 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should be capped by max
-  let pi = linear(10, 100, Buffer, 25) |> buffer_value(150)
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(150)
   let expected_capped =
     element(
       "m3e-linear-progress-indicator",
@@ -132,10 +164,15 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_capped)
+  render(pi, []) |> should.equal(expected_capped)
 
   // Should be capped at 0
-  let pi = linear(10, 100, Buffer, 25) |> buffer_value(-50)
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(-50)
   let expected_zero =
     element(
       "m3e-linear-progress-indicator",
@@ -147,10 +184,16 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_zero)
+  render(pi, []) |> should.equal(expected_zero)
 
   // Should not apply to Circular
-  let pi = circular(None, 50, True, 100, 5, 25) |> buffer_value(50)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
   let expected_circular =
     element(
       "m3e-circular-progress-indicator",
@@ -163,11 +206,18 @@ pub fn buffer_value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_circular)
+  render(pi, []) |> should.equal(expected_circular)
 }
 
 pub fn content_test() {
-  let pi = circular(None, 50, True, 100, 5, 25) |> content(Some("New Content"))
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
+    |> content(Some("New Content"))
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -180,10 +230,16 @@ pub fn content_test() {
       ],
       [element.text("New Content")],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should not apply to Linear
-  let pi = linear(10, 100, Buffer, 25) |> content(Some("New Content"))
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(10)
+    |> content(Some("New Content"))
   let expected_linear =
     element(
       "m3e-linear-progress-indicator",
@@ -195,11 +251,17 @@ pub fn content_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_linear)
+  render(pi, []) |> should.equal(expected_linear)
 }
 
 pub fn diameter_test() {
-  let pi = circular(None, 50, True, 100, 5, 25) |> diameter(60)
+  let pi =
+    circular()
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
+    |> diameter(60)
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -212,10 +274,16 @@ pub fn diameter_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should be capped at 0
-  let pi = circular(None, 50, True, 100, 5, 25) |> diameter(-10)
+  let pi =
+    circular()
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
+    |> diameter(-10)
   let expected_zero =
     element(
       "m3e-circular-progress-indicator",
@@ -228,10 +296,16 @@ pub fn diameter_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_zero)
+  render(pi, []) |> should.equal(expected_zero)
 
   // Should not apply to Linear
-  let pi = linear(10, 100, Buffer, 25) |> diameter(60)
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(10)
+    |> diameter(60)
   let expected_linear =
     element(
       "m3e-linear-progress-indicator",
@@ -243,11 +317,17 @@ pub fn diameter_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_linear)
+  render(pi, []) |> should.equal(expected_linear)
 }
 
 pub fn indeterminate_test() {
-  let pi = circular(None, 50, True, 100, 5, 25) |> indeterminate(False)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
+    |> indeterminate(False)
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -259,10 +339,16 @@ pub fn indeterminate_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should not apply to Linear
-  let pi = linear(10, 100, Buffer, 25) |> indeterminate(True)
+  let pi =
+    linear()
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> buffer_value(10)
+    |> indeterminate(True)
   let expected_linear =
     element(
       "m3e-linear-progress-indicator",
@@ -274,11 +360,17 @@ pub fn indeterminate_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_linear)
+  render(pi, []) |> should.equal(expected_linear)
 }
 
 pub fn max_test() {
-  let pi = circular(None, 50, False, 100, 5, 25) |> max(200)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> stroke_width(5)
+    |> value(25)
+    |> max(200)
+
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -290,10 +382,15 @@ pub fn max_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should be capped at 0
-  let pi = circular(None, 50, False, 100, 5, 25) |> max(-10)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> stroke_width(5)
+    |> value(25)
+    |> max(-10)
   let expected_zero =
     element(
       "m3e-circular-progress-indicator",
@@ -306,10 +403,16 @@ pub fn max_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_zero)
+  render(pi, []) |> should.equal(expected_zero)
 
   // Should not apply to Circular if indeterminate
-  let pi = circular(None, 50, True, 100, 5, 25) |> max(200)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> stroke_width(5)
+    |> value(25)
+    |> max(200)
   let expected_indet =
     element(
       "m3e-circular-progress-indicator",
@@ -322,9 +425,14 @@ pub fn max_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_indet)
+  render(pi, []) |> should.equal(expected_indet)
 
-  let pi = linear(10, 100, Determinate, 25) |> max(200)
+  let pi =
+    linear()
+    |> buffer_value(10)
+    |> mode(Determinate)
+    |> value(25)
+    |> max(200)
   let expected_linear =
     element(
       "m3e-linear-progress-indicator",
@@ -336,10 +444,15 @@ pub fn max_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_linear)
+  render(pi, []) |> should.equal(expected_linear)
 
   // Should not apply to Linear if mode is not Determinate
-  let pi = linear(10, 100, Buffer, 25) |> max(200)
+  let pi =
+    linear()
+    |> buffer_value(10)
+    |> mode(Buffer)
+    |> value(25)
+    |> max(200)
   let expected_buffer =
     element(
       "m3e-linear-progress-indicator",
@@ -351,11 +464,16 @@ pub fn max_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_buffer)
+  render(pi, []) |> should.equal(expected_buffer)
 }
 
 pub fn mode_test() {
-  let pi = linear(10, 100, Determinate, 25) |> mode(Query)
+  let pi =
+    linear()
+    |> buffer_value(10)
+    |> max(100)
+    |> value(25)
+    |> mode(Query)
   let expected =
     element(
       "m3e-linear-progress-indicator",
@@ -367,10 +485,17 @@ pub fn mode_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should not apply to Circular
-  let pi = circular(None, 50, True, 100, 5, 25) |> mode(Query)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(25)
+    |> mode(Query)
   let expected_circular =
     element(
       "m3e-circular-progress-indicator",
@@ -383,11 +508,17 @@ pub fn mode_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_circular)
+  render(pi, []) |> should.equal(expected_circular)
 }
 
 pub fn stroke_width_test() {
-  let pi = circular(None, 50, True, 100, 5, 25) |> stroke_width(10)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> value(25)
+    |> stroke_width(10)
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -400,10 +531,16 @@ pub fn stroke_width_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should be capped at 0
-  let pi = circular(None, 50, True, 100, 5, 25) |> stroke_width(-5)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> value(25)
+    |> stroke_width(-5)
   let expected_zero =
     element(
       "m3e-circular-progress-indicator",
@@ -416,10 +553,16 @@ pub fn stroke_width_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_zero)
+  render(pi, []) |> should.equal(expected_zero)
 
   // Should not apply to Linear
-  let pi = linear(10, 100, Buffer, 25) |> stroke_width(10)
+  let pi =
+    linear()
+    |> buffer_value(10)
+    |> max(100)
+    |> mode(Buffer)
+    |> value(25)
+    |> stroke_width(10)
   let expected_linear =
     element(
       "m3e-linear-progress-indicator",
@@ -431,11 +574,16 @@ pub fn stroke_width_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_linear)
+  render(pi, []) |> should.equal(expected_linear)
 }
 
 pub fn value_test() {
-  let pi = circular(None, 50, False, 100, 5, 25) |> value(75)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(75)
   let expected =
     element(
       "m3e-circular-progress-indicator",
@@ -447,10 +595,15 @@ pub fn value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected)
+  render(pi, []) |> should.equal(expected)
 
   // Should be capped by max
-  let pi = circular(None, 50, False, 100, 5, 25) |> value(150)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(150)
   let expected_capped =
     element(
       "m3e-circular-progress-indicator",
@@ -462,10 +615,15 @@ pub fn value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_capped)
+  render(pi, []) |> should.equal(expected_capped)
 
   // Should be capped at 0
-  let pi = circular(None, 50, False, 100, 5, 25) |> value(-50)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(-50)
   let expected_zero =
     element(
       "m3e-circular-progress-indicator",
@@ -477,10 +635,16 @@ pub fn value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_zero)
+  render(pi, []) |> should.equal(expected_zero)
 
   // Should not apply to Circular if indeterminate
-  let pi = circular(None, 50, True, 100, 5, 25) |> value(75)
+  let pi =
+    circular()
+    |> diameter(50)
+    |> indeterminate(True)
+    |> max(100)
+    |> stroke_width(5)
+    |> value(75)
   let expected_indet =
     element(
       "m3e-circular-progress-indicator",
@@ -493,9 +657,14 @@ pub fn value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_indet)
+  render(pi, []) |> should.equal(expected_indet)
 
-  let pi = linear(10, 100, Determinate, 25) |> value(75)
+  let pi =
+    linear()
+    |> buffer_value(10)
+    |> max(100)
+    |> mode(Determinate)
+    |> value(75)
   let expected_linear =
     element(
       "m3e-linear-progress-indicator",
@@ -507,10 +676,15 @@ pub fn value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_linear)
+  render(pi, []) |> should.equal(expected_linear)
 
   // Should not apply to Linear if mode is not Buffer or Determinate
-  let pi = linear(10, 100, Query, 25) |> value(75)
+  let pi =
+    linear()
+    |> buffer_value(10)
+    |> max(100)
+    |> mode(Query)
+    |> value(75)
   let expected_query =
     element(
       "m3e-linear-progress-indicator",
@@ -522,5 +696,5 @@ pub fn value_test() {
       ],
       [],
     )
-  render(pi) |> should.equal(expected_query)
+  render(pi, []) |> should.equal(expected_query)
 }
