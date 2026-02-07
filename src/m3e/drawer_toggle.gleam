@@ -1,4 +1,4 @@
-//// drawer_container provides Lustre support for the [M3E Drawer Toggle component](https://matraic.github.io/m3e/#/components/drawer_container.html)
+//// drawer_toggle provides Lustre support for the [M3E Drawer Toggle component](https://matraic.github.io/m3e/#/components/drawer_container.html)
 
 import gleam/list
 import lustre/attribute.{type Attribute, for, none}
@@ -13,7 +13,7 @@ pub opaque type DrawerToggle {
   DrawerToggle(for: String)
 }
 
-/// new creates a DrawToggle
+/// new creates a DrawerToggle
 /// 
 /// ## Parameters:
 /// - for: the id of the drawer to toggle
@@ -22,10 +22,10 @@ pub fn new(for: String) -> DrawerToggle {
   DrawerToggle(for: for)
 }
 
-/// render creates a Lustre Element from a DrawToggle
+/// render creates a Lustre Element from a DrawerToggle
 ///
 /// ## Parameters:
-/// - c: a DrawToggle
+/// - c: a DrawerToggle
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 ///
