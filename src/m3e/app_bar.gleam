@@ -1,4 +1,4 @@
-//// button provides Lustre support for the [M3E App Bar component](https://matraic.github.io/m3e/#/components/app-bar.html)
+//// app_bar provides Lustre support for the [M3E App Bar component](https://matraic.github.io/m3e/#/components/app-bar.html)
 
 import gleam/function
 import gleam/list.{filter}
@@ -42,13 +42,8 @@ pub type AppBar {
 
 /// new creates a new AppBar
 /// 
-/// ## Parameters:
-/// - centered: Whether the title and subtitle are centered
-/// - for: The identifier of the interactive control to which this element is attached
-/// - size: Size of the bar
-/// 
-pub fn new(centered: Bool, for: Option(String), size: Size) -> AppBar {
-  AppBar(centered, for, size)
+pub fn new() -> AppBar {
+  AppBar(centered: False, for: None, size: default_size)
 }
 
 /// render creates an M3E App Bar component from an AppBar

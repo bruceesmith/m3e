@@ -5,7 +5,10 @@ import lustre/element
 import m3e/app_bar
 
 pub fn new_test() {
-  app_bar.new(True, Some("nav-id"), app_bar.Large)
+  app_bar.new()
+  |> app_bar.centered(True)
+  |> app_bar.for(Some("nav-id"))
+  |> app_bar.size(app_bar.Large)
   |> should.equal(app_bar.AppBar(
     centered: True,
     for: Some("nav-id"),
@@ -14,13 +17,13 @@ pub fn new_test() {
 }
 
 pub fn centered_test() {
-  app_bar.new(False, None, app_bar.Small)
+  app_bar.new()
   |> app_bar.centered(True)
   |> should.equal(app_bar.AppBar(centered: True, for: None, size: app_bar.Small))
 }
 
 pub fn for_test() {
-  app_bar.new(False, None, app_bar.Small)
+  app_bar.new()
   |> app_bar.for(Some("test-id"))
   |> should.equal(app_bar.AppBar(
     centered: False,
@@ -30,7 +33,7 @@ pub fn for_test() {
 }
 
 pub fn size_test() {
-  app_bar.new(False, None, app_bar.Small)
+  app_bar.new()
   |> app_bar.size(app_bar.Large)
   |> should.equal(app_bar.AppBar(
     centered: False,
@@ -40,7 +43,11 @@ pub fn size_test() {
 }
 
 pub fn render_test() {
-  let bar = app_bar.new(True, Some("nav-id"), app_bar.Large)
+  let bar =
+    app_bar.new()
+    |> app_bar.centered(True)
+    |> app_bar.for(Some("nav-id"))
+    |> app_bar.size(app_bar.Large)
 
   app_bar.render(bar, [])
   |> should.equal(
@@ -57,7 +64,7 @@ pub fn render_test() {
 }
 
 pub fn render_defaults_test() {
-  let bar = app_bar.new(False, None, app_bar.Small)
+  let bar = app_bar.new()
 
   app_bar.render(bar, [element.text("Title")])
   |> should.equal(
