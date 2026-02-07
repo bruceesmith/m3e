@@ -83,8 +83,6 @@ fn scheme_to_string(s: Scheme) -> String {
 ///
 pub const default_scheme = Auto
 
-/// Variant 
-/// "monochrome" | "neutral" | "tonal-spot" | "vibrant" | "expressive" | "fidelity" | "rainbow" | "fruit-salad" | "content"
 /// Theme is the basis for an m3e-theme component
 ///
 /// ## Fields:

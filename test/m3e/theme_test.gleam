@@ -2,8 +2,8 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/theme.{
-  Dark, Expressive, Light, color, density, largest_density, motion, new, scheme,
-  smallest_density,
+  Dark, Expressive, Light, color, density, largest_density, motion, new, render,
+  scheme, smallest_density,
 }
 
 pub fn basic_test() {
@@ -20,7 +20,7 @@ pub fn basic_test() {
       ],
       [],
     )
-  theme.render(t, [], []) |> should.equal(expected)
+  render(t, [], []) |> should.equal(expected)
 }
 
 pub fn element_test() {
@@ -38,7 +38,7 @@ pub fn element_test() {
       [],
     )
   t
-  |> theme.render([], [])
+  |> render([], [])
   |> should.equal(expected)
 }
 
@@ -57,7 +57,7 @@ pub fn color_test() {
       ],
       [],
     )
-  theme.render(t_new, [], []) |> should.equal(expected)
+  render(t_new, [], []) |> should.equal(expected)
 }
 
 pub fn density_test() {
@@ -75,7 +75,7 @@ pub fn density_test() {
       ],
       [],
     )
-  theme.render(t_1, [], []) |> should.equal(expected_1)
+  render(t_1, [], []) |> should.equal(expected_1)
 
   let t_small = density(t, smallest_density - 1)
   let expected_default =
@@ -90,10 +90,10 @@ pub fn density_test() {
       ],
       [],
     )
-  theme.render(t_small, [], []) |> should.equal(expected_default)
+  render(t_small, [], []) |> should.equal(expected_default)
 
   let t_large = density(t, largest_density + 1)
-  theme.render(t_large, [], []) |> should.equal(expected_default)
+  render(t_large, [], []) |> should.equal(expected_default)
 }
 
 pub fn motion_test() {
@@ -111,7 +111,7 @@ pub fn motion_test() {
       ],
       [],
     )
-  theme.render(t_expr, [], []) |> should.equal(expected)
+  render(t_expr, [], []) |> should.equal(expected)
 }
 
 pub fn scheme_test() {
@@ -129,7 +129,7 @@ pub fn scheme_test() {
       ],
       [],
     )
-  theme.render(t_dark, [], []) |> should.equal(expected_dark)
+  render(t_dark, [], []) |> should.equal(expected_dark)
 
   let t_light = scheme(t, Light)
   let expected_light =
@@ -144,7 +144,7 @@ pub fn scheme_test() {
       ],
       [],
     )
-  theme.render(t_light, [], []) |> should.equal(expected_light)
+  render(t_light, [], []) |> should.equal(expected_light)
 }
 // Private functions are not directly testable,
 // but we can test their effects through the public API.
