@@ -1,11 +1,12 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
 
+import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, none}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/helpers.{boolean_attribute, slot}
+import m3e/helpers.{boolean_attribute, option_attribute, slot}
 
 /// Purpose defines the intended purpose of the icon
 ///
@@ -133,7 +134,7 @@ pub const default_width = Default
 /// ## Fields:
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
-/// - key: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
+/// - name: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
 /// - purpose: An slot value defined by a parent element
 /// - selected: Whether the toggle button is selected
 /// - shape: The shape of the button
@@ -148,7 +149,7 @@ pub opaque type IconButton {
   IconButton(
     disabled: Bool,
     disabled_interactive: Bool,
-    key: String,
+    name: Option(String),
     purpose: Option(Purpose),
     selected: Bool,
     shape: Shape,
@@ -167,7 +168,7 @@ pub fn new() -> IconButton {
   IconButton(
     False,
     False,
-    "",
+    None,
     None,
     False,
     default_shape,
@@ -195,10 +196,10 @@ pub fn disabled_interactive(
   IconButton(..i, disabled_interactive: disabled_interactive)
 }
 
-/// key sets the key field
+/// name sets the name field
 /// 
-pub fn key(i: IconButton, key: String) -> IconButton {
-  IconButton(..i, key: key)
+pub fn name(i: IconButton, name: Option(String)) -> IconButton {
+  IconButton(..i, name: name)
 }
 
 /// purpose sets the purpose field
@@ -272,19 +273,19 @@ pub fn render(
     [
       attribute.disabled(i.disabled),
       boolean_attribute("disabled-interactive", i.disabled_interactive),
-      attribute.attribute("key", i.key),
+      option_attribute(i.name, fn(_) { "name" }, function.identity, None),
       case i.purpose {
         Some(p) -> slot(purpose_to_string(p))
         None -> none()
       },
       attribute.selected(i.selected),
-      attribute.attribute("shape", shape_to_string(i.shape)),
-      attribute.attribute("size", size_to_string(i.size)),
+      attribute("shape", shape_to_string(i.shape)),
+      attribute("size", size_to_string(i.size)),
       boolean_attribute("toggle", i.toggle),
-      attribute.attribute("type", type_to_string(i.type_)),
+      attribute("type", type_to_string(i.type_)),
       attribute.value(i.value),
-      attribute.attribute("variant", variant_to_string(i.variant)),
-      attribute.attribute("width", width_to_string(i.width)),
+      attribute("variant", variant_to_string(i.variant)),
+      attribute("width", width_to_string(i.width)),
       ..attributes
     ]
       |> list.filter(fn(a) { a != none() }),

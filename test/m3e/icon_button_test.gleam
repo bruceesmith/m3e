@@ -4,7 +4,7 @@ import lustre/attribute.{attribute, disabled, selected, value}
 import lustre/element.{element}
 import m3e/icon_button.{
   ExtraLarge, Filled, Large, LeadingIcon, Narrow, Reset, Square, Submit, Tonal,
-  Wide, disabled_interactive, key, new, purpose, render, shape, size, toggle,
+  Wide, disabled_interactive, name, new, purpose, render, shape, size, toggle,
   type_, variant, width,
 }
 
@@ -15,7 +15,6 @@ pub fn icon_button_creation_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -32,7 +31,7 @@ pub fn icon_button_creation_test() {
     new()
     |> icon_button.disabled(True)
     |> disabled_interactive(True)
-    |> key("key")
+    |> name(Some("key"))
     |> purpose(None)
     |> icon_button.selected(True)
     |> shape(Square)
@@ -49,7 +48,7 @@ pub fn icon_button_creation_test() {
       [
         disabled(True),
         attribute("disabled-interactive", ""),
-        attribute("key", "key"),
+        attribute("name", "key"),
         selected(True),
         attribute("shape", "square"),
         attribute("size", "large"),
@@ -71,7 +70,6 @@ pub fn icon_button_element_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -93,7 +91,6 @@ pub fn icon_button_purpose_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         attribute("slot", "leading-icon"),
         selected(False),
         attribute("shape", "rounded"),
@@ -116,7 +113,6 @@ pub fn icon_button_disabled_test() {
       "m3e-icon-button",
       [
         disabled(True),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -139,7 +135,6 @@ pub fn icon_button_disabled_interactive_test() {
       [
         disabled(False),
         attribute("disabled-interactive", ""),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -153,15 +148,15 @@ pub fn icon_button_disabled_interactive_test() {
   b |> render([], []) |> should.equal(expected)
 }
 
-pub fn icon_button_key_test() {
-  let b = new() |> key("my-key")
+pub fn icon_button_name_test() {
+  let b = new() |> name(Some("my-key"))
 
   let expected =
     element(
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", "my-key"),
+        attribute("name", "my-key"),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -183,7 +178,6 @@ pub fn icon_button_selected_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(True),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -205,7 +199,6 @@ pub fn icon_button_shape_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "square"),
         attribute("size", "small"),
@@ -227,7 +220,6 @@ pub fn icon_button_size_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "extra-large"),
@@ -249,7 +241,6 @@ pub fn icon_button_toggle_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -272,7 +263,6 @@ pub fn icon_button_type_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -294,7 +284,6 @@ pub fn icon_button_value_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -316,7 +305,6 @@ pub fn icon_button_variant_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
@@ -338,7 +326,6 @@ pub fn icon_button_width_test() {
       "m3e-icon-button",
       [
         disabled(False),
-        attribute("key", ""),
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
