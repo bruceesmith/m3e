@@ -1,5 +1,6 @@
-//// optgroup provides Lustre support for the [M3E Optgroupcomponent](https://matraic.github.io/m3e/#/components/option.html)
+//// optgroup provides Lustre support for the [M3E Optgroup component](https://matraic.github.io/m3e/#/components/option.html)
 
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
 /// Optgroup holds all information to create an Optgroup
@@ -7,7 +8,7 @@ import lustre/element.{type Element, element}
 /// ## Fields:
 /// - no fields are defined
 /// 
-pub type Optgroup {
+pub opaque type Optgroup {
   Optgroup
 }
 
@@ -22,6 +23,10 @@ pub fn new() -> Optgroup {
 
 /// render creates an M3E Optgroup component from an Optgroup
 ///
-pub fn render(_: Optgroup, children: List(Element(msg))) -> Element(msg) {
-  element("m3e-option-panel", [], children)
+pub fn render(
+  _: Optgroup,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element("m3e-option-panel", attributes, children)
 }
