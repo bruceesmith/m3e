@@ -8,8 +8,6 @@ import lustre/element/html
 import m3e/helpers.{boolean_attribute, slot}
 import m3e/icon
 
-/// nav_menu_item provides Lustre support for the [M3E Nav Menu Item component](https://matraic.github.io/m3e/#/components/nav-menu.html)
-/// 
 /// ## Fields:
 /// - badge: Renders the badge of the item
 /// - disabled: Whether the element is disabled
@@ -36,34 +34,18 @@ pub opaque type NavMenuItem {
 /// new creates a nav-menu-item
 ///
 /// ## Parameters:
-/// - badge: Renders the badge of the item
-/// - disabled: Whether the element is disabled
-/// - leading_icon_name: Renders the icon of the item
 /// - label: Renders the label of the item
-/// - open: Whether the item is expanded
-/// - selected: Whether the element is selected
-/// - selected_icon_name: Renders the icon of the item when selected
-/// - toggle_icon_name: Renders the toggle icon
 /// 
-pub fn new(
-  badge: Option(String),
-  disabled: Bool,
-  leading_icon_name: Option(String),
-  label: String,
-  open: Bool,
-  selected: Bool,
-  selected_icon_name: Option(String),
-  toggle_icon_name: Option(String),
-) -> NavMenuItem {
+pub fn new(label: String) -> NavMenuItem {
   NavMenuItem(
-    badge: badge,
-    disabled: disabled,
-    leading_icon_name: leading_icon_name,
+    badge: None,
+    disabled: False,
+    leading_icon_name: None,
     label: label,
-    open: open,
-    selected: selected,
-    selected_icon_name: selected_icon_name,
-    toggle_icon_name: toggle_icon_name,
+    open: False,
+    selected: False,
+    selected_icon_name: None,
+    toggle_icon_name: None,
   )
 }
 

@@ -12,17 +12,7 @@ pub fn main() {
 
 pub fn basic_render_test() {
   let label = "Home"
-  let item =
-    nav_menu_item.new(
-      option.None,
-      False,
-      option.None,
-      label,
-      False,
-      False,
-      option.None,
-      option.None,
-    )
+  let item = nav_menu_item.new(label)
 
   nav_menu_item.render(item, [])
   |> should.equal(
@@ -45,16 +35,7 @@ pub fn properties_test() {
   let badge_text = "3"
 
   let item =
-    nav_menu_item.new(
-      option.None,
-      False,
-      option.None,
-      label,
-      False,
-      False,
-      option.None,
-      option.None,
-    )
+    nav_menu_item.new(label)
     |> nav_menu_item.badge(option.Some(badge_text))
     |> nav_menu_item.disabled(True)
     |> nav_menu_item.open(True)
