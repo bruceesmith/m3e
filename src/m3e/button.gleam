@@ -98,7 +98,7 @@ pub opaque type Button(msg) {
     selected: Bool,
     disabled: Bool,
     type_: Option(Type),
-    key: Option(String),
+    name: Option(String),
     value: Option(String),
   )
 }
@@ -106,7 +106,7 @@ pub opaque type Button(msg) {
 /// new creates a new Button
 /// 
 /// ## Parameters:
-/// - label`: the text on the button
+/// - label: the text on the button
 /// - variant: the button variety
 ///
 pub fn new(label: String, variant: Variant) -> Button(msg) {
@@ -159,7 +159,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         attribute.selected(b.selected),
         attribute.disabled(b.disabled),
         option_attribute(b.type_, fn(_) { "type" }, type_to_string, None),
-        option_attribute(b.key, fn(_) { "name" }, function.identity, None),
+        option_attribute(b.name, fn(_) { "name" }, function.identity, None),
         option_attribute(b.value, fn(_) { "value" }, function.identity, None),
       ],
       attributes,
@@ -173,17 +173,17 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
 ///
 /// ## Parameters:
 /// - b: a Button
-/// - tipe: sets the Button to act as a Reset or Submit button for a form
-/// - key: the name of the button when the form is submitted
+/// - type_: sets the Button to act as a Reset or Submit button for a form
+/// - name: the name of the button when the form is submitted
 /// - value: the value of the button when the form is submitted
 ///
 pub fn form(
   b: Button(msg),
   type_: Option(Type),
-  key: Option(String),
+  name: Option(String),
   value: Option(String),
 ) -> Button(msg) {
-  Button(..b, type_: type_, key: key, value: value)
+  Button(..b, type_: type_, name: name, value: value)
 }
 
 /// disabled sets the `disabled` field
@@ -205,10 +205,10 @@ pub fn label(b: Button(msg), label: String) -> Button(msg) {
 }
 
 ///
-/// key sets the`key` field of a Button
+/// name sets the `name` field of a Button
 ///
-pub fn key(b: Button(msg), key: Option(String)) -> Button(msg) {
-  Button(..b, key: key)
+pub fn name(b: Button(msg), name: Option(String)) -> Button(msg) {
+  Button(..b, name: name)
 }
 
 /// selected_label sets the`selected_label` field of a Button
