@@ -1,12 +1,12 @@
-import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute}
+import gleam/option.{type Option, None, Some, or}
+import lustre/attribute.{type Attribute, attribute, none}
 
 /// boolean_attribute creates an HTML boolean attribute (or nothing)
 ///
 pub fn boolean_attribute(name: String, value: Bool) -> Attribute(msg) {
   case value {
     True -> attribute(name, "")
-    False -> attribute.none()
+    False -> none()
   }
 }
 
@@ -27,7 +27,7 @@ pub fn clamp_with_default(value: Int, min: Int, max: Int, default: Int) -> Int {
 /// - option: the Option value to convert to a Lustre Attribute(msg)
 /// - attribute_name_func: function to create the attribute's name
 /// - attribute_value_func: function to create the attribute's value
-/// - default_value: default Option value if `optional_value` is None
+/// - default_value: default Option value if `option` is None
 ///
 pub fn option_attribute(
   option: Option(a),
@@ -35,13 +35,9 @@ pub fn option_attribute(
   attribute_value_func: fn(a) -> String,
   default_value: Option(a),
 ) -> Attribute(msg) {
-  case option {
+  case or(option, default_value) {
     Some(v) -> attribute(attribute_name_func(v), attribute_value_func(v))
-    None ->
-      case default_value {
-        Some(dv) -> attribute(attribute_name_func(dv), attribute_value_func(dv))
-        None -> attribute.none()
-      }
+    None -> none()
   }
 }
 
