@@ -16,7 +16,14 @@ pub fn drawer_creation_test() {
 
 pub fn drawer_start_test() {
   let content_elt = div([], [text("Start Content")])
-  let d = new(Start, Side, True, "start-id", True, content_elt)
+  let d =
+    new()
+    |> usage(Start)
+    |> mode(Side)
+    |> open(True)
+    |> id("start-id")
+    |> divider(True)
+    |> content(content_elt)
 
   let #(attrs, elt) = render(d)
 
@@ -34,7 +41,11 @@ pub fn drawer_start_test() {
 
 pub fn drawer_end_test() {
   let content_elt = div([], [text("End Content")])
-  let d = new(End, Push, False, "", False, content_elt)
+  let d =
+    new()
+    |> usage(End)
+    |> mode(Push)
+    |> content(content_elt)
 
   let #(attrs, elt) = render(d)
 

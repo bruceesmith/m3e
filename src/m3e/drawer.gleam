@@ -1,3 +1,5 @@
+//// drawer provides Lustre support for the M3E Drawer component
+
 import gleam/string
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -61,32 +63,14 @@ pub opaque type Drawer(msg) {
 
 /// new creates a Drawer
 /// 
-/// ## Parameters:
-/// - usage: whether the drawer is at the start or end, or is unused
-/// - mode: the behaviour of the drawer
-/// - open: whether the drawer is open
-/// - id: the id of the drawer
-/// - divider: whether to show a divider between the drawer and content for side mode
-/// - content: the content of the drawer
-/// 
-/// ## Returns:
-/// A Drawer
-///
-pub fn new(
-  usage: Usage,
-  mode: Mode,
-  open: Bool,
-  id: String,
-  divider: Bool,
-  content: Element(msg),
-) -> Drawer(msg) {
+pub fn new() -> Drawer(msg) {
   Drawer(
-    usage: usage,
-    mode: mode,
-    open: open,
-    id: id,
-    divider: divider,
-    content: content,
+    usage: Start,
+    mode: default_mode,
+    open: False,
+    id: "",
+    divider: False,
+    content: element.none(),
   )
 }
 
