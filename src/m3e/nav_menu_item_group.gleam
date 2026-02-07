@@ -35,7 +35,7 @@ pub fn heading(_group: NavMenuItemGroup, heading: String) -> NavMenuItemGroup {
 /// ## Parameters:
 /// - group: a NavMenuItemGroup
 /// - attributes: additional attributes
-/// - children: nested nav_manu_items and possible one or more dividers
+/// - children: nested nav_menu_items and possible one or more dividers
 /// 
 pub fn render(
   group: NavMenuItemGroup,
