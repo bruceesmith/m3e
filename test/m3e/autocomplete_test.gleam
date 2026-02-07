@@ -6,7 +6,9 @@ import m3e/autocomplete
 import m3e/option as m3e_opt
 
 pub fn new_test() {
-  autocomplete.new(True, "test-id", True, False)
+  autocomplete.new("test-id")
+  |> autocomplete.auto_activate(True)
+  |> autocomplete.required(True)
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: True,
     for: "test-id",
@@ -16,7 +18,11 @@ pub fn new_test() {
 }
 
 pub fn render_test() {
-  let ac = autocomplete.new(True, "test-id", True, True)
+  let ac =
+    autocomplete.new("test-id")
+    |> autocomplete.auto_activate(True)
+    |> autocomplete.required(True)
+    |> autocomplete.hide_selection_indicator(True)
   let opt = m3e_opt.new(False, False, Some("val"))
 
   autocomplete.render(ac, [opt])
@@ -37,7 +43,7 @@ pub fn render_test() {
 }
 
 pub fn render_defaults_test() {
-  let ac = autocomplete.new(False, "test-id", False, False)
+  let ac = autocomplete.new("test-id")
 
   autocomplete.render(ac, [])
   |> should.equal(
@@ -50,7 +56,7 @@ pub fn render_defaults_test() {
 }
 
 pub fn auto_activate_test() {
-  autocomplete.new(False, "id", False, False)
+  autocomplete.new("id")
   |> autocomplete.auto_activate(True)
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: True,
@@ -61,7 +67,7 @@ pub fn auto_activate_test() {
 }
 
 pub fn for_test() {
-  autocomplete.new(False, "id", False, False)
+  autocomplete.new("id")
   |> autocomplete.for("new-id")
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: False,
@@ -72,7 +78,7 @@ pub fn for_test() {
 }
 
 pub fn required_test() {
-  autocomplete.new(False, "id", False, False)
+  autocomplete.new("id")
   |> autocomplete.required(True)
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: False,
@@ -83,7 +89,7 @@ pub fn required_test() {
 }
 
 pub fn hide_selection_indicator_test() {
-  autocomplete.new(False, "id", False, False)
+  autocomplete.new("id")
   |> autocomplete.hide_selection_indicator(True)
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: False,

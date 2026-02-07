@@ -1,4 +1,4 @@
-//// button provides Lustre support for the [M3E Autocomplete component](https://matraic.github.io/m3e/#/components/autocomplete.html)
+//// autocomplete provides Lustre support for the [M3E Autocomplete component](https://matraic.github.io/m3e/#/components/autocomplete.html)
 
 import gleam/list.{filter, map}
 
@@ -28,18 +28,15 @@ pub type Autocomplete {
 /// new creates a new Autocomplete
 ///
 /// ## Parameters:
-/// - auto_activate: Whether the first option should be automatically activated
 /// - for: The identifier of the interactive control to which this element is attached
-/// - required: Whether the user is required to make a selection when interacting with the autocomplete
-/// - hide_selection_indicator: Whether to hide the selection indicator
 ///
-pub fn new(
-  auto_activate: Bool,
-  for: String,
-  required: Bool,
-  hide_selection_indicator: Bool,
-) -> Autocomplete {
-  Autocomplete(auto_activate, for, required, hide_selection_indicator)
+pub fn new(for: String) -> Autocomplete {
+  Autocomplete(
+    auto_activate: False,
+    for: for,
+    required: False,
+    hide_selection_indicator: False,
+  )
 }
 
 /// render creates an M3E Autocomplete component from an Autocomplete
