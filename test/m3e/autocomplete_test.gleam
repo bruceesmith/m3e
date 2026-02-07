@@ -23,7 +23,7 @@ pub fn render_test() {
     |> autocomplete.auto_activate(True)
     |> autocomplete.required(True)
     |> autocomplete.hide_selection_indicator(True)
-  let opt = m3e_opt.new(False, False, Some("val"))
+  let opt = m3e_opt.new() |> m3e_opt.value(Some("val"))
 
   autocomplete.render(ac, [opt])
   |> should.equal(

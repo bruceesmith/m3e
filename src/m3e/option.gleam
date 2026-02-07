@@ -4,7 +4,7 @@ import gleam/function
 import gleam/list.{filter}
 import gleam/option
 
-import lustre/attribute
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -16,28 +16,23 @@ import m3e/helpers.{boolean_attribute, option_attribute}
 /// - selected: Whether the element is selected
 /// - value: A string representing the value of the option
 /// 
-pub type Option {
+pub opaque type Option {
   Option(disabled: Bool, selected: Bool, value: option.Option(String))
 }
 
 /// new creates a new Option
 ///
-/// ## Parameters:
-/// - disabled: Whether the element is disabled
-/// - selected: Whether the element is selected
-/// - value: A string representing the value of the option
-/// 
-pub fn new(
-  disabled: Bool,
-  selected: Bool,
-  value: option.Option(String),
-) -> Option {
-  Option(disabled: disabled, selected: selected, value: value)
+pub fn new() -> Option {
+  Option(disabled: False, selected: False, value: option.None)
 }
 
 /// render creates an M3E Option component from an Option
 ///
-pub fn render(o: Option) -> Element(msg) {
+pub fn render(
+  o: Option,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element(
     "m3e-option",
     [
@@ -49,9 +44,10 @@ pub fn render(o: Option) -> Element(msg) {
         function.identity,
         option.None,
       ),
+      ..attributes
     ]
       |> filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 

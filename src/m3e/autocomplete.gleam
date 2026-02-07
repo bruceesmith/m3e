@@ -51,7 +51,7 @@ pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
       boolean_attribute("hide-selection-indicator", a.hide_selection_indicator),
     ]
       |> filter(fn(a) { a != none() }),
-    map(children, fn(o) { option.render(o) }),
+    map(children, fn(o) { option.render(o, [], []) }),
   )
 }
 
