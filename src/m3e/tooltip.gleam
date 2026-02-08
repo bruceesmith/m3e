@@ -99,66 +99,41 @@ pub opaque type Tooltip {
 /// - disabled: the tooltip is disabled (or not)
 /// - gestures: behaviour on touch devices
 ///
-pub fn new(
-  tip: String,
-  for_id: String,
-  position: Position,
-  hide_delay: HideDelay,
-  show_delay: ShowDelay,
-  disabled: Bool,
-  gestures: TouchGestures,
-) -> Tooltip {
+pub fn new(tip: String, for_id: String) -> Tooltip {
   Tooltip(
     tip: tip,
     for_id: for_id,
-    position: position,
-    hide_delay: hide_delay_validate(hide_delay),
-    show_delay: show_delay_vaidate(show_delay),
-    disabled: disabled,
-    gestures: gestures,
+    position: default_position,
+    hide_delay: default_hide_delay,
+    show_delay: default_show_delay,
+    disabled: False,
+    gestures: Auto,
   )
 }
 
 /// render creates a Lustre Element from a Tooltip
 ///
-/// ## Parameter:
+/// ## Parameters:
 /// - t: a Tooltip
+/// - attributes: a list of additional Attributes
 ///
-pub fn render(t: Tooltip) -> Element(msg) {
+pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
   element(
     "m3e-tooltip",
-    [
-      for(t.for_id),
-      boolean_attribute("disabled", t.disabled),
-      gestures_attr(t.gestures),
-      hide_delay_attr(t.hide_delay),
-      position_attr(t.position),
-      show_delay_attr(t.show_delay),
-    ]
+    list.append(
+      [
+        for(t.for_id),
+        boolean_attribute("disabled", t.disabled),
+        gestures_attr(t.gestures),
+        hide_delay_attr(t.hide_delay),
+        position_attr(t.position),
+        show_delay_attr(t.show_delay),
+      ],
+      attributes,
+    )
       |> list.filter(fn(a) { a != none() }),
-    [
-      text(t.tip),
-    ],
+    [text(t.tip)],
   )
-}
-
-/// basic returns a Lustre Element representing a simple tooltip
-///
-/// ## Parameters:
-/// - tip: text of the tool tip
-/// - for_id: the ID of the element to which the tip is associated
-///
-pub fn basic(tip: String, for_id: String) -> Element(msg) {
-  new(
-    tip,
-    for_id,
-    default_position,
-    default_hide_delay,
-    default_show_delay,
-    False,
-    Auto,
-  )
-  |> render
 }
 
 /// disabled sets the `disabled` field of a tooltip
@@ -204,13 +179,13 @@ fn position_attr(p: Position) -> Attribute(msg) {
 /// show_delay sets the `show_delay` field of a Tooltip
 ///
 pub fn show_delay(t: Tooltip, sd: ShowDelay) -> Tooltip {
-  Tooltip(..t, show_delay: show_delay_vaidate(sd))
+  Tooltip(..t, show_delay: show_delay_validate(sd))
 }
 
 fn show_delay_attr(sd: ShowDelay) -> Attribute(msg) {
   attribute("show-delay", to_string(sd))
 }
 
-fn show_delay_vaidate(sd: ShowDelay) -> ShowDelay {
+fn show_delay_validate(sd: ShowDelay) -> ShowDelay {
   clamp_with_default(sd, 0, maximum_show_delay, default_show_delay)
 }
