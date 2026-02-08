@@ -141,10 +141,10 @@ pub fn render(
         buffer_value_attr(pi.variant, pi.buffer_value),
         diameter_attr(pi.variant, pi.diameter),
         indeterminate_attr(pi.variant, pi.indeterminate),
-        max_attr(pi.max),
+        attribute("max", int.to_string(pi.max)),
         mode_attr(pi.variant, pi.mode),
         stroke_width_attr(pi.variant, pi.stroke_width),
-        value_attr(pi.value),
+        attribute.value(int.to_string(pi.value)),
       ],
       attributes,
     )
@@ -264,10 +264,6 @@ pub fn max(pi: ProgressIndicator, new_max: Maximum) -> ProgressIndicator {
   }
 }
 
-fn max_attr(max: Maximum) -> Attribute(msg) {
-  attribute("max", int.to_string(max))
-}
-
 fn max_validate(max: Maximum) -> Maximum {
   int.max(0, max)
 }
@@ -329,10 +325,6 @@ pub fn value(pi: ProgressIndicator, value: Value) -> ProgressIndicator {
         _ -> pi
       }
   }
-}
-
-fn value_attr(value: Value) -> Attribute(msg) {
-  attribute.value(int.to_string(value))
 }
 
 fn value_validate(max: Maximum, value: Value) -> Value {
