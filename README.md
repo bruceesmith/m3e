@@ -6,32 +6,39 @@
 **m3e** is a set of Gleam/Lustre wrappers for [M3E — Material 3 Expressive components](https://matraic.github.io/m3e/#/getting-started/overview.html)
 
 Currently m3e provides Gleam functions for a small subset of the M3E components
+- Accordion
+- App Bar
+- Auto Complete
 - Button
 - Button Group
 - Card
 - Checkbox
 - Chip
 - Chip Set
+- Dialog
 - Divider
+- Drawer Container
+- Expansion Panel
 - Form Field
 - Heading
 - Icon
+- Icon Button
+- Nav Menu
+- Option
 - Progress Indicator
 - Switch
 - Theme
 - Tooltip
 
-Each M3E component is represented by a Gleam type, has at least
-- a validating constructor function (lowercased type name) - for example _button.button(...)_
-- an _element_ function which creates a Lustre Element from the Gleam type
-
-In many cases there is also a _basic(..)_ function which creates a type instance using default values.
-
-Every type has helper functions which take an existing type instance, and return a new instance with one of the fields of the input updated. As such, these functions are designed to be used with Gleam's pipe operator, e.g.
+Each M3E component is represented by a Gleam type, has
+- a constructor function _new(...), or, in special cases, bespoke constructors (such as _circular()_ and _linear()_ in ProgressIndicator)
+- a _render()_ function which creates a Lustre Element from the Gleam type
+- setter functions which return a new record with one of the fields of the input record updated. As such, these functions are designed to be used in the
+Builder Pattern with Gleam's pipe operator, e.g.
 ```gleam
   import m3e/button
 
-  let b = button.basic("Press me", button.Filled) |> button.shape(button.Square)
+  let b = button.new("Press me", button.Filled) |> button.shape(button.Square)
 ```
 
 Further documentation can (_eventually_) be found at <https://hexdocs.pm/m3e>.
