@@ -1,7 +1,7 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
 
 import gleam/function
-import gleam/list
+import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -10,6 +10,7 @@ import m3e/form_submitter_type.{
   type FormSubmitterType, form_submitter_type_to_string,
 }
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/link.{type Link}
 
 /// Purpose defines the intended purpose of the icon
 ///
@@ -117,6 +118,7 @@ pub const default_width = Default
 /// ## Fields:
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
+/// - link: Whether the element is a link
 /// - name: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
 /// - purpose: An slot value defined by a parent element
 /// - selected: Whether the toggle button is selected
@@ -132,6 +134,7 @@ pub opaque type IconButton {
   IconButton(
     disabled: Bool,
     disabled_interactive: Bool,
+    link: Option(Link),
     name: Option(String),
     purpose: Option(Purpose),
     selected: Bool,
@@ -151,6 +154,7 @@ pub fn new() -> IconButton {
   IconButton(
     False,
     False,
+    None,
     None,
     None,
     False,
@@ -177,6 +181,12 @@ pub fn disabled_interactive(
   disabled_interactive: Bool,
 ) -> IconButton {
   IconButton(..i, disabled_interactive: disabled_interactive)
+}
+
+// link sets the link field
+/// 
+pub fn link(i: IconButton, link: Option(Link)) -> IconButton {
+  IconButton(..i, link: link)
 }
 
 /// name sets the name field
@@ -253,30 +263,33 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-icon-button",
-    [
-      attribute.disabled(i.disabled),
-      boolean_attribute("disabled-interactive", i.disabled_interactive),
-      option_attribute(i.name, fn(_) { "name" }, function.identity, None),
-      case i.purpose {
-        Some(p) -> slot(purpose_to_string(p))
-        None -> none()
-      },
-      attribute.selected(i.selected),
-      attribute("shape", shape_to_string(i.shape)),
-      attribute("size", size_to_string(i.size)),
-      boolean_attribute("toggle", i.toggle),
-      option_attribute(
-        i.type_,
-        fn(_) { "type" },
-        form_submitter_type_to_string,
-        None,
-      ),
-      attribute.value(i.value),
-      attribute("variant", variant_to_string(i.variant)),
-      attribute("width", width_to_string(i.width)),
-      ..attributes
-    ]
-      |> list.filter(fn(a) { a != none() }),
+    flatten([
+      [
+        attribute.disabled(i.disabled),
+        boolean_attribute("disabled-interactive", i.disabled_interactive),
+        option_attribute(i.name, fn(_) { "name" }, function.identity, None),
+        case i.purpose {
+          Some(p) -> slot(purpose_to_string(p))
+          None -> none()
+        },
+        attribute.selected(i.selected),
+        attribute("shape", shape_to_string(i.shape)),
+        attribute("size", size_to_string(i.size)),
+        boolean_attribute("toggle", i.toggle),
+        option_attribute(
+          i.type_,
+          fn(_) { "type" },
+          form_submitter_type_to_string,
+          None,
+        ),
+        attribute.value(i.value),
+        attribute("variant", variant_to_string(i.variant)),
+        attribute("width", width_to_string(i.width)),
+      ],
+      link.render(i.link),
+      attributes,
+    ])
+      |> filter(fn(a) { a != none() }),
     children,
   )
 }
