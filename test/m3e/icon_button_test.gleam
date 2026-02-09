@@ -3,10 +3,12 @@ import gleeunit/should
 import lustre/attribute.{attribute, disabled, selected, value}
 import lustre/element.{element}
 import m3e/icon_button.{
-  ExtraLarge, Filled, Large, LeadingIcon, Narrow, Reset, Square, Submit, Tonal,
-  Wide, disabled_interactive, name, new, purpose, render, shape, size, toggle,
-  type_, variant, width,
+  ExtraLarge, Filled, Large, LeadingIcon, Narrow, Square, Tonal, Wide,
+  disabled_interactive, name, new, purpose, render, shape, size, toggle, type_,
+  variant, width,
 }
+
+import m3e/helpers.{Reset, Submit}
 
 pub fn icon_button_creation_test() {
   let b = new()
@@ -18,7 +20,6 @@ pub fn icon_button_creation_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -37,7 +38,7 @@ pub fn icon_button_creation_test() {
     |> shape(Square)
     |> size(Large)
     |> toggle(True)
-    |> type_(Submit)
+    |> type_(Some(Submit))
     |> icon_button.value("val")
     |> variant(Filled)
     |> width(Narrow)
@@ -73,7 +74,6 @@ pub fn icon_button_element_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -95,7 +95,6 @@ pub fn icon_button_purpose_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -116,7 +115,6 @@ pub fn icon_button_disabled_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -138,7 +136,6 @@ pub fn icon_button_disabled_interactive_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -160,7 +157,6 @@ pub fn icon_button_name_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -181,7 +177,6 @@ pub fn icon_button_selected_test() {
         selected(True),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -202,7 +197,6 @@ pub fn icon_button_shape_test() {
         selected(False),
         attribute("shape", "square"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -223,7 +217,6 @@ pub fn icon_button_size_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "extra-large"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -245,7 +238,6 @@ pub fn icon_button_toggle_test() {
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("toggle", ""),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -256,7 +248,7 @@ pub fn icon_button_toggle_test() {
 }
 
 pub fn icon_button_type_test() {
-  let b = new() |> type_(Reset)
+  let b = new() |> type_(Some(Reset))
 
   let expected =
     element(
@@ -287,7 +279,6 @@ pub fn icon_button_value_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value("123"),
         attribute("variant", "standard"),
         attribute("width", "default"),
@@ -308,7 +299,6 @@ pub fn icon_button_variant_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "tonal"),
         attribute("width", "default"),
@@ -329,7 +319,6 @@ pub fn icon_button_width_test() {
         selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        attribute("type", "button"),
         value(""),
         attribute("variant", "standard"),
         attribute("width", "wide"),

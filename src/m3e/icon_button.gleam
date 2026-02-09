@@ -6,7 +6,10 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/helpers.{
+  type FormSubmitterType, boolean_attribute, form_submitted_type_to_string,
+  option_attribute, slot,
+}
 
 /// Purpose defines the intended purpose of the icon
 ///
@@ -66,26 +69,6 @@ fn size_to_string(s: Size) -> String {
 }
 
 pub const default_size = Small
-
-/// Type controls the behavior of an icon button
-/// 
-pub type Type {
-  Button
-  Submit
-  Reset
-}
-
-/// type_to_string converts a Type to a string
-/// 
-fn type_to_string(t: Type) -> String {
-  case t {
-    Button -> "button"
-    Submit -> "submit"
-    Reset -> "reset"
-  }
-}
-
-pub const default_type = Button
 
 /// Variant is the appearance variant of the button
 /// 
@@ -155,7 +138,7 @@ pub opaque type IconButton {
     shape: Shape,
     size: Size,
     toggle: Bool,
-    type_: Type,
+    type_: Option(FormSubmitterType),
     value: String,
     variant: Variant,
     width: Width,
@@ -174,7 +157,7 @@ pub fn new() -> IconButton {
     default_shape,
     default_size,
     False,
-    default_type,
+    None,
     "",
     default_variant,
     default_width,
@@ -234,7 +217,7 @@ pub fn toggle(i: IconButton, toggle: Bool) -> IconButton {
 
 /// type_ sets the type_ field
 /// 
-pub fn type_(i: IconButton, type_: Type) -> IconButton {
+pub fn type_(i: IconButton, type_: Option(FormSubmitterType)) -> IconButton {
   IconButton(..i, type_: type_)
 }
 
@@ -282,7 +265,12 @@ pub fn render(
       attribute("shape", shape_to_string(i.shape)),
       attribute("size", size_to_string(i.size)),
       boolean_attribute("toggle", i.toggle),
-      attribute("type", type_to_string(i.type_)),
+      option_attribute(
+        i.type_,
+        fn(_) { "type" },
+        form_submitted_type_to_string,
+        None,
+      ),
       attribute.value(i.value),
       attribute("variant", variant_to_string(i.variant)),
       attribute("width", width_to_string(i.width)),
