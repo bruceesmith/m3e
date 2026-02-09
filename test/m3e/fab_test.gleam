@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/fab
-import m3e/helpers
+import m3e/form_submitter_type as helpers
 
 pub fn default_test() {
   fab.new()

@@ -7,10 +7,10 @@ import lustre/attribute.{type Attribute, none as attr_none}
 import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
-import m3e/helpers.{
-  type FormSubmitterType, boolean_attribute, form_submitter_type_to_string,
-  option_attribute, slot,
+import m3e/form_submitter_type.{
+  type FormSubmitterType, form_submitter_type_to_string,
 }
+import m3e/helpers.{boolean_attribute, option_attribute, slot}
 
 /// The visual shape of the button.
 pub type Shape {

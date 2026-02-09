@@ -6,10 +6,10 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/helpers.{
-  type FormSubmitterType, boolean_attribute, form_submitter_type_to_string,
-  option_attribute, slot,
+import m3e/form_submitter_type.{
+  type FormSubmitterType, form_submitter_type_to_string,
 }
+import m3e/helpers.{boolean_attribute, option_attribute, slot}
 
 /// Purpose defines the intended purpose of the icon
 ///
