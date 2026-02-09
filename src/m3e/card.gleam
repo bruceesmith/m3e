@@ -1,10 +1,13 @@
 //// card provides Lustre support for the [M3E Card component](https://matraic.github.io/m3e/#/components/card.html)
 
-import gleam/list
+import gleam/list.{filter, flatten}
+import gleam/option.{type Option, None}
+
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/link.{type Link}
 
 /// Orientation is the orientation of the card
 /// 
@@ -48,6 +51,7 @@ pub const default_variant = Filled
 /// - actionable: Whether the card is "actionable" and will respond to use interaction
 /// - disabled: Whether the element is disabled
 /// - inline: Whether to present the card inline with surrounding content
+/// - link: Whether the card is a link
 /// - orientation: The orientation of the card
 /// - variant: The appearance variant of the card
 /// 
@@ -56,6 +60,7 @@ pub opaque type Card {
     actionable: Bool,
     disabled: Bool,
     inline: Bool,
+    link: Option(Link),
     orientation: Orientation,
     variant: Variant,
   )
@@ -64,7 +69,7 @@ pub opaque type Card {
 /// new creates a Card with default values
 /// 
 pub fn new() -> Card {
-  Card(False, False, False, default_orientation, default_variant)
+  Card(False, False, False, None, default_orientation, default_variant)
 }
 
 /// render creates a Lustre Element from a Card
@@ -81,15 +86,18 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-card",
-    [
-      boolean_attribute("actionable", c.actionable),
-      boolean_attribute("disabled", c.disabled),
-      boolean_attribute("inline", c.inline),
-      attribute("orientation", orientation_to_string(c.orientation)),
-      attribute("variant", variant_to_string(c.variant)),
-      ..attributes
-    ]
-      |> list.filter(fn(a) { a != none() }),
+    flatten([
+      [
+        boolean_attribute("actionable", c.actionable),
+        boolean_attribute("disabled", c.disabled),
+        boolean_attribute("inline", c.inline),
+        attribute("orientation", orientation_to_string(c.orientation)),
+        attribute("variant", variant_to_string(c.variant)),
+      ],
+      link.render(c.link),
+      attributes,
+    ])
+      |> filter(fn(a) { a != none() }),
     children,
   )
 }
@@ -110,6 +118,12 @@ pub fn disabled(c: Card, disabled: Bool) -> Card {
 /// 
 pub fn inline(c: Card, inline: Bool) -> Card {
   Card(..c, inline: inline)
+}
+
+/// link sets the `link` field of a Card
+/// 
+pub fn link(c: Card, link: Option(Link)) -> Card {
+  Card(..c, link: link)
 }
 
 /// orientation sets the `orientation` field of a Card
