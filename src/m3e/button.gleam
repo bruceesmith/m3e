@@ -197,12 +197,12 @@ pub fn label(b: Button(msg), label: String) -> Button(msg) {
   Button(..b, label: label)
 }
 
-///
-/// name sets the `name` field of a Button
-///
-pub fn name(b: Button(msg), name: Option(String)) -> Button(msg) {
-  Button(..b, name: name)
-}
+// ///
+// /// name sets the `name` field of a Button
+// ///
+// pub fn name(b: Button(msg), name: Option(String)) -> Button(msg) {
+//   Button(..b, name: name)
+// }
 
 /// selected_label sets the`selected_label` field of a Button
 ///
@@ -229,11 +229,11 @@ pub fn size(b: Button(msg), s: Size) -> Button(msg) {
   Button(..b, size: Some(s))
 }
 
-/// set_type sets the`type_` field of a Button
-///
-pub fn set_type(b: Button(msg), t: Option(FormSubmitterType)) -> Button(msg) {
-  Button(..b, type_: t)
-}
+// /// set_type sets the`type_` field of a Button
+// ///
+// pub fn set_type(b: Button(msg), t: Option(FormSubmitterType)) -> Button(msg) {
+//   Button(..b, type_: t)
+// }
 
 /// toggle sets the`toggle` field of a Button
 ///
@@ -247,11 +247,11 @@ pub fn selected(b: Button(msg), s: Bool) -> Button(msg) {
   Button(..b, selected: s)
 }
 
-/// value sets the`value` field of a Button
-///
-pub fn value(b: Button(msg), v: Option(String)) -> Button(msg) {
-  Button(..b, value: v)
-}
+// /// value sets the`value` field of a Button
+// ///
+// pub fn value(b: Button(msg), v: Option(String)) -> Button(msg) {
+//   Button(..b, value: v)
+// }
 
 /// variant sets the`variant` field of a Button
 ///

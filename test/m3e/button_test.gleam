@@ -4,10 +4,10 @@ import lustre/attribute.{attribute, disabled, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
-  Elevated, Filled, Large, Outlined, Square, Text, form, icons, label, name, new,
-  render, selected_label, set_type, shape, size, toggle, value, variant,
+  Elevated, Filled, Large, Outlined, Square, Text, form, icons, label, new,
+  render, selected_label, shape, size, toggle, variant,
 }
-import m3e/helpers.{Reset, Submit}
+import m3e/helpers.{Submit}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)
@@ -33,9 +33,7 @@ pub fn button_creation_test() {
     |> toggle(True)
     |> button.selected(True)
     |> button.disabled(True)
-    |> set_type(Some(Submit))
-    |> name(Some("key"))
-    |> value(Some("val"))
+    |> form(Some(Submit), Some("key"), Some("val"))
 
   let expected_full =
     element(
@@ -94,25 +92,6 @@ pub fn button_form_test() {
   b |> render([]) |> should.equal(expected)
 }
 
-pub fn button_name_test() {
-  let b = new("Key", Text) |> name(Some("my-key"))
-
-  let expected =
-    element(
-      "m3e-button",
-      [
-        attribute("variant", "text"),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        selected(False),
-        disabled(False),
-        attribute.name("my-key"),
-      ],
-      [text("Key"), element.none()],
-    )
-  b |> render([]) |> should.equal(expected)
-}
-
 pub fn button_selected_label_test() {
   let b = new("Toggle", Outlined) |> selected_label("On")
 
@@ -166,44 +145,6 @@ pub fn button_size_test() {
         disabled(False),
       ],
       [text("Size"), element.none()],
-    )
-  b |> render([]) |> should.equal(expected)
-}
-
-pub fn button_set_type_test() {
-  let b = new("Reset", Text) |> set_type(Some(Reset))
-
-  let expected =
-    element(
-      "m3e-button",
-      [
-        attribute("variant", "text"),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        selected(False),
-        disabled(False),
-        attribute("type", "reset"),
-      ],
-      [text("Reset"), element.none()],
-    )
-  b |> render([]) |> should.equal(expected)
-}
-
-pub fn button_value_test() {
-  let b = new("Value", Text) |> value(Some("123"))
-
-  let expected =
-    element(
-      "m3e-button",
-      [
-        attribute("variant", "text"),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        selected(False),
-        disabled(False),
-        attribute("value", "123"),
-      ],
-      [text("Value"), element.none()],
     )
   b |> render([]) |> should.equal(expected)
 }
