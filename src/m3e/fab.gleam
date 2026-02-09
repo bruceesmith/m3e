@@ -1,7 +1,7 @@
 ///// fab provides Lustre support for the [M3E FAB component](https://matraic.github.io/m3e/#/components/fabr.html)
 
 import gleam/function.{identity}
-import gleam/list.{filter}
+import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -12,6 +12,7 @@ import m3e/form_submitter_type.{
   type FormSubmitterType, form_submitter_type_to_string,
 }
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/link.{type Link}
 
 /// Size is the size of the bar
 /// 
@@ -66,6 +67,7 @@ pub const default_variant = PrimaryContainer
 /// - disabled_interactive: Whether the element is disabled and interactive
 /// - extended: Whether the element is extended
 /// - extended_label: Renders the label of an extended button
+/// - link: Whether the element is a link
 /// - lowered: Whether to present a lowered elevation
 /// - name: The name of the button when submitted in a form
 /// - size: The size of the button
@@ -79,6 +81,7 @@ pub opaque type FAB {
     disabled_interactive: Bool,
     extended: Bool,
     extended_label: Option(String),
+    link: Option(Link),
     lowered: Bool,
     name: Option(String),
     size: Size,
@@ -96,6 +99,7 @@ pub fn new() -> FAB {
     disabled_interactive: False,
     extended: False,
     extended_label: None,
+    link: None,
     lowered: False,
     name: None,
     size: default_size,
@@ -119,54 +123,57 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-fab",
-    [
-      boolean_attribute("disabled", f.disabled),
-      boolean_attribute("disabled-interactive", f.disabled_interactive),
-      boolean_attribute("extended", f.extended),
-      boolean_attribute("lowered", f.lowered),
-      option_attribute(f.name, fn(_) { "name" }, identity, None),
-      attribute("size", size_to_string(f.size)),
-      option_attribute(
-        f.type_,
-        fn(_) { "type" },
-        form_submitter_type_to_string,
-        None,
-      ),
-      option_attribute(f.value, fn(_) { "value" }, identity, None),
-      attribute("variant", variant_to_string(f.variant)),
-      ..attributes
-    ]
+    flatten([
+      [
+        boolean_attribute("disabled", f.disabled),
+        boolean_attribute("disabled-interactive", f.disabled_interactive),
+        boolean_attribute("extended", f.extended),
+        boolean_attribute("lowered", f.lowered),
+        option_attribute(f.name, fn(_) { "name" }, identity, None),
+        attribute("size", size_to_string(f.size)),
+        option_attribute(
+          f.type_,
+          fn(_) { "type" },
+          form_submitter_type_to_string,
+          None,
+        ),
+        option_attribute(f.value, fn(_) { "value" }, identity, None),
+        attribute("variant", variant_to_string(f.variant)),
+      ],
+      link.render(f.link),
+      attributes,
+    ])
       |> filter(fn(a) { a != none() }),
     [extended_label_elt(f.extended_label), ..children]
       |> filter(fn(a) { a != element.none() }),
   )
 }
 
-/// disabled sets the disabled attribute
+/// disabled sets the disabled field
 /// 
 pub fn disabled(f: FAB, disabled: Bool) -> FAB {
   FAB(..f, disabled: disabled)
 }
 
-/// disabled_interactive sets the disabled_interactive attribute
+/// disabled_interactive sets the disabled_interactive field
 /// 
 pub fn disabled_interactive(f: FAB, disabled_interactive: Bool) -> FAB {
   FAB(..f, disabled_interactive: disabled_interactive)
 }
 
-/// extended sets the extended attribute
+/// extended sets the extended field
 /// 
 pub fn extended(f: FAB, extended: Bool) -> FAB {
   FAB(..f, extended: extended)
 }
 
-/// extended_label sets the extended_label attribute
+/// extended_label sets the extended_label field
 /// 
 pub fn extended_label(f: FAB, extended_label: Option(String)) -> FAB {
   FAB(..f, extended_label: extended_label)
 }
 
-/// extended_label_elt sets the extended_label_elt attribute
+/// extended_label_elt sets the extended_label_elt field
 /// 
 fn extended_label_elt(el: Option(String)) -> Element(msg) {
   case el {
@@ -175,37 +182,43 @@ fn extended_label_elt(el: Option(String)) -> Element(msg) {
   }
 }
 
-/// lowered sets the lowered attribute
+/// link sets the link field
+/// 
+pub fn link(f: FAB, link: Option(Link)) -> FAB {
+  FAB(..f, link: link)
+}
+
+/// lowered sets the lowered field
 /// 
 pub fn lowered(f: FAB, lowered: Bool) -> FAB {
   FAB(..f, lowered: lowered)
 }
 
-/// name sets the name attribute
+/// name sets the name field
 /// 
 pub fn name(f: FAB, name: Option(String)) -> FAB {
   FAB(..f, name: name)
 }
 
-/// size sets the size attribute
+/// size sets the size field
 /// 
 pub fn size(f: FAB, size: Size) -> FAB {
   FAB(..f, size: size)
 }
 
-/// type_ sets the type_ attribute
+/// type_ sets the type_ field
 /// 
 pub fn type_(f: FAB, type_: Option(FormSubmitterType)) -> FAB {
   FAB(..f, type_: type_)
 }
 
-/// value sets the value attribute
+/// value sets the value field
 /// 
 pub fn value(f: FAB, value: Option(String)) -> FAB {
   FAB(..f, value: value)
 }
 
-/// variant sets the variant attribute
+/// variant sets the variant field
 /// 
 pub fn variant(f: FAB, variant: Variant) -> FAB {
   FAB(..f, variant: variant)
