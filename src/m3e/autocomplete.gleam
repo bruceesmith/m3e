@@ -13,15 +13,15 @@ import m3e/option.{type Option}
 /// ## Fields:
 /// - auto_activate: Whether the first option should be automatically activated
 /// - for: The identifier of the interactive control to which this element is attached
-/// - required: Whether the user is required to make a selection when interacting with the autocomplete
 /// - hide_selection_indicator: Whether to hide the selection indicator
+/// - required: Whether the user is required to make a selection when interacting with the autocomplete
 ///
 pub type Autocomplete {
   Autocomplete(
     auto_activate: Bool,
     for: String,
-    required: Bool,
     hide_selection_indicator: Bool,
+    required: Bool,
   )
 }
 
@@ -34,8 +34,8 @@ pub fn new(for: String) -> Autocomplete {
   Autocomplete(
     auto_activate: False,
     for: for,
-    required: False,
     hide_selection_indicator: False,
+    required: False,
   )
 }
 
@@ -47,8 +47,8 @@ pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
     [
       boolean_attribute("auto-activate", a.auto_activate),
       attribute("for", a.for),
-      boolean_attribute("required", a.required),
       boolean_attribute("hide-selection-indicator", a.hide_selection_indicator),
+      boolean_attribute("required", a.required),
     ]
       |> filter(fn(a) { a != none() }),
     map(children, fn(o) { option.render(o, [], []) }),
