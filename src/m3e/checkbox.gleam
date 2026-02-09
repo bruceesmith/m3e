@@ -2,7 +2,8 @@
 
 import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
+import gleam/option.{type Option, None, Some}
+import gleam/string
 import lustre/attribute.{none}
 import lustre/element.{type Element, element}
 
@@ -75,28 +76,21 @@ pub fn disabled(checkbox: Checkbox, disabled: Bool) -> Checkbox {
 /// - name: the name of the checkbox when the form is submitted
 /// - value: the value of the checkbox when the form is submitted
 ///
-pub fn form(
-  checkbox: Checkbox,
-  name: Option(String),
-  value: Option(String),
-) -> Checkbox {
-  Checkbox(..checkbox, name: name, value: value)
-}
-
-/// name sets the `name` field
-///
-pub fn name(checkbox: Checkbox, name: Option(String)) -> Checkbox {
-  Checkbox(..checkbox, name: name)
+pub fn form(checkbox: Checkbox, name: String, value: String) -> Checkbox {
+  case string.length(name) {
+    0 -> checkbox
+    _ -> {
+      let val = case string.length(value) {
+        0 -> default_value
+        _ -> value
+      }
+      Checkbox(..checkbox, name: Some(name), value: Some(val))
+    }
+  }
 }
 
 /// required sets the `required` field
 ///
 pub fn required(checkbox: Checkbox, required: Bool) -> Checkbox {
   Checkbox(..checkbox, required: required)
-}
-
-/// value sets the`value` field
-///
-pub fn value(checkbox: Checkbox, value: Option(String)) -> Checkbox {
-  Checkbox(..checkbox, value: value)
 }
