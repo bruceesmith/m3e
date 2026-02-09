@@ -12,8 +12,8 @@ pub fn new_test() {
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: True,
     for: "test-id",
-    required: True,
     hide_selection_indicator: False,
+    required: True,
   ))
 }
 
@@ -61,8 +61,8 @@ pub fn auto_activate_test() {
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: True,
     for: "id",
-    required: False,
     hide_selection_indicator: False,
+    required: False,
   ))
 }
 
@@ -72,8 +72,8 @@ pub fn for_test() {
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: False,
     for: "new-id",
-    required: False,
     hide_selection_indicator: False,
+    required: False,
   ))
 }
 
@@ -83,8 +83,8 @@ pub fn required_test() {
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: False,
     for: "id",
-    required: True,
     hide_selection_indicator: False,
+    required: True,
   ))
 }
 
@@ -94,7 +94,7 @@ pub fn hide_selection_indicator_test() {
   |> should.equal(autocomplete.Autocomplete(
     auto_activate: False,
     for: "id",
-    required: False,
     hide_selection_indicator: True,
+    required: False,
   ))
 }
