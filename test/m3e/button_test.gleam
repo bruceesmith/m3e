@@ -4,10 +4,10 @@ import lustre/attribute.{attribute, disabled, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
-  Elevated, Filled, Large, Outlined, Reset, Square, Submit, Text, form, icons,
-  label, name, new, render, selected_label, set_type, shape, size, toggle, value,
-  variant,
+  Elevated, Filled, Large, Outlined, Square, Text, form, icons, label, name, new,
+  render, selected_label, set_type, shape, size, toggle, value, variant,
 }
+import m3e/helpers.{Reset, Submit}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)
@@ -33,7 +33,7 @@ pub fn button_creation_test() {
     |> toggle(True)
     |> button.selected(True)
     |> button.disabled(True)
-    |> set_type(Submit)
+    |> set_type(Some(Submit))
     |> name(Some("key"))
     |> value(Some("val"))
 
@@ -171,7 +171,7 @@ pub fn button_size_test() {
 }
 
 pub fn button_set_type_test() {
-  let b = new("Reset", Text) |> set_type(Reset)
+  let b = new("Reset", Text) |> set_type(Some(Reset))
 
   let expected =
     element(

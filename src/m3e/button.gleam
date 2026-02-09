@@ -7,7 +7,10 @@ import lustre/attribute.{type Attribute, none as attr_none}
 import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
-import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/helpers.{
+  type FormSubmitterType, boolean_attribute, form_submitted_type_to_string,
+  option_attribute, slot,
+}
 
 /// The visual shape of the button.
 pub type Shape {
@@ -47,21 +50,6 @@ fn size_to_string(size: Size) -> String {
 /// Default size
 pub const default_size = Small
 
-/// The native HTML button type, meaningful only within a form.
-pub type Type {
-  /// Reset button withion an HTML Form
-  Reset
-  /// Submit button for an HTML Form
-  Submit
-}
-
-fn type_to_string(t: Type) -> String {
-  case t {
-    Reset -> "reset"
-    Submit -> "submit"
-  }
-}
-
 /// The visual variant (style) of the button.
 pub type Variant {
   Elevated
@@ -97,7 +85,7 @@ pub opaque type Button(msg) {
     toggle: Bool,
     selected: Bool,
     disabled: Bool,
-    type_: Option(Type),
+    type_: Option(FormSubmitterType),
     name: Option(String),
     value: Option(String),
   )
@@ -158,7 +146,12 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         boolean_attribute("toggle", b.toggle),
         attribute.selected(b.selected),
         attribute.disabled(b.disabled),
-        option_attribute(b.type_, fn(_) { "type" }, type_to_string, None),
+        option_attribute(
+          b.type_,
+          fn(_) { "type" },
+          form_submitted_type_to_string,
+          None,
+        ),
         option_attribute(b.name, fn(_) { "name" }, function.identity, None),
         option_attribute(b.value, fn(_) { "value" }, function.identity, None),
       ],
@@ -179,7 +172,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
 ///
 pub fn form(
   b: Button(msg),
-  type_: Option(Type),
+  type_: Option(FormSubmitterType),
   name: Option(String),
   value: Option(String),
 ) -> Button(msg) {
@@ -238,8 +231,8 @@ pub fn size(b: Button(msg), s: Size) -> Button(msg) {
 
 /// set_type sets the`type_` field of a Button
 ///
-pub fn set_type(b: Button(msg), t: Type) -> Button(msg) {
-  Button(..b, type_: Some(t))
+pub fn set_type(b: Button(msg), t: Option(FormSubmitterType)) -> Button(msg) {
+  Button(..b, type_: t)
 }
 
 /// toggle sets the`toggle` field of a Button
