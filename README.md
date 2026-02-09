@@ -19,6 +19,7 @@ Currently m3e provides Gleam functions for a small subset of the M3E components
 - Divider
 - Drawer Container
 - Expansion Panel
+- Fab
 - Form Field
 - Heading
 - Icon
