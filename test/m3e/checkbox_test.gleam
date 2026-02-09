@@ -1,3 +1,4 @@
+import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
@@ -40,7 +41,7 @@ pub fn checkbox_disabled_test() {
 pub fn checkbox_form_test() {
   let c =
     new()
-    |> form("some_key", "some_value")
+    |> form(Some("some_key"), Some("some_value"))
 
   let expected =
     element(
