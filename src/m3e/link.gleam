@@ -1,4 +1,4 @@
-import gleam/option.{type Option, None, Some}
+import gleam/option.{type Option, Some}
 
 import lustre/attribute.{type Attribute, attribute}
 
@@ -36,21 +36,21 @@ pub type Link {
 
 /// new creates a new Link
 ///
-pub fn new(download: Bool, href: String, rel: String, target: Target) -> Link {
-  Link(download, href, rel, target)
+pub fn new(href: String) -> Link {
+  Link(False, href, "", Self)
 }
 
-/// render creates Lustre Attributes for a Link
+/// attributes creates Lustre Attributes for a Link
 /// 
-pub fn render(l: Option(Link)) -> List(Attribute(msg)) {
+pub fn attributes(l: Option(Link)) -> List(Attribute(msg)) {
   case l {
-    Some(link) -> [
+    Some(link) if link.href != "" -> [
       boolean_attribute("download", link.download),
       attribute("href", link.href),
       attribute("rel", link.rel),
       attribute("target", link_target_to_string(link.target)),
     ]
-    None -> [attribute.none()]
+    _ -> [attribute.none()]
   }
 }
 

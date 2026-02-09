@@ -140,7 +140,7 @@ pub fn render(
         option_attribute(f.value, fn(_) { "value" }, identity, None),
         attribute("variant", variant_to_string(f.variant)),
       ],
-      link.render(f.link),
+      link.attributes(f.link),
       attributes,
     ])
       |> filter(fn(a) { a != none() }),

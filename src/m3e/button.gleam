@@ -176,7 +176,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         ),
         option_attribute(b.name, fn(_) { "name" }, function.identity, None),
         option_attribute(b.value, fn(_) { "value" }, function.identity, None),
-        ..link.render(b.link)
+        ..link.attributes(b.link)
       ],
       attributes,
     )

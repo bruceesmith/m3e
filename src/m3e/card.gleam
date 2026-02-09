@@ -94,7 +94,7 @@ pub fn render(
         attribute("orientation", orientation_to_string(c.orientation)),
         attribute("variant", variant_to_string(c.variant)),
       ],
-      link.render(c.link),
+      link.attributes(c.link),
       attributes,
     ])
       |> filter(fn(a) { a != none() }),

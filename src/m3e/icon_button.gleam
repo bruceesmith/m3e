@@ -286,7 +286,7 @@ pub fn render(
         attribute("variant", variant_to_string(i.variant)),
         attribute("width", width_to_string(i.width)),
       ],
-      link.render(i.link),
+      link.attributes(i.link),
       attributes,
     ])
       |> filter(fn(a) { a != none() }),
