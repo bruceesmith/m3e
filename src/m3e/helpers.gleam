@@ -20,6 +20,24 @@ pub fn clamp_with_default(value: Int, min: Int, max: Int, default: Int) -> Int {
   }
 }
 
+/// FormSubmitterType is the type of an element when used inside a form
+///
+pub type FormSubmitterType {
+  Button
+  Reset
+  Submit
+}
+
+/// form_submitter_type_to_string converts a FormSubmitterType to a string
+///
+pub fn form_submitted_type_to_string(t: FormSubmitterType) -> String {
+  case t {
+    Button -> "button"
+    Reset -> "reset"
+    Submit -> "submit"
+  }
+}
+
 /// option_attribute creates an HTML attribute if an Option(a) has
 /// a value, else it creates either a default or attribute.none()
 ///
