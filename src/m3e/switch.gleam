@@ -2,7 +2,7 @@
 
 import gleam/function
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{text}
@@ -97,8 +97,10 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
 
 /// form sets the name and value fields when the switch is used in a form
 ///
-pub fn form(s: Switch, name: String, value: String) -> Switch {
-  Switch(..s, name: Some(name), value: Some(value))
+/// Pass None to name & value to clear the form controls
+///
+pub fn form(s: Switch, name: Option(String), value: Option(String)) -> Switch {
+  Switch(..s, name: name, value: value)
 }
 
 /// icon sets the icons field

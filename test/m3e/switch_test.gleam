@@ -1,3 +1,4 @@
+import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute, for, id}
 import lustre/element.{element}
@@ -17,7 +18,7 @@ pub fn switch_full_test() {
     new("test_id", "Test Label")
     |> checked(True)
     |> disabled(True)
-    |> form("key", "value")
+    |> form(Some("key"), Some("value"))
     |> icon(Both)
 
   let expected = [
@@ -92,7 +93,7 @@ pub fn switch_disabled_test() {
 pub fn switch_form_test() {
   let s =
     new("test_id", "Test Label")
-    |> form("some_key", "some_value")
+    |> form(Some("some_key"), Some("some_value"))
 
   let expected = [
     element(
