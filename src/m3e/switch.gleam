@@ -2,7 +2,7 @@
 
 import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
+import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{text}
@@ -95,26 +95,14 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
   ]
 }
 
-/// form sets the name and value fields
+/// form sets the name and value fields when the switch is used in a form
 ///
-pub fn form(s: Switch, name: Option(String), value: Option(String)) -> Switch {
-  Switch(..s, name: name, value: value)
+pub fn form(s: Switch, name: String, value: String) -> Switch {
+  Switch(..s, name: Some(name), value: Some(value))
 }
 
 /// icon sets the icons field
 ///
 pub fn icon(s: Switch, icons: Icons) -> Switch {
   Switch(..s, icons: icons)
-}
-
-/// name sets the name field
-///
-pub fn name(s: Switch, name: Option(String)) -> Switch {
-  Switch(..s, name: name)
-}
-
-/// value sets the value field
-///
-pub fn value(s: Switch, value: Option(String)) -> Switch {
-  Switch(..s, value: value)
 }

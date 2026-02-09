@@ -1,10 +1,7 @@
-import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute, for, id}
 import lustre/element.{element}
-import m3e/switch.{
-  Both, Selected, checked, disabled, form, icon, name, new, render, value,
-}
+import m3e/switch.{Both, Selected, checked, disabled, form, icon, new, render}
 
 pub fn switch_basic_test() {
   let s = new("test_id", "Test Label")
@@ -20,10 +17,8 @@ pub fn switch_full_test() {
     new("test_id", "Test Label")
     |> checked(True)
     |> disabled(True)
-    |> form(Some("key"), Some("value"))
+    |> form("key", "value")
     |> icon(Both)
-    |> name(Some("key"))
-    |> value(Some("value"))
 
   let expected = [
     element(
@@ -97,7 +92,7 @@ pub fn switch_disabled_test() {
 pub fn switch_form_test() {
   let s =
     new("test_id", "Test Label")
-    |> form(Some("some_key"), Some("some_value"))
+    |> form("some_key", "some_value")
 
   let expected = [
     element(
@@ -131,46 +126,6 @@ pub fn switch_icon_test() {
   let s = s |> icon(Selected)
   let expected = [
     element("m3e-switch", [id("test_id"), attribute("icons", "selected")], []),
-    element("label", [for("test_id")], [element.text("Test Label")]),
-  ]
-  s
-  |> render([])
-  |> should.equal(expected)
-}
-
-pub fn switch_name_test() {
-  let s = new("test_id", "Test Label") |> name(Some("test_key"))
-
-  let expected = [
-    element(
-      "m3e-switch",
-      [
-        id("test_id"),
-        attribute("icons", "none"),
-        attribute("name", "test_key"),
-      ],
-      [],
-    ),
-    element("label", [for("test_id")], [element.text("Test Label")]),
-  ]
-  s
-  |> render([])
-  |> should.equal(expected)
-}
-
-pub fn switch_value_test() {
-  let s = new("test_id", "Test Label") |> value(Some("test_value"))
-
-  let expected = [
-    element(
-      "m3e-switch",
-      [
-        id("test_id"),
-        attribute("icons", "none"),
-        attribute("value", "test_value"),
-      ],
-      [],
-    ),
     element("label", [for("test_id")], [element.text("Test Label")]),
   ]
   s
