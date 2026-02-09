@@ -11,6 +11,7 @@ import m3e/form_submitter_type.{
   type FormSubmitterType, form_submitter_type_to_string,
 }
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/link.{type Link}
 
 /// The visual shape of the button.
 pub type Shape {
@@ -72,8 +73,24 @@ fn variant_to_string(v: Variant) -> String {
 /// Default variant
 pub const default_variant = Text
 
-// Button holds all the values necessary to construct am M3E Button
-//
+/// Button holds all the values necessary to construct am M3E Button
+///
+/// ## Fields:
+/// - label: Renders the label of the button
+/// - variant: The appearance variant of the button
+/// - shape: The shape of the button
+/// - size: The size of the button
+/// - icons: Renders an icon before the button's label, Renders an icon after the button's label, Renders an icon before the button's label, when selected
+/// - selected_label: Renders the label of the button, when selected
+/// - toggle: Whether the button will toggle between selected and unselected states
+/// - selected: Whether the toggle button is selected
+/// - disabled: Whether the element is disabled
+/// - disabled_interactive: Whether the element is disabled and interactive
+/// - type_: The type of the element
+/// - name: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
+/// - value: The value associated with the element's name when it's submitted with form data
+/// - link: Make the button behave like a link
+///
 pub opaque type Button(msg) {
   Button(
     label: String,
@@ -85,9 +102,11 @@ pub opaque type Button(msg) {
     toggle: Bool,
     selected: Bool,
     disabled: Bool,
+    disabled_interactive: Bool,
     type_: Option(FormSubmitterType),
     name: Option(String),
     value: Option(String),
+    link: Option(Link),
   )
 }
 
@@ -108,6 +127,8 @@ pub fn new(label: String, variant: Variant) -> Button(msg) {
     False,
     False,
     False,
+    False,
+    None,
     None,
     None,
     None,
@@ -146,6 +167,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         boolean_attribute("toggle", b.toggle),
         attribute.selected(b.selected),
         attribute.disabled(b.disabled),
+        boolean_attribute("disabled-interactive", b.disabled_interactive),
         option_attribute(
           b.type_,
           fn(_) { "type" },
@@ -154,6 +176,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         ),
         option_attribute(b.name, fn(_) { "name" }, function.identity, None),
         option_attribute(b.value, fn(_) { "value" }, function.identity, None),
+        ..link.render(b.link)
       ],
       attributes,
     )
@@ -183,6 +206,18 @@ pub fn form(
 /// 
 pub fn disabled(b: Button(msg), disabled: Bool) -> Button(msg) {
   Button(..b, disabled: disabled)
+}
+
+/// disabled_interactive sets the `disabled_interactive` field
+///
+pub fn disabled_interactive(b: Button(msg), disabled: Bool) -> Button(msg) {
+  Button(..b, disabled_interactive: disabled)
+}
+
+/// link sets the `link` field
+///
+pub fn link(b: Button(msg), link: Option(Link)) -> Button(msg) {
+  Button(..b, link: link)
 }
 
 /// icons sets the `icons` field
