@@ -187,11 +187,11 @@ fn disabled_attr(t: Type, disabled: Bool) -> Attribute(msg) {
   }
 }
 
-/// form sets the fields when the chip is used in a form
+/// form sets the name and value fields when the chip is used in a form
 ///
-pub fn form(c: Chip, name: Option(String), value: Option(String)) -> Chip {
+pub fn form(c: Chip, name: String, value: String) -> Chip {
   case c.type_ {
-    Filter | Input -> Chip(..c, name: name, value: value)
+    Filter | Input -> Chip(..c, name: Some(name), value: Some(value))
     _ -> c
   }
 }
