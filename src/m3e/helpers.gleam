@@ -30,13 +30,15 @@ pub type FormSubmitterType {
 
 /// form_submitter_type_to_string converts a FormSubmitterType to a string
 ///
-pub fn form_submitted_type_to_string(t: FormSubmitterType) -> String {
+pub fn form_submitter_type_to_string(t: FormSubmitterType) -> String {
   case t {
     Button -> "button"
     Reset -> "reset"
     Submit -> "submit"
   }
 }
+
+pub const default_form_submitter_type = Button
 
 /// option_attribute creates an HTML attribute if an Option(a) has
 /// a value, else it creates either a default or attribute.none()

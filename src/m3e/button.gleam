@@ -8,7 +8,7 @@ import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
 import m3e/helpers.{
-  type FormSubmitterType, boolean_attribute, form_submitted_type_to_string,
+  type FormSubmitterType, boolean_attribute, form_submitter_type_to_string,
   option_attribute, slot,
 }
 
@@ -149,7 +149,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         option_attribute(
           b.type_,
           fn(_) { "type" },
-          form_submitted_type_to_string,
+          form_submitter_type_to_string,
           None,
         ),
         option_attribute(b.name, fn(_) { "name" }, function.identity, None),

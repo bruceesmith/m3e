@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{
-  type FormSubmitterType, boolean_attribute, form_submitted_type_to_string,
+  type FormSubmitterType, boolean_attribute, form_submitter_type_to_string,
   option_attribute, slot,
 }
 
@@ -268,7 +268,7 @@ pub fn render(
       option_attribute(
         i.type_,
         fn(_) { "type" },
-        form_submitted_type_to_string,
+        form_submitter_type_to_string,
         None,
       ),
       attribute.value(i.value),
