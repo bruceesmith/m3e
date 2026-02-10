@@ -47,11 +47,14 @@ pub fn attributes_test() {
   fab.new()
   |> fab.disabled(True)
   |> fab.disabled_interactive(True)
+  |> fab.form(Some(
+    form_submission.new()
+    |> form_submission.type_(Submit)
+    |> form_submission.name("test-fab")
+    |> form_submission.value("submitted"),
+  ))
   |> fab.lowered(True)
-  |> fab.name(Some("test-fab"))
   |> fab.size(fab.Small)
-  |> fab.type_(Some(Submit))
-  |> fab.value(Some("submitted"))
   |> fab.variant(fab.Tertiary)
   |> fab.render([], [])
   |> should.equal(

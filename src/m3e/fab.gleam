@@ -1,6 +1,5 @@
 ///// fab provides Lustre support for the [M3E FAB component](https://matraic.github.io/m3e/#/components/fabr.html)
 
-import gleam/function.{identity}
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}
 
@@ -8,10 +7,8 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{span, text}
 
-import m3e/form_submission.{
-  type FormSubmitterType, form_submitter_type_to_string,
-}
-import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/form_submission.{type FormSubmission}
+import m3e/helpers.{boolean_attribute, slot}
 import m3e/link.{type Link}
 
 /// Size is the size of the bar
@@ -67,12 +64,10 @@ pub const default_variant = PrimaryContainer
 /// - disabled_interactive: Whether the element is disabled and interactive
 /// - extended: Whether the element is extended
 /// - extended_label: Renders the label of an extended button
+/// - form_submission: handles this element's role in form submission
 /// - link: Whether the element is a link
 /// - lowered: Whether to present a lowered elevation
-/// - name: The name of the button when submitted in a form
 /// - size: The size of the button
-/// - type_: The form submitter type of the button
-/// - value: The value of the button when submitted in a form
 /// - variant: The appearance variant of the button
 /// 
 pub opaque type FAB {
@@ -81,12 +76,10 @@ pub opaque type FAB {
     disabled_interactive: Bool,
     extended: Bool,
     extended_label: Option(String),
+    form_submission: Option(FormSubmission),
     link: Option(Link),
     lowered: Bool,
-    name: Option(String),
     size: Size,
-    type_: Option(FormSubmitterType),
-    value: Option(String),
     variant: Variant,
   )
 }
@@ -99,12 +92,10 @@ pub fn new() -> FAB {
     disabled_interactive: False,
     extended: False,
     extended_label: None,
+    form_submission: None,
     link: None,
     lowered: False,
-    name: None,
     size: default_size,
-    type_: None,
-    value: None,
     variant: default_variant,
   )
 }
@@ -129,17 +120,10 @@ pub fn render(
         boolean_attribute("disabled-interactive", f.disabled_interactive),
         boolean_attribute("extended", f.extended),
         boolean_attribute("lowered", f.lowered),
-        option_attribute(f.name, fn(_) { "name" }, identity, None),
         attribute("size", size_to_string(f.size)),
-        option_attribute(
-          f.type_,
-          fn(_) { "type" },
-          form_submitter_type_to_string,
-          None,
-        ),
-        option_attribute(f.value, fn(_) { "value" }, identity, None),
         attribute("variant", variant_to_string(f.variant)),
       ],
+      form_submission.attributes(f.form_submission),
       link.attributes(f.link),
       attributes,
     ])
@@ -182,6 +166,12 @@ fn extended_label_elt(el: Option(String)) -> Element(msg) {
   }
 }
 
+/// form sets the form_submission field
+/// 
+pub fn form(f: FAB, form_submission: Option(FormSubmission)) -> FAB {
+  FAB(..f, form_submission: form_submission)
+}
+
 /// link sets the link field
 /// 
 pub fn link(f: FAB, link: Option(Link)) -> FAB {
@@ -194,28 +184,10 @@ pub fn lowered(f: FAB, lowered: Bool) -> FAB {
   FAB(..f, lowered: lowered)
 }
 
-/// name sets the name field
-/// 
-pub fn name(f: FAB, name: Option(String)) -> FAB {
-  FAB(..f, name: name)
-}
-
 /// size sets the size field
 /// 
 pub fn size(f: FAB, size: Size) -> FAB {
   FAB(..f, size: size)
-}
-
-/// type_ sets the type_ field
-/// 
-pub fn type_(f: FAB, type_: Option(FormSubmitterType)) -> FAB {
-  FAB(..f, type_: type_)
-}
-
-/// value sets the value field
-/// 
-pub fn value(f: FAB, value: Option(String)) -> FAB {
-  FAB(..f, value: value)
 }
 
 /// variant sets the variant field
