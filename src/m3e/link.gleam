@@ -1,3 +1,4 @@
+import gleam/list
 import gleam/option.{type Option, Some}
 
 import lustre/attribute.{type Attribute, attribute}
@@ -47,11 +48,16 @@ pub fn attributes(l: Option(Link)) -> List(Attribute(msg)) {
     Some(link) if link.href != "" -> [
       boolean_attribute("download", link.download),
       attribute("href", link.href),
+      case link.rel != "" {
+        True -> attribute("rel", link.rel)
+        False -> attribute.none()
+      },
       attribute("rel", link.rel),
       attribute("target", link_target_to_string(link.target)),
     ]
     _ -> [attribute.none()]
   }
+  |> list.filter(fn(a) { a != attribute.none() })
 }
 
 /// download updates the download attribute of a Link
