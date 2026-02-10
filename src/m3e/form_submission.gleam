@@ -78,3 +78,16 @@ pub fn button_attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
   }
   |> filter(fn(a) { a != none() })
 }
+
+pub fn attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
+  case fs {
+    Some(sub) if sub.name != "" -> {
+      [
+        attribute("name", sub.name),
+        attribute("value", sub.value),
+      ]
+    }
+    _ -> [none()]
+  }
+  |> filter(fn(a) { a != none() })
+}
