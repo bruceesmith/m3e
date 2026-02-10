@@ -7,7 +7,7 @@ import m3e/button.{
   Elevated, Filled, Large, Outlined, Square, Text, form, icons, label, new,
   render, selected_label, shape, size, toggle, variant,
 }
-import m3e/form_submitter_type.{Submit}
+import m3e/form_submission.{Submit}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)

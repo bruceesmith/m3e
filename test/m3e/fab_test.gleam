@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/fab
-import m3e/form_submitter_type as helpers
+import m3e/form_submission.{Submit}
 
 pub fn default_test() {
   fab.new()
@@ -50,7 +50,7 @@ pub fn attributes_test() {
   |> fab.lowered(True)
   |> fab.name(Some("test-fab"))
   |> fab.size(fab.Small)
-  |> fab.type_(Some(helpers.Submit))
+  |> fab.type_(Some(Submit))
   |> fab.value(Some("submitted"))
   |> fab.variant(fab.Tertiary)
   |> fab.render([], [])

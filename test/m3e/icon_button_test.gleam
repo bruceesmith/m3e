@@ -8,7 +8,7 @@ import m3e/icon_button.{
   variant, width,
 }
 
-import m3e/form_submitter_type.{Reset, Submit}
+import m3e/form_submission.{Reset, Submit}
 
 pub fn icon_button_creation_test() {
   let b = new()

@@ -6,7 +6,7 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/form_submitter_type.{
+import m3e/form_submission.{
   type FormSubmitterType, form_submitter_type_to_string,
 }
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
