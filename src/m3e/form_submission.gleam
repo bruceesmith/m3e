@@ -1,4 +1,8 @@
-//// form_submitter_type provides the FormSubmitterType type and related functions
+//// form_submitter_type provides types and related functions for handling form submission elements
+
+import gleam/list.{filter}
+
+import lustre/attribute.{type Attribute, attribute, none}
 
 /// FormSubmitterType is the type of an element when used inside a form
 ///
@@ -19,3 +23,55 @@ pub fn form_submitter_type_to_string(t: FormSubmitterType) -> String {
 }
 
 pub const default_form_submitter_type = Button
+
+/// FormSubmission is the fields used when an element is submitted as part of a form
+/// 
+/// ## Fields:
+/// - type_: The submission type of the element
+/// - name: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
+/// - value: The value associated with the element's name when it's submitted with form data
+/// 
+pub type FormSubmission {
+  FormSubmission(type_: FormSubmitterType, name: String, value: String)
+}
+
+/// new_form_submission creates a new FormSubmission
+///
+pub fn new() -> FormSubmission {
+  FormSubmission(default_form_submitter_type, "", "")
+}
+
+/// type_ sets the `type_` field
+///
+pub fn type_(fs: FormSubmission, type_: FormSubmitterType) -> FormSubmission {
+  FormSubmission(..fs, type_: type_)
+}
+
+/// name sets the `name` field
+///
+pub fn name(fs: FormSubmission, name: String) -> FormSubmission {
+  FormSubmission(..fs, name: name)
+}
+
+/// value sets the `value` field
+///
+pub fn value(fs: FormSubmission, value: String) -> FormSubmission {
+  FormSubmission(..fs, value: value)
+}
+
+/// attributes creates Lustre Attributes for a FormSubmission
+///
+pub fn attributes(fs: FormSubmission) -> List(Attribute(msg)) {
+  case fs.type_ {
+    Button | Reset -> [
+      attribute("type", form_submitter_type_to_string(fs.type_)),
+    ]
+    Submit if fs.name != "" -> [
+      attribute("type", "submit"),
+      attribute("name", fs.name),
+      attribute("value", fs.value),
+    ]
+    _ -> [none()]
+  }
+  |> filter(fn(a) { a != none() })
+}
