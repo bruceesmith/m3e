@@ -1,15 +1,12 @@
 //// button provides Lustre support for the [M3E Button component](https://matraic.github.io/m3e/#/components/button.html)
 
-import gleam/function
-import gleam/list
+import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, none as attr_none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
-import m3e/form_submission.{
-  type FormSubmitterType, form_submitter_type_to_string,
-}
+import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute, option_attribute, slot}
 import m3e/link.{type Link}
 
@@ -76,37 +73,33 @@ pub const default_variant = Text
 /// Button holds all the values necessary to construct am M3E Button
 ///
 /// ## Fields:
-/// - label: Renders the label of the button
-/// - variant: The appearance variant of the button
-/// - shape: The shape of the button
-/// - size: The size of the button
-/// - icons: Renders an icon before the button's label, Renders an icon after the button's label, Renders an icon before the button's label, when selected
-/// - selected_label: Renders the label of the button, when selected
-/// - toggle: Whether the button will toggle between selected and unselected states
-/// - selected: Whether the toggle button is selected
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
-/// - type_: The type of the element
-/// - name: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
-/// - value: The value associated with the element's name when it's submitted with form data
+/// - form_submission: handles this button's role in form submission
+/// - icons: Renders an icon before the button's label, Renders an icon after the button's label, Renders an icon before the button's label, when selected
+/// - label: Renders the label of the button
 /// - link: Make the button behave like a link
+/// - selected: Whether the toggle button is selected
+/// - selected_label: Renders the label of the button, when selected
+/// - shape: The shape of the button
+/// - size: The size of the button
+/// - toggle: Whether the button will toggle between selected and unselected states
+/// - variant: The appearance variant of the button
 ///
 pub opaque type Button(msg) {
   Button(
-    label: String,
-    variant: Option(Variant),
-    shape: Option(Shape),
-    size: Option(Size),
-    icons: List(Element(msg)),
-    selected_label: Option(String),
-    toggle: Bool,
-    selected: Bool,
     disabled: Bool,
     disabled_interactive: Bool,
-    type_: Option(FormSubmitterType),
-    name: Option(String),
-    value: Option(String),
+    form_submission: Option(FormSubmission),
+    icons: List(Element(msg)),
+    label: String,
     link: Option(Link),
+    selected: Bool,
+    selected_label: Option(String),
+    shape: Option(Shape),
+    size: Option(Size),
+    toggle: Bool,
+    variant: Option(Variant),
   )
 }
 
@@ -118,20 +111,18 @@ pub opaque type Button(msg) {
 ///
 pub fn new(label: String, variant: Variant) -> Button(msg) {
   Button(
-    label,
-    Some(variant),
-    None,
-    None,
-    [],
-    None,
-    False,
-    False,
-    False,
-    False,
-    None,
-    None,
-    None,
-    None,
+    disabled: False,
+    disabled_interactive: False,
+    form_submission: None,
+    icons: [],
+    label: label,
+    link: None,
+    selected: False,
+    selected_label: None,
+    shape: None,
+    size: None,
+    toggle: False,
+    variant: Some(variant),
   )
 }
 
@@ -144,14 +135,11 @@ pub fn new(label: String, variant: Variant) -> Button(msg) {
 pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
   element(
     "m3e-button",
-    list.append(
+    flatten([
       [
-        option_attribute(
-          b.variant,
-          fn(_) { "variant" },
-          variant_to_string,
-          Some(default_variant),
-        ),
+        attribute.disabled(b.disabled),
+        boolean_attribute("disabled-interactive", b.disabled_interactive),
+        attribute.selected(b.selected),
         option_attribute(
           b.shape,
           fn(_) { "shape" },
@@ -165,41 +153,31 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
           Some(default_size),
         ),
         boolean_attribute("toggle", b.toggle),
-        attribute.selected(b.selected),
-        attribute.disabled(b.disabled),
-        boolean_attribute("disabled-interactive", b.disabled_interactive),
         option_attribute(
-          b.type_,
-          fn(_) { "type" },
-          form_submitter_type_to_string,
-          None,
+          b.variant,
+          fn(_) { "variant" },
+          variant_to_string,
+          Some(default_variant),
         ),
-        option_attribute(b.name, fn(_) { "name" }, function.identity, None),
-        option_attribute(b.value, fn(_) { "value" }, function.identity, None),
-        ..link.attributes(b.link)
       ],
+      form_submission.attributes(b.form_submission),
+      link.attributes(b.link),
       attributes,
-    )
-      |> list.filter(fn(a) { a != attr_none() }),
-    list.append(b.icons, [text(b.label), selected_label_elt(b.selected_label)]),
+    ])
+      |> filter(fn(a) { a != attribute.none() }),
+    flatten([b.icons, [text(b.label), selected_label_elt(b.selected_label)]])
+      |> filter(fn(a) { a != none() }),
   )
 }
 
-/// form sets up a Button to participate in an HTML form
+/// form_submission sets up a Button to participate in an HTML form
 ///
 /// ## Parameters:
 /// - b: a Button
-/// - type_: sets the Button to act as a Reset or Submit button for a form
-/// - name: the name of the button when the form is submitted
-/// - value: the value of the button when the form is submitted
+/// - fs: a FormSubmission
 ///
-pub fn form(
-  b: Button(msg),
-  type_: Option(FormSubmitterType),
-  name: Option(String),
-  value: Option(String),
-) -> Button(msg) {
-  Button(..b, type_: type_, name: name, value: value)
+pub fn form(b: Button(msg), fs: Option(FormSubmission)) -> Button(msg) {
+  Button(..b, form_submission: fs)
 }
 
 /// disabled sets the `disabled` field
@@ -232,13 +210,6 @@ pub fn label(b: Button(msg), label: String) -> Button(msg) {
   Button(..b, label: label)
 }
 
-// ///
-// /// name sets the `name` field of a Button
-// ///
-// pub fn name(b: Button(msg), name: Option(String)) -> Button(msg) {
-//   Button(..b, name: name)
-// }
-
 /// selected_label sets the`selected_label` field of a Button
 ///
 pub fn selected_label(b: Button(msg), lab: String) -> Button(msg) {
@@ -264,12 +235,6 @@ pub fn size(b: Button(msg), s: Size) -> Button(msg) {
   Button(..b, size: Some(s))
 }
 
-// /// set_type sets the`type_` field of a Button
-// ///
-// pub fn set_type(b: Button(msg), t: Option(FormSubmitterType)) -> Button(msg) {
-//   Button(..b, type_: t)
-// }
-
 /// toggle sets the`toggle` field of a Button
 ///
 pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
@@ -281,12 +246,6 @@ pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
 pub fn selected(b: Button(msg), s: Bool) -> Button(msg) {
   Button(..b, selected: s)
 }
-
-// /// value sets the`value` field of a Button
-// ///
-// pub fn value(b: Button(msg), v: Option(String)) -> Button(msg) {
-//   Button(..b, value: v)
-// }
 
 /// variant sets the`variant` field of a Button
 ///

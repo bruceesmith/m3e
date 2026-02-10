@@ -7,7 +7,7 @@ import m3e/button.{
   Elevated, Filled, Large, Outlined, Square, Text, form, icons, label, new,
   render, selected_label, shape, size, toggle, variant,
 }
-import m3e/form_submission.{Submit}
+import m3e/form_submission.{FormSubmission, Submit}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)
@@ -21,7 +21,7 @@ pub fn button_creation_test() {
         selected(False),
         disabled(False),
       ],
-      [text("Click me"), element.none()],
+      [text("Click me")],
     )
   render(b, []) |> should.equal(expected_basic)
 
@@ -33,7 +33,7 @@ pub fn button_creation_test() {
     |> toggle(True)
     |> button.selected(True)
     |> button.disabled(True)
-    |> form(Some(Submit), Some("key"), Some("val"))
+    |> form(Some(FormSubmission(Submit, "key", "val")))
 
   let expected_full =
     element(
@@ -66,13 +66,13 @@ pub fn button_element_test() {
         selected(False),
         disabled(False),
       ],
-      [text("Basic"), element.none()],
+      [text("Basic")],
     )
   b |> render([]) |> should.equal(expected)
 }
 
 pub fn button_form_test() {
-  let b = new("Submit", Filled) |> form(Some(Submit), Some("k"), Some("v"))
+  let b = new("Submit", Filled) |> form(Some(FormSubmission(Submit, "k", "v")))
 
   let expected =
     element(
@@ -87,7 +87,7 @@ pub fn button_form_test() {
         attribute.name("k"),
         attribute("value", "v"),
       ],
-      [text("Submit"), element.none()],
+      [text("Submit")],
     )
   b |> render([]) |> should.equal(expected)
 }
@@ -126,7 +126,7 @@ pub fn button_shape_test() {
         selected(False),
         disabled(False),
       ],
-      [text("Shape"), element.none()],
+      [text("Shape")],
     )
   b |> render([]) |> should.equal(expected)
 }
@@ -144,7 +144,7 @@ pub fn button_size_test() {
         selected(False),
         disabled(False),
       ],
-      [text("Size"), element.none()],
+      [text("Size")],
     )
   b |> render([]) |> should.equal(expected)
 }
@@ -162,7 +162,7 @@ pub fn button_variant_test() {
         selected(False),
         disabled(False),
       ],
-      [text("Variant"), element.none()],
+      [text("Variant")],
     )
   b |> render([]) |> should.equal(expected)
 }
@@ -181,7 +181,7 @@ pub fn button_icons_test() {
         selected(False),
         disabled(False),
       ],
-      [icon, text("Icon"), element.none()],
+      [icon, text("Icon")],
     )
   b |> render([]) |> should.equal(expected)
 }
@@ -199,7 +199,7 @@ pub fn button_label_test() {
         selected(False),
         disabled(False),
       ],
-      [text("New Label"), element.none()],
+      [text("New Label")],
     )
   b |> render([]) |> should.equal(expected)
 }
@@ -218,7 +218,7 @@ pub fn button_toggle_test() {
         selected(False),
         disabled(False),
       ],
-      [text("Toggle Me"), element.none()],
+      [text("Toggle Me")],
     )
   b |> render([]) |> should.equal(expected)
 }
