@@ -62,7 +62,7 @@ pub fn value(fs: FormSubmission, value: String) -> FormSubmission {
 
 /// attributes creates Lustre Attributes for a FormSubmission
 ///
-pub fn attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
+pub fn button_attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
   case fs {
     Some(sub) if sub.type_ == Button || sub.type_ == Reset -> {
       [attribute("type", form_submitter_type_to_string(sub.type_))]

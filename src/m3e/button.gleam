@@ -160,7 +160,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
           Some(default_variant),
         ),
       ],
-      form_submission.attributes(b.form_submission),
+      form_submission.button_attributes(b.form_submission),
       link.attributes(b.link),
       attributes,
     ])

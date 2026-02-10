@@ -123,7 +123,7 @@ pub fn render(
         attribute("size", size_to_string(f.size)),
         attribute("variant", variant_to_string(f.variant)),
       ],
-      form_submission.attributes(f.form_submission),
+      form_submission.button_attributes(f.form_submission),
       link.attributes(f.link),
       attributes,
     ])

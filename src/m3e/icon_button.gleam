@@ -257,7 +257,7 @@ pub fn render(
         attribute("variant", variant_to_string(i.variant)),
         attribute("width", width_to_string(i.width)),
       ],
-      form_submission.attributes(i.form_submission),
+      form_submission.button_attributes(i.form_submission),
       link.attributes(i.link),
       attributes,
     ])
