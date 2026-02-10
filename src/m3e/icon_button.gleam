@@ -1,15 +1,12 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
 
-import gleam/function
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/form_submission.{
-  type FormSubmitterType, form_submitter_type_to_string,
-}
-import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/form_submission.{type FormSubmission}
+import m3e/helpers.{boolean_attribute, slot}
 import m3e/link.{type Link}
 
 /// Purpose defines the intended purpose of the icon
@@ -118,15 +115,13 @@ pub const default_width = Default
 /// ## Fields:
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
+/// - form_submission: Whether the element is involved in a form submission
 /// - link: Whether the element is a link
-/// - name: The name of the element, submitted as a pair with the element's value as part of form data, when the element is used to submit a form
 /// - purpose: An slot value defined by a parent element
 /// - selected: Whether the toggle button is selected
 /// - shape: The shape of the button
 /// - size: The size of the button
 /// - toggle: Whether the button will toggle between selected and unselected states
-/// - type_: The type of the element
-/// - value: The value associated with the element's name when it's submitted with form data
 /// - variant: The appearance variant of the button
 /// - width: The width of the button
 /// 
@@ -134,15 +129,13 @@ pub opaque type IconButton {
   IconButton(
     disabled: Bool,
     disabled_interactive: Bool,
+    form_submission: Option(FormSubmission),
     link: Option(Link),
-    name: Option(String),
     purpose: Option(Purpose),
     selected: Bool,
     shape: Shape,
     size: Size,
     toggle: Bool,
-    type_: Option(FormSubmitterType),
-    value: String,
     variant: Variant,
     width: Width,
   )
@@ -152,19 +145,17 @@ pub opaque type IconButton {
 /// 
 pub fn new() -> IconButton {
   IconButton(
-    False,
-    False,
-    None,
-    None,
-    None,
-    False,
-    default_shape,
-    default_size,
-    False,
-    None,
-    "",
-    default_variant,
-    default_width,
+    disabled: False,
+    disabled_interactive: False,
+    form_submission: None,
+    link: None,
+    purpose: None,
+    selected: False,
+    shape: default_shape,
+    size: default_size,
+    toggle: False,
+    variant: default_variant,
+    width: default_width,
   )
 }
 
@@ -183,16 +174,16 @@ pub fn disabled_interactive(
   IconButton(..i, disabled_interactive: disabled_interactive)
 }
 
+/// form sets the form_submission field
+/// 
+pub fn form(i: IconButton, form: Option(FormSubmission)) -> IconButton {
+  IconButton(..i, form_submission: form)
+}
+
 // link sets the link field
 /// 
 pub fn link(i: IconButton, link: Option(Link)) -> IconButton {
   IconButton(..i, link: link)
-}
-
-/// name sets the name field
-/// 
-pub fn name(i: IconButton, name: Option(String)) -> IconButton {
-  IconButton(..i, name: name)
 }
 
 /// purpose sets the purpose field
@@ -225,18 +216,6 @@ pub fn toggle(i: IconButton, toggle: Bool) -> IconButton {
   IconButton(..i, toggle: toggle)
 }
 
-/// type_ sets the type_ field
-/// 
-pub fn type_(i: IconButton, type_: Option(FormSubmitterType)) -> IconButton {
-  IconButton(..i, type_: type_)
-}
-
-/// value sets the value field
-/// 
-pub fn value(i: IconButton, value: String) -> IconButton {
-  IconButton(..i, value: value)
-}
-
 /// variant sets the variant field
 /// 
 pub fn variant(i: IconButton, variant: Variant) -> IconButton {
@@ -267,7 +246,6 @@ pub fn render(
       [
         attribute.disabled(i.disabled),
         boolean_attribute("disabled-interactive", i.disabled_interactive),
-        option_attribute(i.name, fn(_) { "name" }, function.identity, None),
         case i.purpose {
           Some(p) -> slot(purpose_to_string(p))
           None -> none()
@@ -276,16 +254,10 @@ pub fn render(
         attribute("shape", shape_to_string(i.shape)),
         attribute("size", size_to_string(i.size)),
         boolean_attribute("toggle", i.toggle),
-        option_attribute(
-          i.type_,
-          fn(_) { "type" },
-          form_submitter_type_to_string,
-          None,
-        ),
-        attribute.value(i.value),
         attribute("variant", variant_to_string(i.variant)),
         attribute("width", width_to_string(i.width)),
       ],
+      form_submission.attributes(i.form_submission),
       link.attributes(i.link),
       attributes,
     ])

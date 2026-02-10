@@ -1,14 +1,19 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute, disabled, selected, value}
+import lustre/attribute.{
+  attribute, disabled as attr_disabled, selected as attr_selected,
+  value as attr_value,
+}
 import lustre/element.{element}
 import m3e/icon_button.{
-  ExtraLarge, Filled, Large, LeadingIcon, Narrow, Square, Tonal, Wide,
-  disabled_interactive, name, new, purpose, render, shape, size, toggle, type_,
-  variant, width,
+  ExtraLarge, Filled, Large, LeadingIcon, Narrow, Square, Tonal, Wide, disabled,
+  disabled_interactive, form, new, purpose, render, selected, shape, size,
+  toggle, variant, width,
 }
 
-import m3e/form_submission.{Reset, Submit}
+// disabled and selected here are the setters, not attributes
+
+import m3e/form_submission.{FormSubmission, Reset, Submit}
 
 pub fn icon_button_creation_test() {
   let b = new()
@@ -16,11 +21,10 @@ pub fn icon_button_creation_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -30,16 +34,14 @@ pub fn icon_button_creation_test() {
 
   let b =
     new()
-    |> icon_button.disabled(True)
+    |> disabled(True)
     |> disabled_interactive(True)
-    |> name(Some("key"))
     |> purpose(None)
-    |> icon_button.selected(True)
+    |> selected(True)
     |> shape(Square)
     |> size(Large)
     |> toggle(True)
-    |> type_(Some(Submit))
-    |> icon_button.value("val")
+    |> form(Some(FormSubmission(Submit, "key", "val")))
     |> variant(Filled)
     |> width(Narrow)
 
@@ -47,15 +49,15 @@ pub fn icon_button_creation_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(True),
+        attr_disabled(True),
         attribute("disabled-interactive", ""),
-        attribute("name", "key"),
-        selected(True),
+        attr_selected(True),
         attribute("shape", "square"),
         attribute("size", "large"),
         attribute("toggle", ""),
         attribute("type", "submit"),
-        value("val"),
+        attribute("name", "key"),
+        attr_value("val"),
         attribute("variant", "filled"),
         attribute("width", "narrow"),
       ],
@@ -64,17 +66,16 @@ pub fn icon_button_creation_test() {
   render(b, [], []) |> should.equal(expected_full)
 }
 
-pub fn icon_button_element_test() {
+pub fn icon_button_render_test() {
   let b = new()
   let expected =
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -90,12 +91,11 @@ pub fn icon_button_purpose_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
+        attr_disabled(False),
         attribute("slot", "leading-icon"),
-        selected(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -105,17 +105,16 @@ pub fn icon_button_purpose_test() {
 }
 
 pub fn icon_button_disabled_test() {
-  let b = new() |> icon_button.disabled(True)
+  let b = new() |> disabled(True)
 
   let expected =
     element(
       "m3e-icon-button",
       [
-        disabled(True),
-        selected(False),
+        attr_disabled(True),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -131,33 +130,11 @@ pub fn icon_button_disabled_interactive_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
+        attr_disabled(False),
         attribute("disabled-interactive", ""),
-        selected(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
-        attribute("variant", "standard"),
-        attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> render([], []) |> should.equal(expected)
-}
-
-pub fn icon_button_name_test() {
-  let b = new() |> name(Some("my-key"))
-
-  let expected =
-    element(
-      "m3e-icon-button",
-      [
-        disabled(False),
-        attribute("name", "my-key"),
-        selected(False),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -167,17 +144,16 @@ pub fn icon_button_name_test() {
 }
 
 pub fn icon_button_selected_test() {
-  let b = new() |> icon_button.selected(True)
+  let b = new() |> selected(True)
 
   let expected =
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(True),
+        attr_disabled(False),
+        attr_selected(True),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -193,11 +169,10 @@ pub fn icon_button_shape_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "square"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -213,11 +188,10 @@ pub fn icon_button_size_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "extra-large"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -233,53 +207,11 @@ pub fn icon_button_toggle_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
         attribute("toggle", ""),
-        value(""),
-        attribute("variant", "standard"),
-        attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> render([], []) |> should.equal(expected)
-}
-
-pub fn icon_button_type_test() {
-  let b = new() |> type_(Some(Reset))
-
-  let expected =
-    element(
-      "m3e-icon-button",
-      [
-        disabled(False),
-        selected(False),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        attribute("type", "reset"),
-        value(""),
-        attribute("variant", "standard"),
-        attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> render([], []) |> should.equal(expected)
-}
-
-pub fn icon_button_value_test() {
-  let b = new() |> icon_button.value("123")
-
-  let expected =
-    element(
-      "m3e-icon-button",
-      [
-        disabled(False),
-        selected(False),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        value("123"),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
@@ -295,11 +227,10 @@ pub fn icon_button_variant_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "tonal"),
         attribute("width", "default"),
       ],
@@ -315,15 +246,54 @@ pub fn icon_button_width_test() {
     element(
       "m3e-icon-button",
       [
-        disabled(False),
-        selected(False),
+        attr_disabled(False),
+        attr_selected(False),
         attribute("shape", "rounded"),
         attribute("size", "small"),
-        value(""),
         attribute("variant", "standard"),
         attribute("width", "wide"),
       ],
       [],
     )
   b |> render([], []) |> should.equal(expected)
+}
+
+pub fn icon_button_form_test() {
+  let b = new() |> form(Some(FormSubmission(Submit, "test-name", "test-value")))
+
+  let expected =
+    element(
+      "m3e-icon-button",
+      [
+        attr_disabled(False),
+        attr_selected(False),
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        attribute("type", "submit"),
+        attribute("name", "test-name"),
+        attr_value("test-value"),
+        attribute("variant", "standard"),
+        attribute("width", "default"),
+      ],
+      [],
+    )
+  b |> render([], []) |> should.equal(expected)
+
+  let b_reset = new() |> form(Some(FormSubmission(Reset, "ignore", "ignore")))
+
+  let expected_reset =
+    element(
+      "m3e-icon-button",
+      [
+        attr_disabled(False),
+        attr_selected(False),
+        attribute("shape", "rounded"),
+        attribute("size", "small"),
+        attribute("type", "reset"),
+        attribute("variant", "standard"),
+        attribute("width", "default"),
+      ],
+      [],
+    )
+  b_reset |> render([], []) |> should.equal(expected_reset)
 }
