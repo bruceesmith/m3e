@@ -1,6 +1,7 @@
 //// form_submitter_type provides types and related functions for handling form submission elements
 
 import gleam/list.{filter}
+import gleam/option.{type Option, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
 
@@ -61,16 +62,18 @@ pub fn value(fs: FormSubmission, value: String) -> FormSubmission {
 
 /// attributes creates Lustre Attributes for a FormSubmission
 ///
-pub fn attributes(fs: FormSubmission) -> List(Attribute(msg)) {
-  case fs.type_ {
-    Button | Reset -> [
-      attribute("type", form_submitter_type_to_string(fs.type_)),
-    ]
-    Submit if fs.name != "" -> [
-      attribute("type", "submit"),
-      attribute("name", fs.name),
-      attribute("value", fs.value),
-    ]
+pub fn attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
+  case fs {
+    Some(sub) if sub.type_ == Button || sub.type_ == Reset -> {
+      [attribute("type", form_submitter_type_to_string(sub.type_))]
+    }
+    Some(sub) if sub.type_ == Submit && sub.name != "" -> {
+      [
+        attribute("type", "submit"),
+        attribute("name", sub.name),
+        attribute("value", sub.value),
+      ]
+    }
     _ -> [none()]
   }
   |> filter(fn(a) { a != none() })
