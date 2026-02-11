@@ -1,0 +1,56 @@
+/// fab_menu_trigger provides Lustre support for the [M3E FAB Menu Trigger component](https://matraic.github.io/m3e/#/components/fabr.html)
+import gleam/list.{filter}
+
+import lustre/attribute.{type Attribute, attribute, none}
+import lustre/element.{type Element, element}
+
+import m3e/icon.{type Icon}
+
+/// FabMenuTrigger is an element, nested within a clickable element, used to open a floating action button (FAB) menu
+/// 
+/// ## Fields:
+/// - for: the id of the associated m3e-fab-menu element
+/// - icon: the clickable Icon 
+/// 
+pub opaque type FabMenuTrigger {
+  FabMenuTrigger(for: String, icon: Icon)
+}
+
+/// new creates a new FabMenuTrigger
+/// 
+pub fn new(for: String, icon: Icon) -> FabMenuTrigger {
+  FabMenuTrigger(for: for, icon: icon)
+}
+
+/// render creates a Lustre Element from a FabMenuTrigger
+///
+/// ## Parameters:
+/// - f: a FabMenuTrigger
+/// - attributes: a list of additional Attributes
+/// - children: a list of child Elements
+///
+pub fn render(
+  f: FabMenuTrigger,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element(
+    "m3e-fab-menu-trigger",
+    [attribute("for", f.for), ..attributes]
+      |> filter(fn(a) { a != none() }),
+    [f.icon |> icon.render([], []), ..children]
+      |> filter(fn(a) { a != element.none() }),
+  )
+}
+
+/// for sets the for field
+/// 
+pub fn for_(f: FabMenuTrigger, for: String) -> FabMenuTrigger {
+  FabMenuTrigger(..f, for: for)
+}
+
+/// icon sets the icon field
+/// 
+pub fn icon(f: FabMenuTrigger, icon: Icon) -> FabMenuTrigger {
+  FabMenuTrigger(..f, icon: icon)
+}
