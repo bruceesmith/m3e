@@ -1,4 +1,4 @@
-///// fab provides Lustre support for the [M3E FAB component](https://matraic.github.io/m3e/#/components/fabr.html)
+///// fab provides Lustre support for the [M3E FAB component](https://matraic.github.io/m3e/#/components/fab.html)
 
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}

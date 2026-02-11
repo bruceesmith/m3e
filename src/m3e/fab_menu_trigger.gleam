@@ -1,4 +1,4 @@
-/// fab_menu_trigger provides Lustre support for the [M3E FAB Menu Trigger component](https://matraic.github.io/m3e/#/components/fabr.html)
+/// fab_menu_trigger provides Lustre support for the [M3E FAB Menu Trigger component](https://matraic.github.io/m3e/#/components/fab-menu.html)
 import gleam/list.{filter}
 
 import lustre/attribute.{type Attribute, attribute, none}

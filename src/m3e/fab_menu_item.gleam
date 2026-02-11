@@ -1,4 +1,4 @@
-/// fab_menu_item provides Lustre support for the [M3E FAB Menu Item component](https://matraic.github.io/m3e/#/components/fabr.html)
+/// fab_menu_item provides Lustre support for the [M3E FAB Menu Item component](https://matraic.github.io/m3e/#/components/fab-menu.html)
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None}
 
