@@ -1,4 +1,4 @@
-//// menu_item_group provides Lustre support for the [M3E Menu Item Group component](https://matraic.github.io/m3e/#/components/menu.html)
+//// menu_item_radio provides Lustre support for the [M3E Menu Item Radio component](https://matraic.github.io/m3e/#/components/menu.html)
 
 import gleam/list.{filter}
 
