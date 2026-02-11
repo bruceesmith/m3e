@@ -1,0 +1,63 @@
+//// menu_item provides Lustre support for the [M3E Menu Item component](https://matraic.github.io/m3e/#/components/menu.html)
+
+import gleam/list.{filter, flatten}
+import gleam/option.{type Option, None}
+
+import lustre/attribute.{type Attribute, none}
+import lustre/element.{type Element, element}
+
+import m3e/helpers.{boolean_attribute}
+import m3e/link.{type Link}
+
+/// MenuItem is an item of a menu
+/// 
+/// ## Fields:
+/// - disabled: Whether the element is disabled
+/// - link: Whether the element is a link
+/// 
+pub opaque type MenuItem {
+  MenuItem(disabled: Bool, link: Option(Link))
+}
+
+/// new creates a new MenuItem
+/// 
+pub fn new() -> MenuItem {
+  MenuItem(disabled: False, link: None)
+}
+
+/// render creates a Lustre Element from a MenuItem
+/// 
+pub fn render(
+  m: MenuItem,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element(
+    "m3e-menu-item",
+    flatten([
+      [
+        boolean_attribute("disabled", m.disabled),
+      ],
+      link.attributes(m.link),
+      attributes,
+    ])
+      |> filter(fn(a) { a != none() }),
+    children,
+  )
+}
+
+/// disabled sets the disabled field
+/// 
+pub fn disabled(m: MenuItem, disabled: Bool) -> MenuItem {
+  MenuItem(..m, disabled: disabled)
+}
+
+/// link sets the link field
+///
+/// ## Parameters:
+/// - m: a MenuItem
+/// - link: a Link
+///
+pub fn link(m: MenuItem, link: Option(Link)) -> MenuItem {
+  MenuItem(..m, link: link)
+}
