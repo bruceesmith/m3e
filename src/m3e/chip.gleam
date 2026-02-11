@@ -1,10 +1,13 @@
 //// chip provides Lustre support for the [M3E Chip components](https://matraic.github.io/m3e/#/components/chips.html)
 
-import gleam/list
+import gleam/list.{append, flatten}
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, name, none}
+
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{text}
+
+import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
 
 /// Behaviour controls the behavior of an assist or suggestion chip
@@ -55,12 +58,11 @@ pub const default_variant = Outlined
 /// - label: text on the chip
 /// - behaviour: behaviour of an Assist or Suggestion chip
 /// - disabled: whether the Chip is disabled or not
+/// - form_submission: handles this element's role in form submission
 /// - icon: associated Icon
-/// - name: `name` slot in form submission
 /// - removable: whether the chip can be removed
 /// - selected: whether the chip is selected or not
 /// - type_: the type of Chip
-/// - value: value in form submission
 /// - variant: variant of the chip
 ///
 pub opaque type Chip {
@@ -68,12 +70,11 @@ pub opaque type Chip {
     label: String,
     behaviour: Behaviour,
     disabled: Bool,
+    form_submission: Option(FormSubmission),
     icon: Option(Icon),
-    name: Option(String),
     removable: Bool,
     selected: Bool,
     type_: Type,
-    value: Option(String),
     variant: Variant,
   )
 }
@@ -83,12 +84,11 @@ fn default(label: String, type_: Type) -> Chip {
     label: label,
     behaviour: Normal,
     disabled: False,
+    form_submission: None,
     icon: None,
-    name: None,
     removable: False,
     selected: False,
     type_: type_,
-    value: None,
     variant: default_variant,
   )
 }
@@ -137,20 +137,19 @@ pub fn render(
 ) -> Element(msg) {
   element(
     type_to_string(c.type_),
-    list.append(
+    flatten([
       [
         behaviour_attr(c.type_, c.behaviour),
         disabled_attr(c.type_, c.disabled),
-        name_attr(c.type_, c.name),
         removable_attr(c.type_, c.removable),
         selected_attr(c.type_, c.selected),
-        value_attr(c.type_, c.value),
         variant_attr(c.variant),
       ],
+      form_submission.attributes(c.form_submission),
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != none() }),
-    list.append([icon_element(c.type_, c.icon), text(c.label)], children),
+    append([icon_element(c.type_, c.icon), text(c.label)], children),
   )
 }
 
@@ -187,11 +186,11 @@ fn disabled_attr(t: Type, disabled: Bool) -> Attribute(msg) {
   }
 }
 
-/// form sets the name and value fields when the chip is used in a form
+/// form sets the form_submission field when the chip is used in a form
 ///
-pub fn form(c: Chip, name: String, value: String) -> Chip {
+pub fn form(c: Chip, form_submission: Option(FormSubmission)) -> Chip {
   case c.type_ {
-    Filter | Input -> Chip(..c, name: Some(name), value: Some(value))
+    Filter | Input -> Chip(..c, form_submission: form_submission)
     _ -> c
   }
 }
@@ -210,13 +209,6 @@ fn icon_element(t: Type, icon: Option(Icon)) -> Element(msg) {
     Assist, Some(i) | Suggestion, Some(i) -> icon.render(i, [], [])
     Filter, Some(i) | Information, Some(i) -> icon.render(i, [], [])
     _, _ -> element.none()
-  }
-}
-
-fn name_attr(t: Type, val: Option(String)) -> Attribute(msg) {
-  case t, val {
-    Filter, Some(n) | Input, Some(n) -> name(n)
-    _, _ -> none()
   }
 }
 
@@ -248,13 +240,6 @@ pub fn selected(c: Chip, s: Bool) -> Chip {
 fn selected_attr(t: Type, selected: Bool) -> Attribute(msg) {
   case t, selected {
     Filter, True -> attribute("selected", "")
-    _, _ -> none()
-  }
-}
-
-fn value_attr(t: Type, value: Option(String)) -> Attribute(msg) {
-  case t, value {
-    Filter, Some(v) | Input, Some(v) -> attribute("value", v)
     _, _ -> none()
   }
 }

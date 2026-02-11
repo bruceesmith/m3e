@@ -1,11 +1,15 @@
+import gleam/option.{Some}
 import gleeunit/should
+
 import lustre/attribute.{attribute, name}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
 import m3e/chip.{
   assist, behaviour, disabled, filter, form, icon, information, input, removable,
   render, selected, variant,
 }
+import m3e/form_submission
 import m3e/icon
 
 pub fn chip_creation_test() {
@@ -106,7 +110,14 @@ pub fn chip_disabled_test() {
 
 pub fn chip_form_test() {
   // Filter supports form attributes
-  let c = filter("Filter") |> form("name", "value")
+  let c =
+    filter("Filter")
+    |> form(Some(
+      form_submission.new()
+      |> form_submission.name("name")
+      |> form_submission.value("value"),
+    ))
+  //form("name", "value")
 
   let expected =
     element(
@@ -121,7 +132,13 @@ pub fn chip_form_test() {
   c |> render([], []) |> should.equal(expected)
 
   // Assist does not support form attributes
-  let c_assist = assist("Assist") |> form("n", "v")
+  let c_assist =
+    assist("Assist")
+    |> form(Some(
+      form_submission.new()
+      |> form_submission.name("n")
+      |> form_submission.value("v"),
+    ))
   let expected_assist =
     element("m3e-assist-chip", [attribute("variant", "outlined")], [
       element.none(),
