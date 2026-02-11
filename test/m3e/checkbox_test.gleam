@@ -3,6 +3,7 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/checkbox.{checked, disabled, form, new, render, required}
+import m3e/form_submission
 
 pub fn checkbox_basic_test() {
   let c = new()
@@ -41,7 +42,11 @@ pub fn checkbox_disabled_test() {
 pub fn checkbox_form_test() {
   let c =
     new()
-    |> form(Some("some_key"), Some("some_value"))
+    |> form(Some(
+      form_submission.new()
+      |> form_submission.name("some_key")
+      |> form_submission.value("some_value"),
+    ))
 
   let expected =
     element(

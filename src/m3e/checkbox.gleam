@@ -1,22 +1,27 @@
 //// checkbox provides Lustre support for the [M3E Checkbox component](https://matraic.github.io/m3e/#/components/checkbox.html)
 
-import gleam/function
-import gleam/list
+import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None}
+
 import lustre/attribute.{none}
 import lustre/element.{type Element, element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/form_submission.{type FormSubmission}
+import m3e/helpers.{boolean_attribute}
 
 /// Checkbox holds all the values necessary to construct am M3E Checkbox
+///
+/// - checked: whether the checkbox is checked
+/// - disabled: whether the checkbox is disabled
+/// - form_submission: handles this element's role in form submission
+/// - required: Whether a value is required for the element
 ///
 pub opaque type Checkbox {
   Checkbox(
     checked: Bool,
     disabled: Bool,
-    name: Option(String),
+    form_submission: Option(FormSubmission),
     required: Bool,
-    value: Option(String),
   )
 }
 
@@ -28,9 +33,8 @@ pub fn new() -> Checkbox {
   Checkbox(
     checked: False,
     disabled: False,
-    name: None,
+    form_submission: None,
     required: False,
-    value: None,
   )
 }
 
@@ -39,19 +43,15 @@ pub fn new() -> Checkbox {
 pub fn render(checkbox: Checkbox) -> Element(msg) {
   element(
     "m3e-checkbox",
-    [
-      boolean_attribute("checked", checkbox.checked),
-      boolean_attribute("disabled", checkbox.disabled),
-      option_attribute(checkbox.name, fn(_) { "name" }, function.identity, None),
-      boolean_attribute("required", checkbox.required),
-      option_attribute(
-        checkbox.value,
-        fn(_) { "value" },
-        function.identity,
-        None,
-      ),
-    ]
-      |> list.filter(fn(a) { a != none() }),
+    flatten([
+      [
+        boolean_attribute("checked", checkbox.checked),
+        boolean_attribute("disabled", checkbox.disabled),
+        boolean_attribute("required", checkbox.required),
+      ],
+      form_submission.attributes(checkbox.form_submission),
+    ])
+      |> filter(fn(a) { a != none() }),
     [],
   )
 }
@@ -74,15 +74,13 @@ pub fn disabled(checkbox: Checkbox, disabled: Bool) -> Checkbox {
 ///
 /// ## Parameters:
 /// - checkbox: a Checkbox
-/// - name: the name of the checkbox when the form is submitted
-/// - value: the value of the checkbox when the form is submitted
+/// - form_submission: a FormSubmission
 ///
 pub fn form(
   checkbox: Checkbox,
-  name: Option(String),
-  value: Option(String),
+  form_submission: Option(FormSubmission),
 ) -> Checkbox {
-  Checkbox(..checkbox, name: name, value: value)
+  Checkbox(..checkbox, form_submission: form_submission)
 }
 
 /// required sets the `required` field
