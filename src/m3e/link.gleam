@@ -52,7 +52,6 @@ pub fn attributes(l: Option(Link)) -> List(Attribute(msg)) {
         True -> attribute("rel", link.rel)
         False -> attribute.none()
       },
-      attribute("rel", link.rel),
       attribute("target", link_target_to_string(link.target)),
     ]
     _ -> [attribute.none()]
