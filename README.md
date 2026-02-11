@@ -16,16 +16,35 @@ Currently m3e provides Gleam functions for a small subset of the M3E components
 - Chip
 - Chip Set
 - Dialog
+- Dialog Action
+- Dialog Trigger
 - Divider
+- Drawer
 - Drawer Container
+- Drawer Toggle
 - Expansion Panel
 - Fab
+- Fab Menu
+- Fab Menu Item
+- Fab Menu Trigger
 - Form Field
 - Heading
 - Icon
 - Icon Button
+- Loading Indicator
+- Menu
+- Menu Item Checkbox
+- Menu Item Group
+- Menu Item Radio
+- Menu Trigger
 - Nav Menu
+- Nav Menu Item
+- Nav Menu Item Group
+- Nav Rail
+- Nav Rail Toggle
 - Option
+- Option Panel
+- Optgroup
 - Progress Indicator
 - Switch
 - Theme
