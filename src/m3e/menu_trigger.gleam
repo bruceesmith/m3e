@@ -1,4 +1,4 @@
-//// loading_indicator provides Lustre support for the [M3E Menu Trigger component](https://matraic.github.io/m3e/#/components/menu.html)
+//// menu_trigger provides Lustre support for the [M3E Menu Trigger component](https://matraic.github.io/m3e/#/components/menu.html)
 
 import lustre/attribute
 import lustre/element.{type Element, element}
