@@ -1,7 +1,10 @@
 import gleam/option.{Some}
 import gleeunit/should
+
 import lustre/attribute.{attribute, for, id}
 import lustre/element.{element}
+
+import m3e/form_submission
 import m3e/switch.{Both, Selected, checked, disabled, form, icon, new, render}
 
 pub fn switch_basic_test() {
@@ -18,7 +21,11 @@ pub fn switch_full_test() {
     new("test_id", "Test Label")
     |> checked(True)
     |> disabled(True)
-    |> form(Some("key"), Some("value"))
+    |> form(Some(
+      form_submission.new()
+      |> form_submission.name("key")
+      |> form_submission.value("value"),
+    ))
     |> icon(Both)
 
   let expected = [
@@ -93,7 +100,11 @@ pub fn switch_disabled_test() {
 pub fn switch_form_test() {
   let s =
     new("test_id", "Test Label")
-    |> form(Some("some_key"), Some("some_value"))
+    |> form(Some(
+      form_submission.new()
+      |> form_submission.name("some_key")
+      |> form_submission.value("some_value"),
+    ))
 
   let expected = [
     element(
