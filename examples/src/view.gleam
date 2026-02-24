@@ -13,8 +13,8 @@ import msg.{
 
 import m3e/button
 import m3e/card
-import m3e/drawer.{drawer}
-import m3e/drawer_container.{drawer_container} as dc
+import m3e/drawer
+import m3e/drawer_container as dc
 import m3e/drawer_toggle
 import m3e/icon
 import m3e/icon_button as ib
@@ -43,41 +43,40 @@ pub fn view(model: Model) -> Element(Msg) {
       html.text("Gleam/Lustre Material 3 Expression demonstration"),
     ])
   let body = [
-    card.basic()
+    card.new()
     |> card.variant(card.Outlined)
-    |> card.element([], [
+    |> card.render([], [
       html.div([attribute("slot", "content")], [
-        ib.basic()
+        ib.new()
           |> ib.toggle(True)
           |> ib.purpose(Some(ib.LeadingIcon))
           |> ib.variant(ib.Filled)
-          |> ib.element([], [
-            icon.basic("menu") |> icon.element([], []),
-            icon.basic("menu_open")
-              |> icon.purpose(icon.Selected)
-              |> icon.element([], []),
-            drawer_toggle.drawer_toggle("nav-drawer")
-              |> drawer_toggle.element([], []),
+          |> ib.render([], [
+            icon.new("menu") |> icon.render([], []),
+            icon.new("menu_open")
+              |> icon.purpose(icon.SelectedIcon)
+              |> icon.render([], []),
+            drawer_toggle.new("nav-drawer")
+              |> drawer_toggle.render([], []),
           ]),
-        drawer_container(
-          drawer(
-            drawer.Start,
-            drawer.Over,
-            True,
-            "nav-drawer",
-            False,
-            html.text("Start drawer"),
-          ),
-          main,
-          drawer.empty(),
-        )
-          |> dc.element([]),
+        dc.new()
+          |> dc.start(
+            drawer.new()
+            |> drawer.usage(drawer.Start)
+            |> drawer.mode(drawer.Over)
+            |> drawer.open(True)
+            |> drawer.id("nav-drawer")
+            |> drawer.divider(False)
+            |> drawer.content(html.text("Start drawer")),
+          )
+          |> dc.end(drawer.empty())
+          |> dc.render([], [main]),
         // drawer-container
       ]),
     ]),
   ]
-  theme.element(
-    theme.basic("app-theme") |> theme.color("#09022e"),
+  theme.render(
+    theme.new("app-theme") |> theme.color("#09022e"),
     // [class("grid gap-5")],
     [],
     [title, ..body],
@@ -102,8 +101,8 @@ fn button() -> Element(Msg) {
       class("grid grid-cols-[5fr_5fr_5fr] gap-5"),
     ],
     [
-      button.basic("Home", button.Outlined)
-        |> button.element([class("col-2"), on_click(HomeSelected)]),
+      button.new("Home", button.Outlined)
+        |> button.render([class("col-2"), on_click(HomeSelected)]),
       html.div(
         [
           class(
@@ -112,16 +111,16 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Variants")]),
-          button.basic("Elevated", button.Elevated)
-            |> button.element([]),
-          button.basic("Filled", button.Filled)
-            |> button.element([]),
-          button.basic("Tonal", button.Tonal)
-            |> button.element([]),
-          button.basic("Outlined", button.Outlined)
-            |> button.element([]),
-          button.basic("Text", button.Text)
-            |> button.element([]),
+          button.new("Elevated", button.Elevated)
+            |> button.render([]),
+          button.new("Filled", button.Filled)
+            |> button.render([]),
+          button.new("Tonal", button.Tonal)
+            |> button.render([]),
+          button.new("Outlined", button.Outlined)
+            |> button.render([]),
+          button.new("Text", button.Text)
+            |> button.render([]),
         ],
       ),
       html.div(
@@ -130,11 +129,11 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Shapes")]),
-          button.basic("Rounded Filled", button.Filled)
-            |> button.element([class("justify-self-center")]),
-          button.basic("Square Filled", button.Filled)
+          button.new("Rounded Filled", button.Filled)
+            |> button.render([class("justify-self-center")]),
+          button.new("Square Filled", button.Filled)
             |> button.shape(button.Square)
-            |> button.element([class("justify-self-center")]),
+            |> button.render([class("justify-self-center")]),
         ],
       ),
       html.div(
@@ -145,21 +144,21 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Sizes")]),
-          button.basic("Extra Small", button.Tonal)
+          button.new("Extra Small", button.Tonal)
             |> button.size(button.ExtraSmall)
-            |> button.element([]),
-          button.basic("Small", button.Tonal)
+            |> button.render([]),
+          button.new("Small", button.Tonal)
             |> button.size(button.Small)
-            |> button.element([]),
-          button.basic("Medium", button.Tonal)
+            |> button.render([]),
+          button.new("Medium", button.Tonal)
             |> button.size(button.Medium)
-            |> button.element([]),
-          button.basic("Large", button.Tonal)
+            |> button.render([]),
+          button.new("Large", button.Tonal)
             |> button.size(button.Large)
-            |> button.element([]),
-          button.basic("Extra Large", button.Tonal)
+            |> button.render([]),
+          button.new("Extra Large", button.Tonal)
             |> button.size(button.ExtraLarge)
-            |> button.element([]),
+            |> button.render([]),
         ],
       ),
       html.div(
@@ -168,16 +167,16 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Icons")]),
-          button.basic("Send", button.Tonal)
-            |> button.icons([icon.basic("send") |> icon.element([], [])])
-            |> button.element([class("justify-self-center")]),
-          button.basic("Open", button.Tonal)
+          button.new("Send", button.Tonal)
+            |> button.icons([icon.new("send") |> icon.render([], [])])
+            |> button.render([class("justify-self-center")]),
+          button.new("Open", button.Tonal)
             |> button.icons([
-              icon.basic("open_in_new_window")
+              icon.new("open_in_new_window")
               |> icon.purpose(icon.Trailing)
-              |> icon.element([], []),
+              |> icon.render([], []),
             ])
-            |> button.element([class("justify-self-center")]),
+            |> button.render([class("justify-self-center")]),
         ],
       ),
       html.div(
@@ -186,19 +185,19 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Toggle")]),
-          button.basic("Tonal toggle", button.Tonal)
+          button.new("Tonal toggle", button.Tonal)
             |> button.toggle(True)
-            |> button.element([class("justify-self-center")]),
-          button.basic("Start", button.Tonal)
+            |> button.render([class("justify-self-center")]),
+          button.new("Start", button.Tonal)
             |> button.toggle(True)
             |> button.icons([
-              icon.basic("play_arrow") |> icon.element([], []),
-              icon.basic("stop")
-                |> icon.purpose(icon.Selected)
-                |> icon.element([], []),
+              icon.new("play_arrow") |> icon.render([], []),
+              icon.new("stop")
+                |> icon.purpose(icon.SelectedIcon)
+                |> icon.render([], []),
             ])
             |> button.selected_label("Stop")
-            |> button.element([class("justify-self-center")]),
+            |> button.render([class("justify-self-center")]),
         ],
       ),
       html.div(
@@ -207,12 +206,12 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Disabling")]),
-          button.basic("Disabled", button.Filled)
+          button.new("Disabled", button.Filled)
             |> button.disabled(True)
-            |> button.element([class("justify-self-center")]),
-          button.basic("Disabled interactive", button.Filled)
+            |> button.render([class("justify-self-center")]),
+          button.new("Disabled interactive", button.Filled)
             |> button.disabled(True)
-            |> button.element([class("justify-self-center")]),
+            |> button.render([class("justify-self-center")]),
         ],
       ),
       html.div(
@@ -221,13 +220,13 @@ fn button() -> Element(Msg) {
         ],
         [
           html.p([], [html.text("Links")]),
-          button.basic("Google", button.Tonal)
+          button.new("Google", button.Tonal)
             |> button.icons([
-              icon.basic("open_in_new_window")
+              icon.new("open_in_new_window")
               |> icon.purpose(icon.Trailing)
-              |> icon.element([], []),
+              |> icon.render([], []),
             ])
-            |> button.element([
+            |> button.render([
               class("justify-self-center"),
               attribute.href("https://google.com"),
               attribute.target("_blank"),
@@ -242,7 +241,7 @@ fn icon() -> Element(Msg) {
   html.div([], [
     html.div([on_click(HomeSelected)], [html.text("Home")]),
     html.br([]),
-    html.div([], [icon.basic("home") |> icon.element([], [])]),
+    html.div([], [icon.new("home") |> icon.render([], [])]),
     html.br([]),
   ])
 }
@@ -251,7 +250,7 @@ fn switch_() -> Element(Msg) {
   html.div([], [
     html.div([on_click(HomeSelected)], [html.text("Home")]),
     html.br([]),
-    html.div([], switch.basic("my-switch", "My choice") |> switch.element([])),
+    html.div([], switch.new("my-switch", "My choice") |> switch.render([])),
     html.br([]),
   ])
 }
