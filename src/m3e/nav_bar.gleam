@@ -1,4 +1,4 @@
-//// nav_menu provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-menu.html)
+//// nav_bar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 
 import gleam/list.{filter, flatten}
 
