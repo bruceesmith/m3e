@@ -48,7 +48,9 @@ pub type Variant {
   Outlined
 }
 
-fn variant_to_string(v: Variant) -> String {
+/// variant_to_string converts a Variant to a string
+/// 
+pub fn variant_to_string(v: Variant) -> String {
   case v {
     Filled -> "filled"
     Outlined -> "outlined"
