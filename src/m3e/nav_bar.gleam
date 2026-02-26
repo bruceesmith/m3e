@@ -20,7 +20,7 @@ pub fn mode_to_string(mode: Mode) -> String {
   }
 }
 
-/// NavBar provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
+/// NavBar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
 /// ## Fields:
 /// - mode: the possible modes in which to present items in a navigation bar
