@@ -9,12 +9,6 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
-//  * @attr disabled - Whether the element is disabled.
-//  * @attr hide-selection-indicator - Whether to hide the selection indicator for single select options.
-//  * @attr multi - Whether multiple options can be selected.
-//  * @attr name - The name that identifies the element when submitting the associated form.
-//  * @attr required - Whether the element is required.
-
 /// Select provides Lustre support for the [M3E Select component](https://matraic.github.io/m3e/#/components/select.html)
 /// 
 /// ## Fields:
