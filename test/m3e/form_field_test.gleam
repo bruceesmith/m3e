@@ -9,28 +9,30 @@ import m3e/form_field.{
 
 pub fn form_field_creation_test() {
   let f = new()
-  let expected =
-    element(
-      "m3e-form-field",
-      [
-        attribute("float-label", "auto"),
-        attribute("hide-subscript", "auto"),
-        attribute("variant", "outlined"),
-      ],
-      [],
-    )
-  render(f, [], []) |> should.equal(expected)
+  let expected_attributes = [
+    attribute("float-label", "auto"),
+    attribute("hide-subscript", "auto"),
+    attribute("variant", "outlined"),
+  ]
+
+  let expected_without_children =
+    element("m3e-form-field", expected_attributes, [])
+  render(f, [], []) |> should.equal(expected_without_children)
+
+  let expected_with_children =
+    element("m3e-form-field", expected_attributes, [text("Child")])
+  render(f, [], [text("Child")]) |> should.equal(expected_with_children)
 }
 
 pub fn form_field_default_test() {
-  let f =
+  let f_without_children =
     new()
     |> float_label(Always)
     |> hide_required_marker(True)
     |> hide_subscript(NeverHide)
     |> variant(Filled)
 
-  let expected =
+  let expected_without_children =
     element(
       "m3e-form-field",
       [
@@ -41,31 +43,16 @@ pub fn form_field_default_test() {
       ],
       [],
     )
-  render(f, [], []) |> should.equal(expected)
-}
+  render(f_without_children, [], []) |> should.equal(expected_without_children)
 
-pub fn form_field_element_test() {
-  let f = new()
-  let expected =
-    element(
-      "m3e-form-field",
-      [
-        attribute("float-label", "auto"),
-        attribute("hide-subscript", "auto"),
-        attribute("variant", "outlined"),
-      ],
-      [text("Child")],
-    )
-  f |> render([], [text("Child")]) |> should.equal(expected)
-
-  let f =
+  let f_with_children =
     new()
     |> float_label(Always)
     |> hide_required_marker(True)
     |> hide_subscript(AlwaysHide)
     |> variant(Filled)
 
-  let expected =
+  let expected_with_children =
     element(
       "m3e-form-field",
       [
@@ -76,7 +63,8 @@ pub fn form_field_element_test() {
       ],
       [text("Child")],
     )
-  f |> render([], [text("Child")]) |> should.equal(expected)
+  render(f_with_children, [], [text("Child")])
+  |> should.equal(expected_with_children)
 }
 
 pub fn form_field_setters_test() {
