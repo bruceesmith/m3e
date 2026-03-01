@@ -76,25 +76,67 @@ pub fn duration(s: Snackbar, duration: Option(Int)) -> Snackbar {
   Snackbar(..s, duration: duration)
 }
 
-/// render displays a Snackbar. Unlike render() functions in other M3E components,
-/// which are called from an application's view() function, the Snackbar's render()
-/// is called from an application's update() function
+/// SnackbarAction describes the intent to open a snackbar with specific parameters.
+/// This allows the logic to be pure and easily testable.
+pub type SnackbarAction(msg) {
+  Open(
+    message: String,
+    action_label: String,
+    dismissable: Bool,
+    close_label: String,
+    duration: Int,
+    callback: Option(msg),
+  )
+}
+
+/// open displays a Snackbar. Unlike render() functions in other M3E components,
+/// which are called from an application's view() function, the Snackbar's open()
+/// is called from an application's update() function.
 /// 
 /// ## Parameters:
 /// - s: a Snackbar
 /// - callback: the Msg that should be sent when the Action button is clicked
 /// 
-pub fn render(s: Snackbar, callback: Option(msg)) -> Effect(msg) {
+pub fn open(s: Snackbar, callback: Option(msg)) -> Effect(msg) {
+  s
+  |> to_action(callback)
+  |> to_effect
+}
+
+/// to_action describes a Snackbar. It is a pure function that returns a 
+/// SnackbarAction description.
+/// 
+/// ## Parameters:
+/// - s: a Snackbar
+/// - callback: the Msg that should be sent when the Action button is clicked
+/// 
+pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
   let action_label = unwrap(s.action_label, default_action_label)
   let close_label = unwrap(s.close_label, default_close_label)
   let duration = unwrap(s.duration, default_duration)
 
-  effect.from(fn(dispatch) {
-    open_snackbar(s.message, action_label, s.dismissable, case callback {
-      Some(cb) -> FullOptions(close_label, duration, fn() { dispatch(cb) })
-      None -> ShortOptions(close_label, duration)
-    })
-  })
+  Open(
+    message: s.message,
+    action_label: action_label,
+    dismissable: s.dismissable,
+    close_label: close_label,
+    duration: duration,
+    callback: callback,
+  )
+}
+
+/// to_effect converts a SnackbarAction description into a Lustre Effect.
+/// 
+pub fn to_effect(action: SnackbarAction(msg)) -> Effect(msg) {
+  case action {
+    Open(message, action_label, dismissable, close_label, duration, callback) ->
+      effect.from(fn(dispatch) {
+        open_snackbar(message, action_label, dismissable, case callback {
+          Some(cb) -> FullOptions(close_label, duration, fn() { dispatch(cb) })
+          None -> ShortOptions(close_label, duration)
+        })
+      })
+  }
 }
 
 /// Interfaces to the JavaScript M3eSnackbar.open() function. 
