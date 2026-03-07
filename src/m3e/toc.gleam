@@ -6,9 +6,6 @@ import gleam/list.{filter, flatten}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-//  * @attr for - The identifier of the interactive control to which this element is attached.
-//  * @attr max-depth - The maximum depth of the table of contents.
-
 /// Toc provides Lustre support for the [M3E Toc component](https://matraic.github.io/m3e/#/components/toc.html)
 /// 
 /// ## Fields:
