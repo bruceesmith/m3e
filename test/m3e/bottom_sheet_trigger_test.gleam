@@ -1,5 +1,4 @@
 import gleam/option.{Some}
-import gleeunit
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element, text}
