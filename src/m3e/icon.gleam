@@ -51,6 +51,7 @@ pub type Purpose {
   Leading
   LeadingIcon
   RemoveIcon
+  Selected
   SelectedIcon
   ToggleIcon
   Trailing
@@ -65,6 +66,7 @@ fn purpose_to_string(purpose: Purpose) -> String {
     Leading -> "leading"
     LeadingIcon -> "leading-icon"
     RemoveIcon -> "remove-icon"
+    Selected -> "selected"
     SelectedIcon -> "selected-icon"
     ToggleIcon -> "toggle-icon"
     Trailing -> "trailing"
