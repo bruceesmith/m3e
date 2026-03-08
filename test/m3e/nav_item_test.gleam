@@ -1,14 +1,9 @@
 import gleam/option.{Some}
-import gleeunit
 import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
 import m3e/link
 import m3e/nav_item
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn basic_render_test() {
   nav_item.new()

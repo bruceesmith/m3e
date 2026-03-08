@@ -1,12 +1,7 @@
-import gleeunit
 import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
 import m3e/nav_bar
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn basic_render_test() {
   nav_bar.new()

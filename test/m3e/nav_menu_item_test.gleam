@@ -1,14 +1,9 @@
 import gleam/option
-import gleeunit
 import gleeunit/should
 import lustre/attribute
 import lustre/element.{element, none}
 import lustre/element/html
 import m3e/nav_menu_item
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn basic_render_test() {
   let label = "Home"

@@ -1,14 +1,9 @@
 import gleam/option
-import gleeunit
 import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
 import m3e/dialog
-
-pub fn main() {
-  gleeunit.main()
-}
 
 pub fn basic_render_test() {
   let content = [html.text("This is the dialog content.")]
