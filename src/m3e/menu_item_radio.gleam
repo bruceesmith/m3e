@@ -7,6 +7,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
 /// MenuItemRadio is an item of a menu which supports a mutually exclusive checkable state
 /// 
 /// ## Fields:
@@ -17,11 +19,38 @@ pub opaque type MenuItemRadio {
   MenuItemRadio(checked: Bool, disabled: Bool)
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Icon
+  // Renders an icon before the items's label 
+  TrailingIcon
+  // Renders an icon after the item's label 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new MenuItemRadio
 ///
 pub fn new() -> MenuItemRadio {
   MenuItemRadio(checked: False, disabled: False)
 }
+
+// --- SETTERS ---
+
+/// checked sets the checked field
+///
+pub fn checked(m: MenuItemRadio, checked: Bool) -> MenuItemRadio {
+  MenuItemRadio(..m, checked: checked)
+}
+
+/// disabled sets the disabled field
+///
+pub fn disabled(m: MenuItemRadio, disabled: Bool) -> MenuItemRadio {
+  MenuItemRadio(..m, disabled: disabled)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a MenuItemRadio
 ///
@@ -42,14 +71,11 @@ pub fn render(
   )
 }
 
-/// checked sets the checked field
-///
-pub fn checked(m: MenuItemRadio, checked: Bool) -> MenuItemRadio {
-  MenuItemRadio(..m, checked: checked)
-}
-
-/// disabled sets the disabled field
-///
-pub fn disabled(m: MenuItemRadio, disabled: Bool) -> MenuItemRadio {
-  MenuItemRadio(..m, disabled: disabled)
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Icon -> attribute("slot", "icon")
+    TrailingIcon -> attribute("slot", "trailing-icon")
+  }
 }

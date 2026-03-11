@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute, attribute, name, none}
 import lustre/element.{type Element, element}
 
-import m3e/helpers.{clamp_with_default, slot}
+import m3e/helpers.{clamp_with_default}
 
 /// The Grade of the variable font icon
 /// [Refer](https://m3.material.io/styles/icons/applying-icons)
@@ -41,41 +41,6 @@ pub const largest_optical_size = 48
 
 /// The default optical size of the icon
 pub const default_optical_size = 24
-
-/// Purpose defines the intended purpose of the icon
-///
-pub type Purpose {
-  Avatar
-  CloseIcon
-  Default
-  Leading
-  LeadingIcon
-  RemoveIcon
-  Selected
-  SelectedIcon
-  ToggleIcon
-  Trailing
-  TrailingIcon
-}
-
-fn purpose_to_string(purpose: Purpose) -> String {
-  case purpose {
-    Avatar -> "avatar"
-    CloseIcon -> "close-icon"
-    Default -> "icon"
-    Leading -> "leading"
-    LeadingIcon -> "leading-icon"
-    RemoveIcon -> "remove-icon"
-    Selected -> "selected"
-    SelectedIcon -> "selected-icon"
-    ToggleIcon -> "toggle-icon"
-    Trailing -> "trailing"
-    TrailingIcon -> "trailing-icon"
-  }
-}
-
-/// Default purpose
-pub const default_purpose = Default
 
 /// The Variant of the icon
 pub type Variant {
@@ -122,13 +87,13 @@ pub const default_weight = 400
 /// - variant:  the visual style of the icon
 /// - weight: the thickness and boldness of the icon's strokes. Between 100 and 700
 ///
-pub opaque type Icon {
+pub opaque type Icon(msg) {
   Icon(
     name: String,
     filled: Bool,
     grade: Grade,
     optical_size: OpticalSize,
-    purpose: Purpose,
+    purpose: Attribute(msg),
     variant: Variant,
     weight: Weight,
   )
@@ -139,13 +104,13 @@ pub opaque type Icon {
 /// ## Parameters:
 /// - name: the name of the Material Symbol used in this Icon
 ///
-pub fn new(name: String) -> Icon {
+pub fn new(name: String) -> Icon(msg) {
   Icon(
     name,
     False,
     default_grade,
     default_optical_size,
-    default_purpose,
+    none(),
     default_variant,
     default_weight,
   )
@@ -159,7 +124,7 @@ pub fn new(name: String) -> Icon {
 /// - children: child HTML elements
 ///
 pub fn render(
-  i: Icon,
+  i: Icon(msg),
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -171,7 +136,7 @@ pub fn render(
         filled_attr(i.filled),
         grade_attr(i.grade),
         optical_size_attr(i.optical_size),
-        purpose_attr(i.purpose),
+        i.purpose,
         variant_attr(i.variant),
         weight_attr(i.weight),
       ],
@@ -184,7 +149,7 @@ pub fn render(
 
 /// filled sets the `filled` field
 ///
-pub fn filled(i: Icon, f: Bool) -> Icon {
+pub fn filled(i: Icon(msg), f: Bool) -> Icon(msg) {
   Icon(..i, filled: f)
 }
 
@@ -197,7 +162,7 @@ fn filled_attr(f: Bool) -> Attribute(msg) {
 
 /// grade sets the `grade` field
 ///
-pub fn grade(i: Icon, g: Grade) -> Icon {
+pub fn grade(i: Icon(msg), g: Grade) -> Icon(msg) {
   Icon(..i, grade: g)
 }
 
@@ -205,18 +170,9 @@ fn grade_attr(g: Grade) -> Attribute(msg) {
   attribute("grade", grade_to_string(g))
 }
 
-/// leading returns True if the Icon Purpose is Leading
-///
-pub fn leading(i: Icon) -> Bool {
-  case i.purpose {
-    Leading -> True
-    _ -> False
-  }
-}
-
 /// optical_size checks and then sets the `optical_size` field
 ///
-pub fn optical_size(i: Icon, os: OpticalSize) -> Icon {
+pub fn optical_size(i: Icon(msg), os: OpticalSize) -> Icon(msg) {
   Icon(..i, optical_size: optical_size_validate(os))
 }
 
@@ -235,17 +191,13 @@ fn optical_size_validate(os: OpticalSize) -> OpticalSize {
 
 /// purpose sets the `purpose` field
 ///
-pub fn purpose(i: Icon, p: Purpose) -> Icon {
+pub fn purpose(i: Icon(msg), p: Attribute(msg)) -> Icon(msg) {
   Icon(..i, purpose: p)
-}
-
-fn purpose_attr(p: Purpose) -> Attribute(msg) {
-  slot(purpose_to_string(p))
 }
 
 /// variant sets the `variant` field
 ///
-pub fn variant(i: Icon, v: Variant) -> Icon {
+pub fn variant(i: Icon(msg), v: Variant) -> Icon(msg) {
   Icon(..i, variant: v)
 }
 
@@ -255,7 +207,7 @@ fn variant_attr(v: Variant) -> Attribute(msg) {
 
 /// weight sets the `weight` field
 ///
-pub fn weight(i: Icon, w: Weight) -> Icon {
+pub fn weight(i: Icon(msg), w: Weight) -> Icon(msg) {
   Icon(..i, weight: weight_validate(w))
 }
 

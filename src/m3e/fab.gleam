@@ -8,54 +8,10 @@ import lustre/element.{type Element, element}
 import lustre/element/html.{span, text}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute, slot}
+import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 
-/// Size is the size of the bar
-/// 
-pub type Size {
-  Large
-  Medium
-  Small
-}
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    Large -> "large"
-    Medium -> "medium"
-    Small -> "small"
-  }
-}
-
-/// Default size
-/// 
-pub const default_size = Medium
-
-/// Variant is the appearance variant of the button
-/// 
-pub type Variant {
-  Primary
-  PrimaryContainer
-  Secondary
-  SecondaryContainer
-  Surface
-  Tertiary
-  TertiaryContainer
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Primary -> "primary"
-    PrimaryContainer -> "primary-container"
-    Secondary -> "secondary"
-    SecondaryContainer -> "secondary-container"
-    Surface -> "surface"
-    Tertiary -> "tertiary"
-    TertiaryContainer -> "tertiary-container"
-  }
-}
-
-pub const default_variant = PrimaryContainer
+// --- Types ---
 
 /// FAB is a floating action button (FAB) used to present important actions
 /// 
@@ -84,6 +40,45 @@ pub opaque type FAB {
   )
 }
 
+/// Size is the size of the bar
+/// 
+pub type Size {
+  Large
+  Medium
+  Small
+}
+
+/// Default size
+/// 
+pub const default_size = Medium
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  CloseIcon
+  // Renders the close icon when used to open a FAB menu 
+  Label
+  // Renders the label of an extended button 
+  MenuItemIcon
+  // Renders an icon before the items's label 
+}
+
+/// Variant is the appearance variant of the button
+/// 
+pub type Variant {
+  Primary
+  PrimaryContainer
+  Secondary
+  SecondaryContainer
+  Surface
+  Tertiary
+  TertiaryContainer
+}
+
+pub const default_variant = PrimaryContainer
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new FAB
 /// 
 pub fn new() -> FAB {
@@ -99,6 +94,64 @@ pub fn new() -> FAB {
     variant: default_variant,
   )
 }
+
+// --- SETTERS ---
+
+/// disabled sets the disabled field
+/// 
+pub fn disabled(f: FAB, disabled: Bool) -> FAB {
+  FAB(..f, disabled: disabled)
+}
+
+/// disabled_interactive sets the disabled_interactive field
+/// 
+pub fn disabled_interactive(f: FAB, disabled_interactive: Bool) -> FAB {
+  FAB(..f, disabled_interactive: disabled_interactive)
+}
+
+/// extended sets the extended field
+/// 
+pub fn extended(f: FAB, extended: Bool) -> FAB {
+  FAB(..f, extended: extended)
+}
+
+/// extended_label sets the extended_label field
+/// 
+pub fn extended_label(f: FAB, extended_label: Option(String)) -> FAB {
+  FAB(..f, extended_label: extended_label)
+}
+
+/// form sets the form_submission field
+/// 
+pub fn form(f: FAB, form_submission: Option(FormSubmission)) -> FAB {
+  FAB(..f, form_submission: form_submission)
+}
+
+/// link sets the link field
+/// 
+pub fn link(f: FAB, link: Option(Link)) -> FAB {
+  FAB(..f, link: link)
+}
+
+/// lowered sets the lowered field
+/// 
+pub fn lowered(f: FAB, lowered: Bool) -> FAB {
+  FAB(..f, lowered: lowered)
+}
+
+/// size sets the size field
+/// 
+pub fn size(f: FAB, size: Size) -> FAB {
+  FAB(..f, size: size)
+}
+
+/// variant sets the variant field
+/// 
+pub fn variant(f: FAB, variant: Variant) -> FAB {
+  FAB(..f, variant: variant)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a FAB
 ///
@@ -133,65 +186,43 @@ pub fn render(
   )
 }
 
-/// disabled sets the disabled field
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 
-pub fn disabled(f: FAB, disabled: Bool) -> FAB {
-  FAB(..f, disabled: disabled)
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    CloseIcon -> attribute("slot", "close-icon")
+    Label -> attribute("slot", "label")
+    MenuItemIcon -> attribute("slot", "icon")
+  }
 }
 
-/// disabled_interactive sets the disabled_interactive field
-/// 
-pub fn disabled_interactive(f: FAB, disabled_interactive: Bool) -> FAB {
-  FAB(..f, disabled_interactive: disabled_interactive)
-}
-
-/// extended sets the extended field
-/// 
-pub fn extended(f: FAB, extended: Bool) -> FAB {
-  FAB(..f, extended: extended)
-}
-
-/// extended_label sets the extended_label field
-/// 
-pub fn extended_label(f: FAB, extended_label: Option(String)) -> FAB {
-  FAB(..f, extended_label: extended_label)
-}
+// --- PRIVATE INTERNAL HELPERS ---
 
 /// extended_label_elt sets the extended_label_elt field
 /// 
 fn extended_label_elt(el: Option(String)) -> Element(msg) {
   case el {
-    Some(label) -> span([slot("label")], [text(label)])
+    Some(label) -> span([slot(Label)], [text(label)])
     None -> element.none()
   }
 }
 
-/// form sets the form_submission field
-/// 
-pub fn form(f: FAB, form_submission: Option(FormSubmission)) -> FAB {
-  FAB(..f, form_submission: form_submission)
+fn size_to_string(size: Size) -> String {
+  case size {
+    Large -> "large"
+    Medium -> "medium"
+    Small -> "small"
+  }
 }
 
-/// link sets the link field
-/// 
-pub fn link(f: FAB, link: Option(Link)) -> FAB {
-  FAB(..f, link: link)
-}
-
-/// lowered sets the lowered field
-/// 
-pub fn lowered(f: FAB, lowered: Bool) -> FAB {
-  FAB(..f, lowered: lowered)
-}
-
-/// size sets the size field
-/// 
-pub fn size(f: FAB, size: Size) -> FAB {
-  FAB(..f, size: size)
-}
-
-/// variant sets the variant field
-/// 
-pub fn variant(f: FAB, variant: Variant) -> FAB {
-  FAB(..f, variant: variant)
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Primary -> "primary"
+    PrimaryContainer -> "primary-container"
+    Secondary -> "secondary"
+    SecondaryContainer -> "secondary-container"
+    Surface -> "surface"
+    Tertiary -> "tertiary"
+    TertiaryContainer -> "tertiary-container"
+  }
 }

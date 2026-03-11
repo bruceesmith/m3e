@@ -10,18 +10,13 @@ import lustre/element.{type Element, element}
 import m3e/form_field.{type Variant, default_variant, variant_to_string}
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
 /// PageSize captures the semantics of the page-size attribute
 /// 
 pub type PageSize {
   PageSize(Int)
   PageSizeAll
-}
-
-fn page_size_to_string(p: PageSize) -> String {
-  case p {
-    PageSize(i) -> to_string(i)
-    PageSizeAll -> "all"
-  }
 }
 
 pub const default_page_size = 50
@@ -69,6 +64,21 @@ pub opaque type Paginator {
   )
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  FirstPageIcon
+  // Slot for a custom first-page icon 
+  LastPageIcon
+  // Slot for a custom last-page icon 
+  NextPageIcon
+  // Slot for a custom next-page icon
+  PreviousPageIcon
+  // Slot for a custom previous-page icon 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a Paginator with default values
 /// 
 pub fn new() -> Paginator {
@@ -88,6 +98,8 @@ pub fn new() -> Paginator {
     False,
   )
 }
+
+// --- SETTERS ---
 
 /// disabled sets the disabled attribute of a Paginator
 /// 
@@ -176,6 +188,8 @@ pub fn show_first_last_buttons(
   Paginator(..p, show_first_last_buttons: show_first_last_buttons)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element from a Paginator
 /// 
 /// ## Parameters:
@@ -214,4 +228,24 @@ pub fn render(
       |> filter(fn(a) { a != attribute.none() }),
     children,
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    FirstPageIcon -> attribute("slot", "first-page-icon")
+    LastPageIcon -> attribute("slot", "last-page-icon")
+    NextPageIcon -> attribute("slot", "next-page-icon")
+    PreviousPageIcon -> attribute("slot", "previous-page-icon")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn page_size_to_string(p: PageSize) -> String {
+  case p {
+    PageSize(i) -> to_string(i)
+    PageSizeAll -> "all"
+  }
 }

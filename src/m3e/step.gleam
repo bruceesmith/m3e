@@ -5,6 +5,25 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  DoneIcon
+  // Renders the icon of a completed step 
+  EditIcon
+  // Renders the icon of a completed editable step 
+  Error
+  // Renders the error message for an invalid step 
+  ErrorIcon
+  // Renders icon of an invalid step 
+  Hint
+  // Renders the hint text of the step 
+  Icon
+  // Renders the icon of the step
+}
+
 /// Step provides Lustre support for the [M3E Step component
 /// 
 /// ## Fields:
@@ -28,11 +47,15 @@ pub opaque type Step {
   )
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new Step
 /// 
 pub fn new(for: String) -> Step {
   Step(False, False, False, for, False, False, "")
 }
+
+// --- SETTERS ---
 
 /// completed sets the completed field
 /// 
@@ -76,6 +99,8 @@ pub fn text(s: Step, text: String) -> Step {
   Step(..s, text: text)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element(msg) from a Step
 /// 
 pub fn render(s: Step) -> Element(msg) {
@@ -91,4 +116,17 @@ pub fn render(s: Step) -> Element(msg) {
     ],
     [element.text(s.text)],
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    DoneIcon -> attribute("slot", "done-icon")
+    EditIcon -> attribute("slot", "edit-icon")
+    Error -> attribute("slot", "error")
+    ErrorIcon -> attribute("slot", "error-icon")
+    Hint -> attribute("slot", "hint")
+    Icon -> attribute("slot", "icon")
+  }
 }

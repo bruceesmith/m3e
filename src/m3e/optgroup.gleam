@@ -3,6 +3,8 @@
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// Optgroup holds all information to create an Optgroup
 ///
 /// ## Fields:
@@ -11,6 +13,15 @@ import lustre/element.{type Element, element}
 pub opaque type Optgroup {
   Optgroup
 }
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Label
+  // Renders the label of the group 
+}
+
+// --- CONSTRUCTORS ---
 
 /// new creates a new Optgroup
 ///
@@ -21,6 +32,8 @@ pub fn new() -> Optgroup {
   Optgroup
 }
 
+// --- RENDERING ---
+
 /// render creates an M3E Optgroup component from an Optgroup
 ///
 pub fn render(
@@ -30,3 +43,12 @@ pub fn render(
 ) -> Element(msg) {
   element("m3e-option-panel", attributes, children)
 }
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Label -> attribute("slot", "label")
+  }
+}
+// --- PRIVATE INTERNAL HELPERS ---

@@ -1,26 +1,228 @@
 //// drawer_container provides Lustre support for the [M3E DrawerContainer component](https://matraic.github.io/m3e/#/components/drawer_container.html)
 
-import gleam/list
-import lustre/attribute.{type Attribute, none}
+import gleam/list.{filter, flatten}
+import gleam/option.{type Option, None, Some}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
+import m3e/helpers.{boolean_attribute}
 
-import m3e/drawer.{type Drawer, empty}
+// --- TYPES ---
 
 /// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
 /// ## Fields:
-/// - start: the start drawer
-/// - end: the end drawer
+/// - end: Whether the end drawer is open
+/// - end_mode: The behavior mode of the end drawer
+/// - end_divider: Whether to show a divider between the end drawer and content for `side` mode
+/// - start: Whether the start drawer is open
+/// - start_mode: The behavior mode of the start drawer
+/// - start_divider: Whether to show a divider between the start drawer and content for `side` mode
 ///
 pub opaque type DrawerContainer(msg) {
-  DrawerContainer(start: Drawer(msg), end: Drawer(msg))
+  DrawerContainer(
+    end: Bool,
+    end_divider: Bool,
+    end_drawer: Option(Element(msg)),
+    end_mode: Mode,
+    main_content: Element(msg),
+    start: Bool,
+    start_divider: Bool,
+    start_drawer: Option(Element(msg)),
+    start_mode: Mode,
+  )
 }
 
-/// new creates a DrawerContainer
+/// Mode is the behaviour of a drawer
+/// 
+pub type Mode {
+  Auto
+  Over
+  Push
+  Side
+}
+
+/// Default Mode
+/// 
+pub const default_mode = Auto
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  End
+  // Renders the end drawer 
+  Start
+  // Renders the start drawer 
+}
+
+// --- CONFIGURATION ---
+
+/// Config is a transparent record used for bulk configuration
+/// 
+pub type Config(msg) {
+  Config(
+    end: Bool,
+    end_divider: Bool,
+    end_drawer: Option(Element(msg)),
+    end_mode: Mode,
+    main_content: Element(msg),
+    start: Bool,
+    start_divider: Bool,
+    start_drawer: Option(Element(msg)),
+    start_mode: Mode,
+  )
+}
+
+/// default_config provides a starting point for configuration with sensible defaults.
+/// 
+pub fn default_config() -> Config(msg) {
+  Config(
+    end: False,
+    end_divider: False,
+    end_drawer: None,
+    end_mode: default_mode,
+    main_content: element.none(),
+    start: False,
+    start_divider: False,
+    start_drawer: None,
+    start_mode: default_mode,
+  )
+}
+
+// --- CONSTRUCTORS ---
+
+/// from_config bridges the transparent Config to the Opaque type
+/// 
+pub fn from_config(config: Config(msg)) -> DrawerContainer(msg) {
+  DrawerContainer(
+    end: case config.end_drawer {
+      Some(_) -> config.end
+      None -> False
+    },
+    end_divider: case config.end_drawer {
+      Some(_) -> config.end_divider
+      None -> False
+    },
+    end_drawer: config.end_drawer,
+    end_mode: case config.end_drawer {
+      Some(_) -> config.end_mode
+      None -> default_mode
+    },
+    main_content: config.main_content,
+    start: case config.start_drawer {
+      Some(_) -> config.start
+      None -> False
+    },
+    start_divider: case config.start_drawer {
+      Some(_) -> config.start_divider
+      None -> False
+    },
+    start_drawer: config.start_drawer,
+    start_mode: case config.start_drawer {
+      Some(_) -> config.start_mode
+      None -> default_mode
+    },
+  )
+}
+
+/// new creates a DrawerContainer with defaults
 /// 
 pub fn new() -> DrawerContainer(msg) {
-  DrawerContainer(start: empty(), end: empty())
+  from_config(default_config())
 }
+
+// --- SETTERS ---
+
+/// end sets the `end` fieldq
+/// 
+pub fn end(c: DrawerContainer(msg), end: Bool) -> DrawerContainer(msg) {
+  case c.end_drawer {
+    Some(_) -> DrawerContainer(..c, end: end)
+    None -> c
+  }
+}
+
+/// end_divider sets the `end_divider` field
+/// 
+pub fn end_divider(
+  c: DrawerContainer(msg),
+  end_divider: Bool,
+) -> DrawerContainer(msg) {
+  case c.end_drawer {
+    Some(_) -> DrawerContainer(..c, end_divider: end_divider)
+    None -> c
+  }
+}
+
+/// end_drawer sets the `end_drawer` field
+/// 
+pub fn end_drawer(
+  c: DrawerContainer(msg),
+  end_drawer: Option(Element(msg)),
+) -> DrawerContainer(msg) {
+  DrawerContainer(..c, end_drawer: end_drawer)
+}
+
+/// end_mode sets the `end_mode` field
+/// 
+pub fn end_mode(c: DrawerContainer(msg), end_mode: Mode) -> DrawerContainer(msg) {
+  case c.end_drawer {
+    Some(_) -> DrawerContainer(..c, end_mode: end_mode)
+    None -> c
+  }
+}
+
+/// main_content sets the `main_content` field
+/// 
+pub fn main_content(
+  c: DrawerContainer(msg),
+  main_content: Element(msg),
+) -> DrawerContainer(msg) {
+  DrawerContainer(..c, main_content: main_content)
+}
+
+/// start sets the `start` field
+/// 
+pub fn start(c: DrawerContainer(msg), start: Bool) -> DrawerContainer(msg) {
+  case c.start_drawer {
+    Some(_) -> DrawerContainer(..c, start: start)
+    None -> c
+  }
+}
+
+/// start_divider sets the `start_divider` field
+/// 
+pub fn start_divider(
+  c: DrawerContainer(msg),
+  start_divider: Bool,
+) -> DrawerContainer(msg) {
+  case c.start_drawer {
+    Some(_) -> DrawerContainer(..c, start_divider: start_divider)
+    None -> c
+  }
+}
+
+/// start_drawer sets the `start_drawer` field
+/// 
+pub fn start_drawer(
+  c: DrawerContainer(msg),
+  start_drawer: Option(Element(msg)),
+) -> DrawerContainer(msg) {
+  DrawerContainer(..c, start_drawer: start_drawer)
+}
+
+/// start_mode sets the `start_mode` field
+/// 
+pub fn start_mode(
+  c: DrawerContainer(msg),
+  start_mode: Mode,
+) -> DrawerContainer(msg) {
+  case c.start_drawer {
+    Some(_) -> DrawerContainer(..c, start_mode: start_mode)
+    None -> c
+  }
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a DrawerContainer
 ///
@@ -29,48 +231,77 @@ pub fn new() -> DrawerContainer(msg) {
 /// - attributes: a list of additional Attributes
 /// - children: the main content
 ///
-pub fn render(
-  c: DrawerContainer(msg),
-  attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
-) -> Element(msg) {
-  let #(start_attrs, start_drawer) = drawer.render(c.start)
-  let #(end_attrs, end_drawer) = drawer.render(c.end)
+pub fn render(c: DrawerContainer(msg)) -> Element(msg) {
+  let drawers =
+    [
+      case c.start_drawer {
+        Some(d) -> d
+        None -> element.none()
+      },
+      c.main_content,
+      case c.end_drawer {
+        Some(d) -> d
+        None -> element.none()
+      },
+    ]
+    |> filter(fn(e) { e != element.none() })
 
   element(
     "m3e-drawer-container",
-    list.append(start_attrs, end_attrs)
-      |> list.append(attributes)
-      |> list.filter(fn(a) { a != none() }),
-    [start_drawer]
-      |> list.append(children)
-      |> list.append([end_drawer]),
+    flatten([
+      case c.end_drawer {
+        Some(_) -> {
+          [
+            boolean_attribute("end", c.end),
+            boolean_attribute("end-divider", c.end_divider),
+            attribute("end-mode", mode_to_string(c.end_mode)),
+          ]
+        }
+        None -> []
+      },
+      case c.start_drawer {
+        Some(_) -> {
+          [
+            boolean_attribute("start", c.start),
+            boolean_attribute("start-divider", c.start_divider),
+            attribute("start-mode", mode_to_string(c.start_mode)),
+          ]
+        }
+        None -> []
+      },
+    ])
+      |> filter(fn(a) { a != none() }),
+    drawers,
   )
 }
 
-/// end sets the `end` field
+/// render_config creates a Lustre Element directly from a Config
 /// 
-pub fn end(c: DrawerContainer(msg), end: Drawer(msg)) -> DrawerContainer(msg) {
-  DrawerContainer(..c, end: end)
+/// ## Parameters:
+/// - config: a Config
+///
+pub fn render_config(config: Config(msg)) -> Element(msg) {
+  render(from_config(config))
 }
 
-/// start sets the `start` field
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 
-pub fn start(
-  c: DrawerContainer(msg),
-  start: Drawer(msg),
-) -> DrawerContainer(msg) {
-  DrawerContainer(..c, start: start)
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    End -> attribute("slot", "end")
+    Start -> attribute("slot", "start")
+  }
 }
 
-/// toggle_start toggles the open state of the start drawer
-/// 
-pub fn toggle_start(c: DrawerContainer(msg)) -> DrawerContainer(msg) {
-  DrawerContainer(..c, start: drawer.toggle(c.start))
-}
+// --- PRIVATE INTERNAL HELPERS ---
 
-/// toggle_end toggles the open state of the end drawer
+/// Convert a Mode to a string
 /// 
-pub fn toggle_end(c: DrawerContainer(msg)) -> DrawerContainer(msg) {
-  DrawerContainer(..c, end: drawer.toggle(c.end))
+fn mode_to_string(m: Mode) -> String {
+  case m {
+    Auto -> "auto"
+    Over -> "over"
+    Push -> "push"
+    Side -> "side"
+  }
 }

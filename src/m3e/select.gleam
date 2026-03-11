@@ -9,7 +9,9 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
-/// Select provides Lustre support for the [M3E Select component](https://matraic.github.io/m3e/#/components/select.html)
+// --- Types ---
+
+/// Select provides a form control for selecting a value from a set of predefined options)
 /// 
 /// ## Fields:
 /// - disabled: Whether the element is disabled
@@ -29,6 +31,17 @@ pub opaque type Select {
   )
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Arrow
+  // Renders the dropdown arrow 
+  Value
+  // Renders the selected value(s) 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new Select
 /// 
 pub fn new() -> Select {
@@ -41,6 +54,8 @@ pub fn new() -> Select {
     required: False,
   )
 }
+
+// --- SETTERS ---
 
 /// disabled sets the disabled field
 /// 
@@ -81,6 +96,8 @@ pub fn required(s: Select, required: Bool) -> Select {
   Select(..s, required: required)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element(msg) from a Select
 /// 
 /// ## Parameters:
@@ -113,3 +130,13 @@ pub fn render(
     children,
   )
 }
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Arrow -> attribute("slot", "arrow")
+    Value -> attribute("slot", "value")
+  }
+}
+// --- PRIVATE INTERNAL HELPERS ---

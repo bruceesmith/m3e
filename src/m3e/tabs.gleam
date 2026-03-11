@@ -7,18 +7,13 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
 /// HeaderPosition is the position of the tab headers
 /// 
 pub type HeaderPosition {
   After
   Before
-}
-
-fn header_position_to_string(header_position: HeaderPosition) -> String {
-  case header_position {
-    After -> "after"
-    Before -> "before"
-  }
 }
 
 pub const default_header_position: HeaderPosition = Before
@@ -27,24 +22,18 @@ pub const default_next_page_label: String = "Next page"
 
 pub const default_previous_page_label: String = "Previous page"
 
-/// Variant is the appearance variant of the tabs
+/// Slot gives type-safe names to each of the defined HTML named slots
 /// 
-pub type Variant {
-  Primary
-  Secondary
+pub type Slot {
+  NextIcon
+  // Renders the icon to present for the next button used to paginate 
+  Panel
+  // Renders the panels of the tabs 
+  PrevIcon
+  // Renders the icon to present for the previous button used to paginate
 }
 
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Primary -> "primary"
-    Secondary -> "secondary"
-  }
-}
-
-pub const default_variant: Variant = Secondary
-
-/// Tabs
-/// Tab provides Lustre support for the [M3E Tab component](https://matraic.github.io/m3e/#/components/tabs.html)
+/// Tabs provides a structured navigation surface for organizing content into distinct views, where only one view is visible at a time
 /// 
 /// ## Fields:
 /// - disabled_pagination: Whether scroll buttons are disabled
@@ -65,6 +54,17 @@ pub opaque type Tabs {
   )
 }
 
+/// Variant is the appearance variant of the tabs
+/// 
+pub type Variant {
+  Primary
+  Secondary
+}
+
+pub const default_variant: Variant = Secondary
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new Tabs 
 /// 
 pub fn new() -> Tabs {
@@ -77,6 +77,8 @@ pub fn new() -> Tabs {
     variant: variant_to_string(default_variant),
   )
 }
+
+// --- SETTERS ---
 
 /// disabled_pagination sets the disabled_pagination field
 /// 
@@ -114,6 +116,8 @@ pub fn variant(t: Tabs, variant: Variant) -> Tabs {
   Tabs(..t, variant: variant_to_string(variant))
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element(msg) from a Tabs
 /// 
 /// ## Parameters:
@@ -145,4 +149,30 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    NextIcon -> attribute("slot", "next-icon")
+    Panel -> attribute("slot", "panel")
+    PrevIcon -> attribute("slot", "prev-icon")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn header_position_to_string(header_position: HeaderPosition) -> String {
+  case header_position {
+    After -> "after"
+    Before -> "before"
+  }
+}
+
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Primary -> "primary"
+    Secondary -> "secondary"
+  }
 }

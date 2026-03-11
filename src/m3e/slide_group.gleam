@@ -8,6 +8,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
 /// SlideGroup provides Lustre support for the [M3E Slide Group component](https://matraic.github.io/m3e/#/components/slide_group.html)
 /// 
 /// ## Fields:
@@ -27,6 +29,17 @@ pub opaque type SlideGroup {
   )
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  NextIcon
+  // Renders the icon to present for the next button 
+  PrevIcon
+  // Renders the icon to present for the previous button 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new SlideGroup
 /// 
 pub fn new() -> SlideGroup {
@@ -38,6 +51,8 @@ pub fn new() -> SlideGroup {
     vertical: False,
   )
 }
+
+// --- SETTERS ---
 
 /// disabled sets the disabled field
 /// 
@@ -72,6 +87,8 @@ pub fn vertical(s: SlideGroup, vertical: Bool) -> SlideGroup {
   SlideGroup(..s, vertical: vertical)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element(msg) from a SlideGroup
 /// 
 /// ## Parameters:
@@ -100,3 +117,13 @@ pub fn render(
     children,
   )
 }
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    NextIcon -> attribute("slot", "next-icon")
+    PrevIcon -> attribute("slot", "prev-icon")
+  }
+}
+// --- PRIVATE INTERNAL HELPERS ---

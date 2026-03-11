@@ -9,19 +9,7 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 
-/// Orientation is the layout orientation of the item
-/// 
-pub type Orientation {
-  Horizontal
-  Vertical
-}
-
-pub fn orientation_to_string(orientation: Orientation) -> String {
-  case orientation {
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
-  }
-}
+// --- Types ---
 
 /// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
@@ -42,6 +30,24 @@ pub opaque type NavItem {
   )
 }
 
+/// Orientation is the layout orientation of the item
+/// 
+pub type Orientation {
+  Horizontal
+  Vertical
+}
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Icon
+  // Renders the icon of the item 
+  SelectedIcon
+  // Renders the icon of the item when selected
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new NavItem
 /// 
 pub fn new() -> NavItem {
@@ -53,6 +59,8 @@ pub fn new() -> NavItem {
     selected: False,
   )
 }
+
+// --- SETTERS ---
 
 /// disabled sets the disabled field
 /// 
@@ -87,6 +95,8 @@ pub fn selected(item: NavItem, selected: Bool) -> NavItem {
   NavItem(..item, selected: selected)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element(msg) from a NavItem
 /// 
 /// ## Parameters:
@@ -113,4 +123,22 @@ pub fn render(
       |> filter(fn(a) { a != attribute.none() }),
     children,
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Icon -> attribute("slot", "icon")
+    SelectedIcon -> attribute("slot", "selected-icon")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn orientation_to_string(orientation: Orientation) -> String {
+  case orientation {
+    Horizontal -> "horizontal"
+    Vertical -> "vertical"
+  }
 }

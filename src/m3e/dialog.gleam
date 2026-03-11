@@ -3,12 +3,14 @@
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, none}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element, none as element_none}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/icon
+
+// --- Types ---
 
 /// Dialog component
 /// 
@@ -37,6 +39,19 @@ pub opaque type Dialog(msg) {
   )
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Actions
+  // Renders the actions of the dialog 
+  CloseIcon
+  // Renders the icon of the button used to close the dialog 
+  Header
+  // Renders the header of the dialog 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a Dialog with default values
 /// 
 /// ## Parameters:
@@ -47,39 +62,7 @@ pub fn new(id: String, header: String) -> Dialog(msg) {
   Dialog(id, False, None, False, False, False, header, None, [])
 }
 
-/// render creates a Lustre Element from a Dialog
-/// 
-pub fn render(
-  d: Dialog(msg),
-  attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
-) -> Element(msg) {
-  element(
-    "m3e-dialog",
-    [
-      attribute.id(d.id),
-      boolean_attribute("alert", d.alert),
-      option_attribute(
-        d.close_label,
-        fn(_) { "close-label" },
-        function.identity,
-        None,
-      ),
-      boolean_attribute("no-focus-trap", d.no_focus_trap),
-      boolean_attribute("disable-close", d.disable_close),
-      boolean_attribute("dismissible", d.dismissible),
-      ..attributes
-    ]
-      |> list.filter(fn(a) { a != none() }),
-    [
-      html.span([slot("header")], [html.text(d.header)]),
-      close_icon_elt(d.close_icon_name),
-      actions_elt(d.actions),
-      ..children
-    ]
-      |> list.filter(fn(a) { a != element_none() }),
-  )
-}
+// --- SETTERS ---
 
 /// actions sets the `actions` field
 /// 
@@ -87,25 +70,10 @@ pub fn actions(d: Dialog(msg), actions: List(Element(msg))) -> Dialog(msg) {
   Dialog(..d, actions: actions)
 }
 
-fn actions_elt(actions: List(Element(msg))) -> Element(msg) {
-  case actions {
-    [] -> element_none()
-    items -> html.div([slot("actions")], items)
-  }
-}
-
 /// alert sets the `alert` field
 /// 
 pub fn alert(d: Dialog(msg), alert: Bool) -> Dialog(msg) {
   Dialog(..d, alert: alert)
-}
-
-fn close_icon_elt(close_icon_name: Option(String)) -> Element(msg) {
-  case close_icon_name {
-    None -> element_none()
-    Some(s) ->
-      icon.new(s) |> icon.purpose(icon.CloseIcon) |> icon.render([], [])
-  }
 }
 
 /// close_icon_name sets the `close_icon_name` field
@@ -151,4 +119,67 @@ pub fn id(d: Dialog(msg), id: String) -> Dialog(msg) {
 /// 
 pub fn no_focus_trap(d: Dialog(msg), no_focus_trap: Bool) -> Dialog(msg) {
   Dialog(..d, no_focus_trap: no_focus_trap)
+}
+
+// --- RENDERING ---
+
+/// render creates a Lustre Element from a Dialog
+/// 
+pub fn render(
+  d: Dialog(msg),
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element(
+    "m3e-dialog",
+    [
+      attribute.id(d.id),
+      boolean_attribute("alert", d.alert),
+      option_attribute(
+        d.close_label,
+        fn(_) { "close-label" },
+        function.identity,
+        None,
+      ),
+      boolean_attribute("no-focus-trap", d.no_focus_trap),
+      boolean_attribute("disable-close", d.disable_close),
+      boolean_attribute("dismissible", d.dismissible),
+      ..attributes
+    ]
+      |> list.filter(fn(a) { a != none() }),
+    [
+      html.span([slot(Header)], [html.text(d.header)]),
+      close_icon_elt(d.close_icon_name),
+      actions_elt(d.actions),
+      ..children
+    ]
+      |> list.filter(fn(a) { a != element_none() }),
+  )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Actions -> attribute("slot", "actions")
+    CloseIcon -> attribute("slot", "close-icon")
+    Header -> attribute("slot", "header")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn actions_elt(actions: List(Element(msg))) -> Element(msg) {
+  case actions {
+    [] -> element_none()
+    items -> html.div([slot(Actions)], items)
+  }
+}
+
+fn close_icon_elt(close_icon_name: Option(String)) -> Element(msg) {
+  case close_icon_name {
+    None -> element_none()
+    Some(s) ->
+      icon.new(s) |> icon.purpose(slot(CloseIcon)) |> icon.render([], [])
+  }
 }

@@ -6,6 +6,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
 /// When a form field's control is empty, the label is presented over the control instead of above. 
 /// This behavior can be changed using the float-label attribute
 /// 
@@ -14,50 +16,7 @@ pub type FloatLabel {
   Auto
 }
 
-fn float_label_to_string(f: FloatLabel) -> String {
-  case f {
-    Always -> "always"
-    Auto -> "auto"
-  }
-}
-
 pub const default_float_label = Auto
-
-/// Hint labels are additional descriptive text that appear in a field's subscript
-/// 
-pub type HideSubscript {
-  AlwaysHide
-  AutoHide
-  NeverHide
-}
-
-fn hide_subscript_to_string(h: HideSubscript) -> String {
-  case h {
-    AlwaysHide -> "always"
-    AutoHide -> "auto"
-    NeverHide -> "never"
-  }
-}
-
-pub const default_hide_subscript = AutoHide
-
-/// Variant is the appearance variant of the field
-/// 
-pub type Variant {
-  Filled
-  Outlined
-}
-
-/// variant_to_string converts a Variant to a string
-/// 
-pub fn variant_to_string(v: Variant) -> String {
-  case v {
-    Filled -> "filled"
-    Outlined -> "outlined"
-  }
-}
-
-pub const default_variant = Outlined
 
 /// FormField is a container for form controls that applies Material Design styling and behavior. 
 /// Supported controls include: input, select, textarea, and m3e-input-chip-set
@@ -77,11 +36,80 @@ pub opaque type FormField {
   )
 }
 
+/// Hint labels are additional descriptive text that appear in a field's subscript
+/// 
+pub type HideSubscript {
+  AlwaysHide
+  AutoHide
+  NeverHide
+}
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Error
+  // Renders error text in the fields's subscript, when the control is invalid 
+  Hint
+  // Renders hint text in the fields's subscript, when the control is valid 
+  Prefix
+  // Renders content before the fields's control 
+  PrefixText
+  // Renders text before the fields's control 
+  Suffix
+  // Renders content after the fields's control 
+  SuffixText
+  // Renders text after the fields's control 
+}
+
+pub const default_hide_subscript = AutoHide
+
+/// Variant is the appearance variant of the field
+/// 
+pub type Variant {
+  Filled
+  Outlined
+}
+
+pub const default_variant = Outlined
+
+// --- CONSTRUCTORS ---
+
 /// new creates a FormField with default values
 /// 
 pub fn new() -> FormField {
   FormField(default_float_label, False, default_hide_subscript, default_variant)
 }
+
+// --- SETTERS ---
+
+/// float_label sets the float-label attribute of a FormField
+/// 
+pub fn float_label(f: FormField, float_label: FloatLabel) -> FormField {
+  FormField(..f, float_label: float_label)
+}
+
+/// hide_required_marker sets the hide-required-marker attribute of a FormField
+/// 
+pub fn hide_required_marker(
+  f: FormField,
+  hide_required_marker: Bool,
+) -> FormField {
+  FormField(..f, hide_required_marker: hide_required_marker)
+}
+
+/// hide_subscript sets the hide-subscript attribute of a FormField
+/// 
+pub fn hide_subscript(f: FormField, hide_subscript: HideSubscript) -> FormField {
+  FormField(..f, hide_subscript: hide_subscript)
+}
+
+/// variant sets the variant attribute of a FormField
+/// 
+pub fn variant(f: FormField, variant: Variant) -> FormField {
+  FormField(..f, variant: variant)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a FormField
 /// 
@@ -109,29 +137,41 @@ pub fn render(
   )
 }
 
-/// float_label sets the float-label attribute of a FormField
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 
-pub fn float_label(f: FormField, float_label: FloatLabel) -> FormField {
-  FormField(..f, float_label: float_label)
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Error -> attribute("slot", "error")
+    Hint -> attribute("slot", "hint")
+    Prefix -> attribute("slot", "prefix")
+    PrefixText -> attribute("slot", "prefix-text")
+    Suffix -> attribute("slot", "suffix")
+    SuffixText -> attribute("slot", "suffix-text")
+  }
 }
 
-/// hide_required_marker sets the hide-required-marker attribute of a FormField
-/// 
-pub fn hide_required_marker(
-  f: FormField,
-  hide_required_marker: Bool,
-) -> FormField {
-  FormField(..f, hide_required_marker: hide_required_marker)
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn float_label_to_string(f: FloatLabel) -> String {
+  case f {
+    Always -> "always"
+    Auto -> "auto"
+  }
 }
 
-/// hide_subscript sets the hide-subscript attribute of a FormField
-/// 
-pub fn hide_subscript(f: FormField, hide_subscript: HideSubscript) -> FormField {
-  FormField(..f, hide_subscript: hide_subscript)
+fn hide_subscript_to_string(h: HideSubscript) -> String {
+  case h {
+    AlwaysHide -> "always"
+    AutoHide -> "auto"
+    NeverHide -> "never"
+  }
 }
 
-/// variant sets the variant attribute of a FormField
+/// variant_to_string converts a Variant to a string
 /// 
-pub fn variant(f: FormField, variant: Variant) -> FormField {
-  FormField(..f, variant: variant)
+fn variant_to_string(v: Variant) -> String {
+  case v {
+    Filled -> "filled"
+    Outlined -> "outlined"
+  }
 }

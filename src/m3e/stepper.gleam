@@ -7,18 +7,13 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
 /// HeaderPosition is the position of the step header, when oriented horizontally.
 /// 
 pub type HeaderPosition {
   Above
   Below
-}
-
-fn head_position_to_string(header_position: HeaderPosition) -> String {
-  case header_position {
-    Above -> "above"
-    Below -> "below"
-  }
 }
 
 pub const default_header_position = Above
@@ -28,13 +23,6 @@ pub const default_header_position = Above
 pub type LabelPosition {
   LabelBelow
   LabelEnd
-}
-
-fn label_position_to_string(label_position: LabelPosition) -> String {
-  case label_position {
-    LabelBelow -> "below"
-    LabelEnd -> "end"
-  }
 }
 
 pub const default_label_position = LabelEnd
@@ -47,15 +35,16 @@ pub type Orientation {
   Vertical
 }
 
-fn orientation_to_string(orientation: Orientation) -> String {
-  case orientation {
-    Auto -> "auto"
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
-  }
-}
-
 pub const default_orientation = Horizontal
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Panel
+  // Renders a panel 
+  Step
+  // Renders a step 
+}
 
 /// Stepper provides Lustre support for the [M3E Stepper component
 /// 
@@ -74,6 +63,8 @@ pub opaque type Stepper {
   )
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new Stepper
 /// 
 pub fn new() -> Stepper {
@@ -84,6 +75,8 @@ pub fn new() -> Stepper {
     default_orientation,
   )
 }
+
+// --- SETTERS ---
 
 /// header_position sets the header_position field of a Stepper
 ///
@@ -115,6 +108,8 @@ pub fn orientation(stepper: Stepper, orientation: Orientation) -> Stepper {
   Stepper(..stepper, orientation: orientation)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element(msg) from a Stepper
 ///
 pub fn render(
@@ -142,4 +137,37 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Panel -> attribute("slot", "panel")
+    Step -> attribute("slot", "step")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn head_position_to_string(header_position: HeaderPosition) -> String {
+  case header_position {
+    Above -> "above"
+    Below -> "below"
+  }
+}
+
+fn label_position_to_string(label_position: LabelPosition) -> String {
+  case label_position {
+    LabelBelow -> "below"
+    LabelEnd -> "end"
+  }
+}
+
+fn orientation_to_string(orientation: Orientation) -> String {
+  case orientation {
+    Auto -> "auto"
+    Horizontal -> "horizontal"
+    Vertical -> "vertical"
+  }
 }

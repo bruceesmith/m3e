@@ -2,25 +2,20 @@
 
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute, option_attribute, slot}
+import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/link.{type Link}
+
+// --- Types ---
 
 /// The visual shape of the button.
 pub type Shape {
   Rounded
   Square
-}
-
-fn shape_to_string(shape: Shape) -> String {
-  case shape {
-    Rounded -> "rounded"
-    Square -> "square"
-  }
 }
 
 /// Default shape
@@ -35,18 +30,21 @@ pub type Size {
   ExtraLarge
 }
 
-fn size_to_string(size: Size) -> String {
-  case size {
-    ExtraSmall -> "extra-small"
-    Small -> "small"
-    Medium -> "medium"
-    Large -> "large"
-    ExtraLarge -> "extra-large"
-  }
-}
-
 /// Default size
 pub const default_size = Small
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Icon
+  // Renders an icon before the button's label 
+  Selected
+  // Renders the label of the button, when selected 
+  SelectedIcon
+  // Renders an icon before the button's label, when selected 
+  TrailingIcon
+  // Renders an icon after the button's label 
+}
 
 /// The visual variant (style) of the button.
 pub type Variant {
@@ -55,16 +53,6 @@ pub type Variant {
   Outlined
   Text
   Tonal
-}
-
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Elevated -> "elevated"
-    Filled -> "filled"
-    Outlined -> "outlined"
-    Text -> "text"
-    Tonal -> "tonal"
-  }
 }
 
 /// Default variant
@@ -103,6 +91,8 @@ pub opaque type Button(msg) {
   )
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new Button
 /// 
 /// ## Parameters:
@@ -125,6 +115,86 @@ pub fn new(label: String, variant: Variant) -> Button(msg) {
     variant: Some(variant),
   )
 }
+
+// --- SETTERS ---
+
+/// disabled sets the `disabled` field
+/// 
+pub fn disabled(b: Button(msg), disabled: Bool) -> Button(msg) {
+  Button(..b, disabled: disabled)
+}
+
+/// disabled_interactive sets the `disabled_interactive` field
+///
+pub fn disabled_interactive(b: Button(msg), disabled: Bool) -> Button(msg) {
+  Button(..b, disabled_interactive: disabled)
+}
+
+/// form_submission sets up a Button to participate in an HTML form
+///
+/// ## Parameters:
+/// - b: a Button
+/// - fs: a FormSubmission
+///
+pub fn form(b: Button(msg), fs: Option(FormSubmission)) -> Button(msg) {
+  Button(..b, form_submission: fs)
+}
+
+/// icons sets the `icons` field
+///
+pub fn icons(b: Button(msg), icons: List(Element(msg))) -> Button(msg) {
+  Button(..b, icons: icons)
+}
+
+/// label sets the `label` field
+///
+pub fn label(b: Button(msg), label: String) -> Button(msg) {
+  Button(..b, label: label)
+}
+
+/// link sets the `link` field
+///
+pub fn link(b: Button(msg), link: Option(Link)) -> Button(msg) {
+  Button(..b, link: link)
+}
+
+/// selected sets the`selected` field of a Button
+///
+pub fn selected(b: Button(msg), s: Bool) -> Button(msg) {
+  Button(..b, selected: s)
+}
+
+/// selected_label sets the`selected_label` field of a Button
+///
+pub fn selected_label(b: Button(msg), lab: String) -> Button(msg) {
+  Button(..b, selected_label: Some(lab))
+}
+
+/// shape sets the`shape` field of a Button
+///
+pub fn shape(b: Button(msg), s: Shape) -> Button(msg) {
+  Button(..b, shape: Some(s))
+}
+
+/// size sets the`size` field of a Button
+///
+pub fn size(b: Button(msg), s: Size) -> Button(msg) {
+  Button(..b, size: Some(s))
+}
+
+/// toggle sets the`toggle` field of a Button
+///
+pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
+  Button(..b, toggle: t)
+}
+
+/// variant sets the`variant` field of a Button
+///
+pub fn variant(b: Button(msg), v: Variant) -> Button(msg) {
+  Button(..b, variant: Some(v))
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a Button
 ///
@@ -170,85 +240,49 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
   )
 }
 
-/// form_submission sets up a Button to participate in an HTML form
-///
-/// ## Parameters:
-/// - b: a Button
-/// - fs: a FormSubmission
-///
-pub fn form(b: Button(msg), fs: Option(FormSubmission)) -> Button(msg) {
-  Button(..b, form_submission: fs)
-}
-
-/// disabled sets the `disabled` field
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 
-pub fn disabled(b: Button(msg), disabled: Bool) -> Button(msg) {
-  Button(..b, disabled: disabled)
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Icon -> attribute("slot", "icon")
+    Selected -> attribute("slot", "selected")
+    SelectedIcon -> attribute("slot", "selected-icon")
+    TrailingIcon -> attribute("slot", "trailing-icon")
+  }
 }
 
-/// disabled_interactive sets the `disabled_interactive` field
-///
-pub fn disabled_interactive(b: Button(msg), disabled: Bool) -> Button(msg) {
-  Button(..b, disabled_interactive: disabled)
-}
-
-/// link sets the `link` field
-///
-pub fn link(b: Button(msg), link: Option(Link)) -> Button(msg) {
-  Button(..b, link: link)
-}
-
-/// icons sets the `icons` field
-///
-pub fn icons(b: Button(msg), icons: List(Element(msg))) -> Button(msg) {
-  Button(..b, icons: icons)
-}
-
-/// label sets the `label` field
-///
-pub fn label(b: Button(msg), label: String) -> Button(msg) {
-  Button(..b, label: label)
-}
-
-/// selected_label sets the`selected_label` field of a Button
-///
-pub fn selected_label(b: Button(msg), lab: String) -> Button(msg) {
-  Button(..b, selected_label: Some(lab))
-}
+// --- PRIVATE INTERNAL HELPERS ---
 
 fn selected_label_elt(sl: Option(String)) -> Element(msg) {
   case sl {
-    Some(lab) -> span([slot("selected")], [text(lab)])
+    Some(lab) -> span([slot(Selected)], [text(lab)])
     None -> none()
   }
 }
 
-/// shape sets the`shape` field of a Button
-///
-pub fn shape(b: Button(msg), s: Shape) -> Button(msg) {
-  Button(..b, shape: Some(s))
+fn shape_to_string(shape: Shape) -> String {
+  case shape {
+    Rounded -> "rounded"
+    Square -> "square"
+  }
 }
 
-/// size sets the`size` field of a Button
-///
-pub fn size(b: Button(msg), s: Size) -> Button(msg) {
-  Button(..b, size: Some(s))
+fn size_to_string(size: Size) -> String {
+  case size {
+    ExtraSmall -> "extra-small"
+    Small -> "small"
+    Medium -> "medium"
+    Large -> "large"
+    ExtraLarge -> "extra-large"
+  }
 }
 
-/// toggle sets the`toggle` field of a Button
-///
-pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
-  Button(..b, toggle: t)
-}
-
-/// selected sets the`selected` field of a Button
-///
-pub fn selected(b: Button(msg), s: Bool) -> Button(msg) {
-  Button(..b, selected: s)
-}
-
-/// variant sets the`variant` field of a Button
-///
-pub fn variant(b: Button(msg), v: Variant) -> Button(msg) {
-  Button(..b, variant: Some(v))
+fn variant_to_string(v: Variant) -> String {
+  case v {
+    Elevated -> "elevated"
+    Filled -> "filled"
+    Outlined -> "outlined"
+    Text -> "text"
+    Tonal -> "tonal"
+  }
 }

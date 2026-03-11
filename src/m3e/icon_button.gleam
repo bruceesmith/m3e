@@ -6,109 +6,10 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute, slot}
+import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 
-/// Purpose defines the intended purpose of the icon
-///
-pub type Purpose {
-  LeadingIcon
-  TrailingButton
-  TrailingIcon
-}
-
-fn purpose_to_string(purpose: Purpose) -> String {
-  case purpose {
-    LeadingIcon -> "leading-icon"
-    TrailingButton -> "trailing-button"
-    TrailingIcon -> "trailing-icon"
-  }
-}
-
-/// Shape
-///
-pub type Shape {
-  Rounded
-  Square
-}
-
-/// shape_to_string converts a Shape to a string
-/// 
-pub fn shape_to_string(s: Shape) -> String {
-  case s {
-    Rounded -> "rounded"
-    Square -> "square"
-  }
-}
-
-pub const default_shape = Rounded
-
-/// Size is the size of the button
-/// extra-small, small (default), medium, large, and extra-large
-/// 
-pub type Size {
-  ExtraSmall
-  Small
-  Medium
-  Large
-  ExtraLarge
-}
-
-/// size_to_string converts a Size to a string
-/// 
-fn size_to_string(s: Size) -> String {
-  case s {
-    ExtraSmall -> "extra-small"
-    Small -> "small"
-    Medium -> "medium"
-    Large -> "large"
-    ExtraLarge -> "extra-large"
-  }
-}
-
-pub const default_size = Small
-
-/// Variant is the appearance variant of the button
-/// 
-pub type Variant {
-  Filled
-  Tonal
-  Outlined
-  Standard
-}
-
-/// variant_to_string converts a Variant to a string
-/// 
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Filled -> "filled"
-    Tonal -> "tonal"
-    Outlined -> "outlined"
-    Standard -> "standard"
-  }
-}
-
-pub const default_variant = Standard
-
-/// Width is the width of the button
-/// 
-pub type Width {
-  Default
-  Narrow
-  Wide
-}
-
-/// width_to_string converts a Width to a string
-/// 
-fn width_to_string(w: Width) -> String {
-  case w {
-    Default -> "default"
-    Narrow -> "narrow"
-    Wide -> "wide"
-  }
-}
-
-pub const default_width = Default
+// --- Types ---
 
 /// IconButton is an icon button users interact with to perform a supplementary action
 /// 
@@ -141,6 +42,66 @@ pub opaque type IconButton {
   )
 }
 
+/// Purpose defines the intended purpose of the icon
+///
+pub type Purpose {
+  LeadingIcon
+  TrailingButton
+  TrailingIcon
+}
+
+/// Shape
+///
+pub type Shape {
+  Rounded
+  Square
+}
+
+pub const default_shape = Rounded
+
+/// Size is the size of the button
+/// extra-small, small (default), medium, large, and extra-large
+/// 
+pub type Size {
+  ExtraSmall
+  Small
+  Medium
+  Large
+  ExtraLarge
+}
+
+pub const default_size = Small
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Selected
+  // Renders an icon, when selected
+}
+
+/// Variant is the appearance variant of the button
+/// 
+pub type Variant {
+  Filled
+  Tonal
+  Outlined
+  Standard
+}
+
+pub const default_variant = Standard
+
+/// Width is the width of the button
+/// 
+pub type Width {
+  Default
+  Narrow
+  Wide
+}
+
+pub const default_width = Default
+
+// --- CONSTRUCTORS ---
+
 /// new creates an icon button with default values
 /// 
 pub fn new() -> IconButton {
@@ -158,6 +119,8 @@ pub fn new() -> IconButton {
     width: default_width,
   )
 }
+
+// --- SETTERS ---
 
 /// disabled sets the disabled field
 /// 
@@ -228,6 +191,8 @@ pub fn width(i: IconButton, width: Width) -> IconButton {
   IconButton(..i, width: width)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element from an IconButton
 ///
 /// ## Parameters:
@@ -264,4 +229,64 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Selected -> attribute("slot", "selected")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn purpose_to_string(purpose: Purpose) -> String {
+  case purpose {
+    LeadingIcon -> "leading-icon"
+    TrailingButton -> "trailing-button"
+    TrailingIcon -> "trailing-icon"
+  }
+}
+
+/// shape_to_string converts a Shape to a string
+/// 
+fn shape_to_string(s: Shape) -> String {
+  case s {
+    Rounded -> "rounded"
+    Square -> "square"
+  }
+}
+
+/// size_to_string converts a Size to a string
+/// 
+fn size_to_string(s: Size) -> String {
+  case s {
+    ExtraSmall -> "extra-small"
+    Small -> "small"
+    Medium -> "medium"
+    Large -> "large"
+    ExtraLarge -> "extra-large"
+  }
+}
+
+/// variant_to_string converts a Variant to a string
+/// 
+fn variant_to_string(v: Variant) -> String {
+  case v {
+    Filled -> "filled"
+    Tonal -> "tonal"
+    Outlined -> "outlined"
+    Standard -> "standard"
+  }
+}
+
+/// width_to_string converts a Width to a string
+/// 
+fn width_to_string(w: Width) -> String {
+  case w {
+    Default -> "default"
+    Narrow -> "narrow"
+    Wide -> "wide"
+  }
 }

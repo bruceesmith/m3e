@@ -8,6 +8,8 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 
+// --- Types ---
+
 /// FabMenuItem is an item of a floating action button (FAB) menu
 /// 
 /// ## Fields:
@@ -18,11 +20,36 @@ pub opaque type FabMenuItem {
   FabMenuItem(disabled: Bool, link: Option(Link))
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Icon
+  // Renders an icon before the items's label 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new FabMenuItem
 /// 
 pub fn new() -> FabMenuItem {
   FabMenuItem(disabled: False, link: None)
 }
+
+// --- SETTERS ---
+
+/// disabled sets the disabled field
+///
+pub fn disabled(f: FabMenuItem, disabled: Bool) -> FabMenuItem {
+  FabMenuItem(..f, disabled: disabled)
+}
+
+/// link sets the link field
+///
+pub fn link(f: FabMenuItem, link: Option(Link)) -> FabMenuItem {
+  FabMenuItem(..f, link: link)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a FabMenuItem
 ///
@@ -45,14 +72,10 @@ pub fn render(
   )
 }
 
-/// disabled sets the disabled field
-///
-pub fn disabled(f: FabMenuItem, disabled: Bool) -> FabMenuItem {
-  FabMenuItem(..f, disabled: disabled)
-}
-
-/// link sets the link field
-///
-pub fn link(f: FabMenuItem, link: Option(Link)) -> FabMenuItem {
-  FabMenuItem(..f, link: link)
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Icon -> attribute("slot", "icon")
+  }
 }

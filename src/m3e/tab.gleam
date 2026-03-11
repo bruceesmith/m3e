@@ -7,7 +7,16 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 
-/// Tab provides Lustre support for the [M3E Tab component](https://matraic.github.io/m3e/#/components/tab.html)
+// --- Types ---
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Icon
+  // Renders an icon before the tab's label 
+}
+
+/// Tab provides one view within a structured navigation surface
 /// 
 /// ## Fields:
 /// - disabled: Whether the element is disabled
@@ -18,11 +27,15 @@ pub opaque type Tab {
   Tab(disabled: Bool, for: String, selected: Bool)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new Tab
 /// 
 pub fn new() -> Tab {
   Tab(disabled: False, for: "", selected: False)
 }
+
+// --- SETTERS ---
 
 /// disabled sets the disabled field
 /// 
@@ -41,6 +54,8 @@ pub fn for(t: Tab, for: String) -> Tab {
 pub fn selected(t: Tab, selected: Bool) -> Tab {
   Tab(..t, selected: selected)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a Tab
 ///
@@ -68,3 +83,12 @@ pub fn render(
     children,
   )
 }
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Icon -> attribute("slot", "icon")
+  }
+}
+// --- PRIVATE INTERNAL HELPERS --- 

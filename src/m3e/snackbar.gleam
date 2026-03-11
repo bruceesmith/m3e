@@ -9,6 +9,8 @@ pub const default_close_label = "Close"
 
 pub const default_duration = 3000
 
+// --- Types ---
+
 /// Options represents the SnackbarOptions JavaScript object
 /// 
 /// ## Fields:
@@ -21,7 +23,14 @@ type Options {
   ShortOptions(close_label: String, duration: Int)
 }
 
-/// Snackbar provides Lustre support for the [M3E Snackbar component](https://matraic.github.io/m3e/#/components/snackbar.html)
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  CloseIcon
+  // Renders the icon of the button used to close the snackbar 
+}
+
+/// Snackbar presents short updates about application processes at the bottom of the screen
 ///
 /// ## Fields:
 /// - message: The text to display in the snackbar
@@ -40,11 +49,29 @@ pub type Snackbar {
   )
 }
 
+/// SnackbarAction describes the intent to open a snackbar with specific parameters.
+/// This allows the logic to be pure and easily testable.
+/// 
+pub type SnackbarAction(msg) {
+  Open(
+    message: String,
+    action_label: String,
+    dismissable: Bool,
+    close_label: String,
+    duration: Int,
+    callback: Option(msg),
+  )
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new Snackbar
 /// 
 pub fn new(message: String) -> Snackbar {
   Snackbar(message, None, None, False, None)
 }
+
+// --- SETTERS ---
 
 /// message sets the message field
 /// 
@@ -76,18 +103,7 @@ pub fn duration(s: Snackbar, duration: Option(Int)) -> Snackbar {
   Snackbar(..s, duration: duration)
 }
 
-/// SnackbarAction describes the intent to open a snackbar with specific parameters.
-/// This allows the logic to be pure and easily testable.
-pub type SnackbarAction(msg) {
-  Open(
-    message: String,
-    action_label: String,
-    dismissable: Bool,
-    close_label: String,
-    duration: Int,
-    callback: Option(msg),
-  )
-}
+// --- RENDERING ---
 
 /// open displays a Snackbar. Unlike render() functions in other M3E components,
 /// which are called from an application's view() function, the Snackbar's open()
@@ -110,6 +126,7 @@ pub fn open(s: Snackbar, callback: Option(msg)) -> Effect(msg) {
 /// - s: a Snackbar
 /// - callback: the Msg that should be sent when the Action button is clicked
 /// 
+@internal
 pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
   let action_label = unwrap(s.action_label, default_action_label)
   let close_label = unwrap(s.close_label, default_close_label)
@@ -127,6 +144,7 @@ pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
 
 /// to_effect converts a SnackbarAction description into a Lustre Effect.
 /// 
+@internal
 pub fn to_effect(action: SnackbarAction(msg)) -> Effect(msg) {
   case action {
     Open(message, action_label, dismissable, close_label, duration, callback) ->
@@ -138,6 +156,8 @@ pub fn to_effect(action: SnackbarAction(msg)) -> Effect(msg) {
       })
   }
 }
+
+// --- PRIVATE INTERNAL HELPERS ---
 
 /// Interfaces to the JavaScript M3eSnackbar.open() function. 
 ///

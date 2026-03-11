@@ -4,7 +4,8 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
 import m3e/heading
-import m3e/helpers.{slot}
+
+// --- Types ---
 
 /// nav_menu_item_group
 /// 
@@ -15,6 +16,15 @@ pub opaque type NavMenuItemGroup {
   NavMenuItemGroup(heading: String)
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Label
+  // Renders the label of the group
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a nav-menu-item-group
 ///
 /// ## Parameters:
@@ -24,11 +34,15 @@ pub fn new(heading: String) -> NavMenuItemGroup {
   NavMenuItemGroup(heading: heading)
 }
 
+// --- SETTERS ---
+
 /// heading sets the heading of the group
 ///
 pub fn heading(_group: NavMenuItemGroup, heading: String) -> NavMenuItemGroup {
   NavMenuItemGroup(heading: heading)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a NavMenuItemGroup
 ///
@@ -46,7 +60,15 @@ pub fn render(
     heading.new(group.heading)
       |> heading.size(heading.Large)
       |> heading.variant(heading.Label)
-      |> heading.render([slot("label")]),
+      |> heading.render([slot(Label)]),
     ..children
   ])
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Label -> attribute("slot", "group-label")
+  }
 }

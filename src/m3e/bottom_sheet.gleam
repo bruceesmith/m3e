@@ -5,29 +5,11 @@ import gleam/int
 import gleam/list.{filter, map}
 import gleam/string.{join}
 
-import lustre/attribute.{attribute, none}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 
-/// Detent define the vertical positions a bottom sheet can rest at. 
-/// A sheet may have no detents, a single detent, or multiple detents. 
-/// Detents control how the sheet resizes, how it responds to drag gestures, and how the handle button behaves
-/// 
-pub type Detent {
-  Collapsed
-  Fit
-  Half
-  Full
-}
-
-fn detent_to_string(d: Detent) -> String {
-  case d {
-    Collapsed -> "collapsed"
-    Fit -> "fit"
-    Half -> "half"
-    Full -> "full"
-  }
-}
+// --- Types ---
 
 /// BottomSheet is a sheet used to show secondary content anchored to the bottom of the screen
 /// 
@@ -58,6 +40,26 @@ pub opaque type BottomSheet {
 
 pub const default_hide_friction: Float = 0.5
 
+/// Detent define the vertical positions a bottom sheet can rest at. 
+/// A sheet may have no detents, a single detent, or multiple detents. 
+/// Detents control how the sheet resizes, how it responds to drag gestures, and how the handle button behaves
+/// 
+pub type Detent {
+  Collapsed
+  Fit
+  Half
+  Full
+}
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Header
+  // Renders the header of the sheet 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new BottomSheet
 /// 
 pub fn new() -> BottomSheet {
@@ -73,6 +75,8 @@ pub fn new() -> BottomSheet {
     open: False,
   )
 }
+
+// --- SETTERS ---
 
 /// detent sets the detent field of a BottomSheet
 /// 
@@ -128,6 +132,8 @@ pub fn open(b: BottomSheet, open: Bool) -> BottomSheet {
   BottomSheet(..b, open: open)
 }
 
+// --- RENDERING ---
+
 /// render creates a Lustre Element from a BottomSheet
 ///
 pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
@@ -150,4 +156,23 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Header -> attribute("slot", "header")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn detent_to_string(d: Detent) -> String {
+  case d {
+    Collapsed -> "collapsed"
+    Fit -> "fit"
+    Half -> "half"
+    Full -> "full"
+  }
 }

@@ -5,8 +5,10 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element, none}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute, slot}
+import m3e/helpers.{boolean_attribute}
 import m3e/icon
+
+// --- Types ---
 
 /// ## Fields:
 /// - badge: Renders the badge of the item
@@ -31,6 +33,23 @@ pub opaque type NavMenuItem {
   )
 }
 
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Badge
+  // Renders the badge of the item 
+  Icon
+  // Renders the icon of the item 
+  Label
+  // Renders the label of the item
+  SelectedIcon
+  // Renders the icon of the item when selected 
+  ToggleIcon
+  // Renders the toggle icon 
+}
+
+// --- CONSTRUCTORS ---
+
 /// new creates a nav-menu-item
 ///
 /// ## Parameters:
@@ -49,17 +68,12 @@ pub fn new(label: String) -> NavMenuItem {
   )
 }
 
+// --- SETTERS ---
+
 /// badge sets the badge field
 /// 
 pub fn badge(item: NavMenuItem, badge: Option(String)) -> NavMenuItem {
   NavMenuItem(..item, badge: badge)
-}
-
-fn badge_elt(badge: Option(String)) -> Element(msg) {
-  case badge {
-    None -> none()
-    Some(s) -> html.span([slot("badge")], [html.text(s)])
-  }
 }
 
 /// disabled sets the disabled field
@@ -75,13 +89,6 @@ pub fn leading_icon_name(
   leading_icon_name: Option(String),
 ) -> NavMenuItem {
   NavMenuItem(..item, leading_icon_name: leading_icon_name)
-}
-
-fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
-  case leading_icon_name {
-    None -> none()
-    Some(s) -> icon.new(s) |> icon.purpose(icon.Default) |> icon.render([], [])
-  }
 }
 
 /// label sets the label field
@@ -111,14 +118,6 @@ pub fn selected_icon_name(
   NavMenuItem(..item, selected_icon_name: selected_icon_name)
 }
 
-fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
-  case selected_icon_name {
-    None -> none()
-    Some(s) ->
-      icon.new(s) |> icon.purpose(icon.SelectedIcon) |> icon.render([], [])
-  }
-}
-
 /// toggle_icon_name sets the toggle_icon_name field
 ///
 pub fn toggle_icon_name(
@@ -128,13 +127,7 @@ pub fn toggle_icon_name(
   NavMenuItem(..item, toggle_icon_name: toggle_icon_name)
 }
 
-fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
-  case toggle_icon_name {
-    None -> none()
-    Some(s) ->
-      icon.new(s) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
-  }
-}
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a NavMenuItem
 ///
@@ -157,9 +150,53 @@ pub fn render(
     [
       badge_elt(item.badge),
       leading_icon_elt(item.leading_icon_name),
-      html.span([slot("label")], [html.text(item.label)]),
+      html.span([slot(Label)], [html.text(item.label)]),
       selected_icon_elt(item.selected_icon_name),
       toggle_icon_elt(item.toggle_icon_name),
     ],
   )
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Badge -> attribute("slot", "badge")
+    Icon -> attribute("slot", "icon")
+    Label -> attribute("slot", "label")
+    SelectedIcon -> attribute("slot", "selected-icon")
+    ToggleIcon -> attribute("slot", "toggle-icon")
+  }
+}
+
+// --- PRIVATE INTERNAL HELPERS ---
+
+fn badge_elt(badge: Option(String)) -> Element(msg) {
+  case badge {
+    None -> none()
+    Some(s) -> html.span([slot(Badge)], [html.text(s)])
+  }
+}
+
+fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
+  case leading_icon_name {
+    None -> none()
+    Some(s) -> icon.new(s) |> icon.purpose(icon.Default) |> icon.render([], [])
+  }
+}
+
+fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
+  case selected_icon_name {
+    None -> none()
+    Some(s) ->
+      icon.new(s) |> icon.purpose(icon.SelectedIcon) |> icon.render([], [])
+  }
+}
+
+fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
+  case toggle_icon_name {
+    None -> none()
+    Some(s) ->
+      icon.new(s) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
+  }
 }
