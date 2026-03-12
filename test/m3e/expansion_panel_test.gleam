@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 import lustre/element/html
-import m3e/expansion_panel
+import m3e/expansion_panel.{ToggleIcon}
 import m3e/icon
 
 const header_text = "Panel Header"
@@ -53,7 +53,7 @@ pub fn icon_test() {
 
   let expected_icon =
     icon.new("chevron_right")
-    |> icon.purpose(icon.ToggleIcon)
+    |> icon.purpose(expansion_panel.slot(ToggleIcon))
     |> icon.render([], [])
 
   let expected =

@@ -5,8 +5,10 @@ import lustre/attribute.{
   value as attr_value,
 }
 import lustre/element.{element}
+
+import m3e/app_bar
 import m3e/icon_button.{
-  ExtraLarge, Filled, Large, LeadingIcon, Narrow, Square, Tonal, Wide, disabled,
+  ExtraLarge, Filled, Large, Narrow, Square, Tonal, Wide, disabled,
   disabled_interactive, form, new, purpose, render, selected, shape, size,
   toggle, variant, width,
 }
@@ -85,7 +87,7 @@ pub fn icon_button_render_test() {
 }
 
 pub fn icon_button_purpose_test() {
-  let b = new() |> purpose(Some(LeadingIcon))
+  let b = new() |> purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
 
   let expected =
     element(

@@ -1,6 +1,9 @@
 import gleeunit/should
 import lustre/attribute.{attribute, name}
 import lustre/element.{element}
+
+import m3e/app_bar
+import m3e/button
 import m3e/icon
 
 pub fn basic_test() {
@@ -14,7 +17,6 @@ pub fn basic_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -29,7 +31,7 @@ pub fn element_test() {
     |> icon.filled(True)
     |> icon.grade(icon.High)
     |> icon.optical_size(40)
-    |> icon.purpose(icon.Trailing)
+    |> icon.purpose(button.slot(button.TrailingIcon))
     |> icon.variant(icon.Rounded)
     |> icon.weight(600)
 
@@ -41,7 +43,7 @@ pub fn element_test() {
         attribute("filled", "1"),
         attribute("grade", "high"),
         attribute("optical-size", "40"),
-        attribute("slot", "trailing"),
+        attribute("slot", "trailing-icon"),
         attribute("variant", "rounded"),
         attribute("weight", "600"),
       ],
@@ -65,7 +67,6 @@ pub fn filled_test() {
         attribute("filled", "1"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -87,7 +88,6 @@ pub fn filled_attr_test() {
         attribute("filled", "1"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -109,7 +109,6 @@ pub fn filled_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -133,7 +132,6 @@ pub fn grade_test() {
         attribute("filled", "0"),
         attribute("grade", "low"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -155,7 +153,6 @@ pub fn grade_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "low"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -177,7 +174,6 @@ pub fn grade_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -199,7 +195,6 @@ pub fn grade_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "high"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -208,24 +203,6 @@ pub fn grade_attr_test() {
 
   icon.render(i, [], [])
   |> should.equal(expected)
-}
-
-pub fn leading_test() {
-  let i =
-    icon.new("home")
-    |> icon.purpose(icon.Leading)
-
-  i
-  |> icon.leading
-  |> should.be_true()
-
-  let i =
-    i
-    |> icon.purpose(icon.Trailing)
-
-  i
-  |> icon.leading
-  |> should.be_false()
 }
 
 pub fn optical_size_test() {
@@ -241,7 +218,6 @@ pub fn optical_size_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "20"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -258,7 +234,6 @@ pub fn optical_size_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "30"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -275,7 +250,6 @@ pub fn optical_size_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "48"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -292,7 +266,6 @@ pub fn optical_size_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -325,7 +298,6 @@ pub fn optical_size_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "36"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -339,7 +311,7 @@ pub fn optical_size_attr_test() {
 pub fn purpose_test() {
   let i =
     icon.new("home")
-    |> icon.purpose(icon.SelectedIcon)
+    |> icon.purpose(button.slot(button.SelectedIcon))
 
   let expected =
     element(
@@ -361,7 +333,7 @@ pub fn purpose_test() {
 pub fn purpose_attr_test() {
   let i =
     icon.new("home")
-    |> icon.purpose(icon.Leading)
+    |> icon.purpose(app_bar.slot(app_bar.LeadingIcon))
 
   let expected =
     element(
@@ -371,7 +343,7 @@ pub fn purpose_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "leading"),
+        attribute("slot", "leading-icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -383,7 +355,7 @@ pub fn purpose_attr_test() {
 
   let i =
     icon.new("home")
-    |> icon.purpose(icon.SelectedIcon)
+    |> icon.purpose(button.slot(button.SelectedIcon))
 
   let expected =
     element(
@@ -405,7 +377,7 @@ pub fn purpose_attr_test() {
 
   let i =
     icon.new("home")
-    |> icon.purpose(icon.Trailing)
+    |> icon.purpose(button.slot(button.TrailingIcon))
 
   let expected =
     element(
@@ -415,7 +387,7 @@ pub fn purpose_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "trailing"),
+        attribute("slot", "trailing-icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -439,7 +411,6 @@ pub fn variant_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "sharp"),
         attribute("weight", "400"),
       ],
@@ -461,7 +432,6 @@ pub fn variant_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -483,7 +453,6 @@ pub fn variant_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "rounded"),
         attribute("weight", "400"),
       ],
@@ -505,7 +474,6 @@ pub fn variant_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "sharp"),
         attribute("weight", "400"),
       ],
@@ -529,7 +497,6 @@ pub fn weight_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "100"),
       ],
@@ -546,7 +513,6 @@ pub fn weight_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -563,7 +529,6 @@ pub fn weight_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "700"),
       ],
@@ -580,7 +545,6 @@ pub fn weight_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "400"),
       ],
@@ -613,7 +577,6 @@ pub fn weight_attr_test() {
         attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
-        attribute("slot", "icon"),
         attribute("variant", "outlined"),
         attribute("weight", "600"),
       ],

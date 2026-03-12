@@ -13,7 +13,7 @@ pub fn basic_render_test() {
     heading.new(heading_text)
     |> heading.size(heading.Large)
     |> heading.variant(heading.Label)
-    |> heading.render([attribute.attribute("slot", "label")])
+    |> heading.render([attribute.attribute("slot", "group-label")])
 
   nav_menu_item_group.new(heading_text)
   |> nav_menu_item_group.render([], content)
@@ -30,7 +30,7 @@ pub fn heading_update_test() {
     heading.new(updated)
     |> heading.size(heading.Large)
     |> heading.variant(heading.Label)
-    |> heading.render([attribute.attribute("slot", "label")])
+    |> heading.render([attribute.attribute("slot", "group-label")])
 
   nav_menu_item_group.new(initial)
   |> nav_menu_item_group.heading(updated)
