@@ -3,7 +3,7 @@
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, none}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}

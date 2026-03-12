@@ -173,7 +173,9 @@ pub fn render(
       case p.toggle_icon_name {
         None -> element.none()
         Some(name) ->
-          icon.new(name) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
+          icon.new(name)
+          |> icon.purpose(slot(ToggleIcon))
+          |> icon.render([], [])
       },
       case p.actions {
         None -> element.none()

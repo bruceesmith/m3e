@@ -1,7 +1,7 @@
 //// nav_menu_item provides Lustre support for the [M3E Nav Menu Item component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element, none}
 import lustre/element/html
 
@@ -181,7 +181,7 @@ fn badge_elt(badge: Option(String)) -> Element(msg) {
 fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
   case leading_icon_name {
     None -> none()
-    Some(s) -> icon.new(s) |> icon.purpose(icon.Default) |> icon.render([], [])
+    Some(s) -> icon.new(s) |> icon.purpose(slot(Icon)) |> icon.render([], [])
   }
 }
 
@@ -189,7 +189,7 @@ fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
   case selected_icon_name {
     None -> none()
     Some(s) ->
-      icon.new(s) |> icon.purpose(icon.SelectedIcon) |> icon.render([], [])
+      icon.new(s) |> icon.purpose(slot(SelectedIcon)) |> icon.render([], [])
   }
 }
 
@@ -197,6 +197,6 @@ fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
   case toggle_icon_name {
     None -> none()
     Some(s) ->
-      icon.new(s) |> icon.purpose(icon.ToggleIcon) |> icon.render([], [])
+      icon.new(s) |> icon.purpose(slot(ToggleIcon)) |> icon.render([], [])
   }
 }

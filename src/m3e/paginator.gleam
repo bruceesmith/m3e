@@ -7,7 +7,7 @@ import gleam/string.{join}
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
-import m3e/form_field.{type Variant, default_variant, variant_to_string}
+import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
 import m3e/helpers.{boolean_attribute}
 
 // --- Types ---
@@ -247,5 +247,14 @@ fn page_size_to_string(p: PageSize) -> String {
   case p {
     PageSize(i) -> to_string(i)
     PageSizeAll -> "all"
+  }
+}
+
+/// variant_to_string converts a Variant to a string
+/// 
+fn variant_to_string(v: Variant) -> String {
+  case v {
+    Filled -> "filled"
+    Outlined -> "outlined"
   }
 }

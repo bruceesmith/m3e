@@ -11,14 +11,14 @@ import m3e/link.{type Link}
 
 // --- Types ---
 
-/// IconButton is an icon button users interact with to perform a supplementary action
+/// IconButton(msg) is an icon button users interact with to perform a supplementary action
 /// 
 /// ## Fields:
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
 /// - form_submission: Whether the element is involved in a form submission
 /// - link: Whether the element is a link
-/// - purpose: An slot value defined by a parent element
+/// - purpose: A slot value defined by a parent element
 /// - selected: Whether the toggle button is selected
 /// - shape: The shape of the button
 /// - size: The size of the button
@@ -26,13 +26,13 @@ import m3e/link.{type Link}
 /// - variant: The appearance variant of the button
 /// - width: The width of the button
 /// 
-pub opaque type IconButton {
+pub opaque type IconButton(msg) {
   IconButton(
     disabled: Bool,
     disabled_interactive: Bool,
     form_submission: Option(FormSubmission),
     link: Option(Link),
-    purpose: Option(Purpose),
+    purpose: Option(Attribute(msg)),
     selected: Bool,
     shape: Shape,
     size: Size,
@@ -40,14 +40,6 @@ pub opaque type IconButton {
     variant: Variant,
     width: Width,
   )
-}
-
-/// Purpose defines the intended purpose of the icon
-///
-pub type Purpose {
-  LeadingIcon
-  TrailingButton
-  TrailingIcon
 }
 
 /// Shape
@@ -104,7 +96,7 @@ pub const default_width = Default
 
 /// new creates an icon button with default values
 /// 
-pub fn new() -> IconButton {
+pub fn new() -> IconButton(msg) {
   IconButton(
     disabled: False,
     disabled_interactive: False,
@@ -124,84 +116,87 @@ pub fn new() -> IconButton {
 
 /// disabled sets the disabled field
 /// 
-pub fn disabled(i: IconButton, disabled: Bool) -> IconButton {
+pub fn disabled(i: IconButton(msg), disabled: Bool) -> IconButton(msg) {
   IconButton(..i, disabled: disabled)
 }
 
 /// disabled_interactive sets the disabled_interactive field
 /// 
 pub fn disabled_interactive(
-  i: IconButton,
+  i: IconButton(msg),
   disabled_interactive: Bool,
-) -> IconButton {
+) -> IconButton(msg) {
   IconButton(..i, disabled_interactive: disabled_interactive)
 }
 
 /// form sets the form_submission field
 /// 
-pub fn form(i: IconButton, form: Option(FormSubmission)) -> IconButton {
+pub fn form(i: IconButton(msg), form: Option(FormSubmission)) -> IconButton(msg) {
   IconButton(..i, form_submission: form)
 }
 
 // link sets the link field
 /// 
-pub fn link(i: IconButton, link: Option(Link)) -> IconButton {
+pub fn link(i: IconButton(msg), link: Option(Link)) -> IconButton(msg) {
   IconButton(..i, link: link)
 }
 
 /// purpose sets the purpose field
 /// 
-pub fn purpose(i: IconButton, purpose: Option(Purpose)) -> IconButton {
+pub fn purpose(
+  i: IconButton(msg),
+  purpose: Option(Attribute(msg)),
+) -> IconButton(msg) {
   IconButton(..i, purpose: purpose)
 }
 
 /// selected sets the selected field
 /// 
-pub fn selected(i: IconButton, selected: Bool) -> IconButton {
+pub fn selected(i: IconButton(msg), selected: Bool) -> IconButton(msg) {
   IconButton(..i, selected: selected)
 }
 
 /// shape sets the shape field
 /// 
-pub fn shape(i: IconButton, shape: Shape) -> IconButton {
+pub fn shape(i: IconButton(msg), shape: Shape) -> IconButton(msg) {
   IconButton(..i, shape: shape)
 }
 
 /// size sets the size field
 /// 
-pub fn size(i: IconButton, size: Size) -> IconButton {
+pub fn size(i: IconButton(msg), size: Size) -> IconButton(msg) {
   IconButton(..i, size: size)
 }
 
 /// toggle sets the toggle field
 /// 
-pub fn toggle(i: IconButton, toggle: Bool) -> IconButton {
+pub fn toggle(i: IconButton(msg), toggle: Bool) -> IconButton(msg) {
   IconButton(..i, toggle: toggle)
 }
 
 /// variant sets the variant field
 /// 
-pub fn variant(i: IconButton, variant: Variant) -> IconButton {
+pub fn variant(i: IconButton(msg), variant: Variant) -> IconButton(msg) {
   IconButton(..i, variant: variant)
 }
 
 /// width sets the width field
 /// 
-pub fn width(i: IconButton, width: Width) -> IconButton {
+pub fn width(i: IconButton(msg), width: Width) -> IconButton(msg) {
   IconButton(..i, width: width)
 }
 
 // --- RENDERING ---
 
-/// render creates a Lustre Element from an IconButton
+/// render creates a Lustre Element from an IconButton(msg)
 ///
 /// ## Parameters:
-/// - i: an IconButton
+/// - i: an IconButton(msg)
 /// - attributes: a list of additional Attributes
 /// - children: a list of child Elements
 ///
 pub fn render(
-  i: IconButton,
+  i: IconButton(msg),
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -212,7 +207,7 @@ pub fn render(
         attribute.disabled(i.disabled),
         boolean_attribute("disabled-interactive", i.disabled_interactive),
         case i.purpose {
-          Some(p) -> slot(purpose_to_string(p))
+          Some(p) -> p
           None -> none()
         },
         attribute.selected(i.selected),
@@ -240,14 +235,6 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 }
 
 // --- PRIVATE INTERNAL HELPERS ---
-
-fn purpose_to_string(purpose: Purpose) -> String {
-  case purpose {
-    LeadingIcon -> "leading-icon"
-    TrailingButton -> "trailing-button"
-    TrailingIcon -> "trailing-icon"
-  }
-}
 
 /// shape_to_string converts a Shape to a string
 /// 

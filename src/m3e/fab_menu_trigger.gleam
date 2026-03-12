@@ -12,13 +12,13 @@ import m3e/icon.{type Icon}
 /// - for: the id of the associated m3e-fab-menu element
 /// - icon: the clickable Icon 
 /// 
-pub opaque type FabMenuTrigger {
-  FabMenuTrigger(for: String, icon: Icon)
+pub opaque type FabMenuTrigger(msg) {
+  FabMenuTrigger(for: String, icon: Icon(msg))
 }
 
 /// new creates a new FabMenuTrigger
 /// 
-pub fn new(for: String, icon: Icon) -> FabMenuTrigger {
+pub fn new(for: String, icon: Icon(msg)) -> FabMenuTrigger(msg) {
   FabMenuTrigger(for: for, icon: icon)
 }
 
@@ -30,7 +30,7 @@ pub fn new(for: String, icon: Icon) -> FabMenuTrigger {
 /// - children: a list of child Elements
 ///
 pub fn render(
-  f: FabMenuTrigger,
+  f: FabMenuTrigger(msg),
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -45,12 +45,12 @@ pub fn render(
 
 /// for sets the for field
 /// 
-pub fn for_(f: FabMenuTrigger, for: String) -> FabMenuTrigger {
+pub fn for_(f: FabMenuTrigger(msg), for: String) -> FabMenuTrigger(msg) {
   FabMenuTrigger(..f, for: for)
 }
 
 /// icon sets the icon field
 /// 
-pub fn icon(f: FabMenuTrigger, icon: Icon) -> FabMenuTrigger {
+pub fn icon(f: FabMenuTrigger(msg), icon: Icon(msg)) -> FabMenuTrigger(msg) {
   FabMenuTrigger(..f, icon: icon)
 }

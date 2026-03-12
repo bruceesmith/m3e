@@ -1,6 +1,6 @@
 //// nav_menu_item_group provides Lustre support for the [M3E Nav Menu Item Group component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 
-import lustre/attribute.{type Attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
 import m3e/heading

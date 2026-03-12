@@ -1,6 +1,6 @@
 //// step provides Lustre support for the [M3E Step component](https://matraic.github.io/m3e/#/components/stepper.html)
 
-import lustre/attribute.{attribute}
+import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
