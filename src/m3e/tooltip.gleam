@@ -65,7 +65,7 @@ pub const maximum_show_delay = 500
 /// Default tip position relative to its paired element
 pub const default_position = Below
 
-/// Tooltip is the basis for a m3e-tooltip element
+/// Tooltip adds additional context to a button or other UI element
 ///
 /// ## Fields:
 /// - tip: text of the tool tip
