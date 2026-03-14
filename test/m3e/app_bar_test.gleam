@@ -49,7 +49,7 @@ pub fn render_test() {
     |> app_bar.for(Some("nav-id"))
     |> app_bar.size(app_bar.Large)
 
-  app_bar.render(bar, [])
+  app_bar.render(bar, [], [])
   |> should.equal(
     element.element(
       "m3e-app-bar",
@@ -66,7 +66,7 @@ pub fn render_test() {
 pub fn render_defaults_test() {
   let bar = app_bar.new()
 
-  app_bar.render(bar, [element.text("Title")])
+  app_bar.render(bar, [], [element.text("Title")])
   |> should.equal(
     element.element("m3e-app-bar", [attribute.attribute("size", "small")], [
       element.text("Title"),

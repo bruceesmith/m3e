@@ -1,7 +1,7 @@
 //// app_bar provides Lustre support for the [M3E App Bar component](https://matraic.github.io/m3e/#/components/app-bar.html)
 
 import gleam/function
-import gleam/list.{filter}
+import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -79,14 +79,21 @@ pub fn size(a: AppBar, size: Size) -> AppBar {
 
 /// render creates an M3E App Bar component from an AppBar
 /// 
-pub fn render(a: AppBar, children: List(Element(msg))) -> Element(msg) {
+pub fn render(
+  a: AppBar,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element(
     "m3e-app-bar",
-    [
-      boolean_attribute("centered", a.centered),
-      attribute("size", size_to_string(a.size)),
-      option_attribute(a.for, fn(_) { "for" }, function.identity, None),
-    ]
+    flatten([
+      [
+        boolean_attribute("centered", a.centered),
+        attribute("size", size_to_string(a.size)),
+        option_attribute(a.for, fn(_) { "for" }, function.identity, None),
+      ],
+      attributes,
+    ])
       |> filter(fn(a) { a != none() }),
     children,
   )
