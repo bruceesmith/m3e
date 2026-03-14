@@ -1,108 +1,141 @@
 //// view constructs the HTML for the SPA
 
 import gleam/option.{Some}
-import lustre/attribute.{attribute, class}
-import lustre/element.{type Element}
+import lustre/attribute.{attribute, class, id}
+import lustre/element.{type Element, text}
 import lustre/element/html
 import lustre/event.{on_click}
-import model.{type Model, Home, Icon, Switch}
+import model.{type Model}
 import msg.{
   type Msg, ButtonPageSelected, HomeSelected, IconPageSelected,
   SwitchPageSelected,
 }
 
+import m3e/app_bar
 import m3e/button
-import m3e/card
-import m3e/drawer
+
+// import m3e/card
 import m3e/drawer_container as dc
-import m3e/drawer_toggle
+
+import m3e/drawer_toggle as dt
+import m3e/helpers.{slot}
 import m3e/icon
 import m3e/icon_button as ib
+import m3e/link
+import m3e/nav_menu
+import m3e/nav_menu_item
 import m3e/switch
 import m3e/theme
-
-// <m3e-icon-button slot="leading-icon" aria-label="Menu" toggle>
-//   <m3e-icon name="menu"></m3e-icon>
-//   <m3e-icon slot="selected" name="menu_open"></m3e-icon>
-//   <m3e-drawer-toggle for="nav-drawer"></m3e-drawer-toggle>
-// </m3e-icon-button>
+import m3e/tooltip
 
 pub fn view(model: Model) -> Element(Msg) {
-  // let nav =
-  //   html.div([attribute("slot", "start"), id("nav-drawer")], [
-  //     html.text("Start drawer"),
-  //   ])
-  let main = case model.state {
-    Home -> home()
-    model.Button -> button()
-    Icon -> icon()
-    Switch -> switch_()
-  }
-  let title =
-    html.div([class("grid justify-center")], [
-      html.text("Gleam/Lustre Material 3 Expression demonstration"),
+  let github =
+    html.img([
+      attribute(
+        "src",
+        "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+      ),
+      attribute("alt", "GitHub"),
+      attribute("height", "40"),
+      attribute("width", "40"),
     ])
-  let body = [
-    card.new()
-    |> card.variant(card.Outlined)
-    |> card.render([], [
-      html.div([attribute("slot", "content")], [
-        ib.new()
-          |> ib.toggle(True)
-          |> ib.purpose(Some(ib.LeadingIcon))
-          |> ib.variant(ib.Filled)
-          |> ib.render([], [
-            icon.new("menu") |> icon.render([], []),
-            icon.new("menu_open")
-              |> icon.purpose(icon.SelectedIcon)
-              |> icon.render([], []),
-            drawer_toggle.new("nav-drawer")
-              |> drawer_toggle.render([], []),
-          ]),
-        dc.new()
-          |> dc.start(
-            drawer.new()
-            |> drawer.usage(drawer.Start)
-            |> drawer.mode(drawer.Over)
-            |> drawer.open(True)
-            |> drawer.id("nav-drawer")
-            |> drawer.divider(False)
-            |> drawer.content(html.text("Start drawer")),
-          )
-          |> dc.end(drawer.empty())
-          |> dc.render([], [main]),
-        // drawer-container
+  let appbar =
+    app_bar.new()
+    |> app_bar.for(Some("main-content"))
+    |> app_bar.render([class("flex-none z-4")], [
+      ib.new()
+        |> ib.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
+        |> ib.selected(True)
+        |> ib.toggle(True)
+        |> ib.render([], [
+          icon.new("menu") |> icon.filled(True) |> icon.render([], []),
+          icon.new("menu_open")
+            |> icon.filled(True)
+            |> icon.purpose(ib.slot(ib.Selected))
+            |> icon.render([], []),
+          dt.new("nav-drawer") |> dt.render([], []),
+        ]),
+      html.span([slot("title")], [
+        text("Gleam/Lustre Material 3 Expression demonstration"),
       ]),
-    ]),
-  ]
+      html.span([slot("subtitle")], [text("v0.0.1")]),
+      html.span([slot("trailing-icon")], [
+        ib.new()
+          |> ib.link(Some(link.new("https://github.com/bruceesmith/m3e")))
+          |> ib.render([id("github-button")], [
+            github,
+          ]),
+
+        tooltip.new("Github", "github-button") |> tooltip.render([]),
+      ]),
+    ])
+
+  let menu =
+    nav_menu.new()
+    |> nav_menu.render([id("nav-drawer"), slot("start")], [
+      nav_menu_item.new("Button")
+        |> nav_menu_item.render([
+          event.on_click(ButtonPageSelected),
+          id("m3e-nav-menu-item-1"),
+        ]),
+      nav_menu_item.new("Icon")
+        |> nav_menu_item.render([
+          event.on_click(IconPageSelected),
+          id("m3e-nav-menu-item-2"),
+        ]),
+      nav_menu_item.new("Switch")
+        |> nav_menu_item.render([
+          event.on_click(SwitchPageSelected),
+          id("m3e-nav-menu-item-3"),
+        ]),
+    ])
+
+  let content = case model.state {
+    model.Home -> home()
+    model.Button -> button()
+    model.Icon -> icon()
+    model.Switch -> switch_()
+  }
+
+  let drawercontainer =
+    dc.render_config(
+      dc.Config(
+        ..dc.default_config(),
+        main_content: content,
+        start_drawer: Some(menu),
+        start: True,
+        start_mode: dc.Auto,
+      ),
+      [],
+    )
+
   theme.render(
-    theme.new("app-theme") |> theme.color("#09022e"),
-    // [class("grid gap-5")],
+    theme.new("app-theme")
+      |> theme.contrast(theme.High)
+      |> theme.scheme(theme.Auto),
     [],
-    [title, ..body],
+    [
+      appbar,
+      drawercontainer,
+    ],
   )
 }
 
-fn home() -> Element(Msg) {
+pub fn home() -> Element(Msg) {
   html.div([], [
-    html.text("home"),
-    html.br([]),
-    html.div([on_click(ButtonPageSelected)], [html.text("Button")]),
-    html.br([]),
-    html.div([on_click(IconPageSelected)], [html.text("Icon")]),
-    html.br([]),
-    html.div([on_click(SwitchPageSelected)], [html.text("Switch")]),
+    button.new("Home", button.Outlined)
+    |> button.render([on_click(HomeSelected)]),
   ])
 }
 
-fn button() -> Element(Msg) {
+pub fn button() -> Element(Msg) {
   html.div(
     [
       class("grid grid-cols-[5fr_5fr_5fr] gap-5"),
     ],
     [
-      button.new("Home", button.Outlined)
-        |> button.render([class("col-2"), on_click(HomeSelected)]),
+      // button.new("Home", button.Outlined)
+      //   |> button.render([class("col-2"), on_click(HomeSelected)]),
       html.div(
         [
           class(
@@ -173,7 +206,7 @@ fn button() -> Element(Msg) {
           button.new("Open", button.Tonal)
             |> button.icons([
               icon.new("open_in_new_window")
-              |> icon.purpose(icon.Trailing)
+              |> icon.purpose(button.slot(button.TrailingIcon))
               |> icon.render([], []),
             ])
             |> button.render([class("justify-self-center")]),
@@ -193,7 +226,7 @@ fn button() -> Element(Msg) {
             |> button.icons([
               icon.new("play_arrow") |> icon.render([], []),
               icon.new("stop")
-                |> icon.purpose(icon.SelectedIcon)
+                |> icon.purpose(button.slot(button.SelectedIcon))
                 |> icon.render([], []),
             ])
             |> button.selected_label("Stop")
@@ -223,7 +256,7 @@ fn button() -> Element(Msg) {
           button.new("Google", button.Tonal)
             |> button.icons([
               icon.new("open_in_new_window")
-              |> icon.purpose(icon.Trailing)
+              |> icon.purpose(button.slot(button.TrailingIcon))
               |> icon.render([], []),
             ])
             |> button.render([
@@ -237,7 +270,7 @@ fn button() -> Element(Msg) {
   )
 }
 
-fn icon() -> Element(Msg) {
+pub fn icon() -> Element(Msg) {
   html.div([], [
     html.div([on_click(HomeSelected)], [html.text("Home")]),
     html.br([]),
@@ -246,7 +279,7 @@ fn icon() -> Element(Msg) {
   ])
 }
 
-fn switch_() -> Element(Msg) {
+pub fn switch_() -> Element(Msg) {
   html.div([], [
     html.div([on_click(HomeSelected)], [html.text("Home")]),
     html.br([]),
