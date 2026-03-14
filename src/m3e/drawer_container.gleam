@@ -229,9 +229,11 @@ pub fn start_mode(
 /// ## Parameters:
 /// - c: a DrawerContainer
 /// - attributes: a list of additional Attributes
-/// - children: the main content
 ///
-pub fn render(c: DrawerContainer(msg)) -> Element(msg) {
+pub fn render(
+  c: DrawerContainer(msg),
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
   let drawers =
     [
       case c.start_drawer {
@@ -269,6 +271,7 @@ pub fn render(c: DrawerContainer(msg)) -> Element(msg) {
         }
         None -> []
       },
+      attributes,
     ])
       |> filter(fn(a) { a != none() }),
     drawers,
@@ -279,9 +282,13 @@ pub fn render(c: DrawerContainer(msg)) -> Element(msg) {
 /// 
 /// ## Parameters:
 /// - config: a Config
+/// - attributes: a list of additional Attributes
 ///
-pub fn render_config(config: Config(msg)) -> Element(msg) {
-  render(from_config(config))
+pub fn render_config(
+  config: Config(msg),
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot

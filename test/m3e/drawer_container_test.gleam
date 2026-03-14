@@ -8,7 +8,7 @@ import m3e/drawer_container
 
 pub fn render_default_test() {
   drawer_container.new()
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(element("m3e-drawer-container", [], []))
 }
 
@@ -16,7 +16,7 @@ pub fn render_with_main_content_test() {
   let main = element("main", [], [])
   drawer_container.new()
   |> drawer_container.main_content(main)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(element("m3e-drawer-container", [], [main]))
 }
 
@@ -28,7 +28,7 @@ pub fn start_drawer_test() {
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element("m3e-drawer-container", [attribute("start-mode", "auto")], [
       start_drawer,
@@ -43,7 +43,7 @@ pub fn start_drawer_open_test() {
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.start(True)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element(
       "m3e-drawer-container",
@@ -60,7 +60,7 @@ pub fn start_drawer_divider_test() {
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.start_divider(True)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element(
       "m3e-drawer-container",
@@ -77,7 +77,7 @@ pub fn start_drawer_mode_test() {
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.start_mode(drawer_container.Push)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element("m3e-drawer-container", [attribute("start-mode", "push")], [
       start_drawer,
@@ -93,7 +93,7 @@ pub fn end_drawer_test() {
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element("m3e-drawer-container", [attribute("end-mode", "auto")], [
       end_drawer,
@@ -108,7 +108,7 @@ pub fn end_drawer_open_test() {
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.end(True)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element(
       "m3e-drawer-container",
@@ -125,7 +125,7 @@ pub fn end_drawer_divider_test() {
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.end_divider(True)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element(
       "m3e-drawer-container",
@@ -142,7 +142,7 @@ pub fn end_drawer_mode_test() {
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.end_mode(drawer_container.Side)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element("m3e-drawer-container", [attribute("end-mode", "side")], [
       end_drawer,
@@ -169,7 +169,7 @@ pub fn all_content_and_options_test() {
   |> drawer_container.end(True)
   |> drawer_container.end_divider(True)
   |> drawer_container.end_mode(drawer_container.Side)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(
     element(
       "m3e-drawer-container",
@@ -196,7 +196,7 @@ pub fn setters_have_no_effect_if_drawer_is_none_test() {
   |> drawer_container.end(True)
   |> drawer_container.end_divider(True)
   |> drawer_container.end_mode(drawer_container.Push)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(expected)
 }
 
@@ -214,7 +214,7 @@ pub fn from_config_ignores_fields_if_drawer_is_none_test() {
     }
 
   drawer_container.from_config(config)
-  |> drawer_container.render()
+  |> drawer_container.render([])
   |> should.equal(element("m3e-drawer-container", [], []))
 }
 
@@ -251,7 +251,7 @@ pub fn render_config_test() {
       [start_drawer, main, end_drawer],
     )
 
-  drawer_container.render_config(config)
+  drawer_container.render_config(config, [])
   |> should.equal(expected)
 }
 
