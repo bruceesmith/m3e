@@ -1,7 +1,7 @@
 //// switch provides Lustre support for the [M3E Switch component](https://matraic.github.io/m3e/#/components/switch.html)
 
 import gleam/list
-import gleam/option.{type Option, None}
+import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -37,7 +37,7 @@ fn icons_to_string(i: Icons) -> String {
 pub opaque type Switch {
   Switch(
     id: String,
-    label: String,
+    label: Option(String),
     icons: Icons,
     checked: Bool,
     disabled: Bool,
@@ -47,10 +47,10 @@ pub opaque type Switch {
 
 /// new creates a Switch with default values
 ///
-pub fn new(id: String, label: String) -> Switch {
+pub fn new(id: String) -> Switch {
   Switch(
     id: id,
-    label: label,
+    label: None,
     icons: Neither,
     checked: False,
     disabled: False,
@@ -70,10 +70,16 @@ pub fn disabled(s: Switch, disabled: Bool) -> Switch {
   Switch(..s, disabled: disabled)
 }
 
+/// label sets the label field
+///
+pub fn label(s: Switch, label: Option(String)) -> Switch {
+  Switch(..s, label: label)
+}
+
 /// render creates a list of Lustre Elements from a Switch
 ///
 pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg)) {
-  [
+  let switch_element =
     element(
       "m3e-switch",
       list.flatten([
@@ -88,9 +94,15 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
       ])
         |> list.filter(fn(a) { a != none() }),
       [],
-    ),
-    element("label", [attribute("for", s.id)], [text(s.label)]),
-  ]
+    )
+
+  case s.label {
+    Some(label) -> [
+      switch_element,
+      element("label", [attribute("for", s.id)], [text(label)]),
+    ]
+    None -> [switch_element]
+  }
 }
 
 /// form sets theform_submission field when the switch is used in a form
