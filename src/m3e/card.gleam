@@ -11,21 +11,39 @@ import m3e/link.{type Link}
 
 // --- Types ---
 
+/// Actionability specifies if a card is interactive
+pub type Actionability {
+  Actionable
+  Static
+}
+
+/// Interaction specifies if a card is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// Layout specifies if a card is rendered inline or as a block
+pub type Layout {
+  Inline
+  Block
+}
+
 /// Card is a flexible, expressive container for presenting a unified subject
 /// 
 /// ## Fields:
-/// - actionable: Whether the card is "actionable" and will respond to use interaction
-/// - disabled: Whether the element is disabled
-/// - inline: Whether to present the card inline with surrounding content
+/// - actionability: Whether the card is "actionable" and will respond to user interaction
+/// - interaction: Whether the element is enabled or disabled
+/// - layout: Whether to present the card inline with surrounding content
 /// - link: Whether the card is a link
 /// - orientation: The orientation of the card
 /// - variant: The appearance variant of the card
 /// 
 pub opaque type Card {
   Card(
-    actionable: Bool,
-    disabled: Bool,
-    inline: Bool,
+    actionability: Actionability,
+    interaction: Interaction,
+    layout: Layout,
     link: Option(Link),
     orientation: Orientation,
     variant: Variant,
@@ -66,32 +84,73 @@ pub type Variant {
 /// Default variant
 pub const default_variant = Filled
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a Card
+/// 
+pub type Config {
+  Config(
+    actionability: Actionability,
+    interaction: Interaction,
+    layout: Layout,
+    link: Option(Link),
+    orientation: Orientation,
+    variant: Variant,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    actionability: Static,
+    interaction: Enabled,
+    layout: Block,
+    link: None,
+    orientation: default_orientation,
+    variant: default_variant,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a Card with default values
 /// 
 pub fn new() -> Card {
-  Card(False, False, False, None, default_orientation, default_variant)
+  from_config(default_config())
+}
+
+/// from_config creates a Card from a Config record
+/// 
+pub fn from_config(c: Config) -> Card {
+  Card(
+    actionability: c.actionability,
+    interaction: c.interaction,
+    layout: c.layout,
+    link: c.link,
+    orientation: c.orientation,
+    variant: c.variant,
+  )
 }
 
 // --- SETTERS ---
 
-/// actionable sets the `actionable` field of a Card
+/// actionable sets the `actionability` field of a Card
 /// 
-pub fn actionable(c: Card, actionable: Bool) -> Card {
-  Card(..c, actionable: actionable)
+pub fn actionable(c: Card, a: Actionability) -> Card {
+  Card(..c, actionability: a)
 }
 
-/// disabled sets the `disabled` field of a Card
+/// disabled sets the `interaction` field of a Card
 /// 
-pub fn disabled(c: Card, disabled: Bool) -> Card {
-  Card(..c, disabled: disabled)
+pub fn disabled(c: Card, i: Interaction) -> Card {
+  Card(..c, interaction: i)
 }
 
-/// inline sets the `inline` field of a Card
+/// inline sets the `layout` field of a Card
 /// 
-pub fn inline(c: Card, inline: Bool) -> Card {
-  Card(..c, inline: inline)
+pub fn inline(c: Card, l: Layout) -> Card {
+  Card(..c, layout: l)
 }
 
 /// link sets the `link` field of a Card
@@ -130,9 +189,9 @@ pub fn render(
     "m3e-card",
     flatten([
       [
-        boolean_attribute("actionable", c.actionable),
-        boolean_attribute("disabled", c.disabled),
-        boolean_attribute("inline", c.inline),
+        boolean_attribute("actionable", c.actionability == Actionable),
+        boolean_attribute("disabled", c.interaction == Disabled),
+        boolean_attribute("inline", c.layout == Inline),
         attribute("orientation", orientation_to_string(c.orientation)),
         attribute("variant", variant_to_string(c.variant)),
       ],
@@ -142,6 +201,16 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
