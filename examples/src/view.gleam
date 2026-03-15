@@ -134,8 +134,6 @@ pub fn button() -> Element(Msg) {
       class("grid grid-cols-[5fr_5fr_5fr] gap-5"),
     ],
     [
-      // button.new("Home", button.Outlined)
-      //   |> button.render([class("col-2"), on_click(HomeSelected)]),
       html.div(
         [
           class(
@@ -280,10 +278,87 @@ pub fn icon() -> Element(Msg) {
 }
 
 pub fn switch_() -> Element(Msg) {
-  html.div([], [
-    html.div([on_click(HomeSelected)], [html.text("Home")]),
-    html.br([]),
-    html.div([], switch.new("my-switch", "My choice") |> switch.render([])),
-    html.br([]),
-  ])
+  html.div(
+    [
+      class("grid grid-cols-[1fr_2fr_1fr] gap-5"),
+    ],
+    [
+      html.div(
+        [
+          class("grid grid-rows-1 grid-cols-3 items-center gap-5 col-2"),
+        ],
+        [
+          html.p([], [html.text("Basic")]),
+          html.div(
+            [class("grid justify-items-center")],
+            switch.new("basic", "") |> switch.render([]),
+          ),
+        ],
+      ),
+      html.div(
+        [
+          class("grid grid-rows-1 grid-cols-3 items-center gap-5 col-2"),
+        ],
+        [
+          html.p([], [html.text("Labels")]),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("status-off", "Switch 1") |> switch.render([]),
+          ),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("status-on", "Switch 2")
+              |> switch.checked(True)
+              |> switch.render([]),
+          ),
+        ],
+      ),
+      html.div(
+        [
+          class("grid grid-rows-1 grid-cols-4 items-center gap-5 col-2"),
+        ],
+        [
+          html.p([], [html.text("Icons")]),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("icons-none", "None")
+              |> switch.icon(switch.Neither)
+              |> switch.render([]),
+          ),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("icons-selected", "Selected")
+              |> switch.icon(switch.Selected)
+              |> switch.render([]),
+          ),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("icons-both", "Both")
+              |> switch.icon(switch.Both)
+              |> switch.render([]),
+          ),
+        ],
+      ),
+      html.div(
+        [
+          class("grid grid-rows-1 grid-cols-3 items-center gap-5 col-2"),
+        ],
+        [
+          html.p([], [html.text("Disabled")]),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("disabled-off", "Disabled Off")
+              |> switch.render([]),
+          ),
+          html.div(
+            [class("grid grid-cols-2 justify-items-center")],
+            switch.new("disabled-on", "Disabled On")
+              |> switch.checked(True)
+              |> switch.disabled(True)
+              |> switch.render([]),
+          ),
+        ],
+      ),
+    ],
+  )
 }
