@@ -6,7 +6,7 @@ import lustre/element.{type Element, element}
 
 import m3e/list_variant.{type Variant, Standard, variant_to_string}
 
-// --- Types ---
+// --- TYPES ---
 
 /// ActionList provides a specialized list container for action-based interactions following Material 3 design principles
 /// 
