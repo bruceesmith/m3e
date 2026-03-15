@@ -11,15 +11,21 @@ import m3e/helpers.{boolean_attribute, option_attribute}
 
 // --- Types ---
 
+/// TitleAlignment specifies if the title and subtitle are centered
+pub type TitleAlignment {
+  Centered
+  Standard
+}
+
 /// AppBar holds all information to create a App Bar
 /// 
 /// ## Fields:
-/// - centered: Whether the title and subtitle are centered
+/// - alignment: Whether the title and subtitle are centered
 /// - for: The identifier of the interactive control to which this element is attached
 /// - size: Size of the bar
 /// 
-pub type AppBar {
-  AppBar(centered: Bool, for: Option(String), size: Size)
+pub opaque type AppBar {
+  AppBar(alignment: TitleAlignment, for: Option(String), size: Size)
 }
 
 /// Size is the size of the bar
@@ -47,20 +53,40 @@ pub type Slot {
   // Renders a trailing icon
 }
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for an AppBar
+/// 
+pub type Config {
+  Config(alignment: TitleAlignment, for: Option(String), size: Size)
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(alignment: Standard, for: None, size: default_size)
+}
+
 // --- CONSTRUCTORS ---
 
-/// new creates a new AppBar
+/// new creates a new AppBar with default values
 /// 
 pub fn new() -> AppBar {
-  AppBar(centered: False, for: None, size: default_size)
+  from_config(default_config())
+}
+
+/// from_config creates a new AppBar from a Config record
+/// 
+pub fn from_config(c: Config) -> AppBar {
+  AppBar(alignment: c.alignment, for: c.for, size: c.size)
 }
 
 // --- SETTERS ---
 
-/// centered sets the centered attribute
+/// alignment sets the title alignment
 /// 
-pub fn centered(a: AppBar, centered: Bool) -> AppBar {
-  AppBar(..a, centered: centered)
+pub fn alignment(a: AppBar, alignment: TitleAlignment) -> AppBar {
+  AppBar(..a, alignment: alignment)
 }
 
 /// for sets the for attribute
@@ -88,7 +114,7 @@ pub fn render(
     "m3e-app-bar",
     flatten([
       [
-        boolean_attribute("centered", a.centered),
+        boolean_attribute("centered", a.alignment == Centered),
         attribute("size", size_to_string(a.size)),
         option_attribute(a.for, fn(_) { "for" }, function.identity, None),
       ],
@@ -97,6 +123,16 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' attribute for a named Slot
@@ -116,6 +152,5 @@ fn size_to_string(size: Size) -> String {
   case size {
     Large -> "large"
     Medium -> "medium"
-    Small -> "small"
   }
 }
