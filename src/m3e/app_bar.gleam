@@ -152,5 +152,6 @@ fn size_to_string(size: Size) -> String {
   case size {
     Large -> "large"
     Medium -> "medium"
+    Small -> "small"
   }
 }

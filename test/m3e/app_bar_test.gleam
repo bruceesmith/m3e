@@ -1,4 +1,4 @@
-import gleam/option.{None, Some}
+import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
@@ -6,46 +6,46 @@ import m3e/app_bar
 
 pub fn new_test() {
   app_bar.new()
-  |> app_bar.centered(True)
+  |> app_bar.alignment(app_bar.Centered)
   |> app_bar.for(Some("nav-id"))
   |> app_bar.size(app_bar.Large)
-  |> should.equal(app_bar.AppBar(
-    centered: True,
-    for: Some("nav-id"),
-    size: app_bar.Large,
-  ))
+  |> should.equal(
+    app_bar.from_config(app_bar.Config(
+      alignment: app_bar.Centered,
+      for: Some("nav-id"),
+      size: app_bar.Large,
+    )),
+  )
 }
 
-pub fn centered_test() {
+pub fn alignment_test() {
   app_bar.new()
-  |> app_bar.centered(True)
-  |> should.equal(app_bar.AppBar(centered: True, for: None, size: app_bar.Small))
+  |> app_bar.alignment(app_bar.Centered)
+  |> should.equal(app_bar.from_config(
+    app_bar.Config(..app_bar.default_config(), alignment: app_bar.Centered),
+  ))
 }
 
 pub fn for_test() {
   app_bar.new()
   |> app_bar.for(Some("test-id"))
-  |> should.equal(app_bar.AppBar(
-    centered: False,
-    for: Some("test-id"),
-    size: app_bar.Small,
+  |> should.equal(app_bar.from_config(
+    app_bar.Config(..app_bar.default_config(), for: Some("test-id")),
   ))
 }
 
 pub fn size_test() {
   app_bar.new()
   |> app_bar.size(app_bar.Large)
-  |> should.equal(app_bar.AppBar(
-    centered: False,
-    for: None,
-    size: app_bar.Large,
+  |> should.equal(app_bar.from_config(
+    app_bar.Config(..app_bar.default_config(), size: app_bar.Large),
   ))
 }
 
 pub fn render_test() {
   let bar =
     app_bar.new()
-    |> app_bar.centered(True)
+    |> app_bar.alignment(app_bar.Centered)
     |> app_bar.for(Some("nav-id"))
     |> app_bar.size(app_bar.Large)
 
