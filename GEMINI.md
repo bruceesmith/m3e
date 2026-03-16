@@ -33,14 +33,18 @@ The `examples` directory is a standalone Gleam project.
 ## Development Conventions
 
 ### Component Architecture
-Each component (e.g., `Button`, `Card`) typically follows this pattern:
-1.  **Type Definition**: A public custom type holding the component's state (e.g., `pub type Button(msg) { ... }`).
-2.  **Constructors**:
-    -   `button(...)`: Full constructor with all options.
-    -   `basic(...)`: Convenience constructor with reasonable defaults.
-3.  **Functional Updates**: Helper functions designed for the pipe operator (`|>`) to modify specific fields (e.g., `shape`, `size`, `variant`).
-    -   *Example*: `button.basic("Label", button.Text) |> button.shape(button.Square)`
-4.  **Rendering**: An `element` function that converts the component type into a Lustre `Element`, typically wrapping a custom element (e.g., `m3e-button`).
+Each component (e.g., `Button`, `Card`) follows a dual-pattern strategy based on complexity:
+
+1.  **Type Definition**: Components use a `pub opaque type` to encapsulate state.
+2.  **Builder Pattern (Primary)**:
+    -   **Constructor**: A `new(...)` function creates the component with sensible defaults.
+    -   **Functional Updates**: Setter functions (e.g., `shape`, `variant`) are designed for use with the pipe operator (`|>`).
+3.  **Config Record Pattern (Secondary)**: 
+    -   Used for components with **3 or more configuration fields**.
+    -   **Config Record**: A `pub type Config` record allows for declarative, bulk configuration.
+    -   **Semantic Enums**: Instead of boolean flags, use **Custom Types (Enums)** to avoid "Boolean Blindness" and provide clear intention (e.g., `Interaction(Enabled)` instead of `disabled(False)`).
+    -   **Support Functions**: `default_config()`, `from_config(Config)`, and `render_config(Config)` are provided.
+4.  **Rendering**: A `render` function converts the component type into a Lustre `Element`.
 
 ### Testing Strategy
 -   **State Verification**: Tests check if helper functions correctly update the internal record fields.
