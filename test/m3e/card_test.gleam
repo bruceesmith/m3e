@@ -9,12 +9,12 @@ import m3e/card.{
 
 pub fn card_creation_test() {
   let c =
-    card.new()
-    |> card.actionable(True)
-    |> card.disabled(True)
-    |> card.inline(True)
-    |> card.orientation(Horizontal)
-    |> card.variant(Outlined)
+    new()
+    |> actionable(card.Actionable)
+    |> disabled(card.Disabled)
+    |> inline(card.Inline)
+    |> orientation(Horizontal)
+    |> variant(Outlined)
 
   let expected =
     element(
@@ -35,9 +35,9 @@ pub fn card_creation_test() {
 pub fn card_element_test() {
   let c =
     new()
-    |> actionable(False)
-    |> disabled(False)
-    |> inline(False)
+    |> actionable(card.Static)
+    |> disabled(card.Enabled)
+    |> inline(card.Block)
     |> orientation(Vertical)
     |> variant(Elevated)
 
@@ -57,9 +57,9 @@ pub fn card_element_test() {
 pub fn card_setters_test() {
   let c =
     new()
-    |> actionable(True)
-    |> disabled(True)
-    |> inline(True)
+    |> actionable(card.Actionable)
+    |> disabled(card.Disabled)
+    |> inline(card.Inline)
     |> orientation(Horizontal)
     |> variant(Filled)
 
