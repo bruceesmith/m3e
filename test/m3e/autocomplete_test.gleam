@@ -7,22 +7,22 @@ import m3e/option as m3e_opt
 
 pub fn new_test() {
   autocomplete.new("test-id")
-  |> autocomplete.auto_activate(True)
-  |> autocomplete.required(True)
-  |> should.equal(autocomplete.Autocomplete(
-    auto_activate: True,
-    for: "test-id",
-    hide_selection_indicator: False,
-    required: True,
-  ))
+  |> autocomplete.auto_activate(autocomplete.AutoActivate)
+  |> autocomplete.requirement(autocomplete.Required)
+  |> autocomplete.selection_indicator(autocomplete.ShowSelectionIndicator)
+  |> autocomplete.render([])
+  |> element.to_string
+  |> should.equal(
+    "<m3e-autocomplete auto-activate for=\"test-id\" required></m3e-autocomplete>",
+  )
 }
 
 pub fn render_test() {
   let ac =
     autocomplete.new("test-id")
-    |> autocomplete.auto_activate(True)
-    |> autocomplete.required(True)
-    |> autocomplete.hide_selection_indicator(True)
+    |> autocomplete.auto_activate(autocomplete.AutoActivate)
+    |> autocomplete.requirement(autocomplete.Required)
+    |> autocomplete.selection_indicator(autocomplete.HideSelectionIndicator)
   let opt = m3e_opt.new() |> m3e_opt.value(Some("val"))
 
   autocomplete.render(ac, [opt])
@@ -57,44 +57,36 @@ pub fn render_defaults_test() {
 
 pub fn auto_activate_test() {
   autocomplete.new("id")
-  |> autocomplete.auto_activate(True)
-  |> should.equal(autocomplete.Autocomplete(
-    auto_activate: True,
-    for: "id",
-    hide_selection_indicator: False,
-    required: False,
-  ))
+  |> autocomplete.auto_activate(autocomplete.AutoActivate)
+  |> autocomplete.render([])
+  |> element.to_string
+  |> should.equal(
+    "<m3e-autocomplete auto-activate for=\"id\"></m3e-autocomplete>",
+  )
 }
 
 pub fn for_test() {
   autocomplete.new("id")
   |> autocomplete.for("new-id")
-  |> should.equal(autocomplete.Autocomplete(
-    auto_activate: False,
-    for: "new-id",
-    hide_selection_indicator: False,
-    required: False,
-  ))
+  |> autocomplete.render([])
+  |> element.to_string
+  |> should.equal("<m3e-autocomplete for=\"new-id\"></m3e-autocomplete>")
 }
 
 pub fn required_test() {
   autocomplete.new("id")
-  |> autocomplete.required(True)
-  |> should.equal(autocomplete.Autocomplete(
-    auto_activate: False,
-    for: "id",
-    hide_selection_indicator: False,
-    required: True,
-  ))
+  |> autocomplete.requirement(autocomplete.Required)
+  |> autocomplete.render([])
+  |> element.to_string
+  |> should.equal("<m3e-autocomplete for=\"id\" required></m3e-autocomplete>")
 }
 
 pub fn hide_selection_indicator_test() {
   autocomplete.new("id")
-  |> autocomplete.hide_selection_indicator(True)
-  |> should.equal(autocomplete.Autocomplete(
-    auto_activate: False,
-    for: "id",
-    hide_selection_indicator: True,
-    required: False,
-  ))
+  |> autocomplete.selection_indicator(autocomplete.HideSelectionIndicator)
+  |> autocomplete.render([])
+  |> element.to_string
+  |> should.equal(
+    "<m3e-autocomplete for=\"id\" hide-selection-indicator></m3e-autocomplete>",
+  )
 }
