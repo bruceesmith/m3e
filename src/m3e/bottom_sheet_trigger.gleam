@@ -9,27 +9,59 @@ import lustre/element.{type Element, element, text}
 
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
+/// TriggerRole specifies if a trigger is primary or secondary for accessibility
+pub type TriggerRole {
+  Primary
+  Secondary
+}
+
 /// BottomSheetTrigger is an element, nested within a clickable element, used to trigger a bottom sheet
 /// 
 /// ## Fields:
 /// - detent: The zero‑based index of the detent the sheet should open to.
 /// - for: the ID of the associated BottomSheet.
 /// - label: the label of the trigger
-/// - secondary: Marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership
+/// - role: Marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership
 pub opaque type BottomSheetTrigger {
   BottomSheetTrigger(
     detent: Option(Int),
     for: String,
     label: String,
-    secondary: Bool,
+    role: TriggerRole,
   )
 }
 
-/// new creates a new BottomSheetTrigger
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a BottomSheetTrigger
+/// 
+pub type Config {
+  Config(detent: Option(Int), for: String, label: String, role: TriggerRole)
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(detent: None, for: "", label: "", role: Primary)
+}
+
+// --- CONSTRUCTORS ---
+
+/// new creates a new BottomSheetTrigger with default values
 ///
 pub fn new() -> BottomSheetTrigger {
-  BottomSheetTrigger(detent: None, for: "", label: "", secondary: False)
+  from_config(default_config())
 }
+
+/// from_config creates a BottomSheetTrigger from a Config record
+/// 
+pub fn from_config(c: Config) -> BottomSheetTrigger {
+  BottomSheetTrigger(detent: c.detent, for: c.for, label: c.label, role: c.role)
+}
+
+// --- SETTERS ---
 
 /// detent sets the detent field of a BottomSheetTrigger
 /// 
@@ -49,11 +81,13 @@ pub fn label(b: BottomSheetTrigger, label: String) -> BottomSheetTrigger {
   BottomSheetTrigger(..b, label: label)
 }
 
-/// secondary sets the secondary field of a BottomSheetTrigger
+/// role sets the role field of a BottomSheetTrigger
 /// 
-pub fn secondary(b: BottomSheetTrigger, secondary: Bool) -> BottomSheetTrigger {
-  BottomSheetTrigger(..b, secondary: secondary)
+pub fn role(b: BottomSheetTrigger, role: TriggerRole) -> BottomSheetTrigger {
+  BottomSheetTrigger(..b, role: role)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a BottomSheetTrigger
 ///
@@ -66,9 +100,17 @@ pub fn render(b: BottomSheetTrigger) -> Element(msg) {
         None -> none()
       },
       attribute("for", b.for),
-      boolean_attribute("secondary", b.secondary),
+      boolean_attribute("secondary", b.role == Secondary),
     ]
       |> list.filter(fn(a) { a != none() }),
     [text(b.label)],
   )
 }
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(config: Config) -> Element(msg) {
+  render(from_config(config))
+}
+
+// --- PRIVATE INTERNAL HELPERS ---

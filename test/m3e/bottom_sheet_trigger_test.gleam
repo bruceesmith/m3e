@@ -61,7 +61,7 @@ pub fn label_test() {
 pub fn secondary_test() {
   let trigger =
     bottom_sheet_trigger.new()
-    |> bottom_sheet_trigger.secondary(True)
+    |> bottom_sheet_trigger.role(bottom_sheet_trigger.Secondary)
   let expected =
     element(
       "m3e-bottom-sheet-trigger",
