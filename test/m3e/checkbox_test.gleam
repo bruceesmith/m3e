@@ -2,7 +2,10 @@ import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
-import m3e/checkbox.{checked, disabled, form, new, render, required}
+import m3e/checkbox.{
+  Checked, Disabled, Required, checked, disabled, form, new, render,
+  render_config, required, default_config, Config
+}
 import m3e/form_submission
 
 pub fn checkbox_basic_test() {
@@ -22,7 +25,7 @@ pub fn checkbox_element_test() {
 }
 
 pub fn checkbox_checked_test() {
-  let c = new() |> checked(True)
+  let c = new() |> checked(Checked)
 
   let expected = element("m3e-checkbox", [attribute("checked", "")], [])
   c
@@ -31,7 +34,7 @@ pub fn checkbox_checked_test() {
 }
 
 pub fn checkbox_disabled_test() {
-  let c = new() |> disabled(True)
+  let c = new() |> disabled(Disabled)
 
   let expected = element("m3e-checkbox", [attribute("disabled", "")], [])
   c
@@ -60,10 +63,18 @@ pub fn checkbox_form_test() {
 }
 
 pub fn checkbox_required_test() {
-  let c = new() |> required(True)
+  let c = new() |> required(Required)
 
   let expected = element("m3e-checkbox", [attribute("required", "")], [])
   c
   |> render()
+  |> should.equal(expected)
+}
+
+pub fn checkbox_render_config_test() {
+  let config = Config(..default_config(), checked: Checked, requirement: Required)
+  let expected = element("m3e-checkbox", [attribute("checked", ""), attribute("required", "")], [])
+
+  render_config(config)
   |> should.equal(expected)
 }
