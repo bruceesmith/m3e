@@ -2,7 +2,10 @@ import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/fab
+import m3e/fab.{
+  Config, Disabled, DisabledInteractive, Extended, Lowered, Tertiary,
+  default_config, render_config,
+}
 import m3e/form_submission.{Submit}
 
 pub fn default_test() {
@@ -22,7 +25,7 @@ pub fn default_test() {
 
 pub fn extended_test() {
   fab.new()
-  |> fab.extended(True)
+  |> fab.extended(Extended)
   |> fab.extended_label(Some("Compose"))
   |> fab.render([], [element.text("icon")])
   |> should.equal(
@@ -45,15 +48,14 @@ pub fn extended_test() {
 
 pub fn attributes_test() {
   fab.new()
-  |> fab.disabled(True)
-  |> fab.disabled_interactive(True)
+  |> fab.disabled(Disabled)
   |> fab.form(Some(
     form_submission.new()
     |> form_submission.type_(Submit)
     |> form_submission.name("test-fab")
     |> form_submission.value("submitted"),
   ))
-  |> fab.lowered(True)
+  |> fab.lowered(Lowered)
   |> fab.size(fab.Small)
   |> fab.variant(fab.Tertiary)
   |> fab.render([], [])
@@ -62,7 +64,6 @@ pub fn attributes_test() {
       "m3e-fab",
       [
         attribute.attribute("disabled", ""),
-        attribute.attribute("disabled-interactive", ""),
         attribute.attribute("lowered", ""),
         attribute.attribute("name", "test-fab"),
         attribute.attribute("size", "small"),
@@ -73,4 +74,52 @@ pub fn attributes_test() {
       [],
     ),
   )
+}
+
+pub fn disabled_interactive_test() {
+  fab.new()
+  |> fab.disabled(DisabledInteractive)
+  |> fab.render([], [])
+  |> should.equal(
+    element.element(
+      "m3e-fab",
+      [
+        attribute.attribute("disabled-interactive", ""),
+        attribute.attribute("size", "medium"),
+        attribute.attribute("variant", "primary-container"),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      interaction: Disabled,
+      extension: Extended,
+      extended_label: Some("Config"),
+      elevation: Lowered,
+      variant: Tertiary,
+    )
+  let expected =
+    element.element(
+      "m3e-fab",
+      [
+        attribute.attribute("disabled", ""),
+        attribute.attribute("extended", ""),
+        attribute.attribute("lowered", ""),
+        attribute.attribute("size", "medium"),
+        attribute.attribute("variant", "tertiary"),
+      ],
+      [
+        element.element("span", [attribute.attribute("slot", "label")], [
+          element.text("Config"),
+        ]),
+      ],
+    )
+
+  render_config(config, [], [])
+  |> should.equal(expected)
 }

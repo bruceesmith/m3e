@@ -13,31 +13,51 @@ import m3e/link.{type Link}
 
 // --- Types ---
 
+/// Elevation specifies the elevation of the element
+/// 
+pub type Elevation {
+  Raised
+  Lowered
+}
+
+/// Extension specifies if the element is extended
+/// 
+pub type Extension {
+  Extended
+  NotExtended
+}
+
 /// FAB is a floating action button (FAB) used to present important actions
 /// 
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
-/// - extended: Whether the element is extended
+/// - interaction: Whether the element is enabled or disabled
+/// - extension: Whether the element is extended
 /// - extended_label: Renders the label of an extended button
 /// - form_submission: handles this element's role in form submission
 /// - link: Whether the element is a link
-/// - lowered: Whether to present a lowered elevation
+/// - elevation: Whether to present a lowered elevation
 /// - size: The size of the button
 /// - variant: The appearance variant of the button
 /// 
 pub opaque type FAB {
   FAB(
-    disabled: Bool,
-    disabled_interactive: Bool,
-    extended: Bool,
+    interaction: Interaction,
+    extension: Extension,
     extended_label: Option(String),
     form_submission: Option(FormSubmission),
     link: Option(Link),
-    lowered: Bool,
+    elevation: Elevation,
     size: Size,
     variant: Variant,
   )
+}
+
+/// Interaction specifies if the element is enabled or disabled
+/// 
+pub type Interaction {
+  Enabled
+  Disabled
+  DisabledInteractive
 }
 
 /// Size is the size of the bar
@@ -77,42 +97,73 @@ pub type Variant {
 
 pub const default_variant = PrimaryContainer
 
-// --- CONSTRUCTORS ---
+// --- CONFIGURATION ---
 
-/// new creates a new FAB
+/// Config holds the configuration for a FAB
 /// 
-pub fn new() -> FAB {
-  FAB(
-    disabled: False,
-    disabled_interactive: False,
-    extended: False,
+pub type Config {
+  Config(
+    interaction: Interaction,
+    extension: Extension,
+    extended_label: Option(String),
+    form_submission: Option(FormSubmission),
+    link: Option(Link),
+    elevation: Elevation,
+    size: Size,
+    variant: Variant,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    interaction: Enabled,
+    extension: NotExtended,
     extended_label: None,
     form_submission: None,
     link: None,
-    lowered: False,
+    elevation: Raised,
     size: default_size,
     variant: default_variant,
   )
 }
 
+// --- CONSTRUCTORS ---
+
+/// new creates a new FAB with default values
+/// 
+pub fn new() -> FAB {
+  from_config(default_config())
+}
+
+/// from_config creates a FAB from a Config record
+/// 
+pub fn from_config(c: Config) -> FAB {
+  FAB(
+    interaction: c.interaction,
+    extension: c.extension,
+    extended_label: c.extended_label,
+    form_submission: c.form_submission,
+    link: c.link,
+    elevation: c.elevation,
+    size: c.size,
+    variant: c.variant,
+  )
+}
+
 // --- SETTERS ---
 
-/// disabled sets the disabled field
+/// disabled sets the `interaction` field
 /// 
-pub fn disabled(f: FAB, disabled: Bool) -> FAB {
-  FAB(..f, disabled: disabled)
+pub fn disabled(f: FAB, interaction: Interaction) -> FAB {
+  FAB(..f, interaction: interaction)
 }
 
-/// disabled_interactive sets the disabled_interactive field
+/// extended sets the `extension` field
 /// 
-pub fn disabled_interactive(f: FAB, disabled_interactive: Bool) -> FAB {
-  FAB(..f, disabled_interactive: disabled_interactive)
-}
-
-/// extended sets the extended field
-/// 
-pub fn extended(f: FAB, extended: Bool) -> FAB {
-  FAB(..f, extended: extended)
+pub fn extended(f: FAB, extension: Extension) -> FAB {
+  FAB(..f, extension: extension)
 }
 
 /// extended_label sets the extended_label field
@@ -133,10 +184,10 @@ pub fn link(f: FAB, link: Option(Link)) -> FAB {
   FAB(..f, link: link)
 }
 
-/// lowered sets the lowered field
+/// lowered sets the `elevation` field
 /// 
-pub fn lowered(f: FAB, lowered: Bool) -> FAB {
-  FAB(..f, lowered: lowered)
+pub fn lowered(f: FAB, elevation: Elevation) -> FAB {
+  FAB(..f, elevation: elevation)
 }
 
 /// size sets the size field
@@ -169,10 +220,13 @@ pub fn render(
     "m3e-fab",
     flatten([
       [
-        boolean_attribute("disabled", f.disabled),
-        boolean_attribute("disabled-interactive", f.disabled_interactive),
-        boolean_attribute("extended", f.extended),
-        boolean_attribute("lowered", f.lowered),
+        boolean_attribute("disabled", f.interaction == Disabled),
+        boolean_attribute(
+          "disabled-interactive",
+          f.interaction == DisabledInteractive,
+        ),
+        boolean_attribute("extended", f.extension == Extended),
+        boolean_attribute("lowered", f.elevation == Lowered),
         attribute("size", size_to_string(f.size)),
         attribute("variant", variant_to_string(f.variant)),
       ],
@@ -184,6 +238,16 @@ pub fn render(
     [extended_label_elt(f.extended_label), ..children]
       |> filter(fn(a) { a != element.none() }),
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
