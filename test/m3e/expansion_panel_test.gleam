@@ -3,7 +3,9 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 import lustre/element/html
-import m3e/expansion_panel.{ToggleIcon}
+import m3e/expansion_panel.{
+  Config, Disabled, HideToggle, Open, Start, ToggleIcon, default_config,
+}
 import m3e/icon
 
 const header_text = "Panel Header"
@@ -25,11 +27,11 @@ pub fn defaults_test() {
 pub fn attributes_test() {
   let p =
     expansion_panel.new(header_text)
-    |> expansion_panel.disabled(True)
-    |> expansion_panel.hide_toggle(True)
-    |> expansion_panel.open(True)
-    |> expansion_panel.toggle_direction(expansion_panel.Start)
-    |> expansion_panel.toggle_position(expansion_panel.Start)
+    |> expansion_panel.disabled(Disabled)
+    |> expansion_panel.hide_toggle(HideToggle)
+    |> expansion_panel.open(Open)
+    |> expansion_panel.toggle_direction(Start)
+    |> expansion_panel.toggle_position(Start)
 
   let expected =
     element(
@@ -92,18 +94,26 @@ pub fn actions_test() {
   expansion_panel.render(p, [], []) |> should.equal(expected)
 }
 
-pub fn children_test() {
-  let content = text("Panel Content")
-  let p = expansion_panel.new(header_text)
-
+pub fn render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      header: header_text,
+      interaction: Disabled,
+      state: Open,
+    )
   let expected =
     element(
       "m3e-expansion-panel",
       [
+        attribute("disabled", ""),
+        attribute("open", ""),
         attribute("toggle-direction", "end"),
         attribute("toggle-position", "end"),
       ],
-      [html.span([attribute("slot", "header")], [text(header_text)]), content],
+      [html.span([attribute("slot", "header")], [text(header_text)])],
     )
-  expansion_panel.render(p, [], [content]) |> should.equal(expected)
+
+  expansion_panel.render_config(config, [], [])
+  |> should.equal(expected)
 }
