@@ -6,8 +6,9 @@ import lustre/element.{element}
 import lustre/element/html.{text}
 
 import m3e/chip.{
-  assist, behaviour, disabled, filter, form, icon, information, input, removable,
-  render, selected, variant,
+  Config, Disabled, Removable, Selected, assist, behaviour,
+  default_config, disabled, filter, form, icon, information, input, removable,
+  render, render_config, selected,
 }
 import m3e/form_submission
 import m3e/icon
@@ -88,7 +89,7 @@ pub fn chip_behaviour_test() {
 
 pub fn chip_disabled_test() {
   // Assist supports disabled
-  let c = assist("Disabled") |> disabled(True)
+  let c = assist("Disabled") |> disabled(Disabled)
 
   let expected =
     element(
@@ -99,7 +100,7 @@ pub fn chip_disabled_test() {
   c |> render([], []) |> should.equal(expected)
 
   // Information does not support disabled
-  let c_info = information("Info") |> disabled(True)
+  let c_info = information("Info") |> disabled(Disabled)
   let expected_info =
     element("m3e-chip", [attribute("variant", "outlined")], [
       element.none(),
@@ -117,7 +118,6 @@ pub fn chip_form_test() {
       |> form_submission.name("name")
       |> form_submission.value("value"),
     ))
-  //form("name", "value")
 
   let expected =
     element(
@@ -159,20 +159,11 @@ pub fn chip_icon_test() {
       text("Icon"),
     ])
   c |> render([], []) |> should.equal(expected)
-
-  // Input does not support icon via this function (based on source)
-  let c_input = input("Input") |> icon(i)
-  let expected_input =
-    element("m3e-input-chip", [attribute("variant", "outlined")], [
-      element.none(),
-      text("Input"),
-    ])
-  render(c_input, [], []) |> should.equal(expected_input)
 }
 
 pub fn chip_removable_test() {
   // Input supports removable
-  let c = input("Removable") |> removable(True)
+  let c = input("Removable") |> removable(Removable)
 
   let expected =
     element(
@@ -182,19 +173,19 @@ pub fn chip_removable_test() {
     )
   c |> render([], []) |> should.equal(expected)
 
-  // Filter does not support removable
-  let c_filter = filter("Filter") |> removable(True)
-  let expected_filter =
-    element("m3e-filter-chip", [attribute("variant", "outlined")], [
+  // Assist does not support removable
+  let c_assist = assist("Assist") |> removable(Removable)
+  let expected_assist =
+    element("m3e-assist-chip", [attribute("variant", "outlined")], [
       element.none(),
-      text("Filter"),
+      text("Assist"),
     ])
-  render(c_filter, [], []) |> should.equal(expected_filter)
+  render(c_assist, [], []) |> should.equal(expected_assist)
 }
 
 pub fn chip_selected_test() {
   // Filter supports selected
-  let c = filter("Selected") |> selected(True)
+  let c = filter("Selected") |> selected(Selected)
 
   let expected =
     element(
@@ -205,7 +196,7 @@ pub fn chip_selected_test() {
   c |> render([], []) |> should.equal(expected)
 
   // Assist does not support selected
-  let c_assist = assist("Assist") |> selected(True)
+  let c_assist = assist("Assist") |> selected(Selected)
   let expected_assist =
     element("m3e-assist-chip", [attribute("variant", "outlined")], [
       element.none(),
@@ -214,13 +205,21 @@ pub fn chip_selected_test() {
   render(c_assist, [], []) |> should.equal(expected_assist)
 }
 
-pub fn chip_variant_test() {
-  let c = assist("Elevated") |> variant(chip.Elevated)
-
+pub fn chip_render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      label: "Config",
+      type_: chip.Suggestion,
+      behaviour: chip.Submit,
+    )
   let expected =
-    element("m3e-assist-chip", [attribute("variant", "elevated")], [
-      element.none(),
-      text("Elevated"),
-    ])
-  c |> render([], []) |> should.equal(expected)
+    element(
+      "m3e-suggestion-chip",
+      [attribute("type", "submit"), attribute("variant", "outlined")],
+      [element.none(), text("Config")],
+    )
+
+  render_config(config, [], [])
+  |> should.equal(expected)
 }

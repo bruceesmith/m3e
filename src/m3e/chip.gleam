@@ -12,6 +12,24 @@ import m3e/icon.{type Icon}
 
 // --- Types ---
 
+/// Interaction specifies if a chip is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// Removability specifies if a chip can be removed
+pub type Removability {
+  Removable
+  Permanent
+}
+
+/// SelectionState specifies if a chip is selected or not
+pub type SelectionState {
+  Selected
+  Unselected
+}
+
 /// Behaviour controls the behavior of an assist or suggestion chip
 ///
 pub type Behaviour {
@@ -24,11 +42,11 @@ pub type Behaviour {
 ///
 /// - label: text on the chip
 /// - behaviour: behaviour of an Assist or Suggestion chip
-/// - disabled: whether the Chip is disabled or not
+/// - interaction: whether the Chip is enabled or disabled
 /// - form_submission: handles this element's role in form submission
 /// - icon: associated Icon
-/// - removable: whether the chip can be removed
-/// - selected: whether the chip is selected or not
+/// - removability: whether the chip can be removed
+/// - selection: whether the chip is selected or not
 /// - type_: the type of Chip
 /// - variant: variant of the chip
 ///
@@ -36,11 +54,11 @@ pub opaque type Chip(msg) {
   Chip(
     label: String,
     behaviour: Behaviour,
-    disabled: Bool,
+    interaction: Interaction,
     form_submission: Option(FormSubmission),
     icon: Option(Icon(msg)),
-    removable: Bool,
-    selected: Bool,
+    removability: Removability,
+    selection: SelectionState,
     type_: Type,
     variant: Variant,
   )
@@ -90,50 +108,86 @@ pub type Variant {
 /// Default Variant
 pub const default_variant = Outlined
 
-// --- CONSTRUCTORS ---
+// --- CONFIGURATION ---
 
-fn default(label: String, type_: Type) -> Chip(msg) {
-  Chip(
-    label: label,
+/// Config holds the configuration for a Chip
+/// 
+pub type Config(msg) {
+  Config(
+    label: String,
+    behaviour: Behaviour,
+    interaction: Interaction,
+    form_submission: Option(FormSubmission),
+    icon: Option(Icon(msg)),
+    removability: Removability,
+    selection: SelectionState,
+    type_: Type,
+    variant: Variant,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config(msg) {
+  Config(
+    label: "",
     behaviour: Normal,
-    disabled: False,
+    interaction: Enabled,
     form_submission: None,
     icon: None,
-    removable: False,
-    selected: False,
-    type_: type_,
+    removability: Permanent,
+    selection: Unselected,
+    type_: Information,
     variant: default_variant,
   )
 }
 
+// --- CONSTRUCTORS ---
+
 /// assist creates a basic Assist Chip
 ///
 pub fn assist(label: String) -> Chip(msg) {
-  default(label, Assist)
+  from_config(Config(..default_config(), label: label, type_: Assist))
 }
 
 /// filter creates a basic Filter Chip
 ///
 pub fn filter(label: String) -> Chip(msg) {
-  default(label, Filter)
+  from_config(Config(..default_config(), label: label, type_: Filter))
 }
 
 /// information creates a basic Information Chip
 ///
 pub fn information(label: String) -> Chip(msg) {
-  default(label, Information)
+  from_config(Config(..default_config(), label: label, type_: Information))
 }
 
 /// input creates a basic Input Chip
 ///
 pub fn input(label: String) -> Chip(msg) {
-  default(label, Input)
+  from_config(Config(..default_config(), label: label, type_: Input))
 }
 
 /// suggestion creates a basic Suggestion Chip
 ///
 pub fn suggestion(label: String) -> Chip(msg) {
-  default(label, Suggestion)
+  from_config(Config(..default_config(), label: label, type_: Suggestion))
+}
+
+/// from_config creates a Chip from a Config record
+/// 
+pub fn from_config(c: Config(msg)) -> Chip(msg) {
+  Chip(
+    label: c.label,
+    behaviour: c.behaviour,
+    interaction: c.interaction,
+    form_submission: c.form_submission,
+    icon: c.icon,
+    removability: c.removability,
+    selection: c.selection,
+    type_: c.type_,
+    variant: c.variant,
+  )
 }
 
 // --- SETTERS ---
@@ -147,11 +201,11 @@ pub fn behaviour(c: Chip(msg), behaviour: Behaviour) -> Chip(msg) {
   }
 }
 
-/// disabled sets the `disabled` field
+/// disabled sets the `interaction` field
 ///
-pub fn disabled(c: Chip(msg), d: Bool) -> Chip(msg) {
+pub fn disabled(c: Chip(msg), interaction: Interaction) -> Chip(msg) {
   case c.type_ {
-    Assist | Filter | Suggestion -> Chip(..c, disabled: d)
+    Assist | Filter | Suggestion -> Chip(..c, interaction: interaction)
     _ -> c
   }
 }
@@ -174,20 +228,20 @@ pub fn icon(c: Chip(msg), i: Icon(msg)) -> Chip(msg) {
   }
 }
 
-/// removable sets the removable field
+/// removable sets the `removability` field
 ///
-pub fn removable(c: Chip(msg), removable: Bool) -> Chip(msg) {
+pub fn removable(c: Chip(msg), removability: Removability) -> Chip(msg) {
   case c.type_ {
-    Input -> Chip(..c, removable: removable)
+    Input -> Chip(..c, removability: removability)
     _ -> c
   }
 }
 
-/// selected sets the `selected` field
+/// selected sets the `selection` field
 ///
-pub fn selected(c: Chip(msg), s: Bool) -> Chip(msg) {
+pub fn selected(c: Chip(msg), selection: SelectionState) -> Chip(msg) {
   case c.type_ {
-    Filter -> Chip(..c, selected: s)
+    Filter -> Chip(..c, selection: selection)
     _ -> c
   }
 }
@@ -217,9 +271,9 @@ pub fn render(
     flatten([
       [
         behaviour_attr(c.type_, c.behaviour),
-        disabled_attr(c.type_, c.disabled),
-        removable_attr(c.type_, c.removable),
-        selected_attr(c.type_, c.selected),
+        disabled_attr(c.type_, c.interaction),
+        removable_attr(c.type_, c.removability),
+        selected_attr(c.type_, c.selection),
         variant_attr(c.variant),
       ],
       form_submission.attributes(c.form_submission),
@@ -228,6 +282,16 @@ pub fn render(
       |> list.filter(fn(a) { a != none() }),
     append([icon_element(c.type_, c.icon), text(c.label)], children),
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config(msg),
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
@@ -257,9 +321,10 @@ fn behaviour_attr(t: Type, b: Behaviour) -> Attribute(msg) {
   }
 }
 
-fn disabled_attr(t: Type, disabled: Bool) -> Attribute(msg) {
-  case t, disabled {
-    Assist, True | Filter, True | Suggestion, True -> attribute("disabled", "")
+fn disabled_attr(t: Type, interaction: Interaction) -> Attribute(msg) {
+  case t, interaction {
+    Assist, Disabled | Filter, Disabled | Suggestion, Disabled ->
+      attribute("disabled", "")
     _, _ -> none()
   }
 }
@@ -272,16 +337,16 @@ fn icon_element(t: Type, icon: Option(Icon(msg))) -> Element(msg) {
   }
 }
 
-fn removable_attr(t: Type, removable: Bool) -> Attribute(msg) {
-  case t, removable {
-    Input, True -> attribute("removable", "")
+fn removable_attr(t: Type, removability: Removability) -> Attribute(msg) {
+  case t, removability {
+    Input, Removable -> attribute("removable", "")
     _, _ -> none()
   }
 }
 
-fn selected_attr(t: Type, selected: Bool) -> Attribute(msg) {
-  case t, selected {
-    Filter, True -> attribute("selected", "")
+fn selected_attr(t: Type, selection: SelectionState) -> Attribute(msg) {
+  case t, selection {
+    Filter, Selected -> attribute("selected", "")
     _, _ -> none()
   }
 }
