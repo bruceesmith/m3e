@@ -3,7 +3,9 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
-import m3e/dialog
+import m3e/dialog.{
+  Alert, CloseDisabled, Dismissible, NoFocusTrap,
+}
 
 pub fn basic_render_test() {
   let content = [html.text("This is the dialog content.")]
@@ -26,7 +28,7 @@ pub fn properties_test() {
 
   dialog.new(id, "Initial")
   |> dialog.header("Confirmation")
-  |> dialog.alert(True)
+  |> dialog.alert(Alert)
   |> dialog.render([], content)
   |> should.equal(
     element(
@@ -51,11 +53,11 @@ pub fn full_attributes_test() {
   let action = html.button([], [html.text("OK")])
 
   dialog.new(id, "Headline")
-  |> dialog.alert(True)
+  |> dialog.alert(Alert)
   |> dialog.close_label(option.Some("Close"))
-  |> dialog.no_focus_trap(True)
-  |> dialog.disable_close(True)
-  |> dialog.dismissible(True)
+  |> dialog.focus_trap(NoFocusTrap)
+  |> dialog.close_behavior(CloseDisabled)
+  |> dialog.dismissibility(Dismissible)
   |> dialog.actions([action])
   |> dialog.render([], content)
   |> should.equal(
@@ -75,6 +77,38 @@ pub fn full_attributes_test() {
         ]),
         html.div([attribute.attribute("slot", "actions")], [action]),
         html.text("Content"),
+      ],
+    ),
+  )
+}
+
+pub fn render_config_test() {
+  let id = "config-dialog"
+  let header = "Config Headline"
+  let content = [html.text("Config Content")]
+  
+  let config = dialog.Config(
+    ..dialog.default_config(),
+    id: id,
+    header: header,
+    alert: Alert,
+    dismissibility: Dismissible,
+  )
+
+  dialog.render_config(config, [], content)
+  |> should.equal(
+    element(
+      "m3e-dialog",
+      [
+        attribute.id(id),
+        attribute.attribute("alert", ""),
+        attribute.attribute("dismissible", ""),
+      ],
+      [
+        html.span([attribute.attribute("slot", "header")], [
+          html.text(header),
+        ]),
+        html.text("Config Content"),
       ],
     ),
   )
