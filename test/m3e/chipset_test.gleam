@@ -2,8 +2,9 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/chipset.{
-  Filter, Input, disabled, hide_selection_indicator, multi, new, render, type_,
-  vertical,
+  Config, Disabled, Filter, HideSelectionIndicator, Input, Multi, Vertical,
+  default_config, disabled, hide_selection_indicator, multi, new, render,
+  render_config, type_, vertical,
 }
 
 pub fn chipset_basic_test() {
@@ -35,7 +36,7 @@ pub fn chipset_element_test() {
 }
 
 pub fn chipset_disabled_test() {
-  let c = new() |> type_(Input) |> disabled(True)
+  let c = new() |> type_(Input) |> disabled(Disabled)
 
   let expected = element("m3e-input-chip-set", [attribute("disabled", "")], [])
   c
@@ -43,7 +44,7 @@ pub fn chipset_disabled_test() {
   |> should.equal(expected)
 
   // Disabling a non-Input chipset should have no effect
-  let c_info = new() |> disabled(True)
+  let c_info = new() |> disabled(Disabled)
   let expected_info = element("m3e-chip-set", [], [])
   c_info
   |> render([], [])
@@ -51,7 +52,7 @@ pub fn chipset_disabled_test() {
 }
 
 pub fn chipset_hide_selection_indicator_test() {
-  let c = new() |> type_(Filter) |> hide_selection_indicator(True)
+  let c = new() |> type_(Filter) |> hide_selection_indicator(HideSelectionIndicator)
 
   let expected =
     element(
@@ -66,7 +67,7 @@ pub fn chipset_hide_selection_indicator_test() {
   // Hiding selection indicator on a non-Filter chipset should have no effect
   let c_info =
     new()
-    |> hide_selection_indicator(True)
+    |> hide_selection_indicator(HideSelectionIndicator)
   let expected_info = element("m3e-chip-set", [], [])
   c_info
   |> render([], [])
@@ -74,7 +75,7 @@ pub fn chipset_hide_selection_indicator_test() {
 }
 
 pub fn chipset_multi_test() {
-  let c = new() |> type_(Filter) |> multi(True)
+  let c = new() |> type_(Filter) |> multi(Multi)
 
   let expected = element("m3e-filter-chip-set", [attribute("multi", "")], [])
   c
@@ -82,7 +83,7 @@ pub fn chipset_multi_test() {
   |> should.equal(expected)
 
   // Setting multi on a non-Filter chipset should have no effect
-  let c_info = new() |> multi(True)
+  let c_info = new() |> multi(Multi)
   let expected_info = element("m3e-chip-set", [], [])
   c_info
   |> render([], [])
@@ -90,10 +91,29 @@ pub fn chipset_multi_test() {
 }
 
 pub fn chipset_vertical_test() {
-  let c = new() |> vertical(True)
+  let c = new() |> vertical(Vertical)
 
   let expected = element("m3e-chip-set", [attribute("vertical", "")], [])
   c
   |> render([], [])
+  |> should.equal(expected)
+}
+
+pub fn chipset_render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      type_: Filter,
+      selection_mode: Multi,
+      orientation: Vertical,
+    )
+  let expected =
+    element(
+      "m3e-filter-chip-set",
+      [attribute("multi", ""), attribute("vertical", "")],
+      [],
+    )
+
+  render_config(config, [], [])
   |> should.equal(expected)
 }
