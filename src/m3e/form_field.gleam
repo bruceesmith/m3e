@@ -23,14 +23,14 @@ pub const default_float_label = Auto
 /// 
 /// ## Fields:
 /// - float_label: Specifies whether the label should float always or only when necessary
-/// - hide_required_marker: Whether the required marker should be hidden
+/// - required_marker: Whether the required marker should be hidden
 /// - hide_subscript: Whether subscript content is hidden
 /// - variant: The appearance variant of the field
 /// 
 pub opaque type FormField {
   FormField(
     float_label: FloatLabel,
-    hide_required_marker: Bool,
+    required_marker: RequiredMarkerVisibility,
     hide_subscript: HideSubscript,
     variant: Variant,
   )
@@ -42,6 +42,13 @@ pub type HideSubscript {
   AlwaysHide
   AutoHide
   NeverHide
+}
+
+/// RequiredMarkerVisibility specifies if the required marker should be hidden or shown
+/// 
+pub type RequiredMarkerVisibility {
+  ShowRequiredMarker
+  HideRequiredMarker
 }
 
 /// Slot gives type-safe names to each of the defined HTML named slots
@@ -72,38 +79,73 @@ pub type Variant {
 
 pub const default_variant = Outlined
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a FormField
+/// 
+pub type Config {
+  Config(
+    float_label: FloatLabel,
+    required_marker: RequiredMarkerVisibility,
+    hide_subscript: HideSubscript,
+    variant: Variant,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    float_label: default_float_label,
+    required_marker: ShowRequiredMarker,
+    hide_subscript: default_hide_subscript,
+    variant: default_variant,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a FormField with default values
 /// 
 pub fn new() -> FormField {
-  FormField(default_float_label, False, default_hide_subscript, default_variant)
+  from_config(default_config())
+}
+
+/// from_config creates a FormField from a Config record
+/// 
+pub fn from_config(c: Config) -> FormField {
+  FormField(
+    float_label: c.float_label,
+    required_marker: c.required_marker,
+    hide_subscript: c.hide_subscript,
+    variant: c.variant,
+  )
 }
 
 // --- SETTERS ---
 
-/// float_label sets the float-label attribute of a FormField
+/// float_label sets the `float_label` field
 /// 
 pub fn float_label(f: FormField, float_label: FloatLabel) -> FormField {
   FormField(..f, float_label: float_label)
 }
 
-/// hide_required_marker sets the hide-required-marker attribute of a FormField
+/// hide_required_marker sets the `required_marker` field
 /// 
 pub fn hide_required_marker(
   f: FormField,
-  hide_required_marker: Bool,
+  visibility: RequiredMarkerVisibility,
 ) -> FormField {
-  FormField(..f, hide_required_marker: hide_required_marker)
+  FormField(..f, required_marker: visibility)
 }
 
-/// hide_subscript sets the hide-subscript attribute of a FormField
+/// hide_subscript sets the `hide_subscript` field
 /// 
 pub fn hide_subscript(f: FormField, hide_subscript: HideSubscript) -> FormField {
   FormField(..f, hide_subscript: hide_subscript)
 }
 
-/// variant sets the variant attribute of a FormField
+/// variant sets the `variant` field
 /// 
 pub fn variant(f: FormField, variant: Variant) -> FormField {
   FormField(..f, variant: variant)
@@ -127,7 +169,10 @@ pub fn render(
     "m3e-form-field",
     [
       attribute("float-label", float_label_to_string(f.float_label)),
-      boolean_attribute("hide-required-marker", f.hide_required_marker),
+      boolean_attribute(
+        "hide-required-marker",
+        f.required_marker == HideRequiredMarker,
+      ),
       attribute("hide-subscript", hide_subscript_to_string(f.hide_subscript)),
       attribute("variant", variant_to_string(f.variant)),
       ..attributes
@@ -135,6 +180,16 @@ pub fn render(
       |> list.filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot

@@ -3,8 +3,9 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/form_field.{
-  Always, AlwaysHide, Filled, NeverHide, float_label, hide_required_marker,
-  hide_subscript, new, render, variant,
+  Always, AlwaysHide, Config, Filled, HideRequiredMarker, NeverHide,
+  default_config, float_label, hide_required_marker, hide_subscript, new, render,
+  render_config, variant,
 }
 
 pub fn form_field_creation_test() {
@@ -28,7 +29,7 @@ pub fn form_field_default_test() {
   let f_without_children =
     new()
     |> float_label(Always)
-    |> hide_required_marker(True)
+    |> hide_required_marker(HideRequiredMarker)
     |> hide_subscript(NeverHide)
     |> variant(Filled)
 
@@ -48,7 +49,7 @@ pub fn form_field_default_test() {
   let f_with_children =
     new()
     |> float_label(Always)
-    |> hide_required_marker(True)
+    |> hide_required_marker(HideRequiredMarker)
     |> hide_subscript(AlwaysHide)
     |> variant(Filled)
 
@@ -83,7 +84,7 @@ pub fn form_field_setters_test() {
     )
   render(f_float, [], []) |> should.equal(expected_float)
 
-  let f_marker = f |> hide_required_marker(True)
+  let f_marker = f |> hide_required_marker(HideRequiredMarker)
   let expected_marker =
     element(
       "m3e-form-field",
@@ -122,4 +123,28 @@ pub fn form_field_setters_test() {
       [],
     )
   render(f_var, [], []) |> should.equal(expected_var)
+}
+
+pub fn form_field_render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      float_label: Always,
+      required_marker: HideRequiredMarker,
+      variant: Filled,
+    )
+  let expected =
+    element(
+      "m3e-form-field",
+      [
+        attribute("float-label", "always"),
+        attribute("hide-required-marker", ""),
+        attribute("hide-subscript", "auto"),
+        attribute("variant", "filled"),
+      ],
+      [text("Config Content")],
+    )
+
+  render_config(config, [], [text("Config Content")])
+  |> should.equal(expected)
 }
