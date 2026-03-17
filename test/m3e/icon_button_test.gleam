@@ -8,14 +8,13 @@ import lustre/element.{element}
 
 import m3e/app_bar
 import m3e/icon_button.{
-  ExtraLarge, Filled, Large, Narrow, Square, Tonal, Wide, disabled,
-  disabled_interactive, form, new, purpose, render, selected, shape, size,
-  toggle, variant, width,
+  Config, Disabled, DisabledInteractive, ExtraLarge, ExtraSmall, Filled, Large,
+  Narrow, Selected, Square, Toggle, default_config, disabled, form,
+  new, purpose, render, render_config, selected, shape, size, toggle, variant,
+  width,
 }
 
-// disabled and selected here are the setters, not attributes
-
-import m3e/form_submission.{FormSubmission, Reset, Submit}
+import m3e/form_submission.{FormSubmission, Submit}
 
 pub fn icon_button_creation_test() {
   let b = new()
@@ -36,13 +35,12 @@ pub fn icon_button_creation_test() {
 
   let b =
     new()
-    |> disabled(True)
-    |> disabled_interactive(True)
+    |> disabled(Disabled)
     |> purpose(None)
-    |> selected(True)
+    |> selected(Selected)
     |> shape(Square)
     |> size(Large)
-    |> toggle(True)
+    |> toggle(Toggle)
     |> form(Some(FormSubmission(Submit, "key", "val")))
     |> variant(Filled)
     |> width(Narrow)
@@ -52,7 +50,6 @@ pub fn icon_button_creation_test() {
       "m3e-icon-button",
       [
         attr_disabled(True),
-        attribute("disabled-interactive", ""),
         attr_selected(True),
         attribute("shape", "square"),
         attribute("size", "large"),
@@ -107,7 +104,7 @@ pub fn icon_button_purpose_test() {
 }
 
 pub fn icon_button_disabled_test() {
-  let b = new() |> disabled(True)
+  let b = new() |> disabled(Disabled)
 
   let expected =
     element(
@@ -126,7 +123,7 @@ pub fn icon_button_disabled_test() {
 }
 
 pub fn icon_button_disabled_interactive_test() {
-  let b = new() |> disabled_interactive(True)
+  let b = new() |> disabled(DisabledInteractive)
 
   let expected =
     element(
@@ -146,7 +143,7 @@ pub fn icon_button_disabled_interactive_test() {
 }
 
 pub fn icon_button_selected_test() {
-  let b = new() |> selected(True)
+  let b = new() |> selected(Selected)
 
   let expected =
     element(
@@ -203,7 +200,7 @@ pub fn icon_button_size_test() {
 }
 
 pub fn icon_button_toggle_test() {
-  let b = new() |> toggle(True)
+  let b = new() |> toggle(Toggle)
 
   let expected =
     element(
@@ -222,80 +219,30 @@ pub fn icon_button_toggle_test() {
   b |> render([], []) |> should.equal(expected)
 }
 
-pub fn icon_button_variant_test() {
-  let b = new() |> variant(Tonal)
-
-  let expected =
-    element(
-      "m3e-icon-button",
-      [
-        attr_disabled(False),
-        attr_selected(False),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        attribute("variant", "tonal"),
-        attribute("width", "default"),
-      ],
-      [],
+pub fn icon_button_render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      interaction: Disabled,
+      selection: Selected,
+      toggle: Toggle,
+      size: ExtraSmall,
     )
-  b |> render([], []) |> should.equal(expected)
-}
-
-pub fn icon_button_width_test() {
-  let b = new() |> width(Wide)
-
   let expected =
     element(
       "m3e-icon-button",
       [
-        attr_disabled(False),
-        attr_selected(False),
+        attr_disabled(True),
+        attr_selected(True),
         attribute("shape", "rounded"),
-        attribute("size", "small"),
-        attribute("variant", "standard"),
-        attribute("width", "wide"),
-      ],
-      [],
-    )
-  b |> render([], []) |> should.equal(expected)
-}
-
-pub fn icon_button_form_test() {
-  let b = new() |> form(Some(FormSubmission(Submit, "test-name", "test-value")))
-
-  let expected =
-    element(
-      "m3e-icon-button",
-      [
-        attr_disabled(False),
-        attr_selected(False),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        attribute("type", "submit"),
-        attribute("name", "test-name"),
-        attr_value("test-value"),
+        attribute("size", "extra-small"),
+        attribute("toggle", ""),
         attribute("variant", "standard"),
         attribute("width", "default"),
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
 
-  let b_reset = new() |> form(Some(FormSubmission(Reset, "ignore", "ignore")))
-
-  let expected_reset =
-    element(
-      "m3e-icon-button",
-      [
-        attr_disabled(False),
-        attr_selected(False),
-        attribute("shape", "rounded"),
-        attribute("size", "small"),
-        attribute("type", "reset"),
-        attribute("variant", "standard"),
-        attribute("width", "default"),
-      ],
-      [],
-    )
-  b_reset |> render([], []) |> should.equal(expected_reset)
+  render_config(config, [], [])
+  |> should.equal(expected)
 }

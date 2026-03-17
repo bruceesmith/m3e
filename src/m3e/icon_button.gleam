@@ -14,12 +14,11 @@ import m3e/link.{type Link}
 /// IconButton(msg) is an icon button users interact with to perform a supplementary action
 /// 
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
+/// - interaction: Whether the element is enabled or disabled
 /// - form_submission: Whether the element is involved in a form submission
 /// - link: Whether the element is a link
 /// - purpose: A slot value defined by a parent element
-/// - selected: Whether the toggle button is selected
+/// - selection: Whether the toggle button is selected
 /// - shape: The shape of the button
 /// - size: The size of the button
 /// - toggle: Whether the button will toggle between selected and unselected states
@@ -28,18 +27,32 @@ import m3e/link.{type Link}
 /// 
 pub opaque type IconButton(msg) {
   IconButton(
-    disabled: Bool,
-    disabled_interactive: Bool,
+    interaction: Interaction,
     form_submission: Option(FormSubmission),
     link: Option(Link),
     purpose: Option(Attribute(msg)),
-    selected: Bool,
+    selection: SelectionState,
     shape: Shape,
     size: Size,
-    toggle: Bool,
+    toggle: ToggleMode,
     variant: Variant,
     width: Width,
   )
+}
+
+/// Interaction specifies if the element is enabled or disabled
+/// 
+pub type Interaction {
+  Enabled
+  Disabled
+  DisabledInteractive
+}
+
+/// SelectionState specifies if the toggle button is selected
+/// 
+pub type SelectionState {
+  Selected
+  Unselected
 }
 
 /// Shape
@@ -67,8 +80,15 @@ pub const default_size = Small
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
 pub type Slot {
-  Selected
+  SelectedIcon
   // Renders an icon, when selected
+}
+
+/// ToggleMode specifies if the button will toggle between states
+/// 
+pub type ToggleMode {
+  Toggle
+  NotToggle
 }
 
 /// Variant is the appearance variant of the button
@@ -92,41 +112,73 @@ pub type Width {
 
 pub const default_width = Default
 
-// --- CONSTRUCTORS ---
+// --- CONFIGURATION ---
 
-/// new creates an icon button with default values
+/// Config holds the configuration for an IconButton
 /// 
-pub fn new() -> IconButton(msg) {
-  IconButton(
-    disabled: False,
-    disabled_interactive: False,
+pub type Config(msg) {
+  Config(
+    interaction: Interaction,
+    form_submission: Option(FormSubmission),
+    link: Option(Link),
+    purpose: Option(Attribute(msg)),
+    selection: SelectionState,
+    shape: Shape,
+    size: Size,
+    toggle: ToggleMode,
+    variant: Variant,
+    width: Width,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config(msg) {
+  Config(
+    interaction: Enabled,
     form_submission: None,
     link: None,
     purpose: None,
-    selected: False,
+    selection: Unselected,
     shape: default_shape,
     size: default_size,
-    toggle: False,
+    toggle: NotToggle,
     variant: default_variant,
     width: default_width,
   )
 }
 
-// --- SETTERS ---
+// --- CONSTRUCTORS ---
 
-/// disabled sets the disabled field
+/// new creates an icon button with default values
 /// 
-pub fn disabled(i: IconButton(msg), disabled: Bool) -> IconButton(msg) {
-  IconButton(..i, disabled: disabled)
+pub fn new() -> IconButton(msg) {
+  from_config(default_config())
 }
 
-/// disabled_interactive sets the disabled_interactive field
+/// from_config creates an IconButton from a Config record
 /// 
-pub fn disabled_interactive(
-  i: IconButton(msg),
-  disabled_interactive: Bool,
-) -> IconButton(msg) {
-  IconButton(..i, disabled_interactive: disabled_interactive)
+pub fn from_config(c: Config(msg)) -> IconButton(msg) {
+  IconButton(
+    interaction: c.interaction,
+    form_submission: c.form_submission,
+    link: c.link,
+    purpose: c.purpose,
+    selection: c.selection,
+    shape: c.shape,
+    size: c.size,
+    toggle: c.toggle,
+    variant: c.variant,
+    width: c.width,
+  )
+}
+
+// --- SETTERS ---
+
+/// disabled sets the `interaction` field
+/// 
+pub fn disabled(i: IconButton(msg), interaction: Interaction) -> IconButton(msg) {
+  IconButton(..i, interaction: interaction)
 }
 
 /// form sets the form_submission field
@@ -150,10 +202,13 @@ pub fn purpose(
   IconButton(..i, purpose: purpose)
 }
 
-/// selected sets the selected field
+/// selected sets the `selection` field
 /// 
-pub fn selected(i: IconButton(msg), selected: Bool) -> IconButton(msg) {
-  IconButton(..i, selected: selected)
+pub fn selected(
+  i: IconButton(msg),
+  selection: SelectionState,
+) -> IconButton(msg) {
+  IconButton(..i, selection: selection)
 }
 
 /// shape sets the shape field
@@ -168,9 +223,9 @@ pub fn size(i: IconButton(msg), size: Size) -> IconButton(msg) {
   IconButton(..i, size: size)
 }
 
-/// toggle sets the toggle field
+/// toggle sets the `toggle` field
 /// 
-pub fn toggle(i: IconButton(msg), toggle: Bool) -> IconButton(msg) {
+pub fn toggle(i: IconButton(msg), toggle: ToggleMode) -> IconButton(msg) {
   IconButton(..i, toggle: toggle)
 }
 
@@ -204,16 +259,19 @@ pub fn render(
     "m3e-icon-button",
     flatten([
       [
-        attribute.disabled(i.disabled),
-        boolean_attribute("disabled-interactive", i.disabled_interactive),
+        attribute.disabled(i.interaction == Disabled),
+        boolean_attribute(
+          "disabled-interactive",
+          i.interaction == DisabledInteractive,
+        ),
         case i.purpose {
           Some(p) -> p
           None -> none()
         },
-        attribute.selected(i.selected),
+        attribute.selected(i.selection == Selected),
         attribute("shape", shape_to_string(i.shape)),
         attribute("size", size_to_string(i.size)),
-        boolean_attribute("toggle", i.toggle),
+        boolean_attribute("toggle", i.toggle == Toggle),
         attribute("variant", variant_to_string(i.variant)),
         attribute("width", width_to_string(i.width)),
       ],
@@ -226,11 +284,21 @@ pub fn render(
   )
 }
 
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config(msg),
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
+}
+
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Selected -> attribute("slot", "selected")
+    SelectedIcon -> attribute("slot", "selected")
   }
 }
 
