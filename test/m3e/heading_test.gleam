@@ -3,7 +3,8 @@ import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
 import m3e/heading.{
-  Headline, Large, Small, Title, emphasized, new, render, size, variant,
+  Config, Emphasized, Headline, Large, Small, Title, default_config,
+  emphasized, new, render, render_config, size, variant,
 }
 
 pub fn heading_test() {
@@ -37,7 +38,7 @@ pub fn basic_test() {
 pub fn element_test() {
   let h =
     new("Test")
-    |> emphasized(True)
+    |> emphasized(Emphasized)
     |> size(Small)
     |> variant(Title)
 
@@ -87,7 +88,7 @@ pub fn emphasized_test() {
     )
   render(h, []) |> should.equal(expected_basic)
 
-  let h2 = emphasized(h, True)
+  let h2 = emphasized(h, Emphasized)
   let expected_emphasized =
     element(
       "m3e-heading",
@@ -164,4 +165,27 @@ pub fn element_with_attributes_test() {
     )
 
   result |> should.equal(expected)
+}
+
+pub fn render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      text: "Config Text",
+      emphasis: Emphasized,
+      size: Small,
+    )
+  let expected =
+    element(
+      "m3e-heading",
+      [
+        attribute.attribute("emphasized", ""),
+        attribute.attribute("size", "small"),
+        attribute.attribute("variant", "display"),
+      ],
+      [html.text("Config Text")],
+    )
+
+  render_config(config, [])
+  |> should.equal(expected)
 }
