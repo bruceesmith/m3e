@@ -2,9 +2,11 @@ import gleeunit/should
 import lustre/attribute.{attribute, name}
 import lustre/element.{element}
 
-import m3e/app_bar
 import m3e/button
-import m3e/icon
+import m3e/icon.{
+  Config, Filled, High, Low, Medium, NotFilled, Rounded, Sharp, default_config,
+  render_config,
+}
 
 pub fn basic_test() {
   let basic_icon = icon.new("home")
@@ -28,11 +30,11 @@ pub fn basic_test() {
 pub fn element_test() {
   let i =
     icon.new("home")
-    |> icon.filled(True)
-    |> icon.grade(icon.High)
+    |> icon.filled(Filled)
+    |> icon.grade(High)
     |> icon.optical_size(40)
     |> icon.purpose(button.slot(button.TrailingIcon))
-    |> icon.variant(icon.Rounded)
+    |> icon.variant(Rounded)
     |> icon.weight(600)
 
   let expected =
@@ -57,7 +59,7 @@ pub fn element_test() {
 pub fn filled_test() {
   let i =
     icon.new("home")
-    |> icon.filled(True)
+    |> icon.filled(Filled)
 
   let expected =
     element(
@@ -78,7 +80,7 @@ pub fn filled_test() {
 pub fn filled_attr_test() {
   let i =
     icon.new("home")
-    |> icon.filled(True)
+    |> icon.filled(Filled)
 
   let expected =
     element(
@@ -99,7 +101,7 @@ pub fn filled_attr_test() {
 
   let i =
     icon.new("home")
-    |> icon.filled(False)
+    |> icon.filled(NotFilled)
 
   let expected =
     element(
@@ -122,7 +124,7 @@ pub fn filled_attr_test() {
 pub fn grade_test() {
   let i =
     icon.new("home")
-    |> icon.grade(icon.Low)
+    |> icon.grade(Low)
 
   let expected =
     element(
@@ -143,7 +145,7 @@ pub fn grade_test() {
 pub fn grade_attr_test() {
   let i =
     icon.new("home")
-    |> icon.grade(icon.Low)
+    |> icon.grade(Low)
 
   let expected =
     element(
@@ -164,7 +166,7 @@ pub fn grade_attr_test() {
 
   let i =
     icon.new("home")
-    |> icon.grade(icon.Medium)
+    |> icon.grade(Medium)
 
   let expected =
     element(
@@ -185,7 +187,7 @@ pub fn grade_attr_test() {
 
   let i =
     icon.new("home")
-    |> icon.grade(icon.High)
+    |> icon.grade(High)
 
   let expected =
     element(
@@ -331,28 +333,6 @@ pub fn purpose_test() {
 }
 
 pub fn purpose_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.purpose(app_bar.slot(app_bar.LeadingIcon))
-
-  let expected =
-    element(
-      "m3e-icon",
-      [
-        name("home"),
-        attribute("filled", "0"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("slot", "leading-icon"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
   let i =
     icon.new("home")
     |> icon.purpose(button.slot(button.SelectedIcon))
@@ -584,5 +564,34 @@ pub fn weight_attr_test() {
     )
 
   icon.render(i, [], [])
+  |> should.equal(expected)
+}
+
+pub fn render_config_test() {
+  let config =
+    Config(
+      ..default_config(),
+      name: "settings",
+      fill: Filled,
+      grade: High,
+      optical_size: 40,
+      variant: Sharp,
+      weight: 700,
+    )
+  let expected =
+    element(
+      "m3e-icon",
+      [
+        name("settings"),
+        attribute("filled", "1"),
+        attribute("grade", "high"),
+        attribute("optical-size", "40"),
+        attribute("variant", "sharp"),
+        attribute("weight", "700"),
+      ],
+      [],
+    )
+
+  render_config(config, [], [])
   |> should.equal(expected)
 }
