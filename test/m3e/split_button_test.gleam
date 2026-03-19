@@ -123,3 +123,40 @@ pub fn split_button_leading_trailing_update_test() {
     ),
   )
 }
+
+pub fn config_test() {
+  let leading = text("L")
+  let trailing = text("T")
+  split_button.default_config(leading, trailing)
+  |> should.equal(
+    split_button.Config(
+      leading: leading,
+      size: split_button.Small,
+      trailing: trailing,
+      variant: split_button.Filled,
+    ),
+  )
+}
+
+pub fn from_config_test() {
+  let leading = text("L")
+  let trailing = text("T")
+  let config = split_button.default_config(leading, trailing)
+  split_button.from_config(config)
+  |> split_button.render([])
+  |> should.equal(
+    split_button.new(leading, trailing)
+    |> split_button.render([]),
+  )
+}
+
+pub fn render_config_test() {
+  let leading = text("L")
+  let trailing = text("T")
+  let config = split_button.default_config(leading, trailing)
+  split_button.render_config(config, [])
+  |> should.equal(
+    split_button.new(leading, trailing)
+    |> split_button.render([]),
+  )
+}

@@ -56,16 +56,49 @@ pub type Variant {
 
 pub const default_variant = Filled
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a Split Button
+/// 
+pub type Config(msg) {
+  Config(
+    leading: Element(msg),
+    size: Size,
+    trailing: Element(msg),
+    variant: Variant,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config(
+  leading: Element(msg),
+  trailing: Element(msg),
+) -> Config(msg) {
+  Config(
+    leading: leading,
+    size: default_size,
+    trailing: trailing,
+    variant: default_variant,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a new SplitButton
 /// 
 pub fn new(leading: Element(msg), trailing: Element(msg)) -> SplitButton(msg) {
+  from_config(default_config(leading, trailing))
+}
+
+/// from_config creates a SplitButton from a Config record
+/// 
+pub fn from_config(c: Config(msg)) -> SplitButton(msg) {
   SplitButton(
-    leading: leading,
-    size: default_size,
-    trailing: trailing,
-    variant: default_variant,
+    leading: c.leading,
+    size: c.size,
+    trailing: c.trailing,
+    variant: c.variant,
   )
 }
 
@@ -118,6 +151,15 @@ pub fn render(
     ]),
     [s.leading, s.trailing],
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config(msg),
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
