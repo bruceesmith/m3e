@@ -3,7 +3,7 @@
 import gleam/list.{filter, flatten}
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
@@ -11,22 +11,34 @@ import m3e/link.{type Link}
 
 // --- Types ---
 
+/// Focusability specifies if a disabled item is interactive (focusable)
+pub type Focusability {
+  Interactive
+  Static
+}
+
+/// Interaction specifies if an item is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
 /// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
 /// ## Fields:
-/// - disabled - A value indicating whether the element is disabled.
-/// - disabled-interactive - A value indicating whether the element is disabled and interactive.
+/// - interaction: Whether the element is enabled or disabled.
+/// - focusability: Whether the element is disabled and interactive.
 /// - link: all the attributes of an HTML link
-/// - orientation - The layout orientation of the item.
-/// - selected - A value indicating whether the element is selected.
+/// - orientation: The layout orientation of the item.
+/// - selection: Whether the element is selected.
 /// 
 pub opaque type NavItem {
   NavItem(
-    disabled: Bool,
-    disabled_interactive: Bool,
+    focusability: Focusability,
+    interaction: Interaction,
     link: Option(Link),
     orientation: Orientation,
-    selected: Bool,
+    selection: Selection,
   )
 }
 
@@ -35,6 +47,12 @@ pub opaque type NavItem {
 pub type Orientation {
   Horizontal
   Vertical
+}
+
+/// Selection specifies if an item is selected or unselected
+pub type Selection {
+  Selected
+  Unselected
 }
 
 /// Slot gives type-safe names to each of the defined HTML named slots
@@ -46,35 +64,67 @@ pub type Slot {
   // Renders the icon of the item when selected
 }
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a NavItem
+/// 
+pub type Config {
+  Config(
+    focusability: Focusability,
+    interaction: Interaction,
+    link: Option(Link),
+    orientation: Orientation,
+    selection: Selection,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    focusability: Static,
+    interaction: Enabled,
+    link: None,
+    orientation: Vertical,
+    selection: Unselected,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a new NavItem
 /// 
 pub fn new() -> NavItem {
+  from_config(default_config())
+}
+
+/// from_config creates a NavItem from a Config record
+/// 
+pub fn from_config(c: Config) -> NavItem {
   NavItem(
-    disabled: False,
-    disabled_interactive: False,
-    link: None,
-    orientation: Vertical,
-    selected: False,
+    focusability: c.focusability,
+    interaction: c.interaction,
+    link: c.link,
+    orientation: c.orientation,
+    selection: c.selection,
   )
 }
 
 // --- SETTERS ---
 
-/// disabled sets the disabled field
+/// disabled sets the interaction field
 /// 
-pub fn disabled(item: NavItem, disabled: Bool) -> NavItem {
-  NavItem(..item, disabled: disabled)
+pub fn disabled(item: NavItem, interaction: Interaction) -> NavItem {
+  NavItem(..item, interaction: interaction)
 }
 
-/// disabled_interactive sets the disabled_interactive field
+/// disabled_interactive sets the focusability field
 /// 
 pub fn disabled_interactive(
   item: NavItem,
-  disabled_interactive: Bool,
+  focusability: Focusability,
 ) -> NavItem {
-  NavItem(..item, disabled_interactive: disabled_interactive)
+  NavItem(..item, focusability: focusability)
 }
 
 /// link sets the link field
@@ -89,10 +139,10 @@ pub fn orientation(item: NavItem, orientation: Orientation) -> NavItem {
   NavItem(..item, orientation: orientation)
 }
 
-/// selected sets the selected field
+/// selected sets the selection field
 /// 
-pub fn selected(item: NavItem, selected: Bool) -> NavItem {
-  NavItem(..item, selected: selected)
+pub fn selected(item: NavItem, selection: Selection) -> NavItem {
+  NavItem(..item, selection: selection)
 }
 
 // --- RENDERING ---
@@ -112,17 +162,30 @@ pub fn render(
     "m3e-nav-item",
     flatten([
       [
-        boolean_attribute("disabled", item.disabled),
-        boolean_attribute("disabled-interactive", item.disabled_interactive),
-        boolean_attribute("selected", item.selected),
+        boolean_attribute("disabled", item.interaction == Disabled),
+        boolean_attribute(
+          "disabled-interactive",
+          item.focusability == Interactive,
+        ),
+        boolean_attribute("selected", item.selection == Selected),
         attribute("orientation", orientation_to_string(item.orientation)),
       ],
       link.attributes(item.link),
       attributes,
     ])
-      |> filter(fn(a) { a != attribute.none() }),
+      |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot

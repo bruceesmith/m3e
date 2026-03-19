@@ -1,4 +1,4 @@
-import gleam/option.{Some}
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
@@ -40,11 +40,90 @@ pub fn link_property_test() {
 
 pub fn properties_test() {
   nav_item.new()
-  |> nav_item.disabled(True)
-  |> nav_item.disabled_interactive(True)
-  |> nav_item.selected(True)
+  |> nav_item.disabled(nav_item.Disabled)
+  |> nav_item.disabled_interactive(nav_item.Interactive)
+  |> nav_item.selected(nav_item.Selected)
   |> nav_item.orientation(nav_item.Horizontal)
   |> nav_item.render([], [])
+  |> should.equal(
+    element(
+      "m3e-nav-item",
+      [
+        attribute.attribute("disabled", ""),
+        attribute.attribute("disabled-interactive", ""),
+        attribute.attribute("selected", ""),
+        attribute.attribute("orientation", "horizontal"),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn config_test() {
+  let c =
+    nav_item.default_config()
+    |> fn(c) {
+      nav_item.Config(
+        ..c,
+        interaction: nav_item.Disabled,
+        focusability: nav_item.Interactive,
+        selection: nav_item.Selected,
+        orientation: nav_item.Horizontal,
+      )
+    }
+
+  let item = nav_item.from_config(c)
+
+  nav_item.render(item, [], [])
+  |> should.equal(
+    element(
+      "m3e-nav-item",
+      [
+        attribute.attribute("disabled", ""),
+        attribute.attribute("disabled-interactive", ""),
+        attribute.attribute("selected", ""),
+        attribute.attribute("orientation", "horizontal"),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn default_config_test() {
+  let c = nav_item.default_config()
+
+  c.interaction |> should.equal(nav_item.Enabled)
+  c.focusability |> should.equal(nav_item.Static)
+  c.selection |> should.equal(nav_item.Unselected)
+  c.orientation |> should.equal(nav_item.Vertical)
+  c.link |> should.equal(None)
+}
+
+pub fn from_config_test() {
+  let c = nav_item.default_config()
+  let item = nav_item.from_config(c)
+
+  nav_item.render(item, [], [])
+  |> should.equal(nav_item.render(nav_item.new(), [], []))
+}
+
+pub fn render_config_test() {
+  let c = nav_item.default_config()
+  let expected = nav_item.render(nav_item.from_config(c), [], [])
+
+  nav_item.render_config(c, [], [])
+  |> should.equal(expected)
+}
+
+pub fn setters_test() {
+  let item =
+    nav_item.new()
+    |> nav_item.disabled(nav_item.Disabled)
+    |> nav_item.disabled_interactive(nav_item.Interactive)
+    |> nav_item.selected(nav_item.Selected)
+    |> nav_item.orientation(nav_item.Horizontal)
+
+  nav_item.render(item, [], [])
   |> should.equal(
     element(
       "m3e-nav-item",
