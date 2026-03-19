@@ -11,6 +11,12 @@ pub const default_duration = 3000
 
 // --- Types ---
 
+/// Dismissibility specifies if a snackbar can be dismissed by the user
+pub type Dismissibility {
+  Dismissible
+  NotDismissible
+}
+
 /// Options represents the SnackbarOptions JavaScript object
 /// 
 /// ## Fields:
@@ -36,7 +42,7 @@ pub type Slot {
 /// - message: The text to display in the snackbar
 /// - action_label: The label of the snackbar's action
 /// - close_label: The accessible label given to the button used to dismiss the snackbar
-/// - dismissible: Whether a button is presented that can be used to close the snackbar
+/// - dismissibility: Whether a button is presented that can be used to close the snackbar
 /// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar
 ///
 pub type Snackbar {
@@ -44,7 +50,7 @@ pub type Snackbar {
     message: String,
     action_label: Option(String),
     close_label: Option(String),
-    dismissable: Bool,
+    dismissibility: Dismissibility,
     duration: Option(Int),
   )
 }
@@ -63,12 +69,50 @@ pub type SnackbarAction(msg) {
   )
 }
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a Snackbar
+/// 
+pub type Config {
+  Config(
+    message: String,
+    action_label: Option(String),
+    close_label: Option(String),
+    dismissibility: Dismissibility,
+    duration: Option(Int),
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config(message: String) -> Config {
+  Config(
+    message: message,
+    action_label: None,
+    close_label: None,
+    dismissibility: NotDismissible,
+    duration: None,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a new Snackbar
 /// 
 pub fn new(message: String) -> Snackbar {
-  Snackbar(message, None, None, False, None)
+  from_config(default_config(message))
+}
+
+/// from_config creates a Snackbar from a Config record
+/// 
+pub fn from_config(c: Config) -> Snackbar {
+  Snackbar(
+    message: c.message,
+    action_label: c.action_label,
+    close_label: c.close_label,
+    dismissibility: c.dismissibility,
+    duration: c.duration,
+  )
 }
 
 // --- SETTERS ---
@@ -91,10 +135,10 @@ pub fn close_label(s: Snackbar, close_label: Option(String)) -> Snackbar {
   Snackbar(..s, close_label: close_label)
 }
 
-/// dismissable sets the dismissable field
+/// dismissible sets the dismissibility field
 /// 
-pub fn dismissable(s: Snackbar, dismissable: Bool) -> Snackbar {
-  Snackbar(..s, dismissable: dismissable)
+pub fn dismissible(s: Snackbar, d: Dismissibility) -> Snackbar {
+  Snackbar(..s, dismissibility: d)
 }
 
 /// duration sets the duration field
@@ -119,6 +163,12 @@ pub fn open(s: Snackbar, callback: Option(msg)) -> Effect(msg) {
   |> to_effect
 }
 
+/// open_config displays a Snackbar directly from a Config
+/// 
+pub fn open_config(config: Config, callback: Option(msg)) -> Effect(msg) {
+  open(from_config(config), callback)
+}
+
 /// to_action describes a Snackbar. It is a pure function that returns a 
 /// SnackbarAction description.
 /// 
@@ -135,7 +185,7 @@ pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
   Open(
     message: s.message,
     action_label: action_label,
-    dismissable: s.dismissable,
+    dismissable: s.dismissibility == Dismissible,
     close_label: close_label,
     duration: duration,
     callback: callback,

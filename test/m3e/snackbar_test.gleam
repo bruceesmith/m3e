@@ -7,7 +7,7 @@ pub fn snackbar_new_test() {
   s.message |> should.equal("Hello")
   s.action_label |> should.equal(None)
   s.close_label |> should.equal(None)
-  s.dismissable |> should.equal(False)
+  s.dismissibility |> should.equal(snackbar.NotDismissible)
   s.duration |> should.equal(None)
 }
 
@@ -16,14 +16,14 @@ pub fn snackbar_setters_test() {
   |> snackbar.message("New")
   |> snackbar.action_label(Some("Action"))
   |> snackbar.close_label(Some("Close"))
-  |> snackbar.dismissable(True)
+  |> snackbar.dismissible(snackbar.Dismissible)
   |> snackbar.duration(Some(5000))
   |> should.equal(
     snackbar.Snackbar(
       message: "New",
       action_label: Some("Action"),
       close_label: Some("Close"),
-      dismissable: True,
+      dismissibility: snackbar.Dismissible,
       duration: Some(5000),
     ),
   )
@@ -34,7 +34,7 @@ pub fn snackbar_to_action_pure_test() {
     snackbar.new("Hello")
     |> snackbar.action_label(Some("Action"))
     |> snackbar.close_label(Some("Close"))
-    |> snackbar.dismissable(True)
+    |> snackbar.dismissible(snackbar.Dismissible)
     |> snackbar.duration(Some(5000))
 
   // to_action() is pure and can be tested with should.equal
@@ -76,4 +76,27 @@ pub fn snackbar_to_effect_test() {
 
   // to_effect() is side-effecting but we check it doesn't crash
   let _ = snackbar.to_effect(action)
+}
+
+pub fn config_test() {
+  snackbar.default_config("Hello")
+  |> should.equal(
+    snackbar.Config(
+      message: "Hello",
+      action_label: None,
+      close_label: None,
+      dismissibility: snackbar.NotDismissible,
+      duration: None,
+    ),
+  )
+}
+
+pub fn from_config_test() {
+  snackbar.default_config("Hello")
+  |> snackbar.from_config
+  |> should.equal(snackbar.new("Hello"))
+}
+
+pub fn open_config_test() {
+  let _ = snackbar.open_config(snackbar.default_config("Hello"), None)
 }
