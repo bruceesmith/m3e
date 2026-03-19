@@ -9,9 +9,9 @@ import m3e/selection_list
 pub fn default_config_test() {
   selection_list.default_config()
   |> should.equal(selection_list.Config(
-    disabled: False,
-    hide_selection_indicator: False,
-    multi: False,
+    interaction: selection_list.Enabled,
+    indicator_visibility: selection_list.Visible,
+    selection_mode: selection_list.Single,
     variant: list_variant.Standard,
   ))
 }
@@ -46,7 +46,7 @@ pub fn from_config_test() {
 
 pub fn disabled_test() {
   selection_list.new()
-  |> selection_list.disabled(True)
+  |> selection_list.disabled(selection_list.Disabled)
   |> selection_list.render([], [])
   |> should.equal(
     element.element(
@@ -62,7 +62,7 @@ pub fn disabled_test() {
 
 pub fn hide_selection_indicator_test() {
   selection_list.new()
-  |> selection_list.hide_selection_indicator(True)
+  |> selection_list.hide_selection_indicator(selection_list.Hidden)
   |> selection_list.render([], [])
   |> should.equal(
     element.element(
@@ -78,7 +78,7 @@ pub fn hide_selection_indicator_test() {
 
 pub fn multi_test() {
   selection_list.new()
-  |> selection_list.multi(True)
+  |> selection_list.multi(selection_list.Multiple)
   |> selection_list.render([], [])
   |> should.equal(
     element.element(
@@ -123,8 +123,8 @@ pub fn render_test() {
   let children = [element.text("content")]
 
   selection_list.new()
-  |> selection_list.disabled(True)
-  |> selection_list.multi(True)
+  |> selection_list.disabled(selection_list.Disabled)
+  |> selection_list.multi(selection_list.Multiple)
   |> selection_list.render(attrs, children)
   |> should.equal(element.element(
     "m3e-selection-list",
@@ -136,4 +136,27 @@ pub fn render_test() {
     ],
     children,
   ))
+}
+
+pub fn config_full_test() {
+  let config = selection_list.Config(
+    interaction: selection_list.Disabled,
+    indicator_visibility: selection_list.Hidden,
+    selection_mode: selection_list.Multiple,
+    variant: list_variant.Segmented,
+  )
+
+  selection_list.render_config(config, [], [])
+  |> should.equal(
+    element.element(
+      "m3e-selection-list",
+      [
+        attribute.attribute("disabled", ""),
+        attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("multi", ""),
+        attribute.attribute("variant", "segmented"),
+      ],
+      [],
+    ),
+  )
 }

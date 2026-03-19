@@ -10,19 +10,37 @@ import m3e/list_variant.{type Variant, Standard, variant_to_string}
 
 // --- Types ---
 
+/// Interaction specifies if a selection list is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// IndicatorVisibility specifies if the selection indicator is visible or hidden
+pub type IndicatorVisibility {
+  Visible
+  Hidden
+}
+
+/// SelectionMode specifies if single or multiple items can be selected
+pub type SelectionMode {
+  Single
+  Multiple
+}
+
 /// SelectionList provides a container for managing selectable list items with single or multi-select capabilities
 /// 
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - multi: Whether multiple items can be selected
+/// - interaction: Whether the element is enabled or disabled
+/// - indicator_visibility: Whether to hide the selection indicator
+/// - selection_mode: Whether multiple items can be selected
 /// - variant: The appearance variant of the list
 ///
 pub opaque type SelectionList {
   SelectionList(
-    disabled: Bool,
-    hide_selection_indicator: Bool,
-    multi: Bool,
+    interaction: Interaction,
+    indicator_visibility: IndicatorVisibility,
+    selection_mode: SelectionMode,
     variant: Variant,
   )
 }
@@ -32,16 +50,16 @@ pub opaque type SelectionList {
 /// Config is the configuration of a SelectionList
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - multi: Whether multiple items can be selected
+/// - interaction: Whether the element is enabled or disabled
+/// - indicator_visibility: Whether to hide the selection indicator
+/// - selection_mode: Whether multiple items can be selected
 /// - variant: The appearance variant of the list
 ///
 pub type Config {
   Config(
-    disabled: Bool,
-    hide_selection_indicator: Bool,
-    multi: Bool,
+    interaction: Interaction,
+    indicator_visibility: IndicatorVisibility,
+    selection_mode: SelectionMode,
     variant: Variant,
   )
 }
@@ -50,9 +68,9 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    disabled: False,
-    hide_selection_indicator: False,
-    multi: False,
+    interaction: Enabled,
+    indicator_visibility: Visible,
+    selection_mode: Single,
     variant: Standard,
   )
 }
@@ -66,9 +84,9 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> SelectionList {
   SelectionList(
-    disabled: config.disabled,
-    hide_selection_indicator: config.hide_selection_indicator,
-    multi: config.multi,
+    interaction: config.interaction,
+    indicator_visibility: config.indicator_visibility,
+    selection_mode: config.selection_mode,
     variant: config.variant,
   )
 }
@@ -76,35 +94,30 @@ pub fn from_config(config: Config) -> SelectionList {
 /// new creates a SelectionList with default values
 ///
 pub fn new() -> SelectionList {
-  SelectionList(
-    disabled: False,
-    hide_selection_indicator: False,
-    multi: False,
-    variant: Standard,
-  )
+  from_config(default_config())
 }
 
 // --- SETTERS ---
 
-/// disabled sets the `disabled` field
+/// disabled sets the `interaction` field
 ///
-pub fn disabled(sl: SelectionList, disabled: Bool) -> SelectionList {
-  SelectionList(..sl, disabled: disabled)
+pub fn disabled(sl: SelectionList, interaction: Interaction) -> SelectionList {
+  SelectionList(..sl, interaction: interaction)
 }
 
-/// hide_selection_indicator sets the `hide_selection_indicator` field
+/// hide_selection_indicator sets the `indicator_visibility` field
 ///
 pub fn hide_selection_indicator(
   sl: SelectionList,
-  hide_selection_indicator: Bool,
+  indicator_visibility: IndicatorVisibility,
 ) -> SelectionList {
-  SelectionList(..sl, hide_selection_indicator: hide_selection_indicator)
+  SelectionList(..sl, indicator_visibility: indicator_visibility)
 }
 
-/// multi sets the `multi` field
+/// multi sets the `selection_mode` field
 ///
-pub fn multi(sl: SelectionList, multi: Bool) -> SelectionList {
-  SelectionList(..sl, multi: multi)
+pub fn multi(sl: SelectionList, selection_mode: SelectionMode) -> SelectionList {
+  SelectionList(..sl, selection_mode: selection_mode)
 }
 
 /// variant sets the `variant` field
@@ -131,13 +144,13 @@ pub fn render(
     "m3e-selection-list",
     flatten([
       [
-        boolean_attribute("disabled", sl.disabled),
+        boolean_attribute("disabled", sl.interaction == Disabled),
         boolean_attribute(
           "hide-selection-indicator",
-          sl.hide_selection_indicator,
+          sl.indicator_visibility == Hidden,
         ),
       ],
-      [boolean_attribute("multi", sl.multi)],
+      [boolean_attribute("multi", sl.selection_mode == Multiple)],
       [attribute("variant", variant_to_string(sl.variant))],
       attributes,
     ])
