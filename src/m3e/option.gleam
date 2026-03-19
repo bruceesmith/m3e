@@ -1,30 +1,96 @@
 //// option provides Lustre support for the [M3E Option component](https://matraic.github.io/m3e/#/components/option.html)
 
 import gleam/function
-import gleam/list.{filter}
-import gleam/option
+import gleam/list.{filter, flatten}
+import gleam/option.{type Option as GleamOption, None}
 
-import lustre/attribute.{type Attribute}
+import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
+// --- TYPES ---
+
+/// Interaction specifies if an option is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// Selection specifies if an option is selected or unselected
+pub type Selection {
+  Selected
+  Unselected
+}
+
 /// Option holds all information to create an Option
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - selected: Whether the element is selected
+/// - interaction: Whether the element is enabled or disabled
+/// - selection: Whether the element is selected
 /// - value: A string representing the value of the option
 /// 
 pub opaque type Option {
-  Option(disabled: Bool, selected: Bool, value: option.Option(String))
+  Option(
+    interaction: Interaction,
+    selection: Selection,
+    value: GleamOption(String),
+  )
 }
 
-/// new creates a new Option
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for an Option
+/// 
+pub type Config {
+  Config(
+    interaction: Interaction,
+    selection: Selection,
+    value: GleamOption(String),
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(interaction: Enabled, selection: Unselected, value: None)
+}
+
+// --- CONSTRUCTORS ---
+
+/// new creates a new Option with default values
 ///
 pub fn new() -> Option {
-  Option(disabled: False, selected: False, value: option.None)
+  from_config(default_config())
 }
+
+/// from_config creates an Option from a Config record
+/// 
+pub fn from_config(c: Config) -> Option {
+  Option(interaction: c.interaction, selection: c.selection, value: c.value)
+}
+
+// --- SETTERS ---
+
+/// disabled sets the interaction field
+/// 
+pub fn disabled(o: Option, interaction: Interaction) -> Option {
+  Option(..o, interaction: interaction)
+}
+
+/// selected sets the selection field
+/// 
+pub fn selected(o: Option, selection: Selection) -> Option {
+  Option(..o, selection: selection)
+}
+
+/// value sets the value field
+/// 
+pub fn value(o: Option, value: GleamOption(String)) -> Option {
+  Option(..o, value: value)
+}
+
+// --- RENDERING ---
 
 /// render creates an M3E Option component from an Option
 ///
@@ -35,36 +101,25 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-option",
-    [
-      boolean_attribute("disabled", o.disabled),
-      boolean_attribute("selected", o.selected),
-      option_attribute(
-        o.value,
-        fn(_) { "value" },
-        function.identity,
-        option.None,
-      ),
-      ..attributes
-    ]
-      |> filter(fn(a) { a != attribute.none() }),
+    flatten([
+      [
+        boolean_attribute("disabled", o.interaction == Disabled),
+        boolean_attribute("selected", o.selection == Selected),
+        option_attribute(o.value, fn(_) { "value" }, function.identity, None),
+      ],
+      attributes,
+    ])
+      |> filter(fn(a) { a != none() }),
     children,
   )
 }
 
-/// disabled sets the disabled attribute
+/// render_config creates a Lustre Element directly from a Config
 /// 
-pub fn disabled(o: Option, disabled: Bool) -> Option {
-  Option(..o, disabled: disabled)
-}
-
-/// selected sets the selected attribute
-/// 
-pub fn selected(o: Option, selected: Bool) -> Option {
-  Option(..o, selected: selected)
-}
-
-/// value sets the value attribute
-/// 
-pub fn value(o: Option, value: option.Option(String)) -> Option {
-  Option(..o, value: value)
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
