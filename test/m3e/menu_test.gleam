@@ -1,3 +1,4 @@
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
@@ -129,5 +130,94 @@ pub fn attributes_test() {
     )
 
   menu.render(m, [attr], [])
+  |> should.equal(expected)
+}
+
+pub fn config_test() {
+  let c =
+    menu.default_config()
+    |> fn(c) {
+      menu.Config(
+        ..c,
+        anchor: Some("my-anchor"),
+        interaction: menu.Disabled,
+        state: menu.Open,
+        quick: menu.Instant,
+      )
+    }
+
+  let m = menu.from_config(c)
+
+  let expected =
+    element(
+      "m3e-menu",
+      [
+        attribute("anchor", "my-anchor"),
+        attribute("disabled", ""),
+        attribute("open", ""),
+        attribute("position-x", "after"),
+        attribute("position-y", "below"),
+        attribute("quick", ""),
+        attribute("variant", "standard"),
+      ],
+      [],
+    )
+
+  menu.render(m, [], [])
+  |> should.equal(expected)
+}
+
+pub fn default_config_test() {
+  let c = menu.default_config()
+  
+  c.anchor |> should.equal(None)
+  c.interaction |> should.equal(menu.Enabled)
+  c.position_x |> should.equal(menu.After)
+  c.position_y |> should.equal(menu.Below)
+  c.quick |> should.equal(menu.Animated)
+  c.state |> should.equal(menu.Closed)
+  c.variant |> should.equal(menu.Standard)
+}
+
+pub fn from_config_test() {
+  let c = menu.default_config()
+  let m = menu.from_config(c)
+  
+  menu.render(m, [], [])
+  |> should.equal(menu.render(menu.new(), [], []))
+}
+
+pub fn render_config_test() {
+  let c = menu.default_config()
+  let expected = menu.render(menu.from_config(c), [], [])
+
+  menu.render_config(c, [], [])
+  |> should.equal(expected)
+}
+
+pub fn setters_test() {
+  let m =
+    menu.new()
+    |> menu.anchor("my-anchor")
+    |> menu.disabled(menu.Disabled)
+    |> menu.open(menu.Open)
+    |> menu.quick(menu.Instant)
+
+  let expected =
+    element(
+      "m3e-menu",
+      [
+        attribute("anchor", "my-anchor"),
+        attribute("disabled", ""),
+        attribute("open", ""),
+        attribute("position-x", "after"),
+        attribute("position-y", "below"),
+        attribute("quick", ""),
+        attribute("variant", "standard"),
+      ],
+      [],
+    )
+
+  menu.render(m, [], [])
   |> should.equal(expected)
 }
