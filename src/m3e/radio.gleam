@@ -9,39 +9,98 @@ import lustre/element.{type Element, element}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 
+// --- Types ---
+
+/// CheckedState specifies if a radio is checked or unchecked
+pub type CheckedState {
+  Checked
+  Unchecked
+}
+
+/// Interaction specifies if a radio is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// Requirement specifies if a selection is required
+pub type Requirement {
+  Required
+  Optional
+}
+
 /// Radio provides Lustre support for the [M3E Radio component](https://matraic.github.io/m3e/#/components/radio.html)
 /// 
 /// ## Fields:
 /// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
+/// - interaction: Whether the element is enabled or disabled
 /// - form_submission: handles this button's role in form submission
-/// - required: Whether the element is required
+/// - requirement: Whether the element is required
 ///
 pub opaque type Radio {
   Radio(
-    checked: Bool,
-    disabled: Bool,
+    checked: CheckedState,
+    interaction: Interaction,
     form_submission: Option(FormSubmission),
-    required: Bool,
+    requirement: Requirement,
   )
 }
 
-/// new creates a new Radio
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a Radio
+/// 
+pub type Config {
+  Config(
+    checked: CheckedState,
+    interaction: Interaction,
+    form_submission: Option(FormSubmission),
+    requirement: Requirement,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    checked: Unchecked,
+    interaction: Enabled,
+    form_submission: None,
+    requirement: Optional,
+  )
+}
+
+// --- CONSTRUCTORS ---
+
+/// new creates a new Radio with default values
 /// 
 pub fn new() -> Radio {
-  Radio(checked: False, disabled: False, form_submission: None, required: False)
+  from_config(default_config())
 }
+
+/// from_config creates a Radio from a Config record
+/// 
+pub fn from_config(c: Config) -> Radio {
+  Radio(
+    checked: c.checked,
+    interaction: c.interaction,
+    form_submission: c.form_submission,
+    requirement: c.requirement,
+  )
+}
+
+// --- SETTERS ---
 
 /// checked sets the checked field
 /// 
-pub fn checked(r: Radio, checked: Bool) -> Radio {
-  Radio(..r, checked: checked)
+pub fn checked(r: Radio, state: CheckedState) -> Radio {
+  Radio(..r, checked: state)
 }
 
-/// disabled sets the disabled field
+/// disabled sets the interaction field
 /// 
-pub fn disabled(r: Radio, disabled: Bool) -> Radio {
-  Radio(..r, disabled: disabled)
+pub fn disabled(r: Radio, interaction: Interaction) -> Radio {
+  Radio(..r, interaction: interaction)
 }
 
 /// form_submission sets up a Radio to participate in an HTML form
@@ -50,11 +109,13 @@ pub fn form(r: Radio, fs: Option(FormSubmission)) -> Radio {
   Radio(..r, form_submission: fs)
 }
 
-/// required sets the required field
+/// required sets the requirement field
 /// 
-pub fn required(r: Radio, required: Bool) -> Radio {
-  Radio(..r, required: required)
+pub fn required(r: Radio, requirement: Requirement) -> Radio {
+  Radio(..r, requirement: requirement)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a Radio
 /// 
@@ -72,9 +133,9 @@ pub fn render(
     "m3e-radio",
     flatten([
       [
-        boolean_attribute("checked", r.checked),
-        boolean_attribute("disabled", r.disabled),
-        boolean_attribute("required", r.required),
+        boolean_attribute("checked", r.checked == Checked),
+        boolean_attribute("disabled", r.interaction == Disabled),
+        boolean_attribute("required", r.requirement == Required),
       ],
       form_submission.attributes(r.form_submission),
       attributes,
@@ -82,4 +143,14 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
