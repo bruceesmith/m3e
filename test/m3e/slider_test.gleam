@@ -22,7 +22,7 @@ pub fn default_test() {
 
 pub fn disabled_test() {
   slider.new()
-  |> slider.disabled(True)
+  |> slider.disabled(slider.Disabled)
   |> slider.render([], [])
   |> should.equal(
     element.element(
@@ -41,7 +41,7 @@ pub fn disabled_test() {
 
 pub fn discrete_test() {
   slider.new()
-  |> slider.discrete(True)
+  |> slider.discrete(slider.Discrete)
   |> slider.render([], [])
   |> should.equal(
     element.element(
@@ -60,7 +60,7 @@ pub fn discrete_test() {
 
 pub fn labelled_test() {
   slider.new()
-  |> slider.labelled(True)
+  |> slider.labelled(slider.ShowLabels)
   |> slider.render([], [])
   |> should.equal(
     element.element(
@@ -187,7 +187,7 @@ pub fn children_test() {
 
 pub fn combined_test() {
   slider.new()
-  |> slider.disabled(True)
+  |> slider.disabled(slider.Disabled)
   |> slider.max(200.0)
   |> slider.render([attribute.id("slider-1")], [])
   |> should.equal(
@@ -203,5 +203,39 @@ pub fn combined_test() {
       ],
       [],
     ),
+  )
+}
+
+pub fn config_test() {
+  slider.default_config()
+  |> should.equal(
+    slider.Config(
+      discrete: slider.Continuous,
+      interaction: slider.Enabled,
+      labels: slider.HideLabels,
+      max: 100.0,
+      min: 0.0,
+      size: slider.ExtraSmall,
+      step: 1.0,
+    ),
+  )
+}
+
+pub fn from_config_test() {
+  slider.default_config()
+  |> slider.from_config
+  |> slider.render([], [])
+  |> should.equal(
+    slider.new()
+    |> slider.render([], []),
+  )
+}
+
+pub fn render_config_test() {
+  slider.default_config()
+  |> slider.render_config([], [])
+  |> should.equal(
+    slider.new()
+    |> slider.render([], []),
   )
 }
