@@ -9,53 +9,107 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 
+// --- Types ---
+
+/// Interaction specifies if a segmented button is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// IndicatorVisibility specifies if the selection indicator is visible or hidden
+pub type IndicatorVisibility {
+  Visible
+  Hidden
+}
+
+/// SelectionMode specifies if single or multiple options can be selected
+pub type SelectionMode {
+  Single
+  Multiple
+}
+
 /// SegmentedButton provides Lustre support for the [M3E Segmented Button component](https://matraic.github.io/m3e/#/components/segmented-button.html)
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - multi: Whether multiple options can be selected
+/// - interaction: Whether the element is enabled or disabled
+/// - indicator_visibility: Whether to hide the selection indicator
+/// - selection_mode: Whether multiple options can be selected
 /// - name: The name that identifies the element when submitting the associated form
 ///
 pub opaque type SegmentedButton {
   SegmentedButton(
-    disabled: Bool,
-    hide_selection_indicator: Bool,
-    multi: Bool,
+    interaction: Interaction,
+    indicator_visibility: IndicatorVisibility,
+    selection_mode: SelectionMode,
     name: Option(String),
   )
 }
 
-/// new creates a new SegmentedButton
-///
-pub fn new() -> SegmentedButton {
-  SegmentedButton(
-    disabled: False,
-    hide_selection_indicator: False,
-    multi: False,
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a SegmentedButton
+/// 
+pub type Config {
+  Config(
+    interaction: Interaction,
+    indicator_visibility: IndicatorVisibility,
+    selection_mode: SelectionMode,
+    name: Option(String),
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    interaction: Enabled,
+    indicator_visibility: Visible,
+    selection_mode: Single,
     name: None,
   )
 }
 
-/// disabled sets the disabled field
+// --- CONSTRUCTORS ---
+
+/// new creates a new SegmentedButton with default values
 ///
-pub fn disabled(s: SegmentedButton, disabled: Bool) -> SegmentedButton {
-  SegmentedButton(..s, disabled: disabled)
+pub fn new() -> SegmentedButton {
+  from_config(default_config())
 }
 
-/// hide_selection_indicator sets the hide_selection_indicator field
+/// from_config creates a SegmentedButton from a Config record
+/// 
+pub fn from_config(c: Config) -> SegmentedButton {
+  SegmentedButton(
+    interaction: c.interaction,
+    indicator_visibility: c.indicator_visibility,
+    selection_mode: c.selection_mode,
+    name: c.name,
+  )
+}
+
+// --- SETTERS ---
+
+/// disabled sets the interaction field
+///
+pub fn disabled(s: SegmentedButton, interaction: Interaction) -> SegmentedButton {
+  SegmentedButton(..s, interaction: interaction)
+}
+
+/// hide_selection_indicator sets the indicator_visibility field
 ///
 pub fn hide_selection_indicator(
   s: SegmentedButton,
-  hide_selection_indicator: Bool,
+  indicator_visibility: IndicatorVisibility,
 ) -> SegmentedButton {
-  SegmentedButton(..s, hide_selection_indicator: hide_selection_indicator)
+  SegmentedButton(..s, indicator_visibility: indicator_visibility)
 }
 
-/// multi sets the multi field
+/// multi sets the selection_mode field
 ///
-pub fn multi(s: SegmentedButton, multi: Bool) -> SegmentedButton {
-  SegmentedButton(..s, multi: multi)
+pub fn multi(s: SegmentedButton, selection_mode: SelectionMode) -> SegmentedButton {
+  SegmentedButton(..s, selection_mode: selection_mode)
 }
 
 /// name sets the name field
@@ -63,6 +117,8 @@ pub fn multi(s: SegmentedButton, multi: Bool) -> SegmentedButton {
 pub fn name(s: SegmentedButton, name: Option(String)) -> SegmentedButton {
   SegmentedButton(..s, name: name)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a SegmentedButton
 ///
@@ -80,12 +136,12 @@ pub fn render(
     "m3e-segmented-button",
     flatten([
       [
-        boolean_attribute("disabled", s.disabled),
+        boolean_attribute("disabled", s.interaction == Disabled),
         boolean_attribute(
           "hide-selection-indicator",
-          s.hide_selection_indicator,
+          s.indicator_visibility == Hidden,
         ),
-        boolean_attribute("multi", s.multi),
+        boolean_attribute("multi", s.selection_mode == Multiple),
         option_attribute(s.name, fn(_) { "name" }, function.identity, None),
       ],
       attributes,
@@ -93,4 +149,14 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
