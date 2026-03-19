@@ -22,7 +22,7 @@ pub type Maximum =
 
 pub const default_max = 1
 
-/// Mode of a linear indicator
+/// Mode of an indicator
 ///
 pub type Mode {
   Buffer
@@ -72,7 +72,6 @@ fn variant_to_string(variant: Variant) -> String {
 /// - buffer_value: A fractional value, between 0 and max, indicating buffer progress
 /// - content: Optional content displayed inside the circle when determinate
 /// - diameter: The diameter, in pixels, of the progress spinner
-/// - indeterminate: Whether to show something is happening without conveying progress
 /// - max: The maximum progress value
 /// - mode: The mode of the progress bar
 /// - stroke_width: The stroke width, in pixels, of the progress spinner
@@ -83,7 +82,6 @@ pub opaque type ProgressIndicator {
     buffer_value: Value,
     content: Option(String),
     diameter: Diameter,
-    indeterminate: Bool,
     max: Maximum,
     mode: Mode,
     stroke_width: StrokeWidth,
@@ -92,30 +90,30 @@ pub opaque type ProgressIndicator {
   )
 }
 
-/// circular builds a Circular ProgressIndicator
-///
-pub fn circular() -> ProgressIndicator {
-  ProgressIndicator(
-    buffer_value: 0,
-    content: None,
-    diameter: default_diameter,
-    indeterminate: False,
-    max: default_max,
-    mode: Determinate,
-    stroke_width: default_stroke_width,
-    value: 0,
-    variant: Circular,
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a ProgressIndicator
+/// 
+pub type Config {
+  Config(
+    buffer_value: Value,
+    content: Option(String),
+    diameter: Diameter,
+    max: Maximum,
+    mode: Mode,
+    stroke_width: StrokeWidth,
+    value: Value,
+    variant: Variant,
   )
 }
 
-/// linear builds a Linear ProgressIndicator
-///
-pub fn linear() -> ProgressIndicator {
-  ProgressIndicator(
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
     buffer_value: 0,
     content: None,
     diameter: default_diameter,
-    indeterminate: False,
     max: default_max,
     mode: Determinate,
     stroke_width: default_stroke_width,
@@ -123,6 +121,153 @@ pub fn linear() -> ProgressIndicator {
     variant: Linear,
   )
 }
+
+// --- CONSTRUCTORS ---
+
+/// from_config creates a ProgressIndicator from a Config record
+/// 
+pub fn from_config(c: Config) -> ProgressIndicator {
+  ProgressIndicator(
+    buffer_value: c.buffer_value,
+    content: c.content,
+    diameter: c.diameter,
+    max: c.max,
+    mode: c.mode,
+    stroke_width: c.stroke_width,
+    value: c.value,
+    variant: c.variant,
+  )
+}
+
+/// circular builds a Circular ProgressIndicator
+///
+pub fn circular() -> ProgressIndicator {
+  from_config(Config(..default_config(), variant: Circular))
+}
+
+/// linear builds a Linear ProgressIndicator
+///
+pub fn linear() -> ProgressIndicator {
+  from_config(default_config())
+}
+
+// --- SETTERS ---
+
+/// buffer_value sets the `buffer_value` field
+///
+pub fn buffer_value(pi: ProgressIndicator, value: Value) -> ProgressIndicator {
+  case pi.variant {
+    Linear ->
+      ProgressIndicator(
+        ..pi,
+        buffer_value: buffer_value_validate(pi.max, value),
+      )
+    _ -> pi
+  }
+}
+
+/// content sets the `content` field
+///
+pub fn content(
+  pi: ProgressIndicator,
+  content: Option(String),
+) -> ProgressIndicator {
+  case pi.variant {
+    Circular -> ProgressIndicator(..pi, content: content)
+    Linear -> pi
+  }
+}
+
+/// diameter sets the `diameter` field
+///
+pub fn diameter(pi: ProgressIndicator, diameter: Diameter) -> ProgressIndicator {
+  case pi.variant {
+    Circular -> ProgressIndicator(..pi, diameter: diameter_validate(diameter))
+    _ -> pi
+  }
+}
+
+/// indeterminate sets the `mode` field for Circular (semantic enum support)
+///
+pub fn indeterminate(
+  pi: ProgressIndicator,
+  mode: Mode,
+) -> ProgressIndicator {
+  case pi.variant {
+    Circular -> ProgressIndicator(..pi, mode: mode)
+    Linear -> pi
+  }
+}
+
+/// max sets the `max` field
+///
+pub fn max(pi: ProgressIndicator, new_max: Maximum) -> ProgressIndicator {
+  let validated_max = max_validate(new_max)
+  case pi.variant {
+    Circular ->
+      case pi.mode {
+        Indeterminate -> pi
+        _ ->
+          ProgressIndicator(
+            ..pi,
+            max: validated_max,
+            value: value_validate(validated_max, pi.value),
+          )
+      }
+    Linear ->
+      case pi.mode {
+        Determinate ->
+          ProgressIndicator(
+            ..pi,
+            max: validated_max,
+            value: value_validate(validated_max, pi.value),
+          )
+        _ -> pi
+      }
+  }
+}
+
+/// mode sets the `mode` field
+///
+pub fn mode(pi: ProgressIndicator, mode: Mode) -> ProgressIndicator {
+  case pi.variant {
+    Circular -> pi
+    Linear -> ProgressIndicator(..pi, mode: mode)
+  }
+}
+
+/// stroke_width sets the `stroke_width` field
+///
+pub fn stroke_width(
+  pi: ProgressIndicator,
+  stroke_width: StrokeWidth,
+) -> ProgressIndicator {
+  case pi.variant {
+    Circular ->
+      ProgressIndicator(..pi, stroke_width: stroke_width_validate(stroke_width))
+    _ -> pi
+  }
+}
+
+/// value sets the `value` field
+///
+pub fn value(pi: ProgressIndicator, value: Value) -> ProgressIndicator {
+  case pi.variant {
+    Circular ->
+      case pi.mode {
+        Indeterminate -> pi
+        _ -> ProgressIndicator(..pi, value: value_validate(pi.max, value))
+      }
+    Linear ->
+      case pi.mode {
+        Buffer | Determinate ->
+          ProgressIndicator(..pi, value: value_validate(pi.max, value))
+        _ -> pi
+      }
+  }
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a ProgressIndicator
 ///
@@ -140,7 +285,7 @@ pub fn render(
       [
         buffer_value_attr(pi.variant, pi.buffer_value),
         diameter_attr(pi.variant, pi.diameter),
-        indeterminate_attr(pi.variant, pi.indeterminate),
+        indeterminate_attr(pi.variant, pi.mode),
         attribute("max", int.to_string(pi.max)),
         mode_attr(pi.variant, pi.mode),
         stroke_width_attr(pi.variant, pi.stroke_width),
@@ -154,18 +299,16 @@ pub fn render(
   )
 }
 
-/// buffer_value sets the `buffer_value` field
-///
-pub fn buffer_value(pi: ProgressIndicator, value: Value) {
-  case pi.variant {
-    Linear ->
-      ProgressIndicator(
-        ..pi,
-        buffer_value: buffer_value_validate(pi.max, value),
-      )
-    _ -> pi
-  }
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes)
 }
+
+// --- PRIVATE INTERNAL HELPERS ---
 
 fn buffer_value_attr(variant: Variant, value: Value) -> Attribute(msg) {
   case variant {
@@ -178,31 +321,10 @@ fn buffer_value_validate(max: Maximum, value: Value) -> Value {
   value |> int.max(0) |> int.min(max)
 }
 
-/// content sets the `content` field
-///
-pub fn content(
-  pi: ProgressIndicator,
-  content: Option(String),
-) -> ProgressIndicator {
-  case pi.variant {
-    Circular -> ProgressIndicator(..pi, content: content)
-    Linear -> pi
-  }
-}
-
 fn content_element(variant: Variant, content: Option(String)) -> Element(msg) {
   case variant, content {
     Circular, Some(c) -> text(c)
     _, _ -> element.none()
-  }
-}
-
-/// diameter sets the `diameter` field
-///
-pub fn diameter(pi: ProgressIndicator, diameter: Diameter) -> ProgressIndicator {
-  case pi.variant {
-    Circular -> ProgressIndicator(..pi, diameter: diameter_validate(diameter))
-    _ -> pi
   }
 }
 
@@ -217,50 +339,10 @@ fn diameter_validate(diameter: Diameter) -> Diameter {
   int.max(0, diameter)
 }
 
-/// indeterminate sets the `indeterminate` field
-///
-pub fn indeterminate(
-  pi: ProgressIndicator,
-  indeterminate: Bool,
-) -> ProgressIndicator {
-  case pi.variant {
-    Circular -> ProgressIndicator(..pi, indeterminate: indeterminate)
-    Linear -> pi
-  }
-}
-
-fn indeterminate_attr(variant: Variant, indeterminate: Bool) -> Attribute(msg) {
+fn indeterminate_attr(variant: Variant, mode: Mode) -> Attribute(msg) {
   case variant {
-    Circular if indeterminate -> attribute("indeterminate", "")
+    Circular if mode == Indeterminate -> attribute("indeterminate", "")
     _ -> attribute.none()
-  }
-}
-
-/// max sets the `max` field
-///
-pub fn max(pi: ProgressIndicator, new_max: Maximum) -> ProgressIndicator {
-  let validated_max = max_validate(new_max)
-  case pi.variant {
-    Circular ->
-      case pi.indeterminate {
-        False ->
-          ProgressIndicator(
-            ..pi,
-            max: validated_max,
-            value: value_validate(validated_max, pi.value),
-          )
-        _ -> pi
-      }
-    Linear ->
-      case pi.mode {
-        Determinate ->
-          ProgressIndicator(
-            ..pi,
-            max: validated_max,
-            value: value_validate(validated_max, pi.value),
-          )
-        _ -> pi
-      }
   }
 }
 
@@ -268,32 +350,10 @@ fn max_validate(max: Maximum) -> Maximum {
   int.max(0, max)
 }
 
-/// mode sets the `mode` field
-///
-pub fn mode(pi: ProgressIndicator, mode: Mode) -> ProgressIndicator {
-  case pi.variant {
-    Circular -> pi
-    Linear -> ProgressIndicator(..pi, mode: mode)
-  }
-}
-
 fn mode_attr(variant: Variant, mode: Mode) -> Attribute(msg) {
   case variant {
     Linear -> attribute("mode", mode_to_string(mode))
     Circular -> attribute.none()
-  }
-}
-
-/// stroke_width sets the `stroke_width` field
-///
-pub fn stroke_width(
-  pi: ProgressIndicator,
-  stroke_width: StrokeWidth,
-) -> ProgressIndicator {
-  case pi.variant {
-    Circular ->
-      ProgressIndicator(..pi, stroke_width: stroke_width_validate(stroke_width))
-    _ -> pi
   }
 }
 
@@ -307,24 +367,6 @@ fn stroke_width_attr(variant: Variant, width: StrokeWidth) -> Attribute(msg) {
 
 fn stroke_width_validate(stroke_width: StrokeWidth) -> StrokeWidth {
   int.max(0, stroke_width)
-}
-
-/// value sets the `value` field
-///
-pub fn value(pi: ProgressIndicator, value: Value) -> ProgressIndicator {
-  case pi.variant {
-    Circular ->
-      case pi.indeterminate {
-        False -> ProgressIndicator(..pi, value: value_validate(pi.max, value))
-        _ -> pi
-      }
-    Linear ->
-      case pi.mode {
-        Buffer | Determinate ->
-          ProgressIndicator(..pi, value: value_validate(pi.max, value))
-        _ -> pi
-      }
-  }
 }
 
 fn value_validate(max: Maximum, value: Value) -> Value {
