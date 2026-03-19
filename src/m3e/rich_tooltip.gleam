@@ -11,10 +11,16 @@ import m3e/helpers.{boolean_attribute}
 
 // --- Types ---
 
+/// Interaction specifies if a rich tooltip is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
 /// RichTooltip is an element, nested within a clickable element, used to dismiss a parenting rich tooltip
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled.
+/// - interaction: Whether the element is enabled or disabled.
 /// - for: The identifier of the interactive control to which this element is attached
 /// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
 /// - position: The position of the tooltip
@@ -22,7 +28,7 @@ import m3e/helpers.{boolean_attribute}
 ///
 pub opaque type RichTooltip {
   RichTooltip(
-    disabled: Bool,
+    interaction: Interaction,
     for: String,
     hide_delay: Int,
     position: Position,
@@ -57,7 +63,7 @@ pub type Slot {
 /// Config is the configuration of a RichTooltip
 /// 
 /// ## Fields:
-/// - disabled: Whether the element is disabled.
+/// - interaction: Whether the element is enabled or disabled.
 /// - for: The identifier of the interactive control to which this element is attached
 /// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
 /// - position: The position of the tooltip
@@ -65,7 +71,7 @@ pub type Slot {
 ///
 pub type Config {
   Config(
-    disabled: Bool,
+    interaction: Interaction,
     for: String,
     hide_delay: Int,
     position: Position,
@@ -77,7 +83,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    disabled: False,
+    interaction: Enabled,
     for: "",
     hide_delay: 1500,
     position: Below,
@@ -91,7 +97,7 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> RichTooltip {
   RichTooltip(
-    disabled: config.disabled,
+    interaction: config.interaction,
     for: config.for,
     hide_delay: config.hide_delay,
     position: config.position,
@@ -102,21 +108,15 @@ pub fn from_config(config: Config) -> RichTooltip {
 /// new creates a RichTooltip with default values
 /// 
 pub fn new() -> RichTooltip {
-  RichTooltip(
-    disabled: False,
-    for: "",
-    hide_delay: 1500,
-    position: Below,
-    show_delay: 0,
-  )
+  from_config(default_config())
 }
 
 // --- Setters ---
 
-/// disabled sets the `disabled` field
+/// disabled sets the `interaction` field
 ///
-pub fn disabled(r: RichTooltip, disabled: Bool) -> RichTooltip {
-  RichTooltip(..r, disabled: disabled)
+pub fn disabled(r: RichTooltip, interaction: Interaction) -> RichTooltip {
+  RichTooltip(..r, interaction: interaction)
 }
 
 /// for sets the `for` field
@@ -156,7 +156,7 @@ pub fn render(
     "m3e-rich-tooltip",
     flatten([
       [
-        boolean_attribute("disabled", r.disabled),
+        boolean_attribute("disabled", r.interaction == Disabled),
         attribute("for", r.for),
         attribute("hide-delay", int.to_string(r.hide_delay)),
         attribute("position", position_to_string(r.position)),

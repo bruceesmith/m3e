@@ -8,7 +8,7 @@ import m3e/rich_tooltip
 pub fn default_config_test() {
   rich_tooltip.default_config()
   |> should.equal(rich_tooltip.Config(
-    disabled: False,
+    interaction: rich_tooltip.Enabled,
     for: "",
     hide_delay: 1500,
     position: rich_tooltip.Below,
@@ -57,7 +57,7 @@ pub fn from_config_test() {
 
 pub fn disabled_test() {
   rich_tooltip.new()
-  |> rich_tooltip.disabled(True)
+  |> rich_tooltip.disabled(rich_tooltip.Disabled)
   |> rich_tooltip.render([], [])
   |> should.equal(
     element.element(
@@ -135,7 +135,7 @@ pub fn render_test() {
   let children = [element.text("content")]
 
   rich_tooltip.new()
-  |> rich_tooltip.disabled(True)
+  |> rich_tooltip.disabled(rich_tooltip.Disabled)
   |> rich_tooltip.for("test-id")
   |> rich_tooltip.position(rich_tooltip.Above)
   |> rich_tooltip.render(attrs, children)
@@ -156,7 +156,7 @@ pub fn render_test() {
 pub fn render_config_test() {
   let config =
     rich_tooltip.Config(
-      disabled: True,
+      interaction: rich_tooltip.Disabled,
       for: "config-id",
       hide_delay: 100,
       position: rich_tooltip.Before,
