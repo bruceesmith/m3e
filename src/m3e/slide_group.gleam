@@ -10,22 +10,34 @@ import m3e/helpers.{boolean_attribute}
 
 // --- Types ---
 
+/// Interaction specifies if scroll buttons are enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// Orientation specifies the layout orientation of the content
+pub type Orientation {
+  Horizontal
+  Vertical
+}
+
 /// SlideGroup provides Lustre support for the [M3E Slide Group component](https://matraic.github.io/m3e/#/components/slide_group.html)
 /// 
 /// ## Fields:
-/// - disabled: Whether scroll buttons are disabled
+/// - interaction: Whether scroll buttons are enabled or disabled
 /// - next_page_label: The accessible label given to the button used to move to the previous page
-/// - previous-page-label: The accessible label given to the button used to move to the next page
+/// - previous_page_label: The accessible label given to the button used to move to the next page
 /// - threshold: A value, in pixels, indicating the scroll threshold at which to begin showing pagination controls
-/// - vertical: Whether content is oriented vertically
+/// - orientation: Whether content is oriented vertically or horizontally
 ///
 pub opaque type SlideGroup {
   SlideGroup(
-    disabled: Bool,
+    interaction: Interaction,
     next_page_label: String,
     previous_page_label: String,
     threshold: Int,
-    vertical: Bool,
+    orientation: Orientation,
   )
 }
 
@@ -38,26 +50,58 @@ pub type Slot {
   // Renders the icon to present for the previous button 
 }
 
-// --- CONSTRUCTORS ---
+// --- CONFIGURATION ---
 
-/// new creates a new SlideGroup
+/// Config holds the configuration for a SlideGroup
 /// 
-pub fn new() -> SlideGroup {
-  SlideGroup(
-    disabled: False,
+pub type Config {
+  Config(
+    interaction: Interaction,
+    next_page_label: String,
+    previous_page_label: String,
+    threshold: Int,
+    orientation: Orientation,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    interaction: Enabled,
     next_page_label: "Next page",
     previous_page_label: "Previous page",
     threshold: 0,
-    vertical: False,
+    orientation: Horizontal,
+  )
+}
+
+// --- CONSTRUCTORS ---
+
+/// new creates a new SlideGroup with default values
+/// 
+pub fn new() -> SlideGroup {
+  from_config(default_config())
+}
+
+/// from_config creates a SlideGroup from a Config record
+/// 
+pub fn from_config(c: Config) -> SlideGroup {
+  SlideGroup(
+    interaction: c.interaction,
+    next_page_label: c.next_page_label,
+    previous_page_label: c.previous_page_label,
+    threshold: c.threshold,
+    orientation: c.orientation,
   )
 }
 
 // --- SETTERS ---
 
-/// disabled sets the disabled field
+/// disabled sets the interaction field
 /// 
-pub fn disabled(s: SlideGroup, disabled: Bool) -> SlideGroup {
-  SlideGroup(..s, disabled: disabled)
+pub fn disabled(s: SlideGroup, interaction: Interaction) -> SlideGroup {
+  SlideGroup(..s, interaction: interaction)
 }
 
 /// next_page_label sets the next_page_label field
@@ -81,10 +125,10 @@ pub fn threshold(s: SlideGroup, threshold: Int) -> SlideGroup {
   SlideGroup(..s, threshold: threshold)
 }
 
-/// vertical sets the vertical field
+/// vertical sets the orientation field
 /// 
-pub fn vertical(s: SlideGroup, vertical: Bool) -> SlideGroup {
-  SlideGroup(..s, vertical: vertical)
+pub fn vertical(s: SlideGroup, orientation: Orientation) -> SlideGroup {
+  SlideGroup(..s, orientation: orientation)
 }
 
 // --- RENDERING ---
@@ -105,17 +149,27 @@ pub fn render(
     "m3e-slide-group",
     flatten([
       [
-        boolean_attribute("disabled", s.disabled),
+        boolean_attribute("disabled", s.interaction == Disabled),
         attribute("next-page-label", s.next_page_label),
         attribute("previous-page-label", s.previous_page_label),
         attribute("threshold", to_string(s.threshold)),
-        boolean_attribute("vertical", s.vertical),
+        boolean_attribute("vertical", s.orientation == Vertical),
       ],
       attributes,
     ])
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
