@@ -11,23 +11,48 @@ import m3e/helpers.{boolean_attribute, option_attribute}
 
 // --- Types ---
 
+/// Interaction specifies if a select is enabled or disabled
+pub type Interaction {
+  Enabled
+  Disabled
+}
+
+/// IndicatorVisibility specifies if the selection indicator is visible or hidden
+pub type IndicatorVisibility {
+  Visible
+  Hidden
+}
+
+/// SelectionMode specifies if single or multiple options can be selected
+pub type SelectionMode {
+  Single
+  Multiple
+}
+
+/// Requirement specifies if a selection is required
+pub type Requirement {
+  Required
+  Optional
+}
+
 /// Select provides a form control for selecting a value from a set of predefined options)
 /// 
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator for single select options
-/// - multi: Whether multiple options can be selected
+/// - interaction: Whether the element is enabled or disabled
+/// - indicator_visibility: Whether to hide the selection indicator for single select options
+/// - id: The id of the element
+/// - selection_mode: Whether multiple options can be selected
 /// - name: The name that identifies the element when submitting the associated form
-/// - required: Whether the element is required
+/// - requirement: Whether the element is required
 ///
 pub opaque type Select {
   Select(
-    disabled: Bool,
-    hide_selection_indicator: Bool,
+    interaction: Interaction,
+    indicator_visibility: IndicatorVisibility,
     id: Option(String),
-    multi: Bool,
+    selection_mode: SelectionMode,
     name: Option(String),
-    required: Bool,
+    requirement: Requirement,
   )
 }
 
@@ -40,36 +65,70 @@ pub type Slot {
   // Renders the selected value(s) 
 }
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a Select
+/// 
+pub type Config {
+  Config(
+    interaction: Interaction,
+    indicator_visibility: IndicatorVisibility,
+    id: Option(String),
+    selection_mode: SelectionMode,
+    name: Option(String),
+    requirement: Requirement,
+  )
+}
+
+/// default_config creates a new Config with default values
+/// 
+pub fn default_config() -> Config {
+  Config(
+    interaction: Enabled,
+    indicator_visibility: Visible,
+    id: None,
+    selection_mode: Single,
+    name: None,
+    requirement: Optional,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
-/// new creates a new Select
+/// new creates a new Select with default values
 /// 
 pub fn new() -> Select {
+  from_config(default_config())
+}
+
+/// from_config creates a Select from a Config record
+/// 
+pub fn from_config(c: Config) -> Select {
   Select(
-    disabled: False,
-    hide_selection_indicator: False,
-    id: None,
-    multi: False,
-    name: None,
-    required: False,
+    interaction: c.interaction,
+    indicator_visibility: c.indicator_visibility,
+    id: c.id,
+    selection_mode: c.selection_mode,
+    name: c.name,
+    requirement: c.requirement,
   )
 }
 
 // --- SETTERS ---
 
-/// disabled sets the disabled field
+/// disabled sets the interaction field
 /// 
-pub fn disabled(s: Select, disabled: Bool) -> Select {
-  Select(..s, disabled: disabled)
+pub fn disabled(s: Select, interaction: Interaction) -> Select {
+  Select(..s, interaction: interaction)
 }
 
-/// hide_selection_indicator sets the hide_selection_indicator field
+/// hide_selection_indicator sets the indicator_visibility field
 /// 
 pub fn hide_selection_indicator(
   s: Select,
-  hide_selection_indicator: Bool,
+  indicator_visibility: IndicatorVisibility,
 ) -> Select {
-  Select(..s, hide_selection_indicator: hide_selection_indicator)
+  Select(..s, indicator_visibility: indicator_visibility)
 }
 
 /// id sets the id field
@@ -78,10 +137,10 @@ pub fn id(s: Select, id: Option(String)) -> Select {
   Select(..s, id: id)
 }
 
-/// multi sets the multi field
+/// multi sets the selection_mode field
 /// 
-pub fn multi(s: Select, multi: Bool) -> Select {
-  Select(..s, multi: multi)
+pub fn multi(s: Select, selection_mode: SelectionMode) -> Select {
+  Select(..s, selection_mode: selection_mode)
 }
 
 /// name sets the name field
@@ -90,10 +149,10 @@ pub fn name(s: Select, name: Option(String)) -> Select {
   Select(..s, name: name)
 }
 
-/// required sets the required field
+/// required sets the requirement field
 /// 
-pub fn required(s: Select, required: Bool) -> Select {
-  Select(..s, required: required)
+pub fn required(s: Select, requirement: Requirement) -> Select {
+  Select(..s, requirement: requirement)
 }
 
 // --- RENDERING ---
@@ -114,21 +173,31 @@ pub fn render(
     "m3e-select",
     flatten([
       [
-        boolean_attribute("disabled", s.disabled),
+        boolean_attribute("disabled", s.interaction == Disabled),
         boolean_attribute(
           "hide-selection-indicator",
-          s.hide_selection_indicator,
+          s.indicator_visibility == Hidden,
         ),
         option_attribute(s.id, fn(_) { "id" }, function.identity, None),
-        boolean_attribute("multi", s.multi),
+        boolean_attribute("multi", s.selection_mode == Multiple),
         option_attribute(s.name, fn(_) { "name" }, function.identity, None),
-        boolean_attribute("required", s.required),
+        boolean_attribute("required", s.requirement == Required),
       ],
       attributes,
     ])
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
