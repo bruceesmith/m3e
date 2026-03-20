@@ -7,7 +7,7 @@ import lustre/element.{type Element, element, text}
 import lustre/element/html
 import m3e/helpers.{boolean_attribute}
 import m3e/icon
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
 
@@ -99,7 +99,7 @@ pub type Config(msg) {
 /// 
 pub fn default_config() -> Config(msg) {
   Config(
-    interaction: Enabled,
+    interaction: default_interaction,
     toggle_visibility: ShowToggle,
     state: Closed,
     toggle_direction: default_direction,

@@ -9,8 +9,8 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 import m3e/types.{
-  type Interaction, type Orientation, type SelectionState, Disabled, Enabled,
-  Selected, Unselected, Vertical, orientation_to_string,
+  type Interaction, type Orientation, type SelectionState, Disabled, Selected,
+  Unselected, Vertical, default_interaction, orientation_to_string,
 }
 
 // --- Types ---
@@ -68,7 +68,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     focusability: Static,
-    interaction: Enabled,
+    interaction: default_interaction,
     link: None,
     orientation: Vertical,
     selection: Unselected,

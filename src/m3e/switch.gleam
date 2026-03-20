@@ -9,7 +9,7 @@ import lustre/element/html.{text}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- TYPES ---
 
@@ -27,8 +27,6 @@ pub type Icons {
   Neither
   Selected
 }
-
-pub const default_interaction = Enabled
 
 /// Switch is a configuration type representing an M3E Switch
 /// 
@@ -72,7 +70,7 @@ pub fn default_config() -> Config {
     label: None,
     icons: Neither,
     checked: Unchecked,
-    disabled: Enabled,
+    disabled: default_interaction,
     form_submission: None,
   )
 }
@@ -82,14 +80,7 @@ pub fn default_config() -> Config {
 /// new creates a Switch with default values
 ///
 pub fn new(id: String) -> Switch {
-  Switch(
-    id: id,
-    label: None,
-    icons: Neither,
-    checked: Unchecked,
-    disabled: Enabled,
-    form_submission: None,
-  )
+  Switch(..from_config(default_config()), id: id)
 }
 
 /// from_config creates a Switch from a Config

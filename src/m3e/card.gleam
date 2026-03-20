@@ -9,8 +9,8 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 import m3e/types.{
-  type Interaction, type Orientation, Disabled, Enabled, default_orientation,
-  orientation_to_string,
+  type Interaction, type Orientation, Disabled, default_interaction,
+  default_orientation, orientation_to_string,
 }
 
 // --- Types ---
@@ -92,7 +92,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     actionability: Static,
-    interaction: Enabled,
+    interaction: default_interaction,
     layout: Block,
     link: None,
     orientation: default_orientation,

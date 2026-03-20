@@ -9,7 +9,8 @@ import lustre/element.{type Element, element}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/types.{
-  type Interaction, type Requirement, Disabled, Enabled, Optional, Required,
+  type Interaction, type Requirement, Disabled, Optional, Required,
+  default_interaction,
 }
 
 // --- Types ---
@@ -56,7 +57,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     checked: Unchecked,
-    interaction: Enabled,
+    interaction: default_interaction,
     form_submission: None,
     requirement: Optional,
   )

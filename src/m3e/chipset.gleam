@@ -7,8 +7,8 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 import m3e/types.{
   type Interaction, type Orientation, type SelectionIndicator,
-  type SelectionMode, Disabled, Enabled, HideSelectionIndicator, Horizontal,
-  Multi, ShowSelectionIndicator, Vertical, default_selection_mode,
+  type SelectionMode, Disabled, HideSelectionIndicator, Horizontal, Multi,
+  ShowSelectionIndicator, Vertical, default_interaction, default_selection_mode,
 }
 
 // --- Types ---
@@ -58,7 +58,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: Enabled,
+    interaction: default_interaction,
     selection_indicator: ShowSelectionIndicator,
     selection_mode: default_selection_mode,
     type_: Information,

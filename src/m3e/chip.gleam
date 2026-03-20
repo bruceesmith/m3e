@@ -10,7 +10,8 @@ import lustre/element/html.{text}
 import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
 import m3e/types.{
-  type Interaction, type SelectionState, Disabled, Enabled, Selected, Unselected,
+  type Interaction, type SelectionState, Disabled, Selected, Unselected,
+  default_interaction,
 }
 
 // --- Types ---
@@ -123,7 +124,7 @@ pub fn default_config() -> Config(msg) {
   Config(
     label: "",
     behaviour: Normal,
-    interaction: Enabled,
+    interaction: default_interaction,
     form_submission: None,
     icon: None,
     removability: Permanent,

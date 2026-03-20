@@ -9,7 +9,7 @@ import lustre/element.{type Element, element}
 
 import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- TYPES ---
 
@@ -116,7 +116,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: Enabled,
+    interaction: default_interaction,
     first_page_label: "First page",
     page_size_visibility: Visible,
     items_per_page_label: "Items per page",

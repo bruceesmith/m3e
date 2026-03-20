@@ -9,8 +9,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/types.{
-  type Interaction, type Requirement, type SelectionMode, Disabled, Enabled,
-  Multi, Optional, Required, default_selection_mode,
+  type Interaction, type Requirement, type SelectionMode, Disabled, Multi,
+  Optional, Required, default_interaction, default_selection_mode,
 }
 
 // --- Types ---
@@ -70,7 +70,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: Enabled,
+    interaction: default_interaction,
     indicator_visibility: Visible,
     id: None,
     selection_mode: default_selection_mode,

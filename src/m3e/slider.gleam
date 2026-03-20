@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
 
@@ -85,7 +85,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     discrete: Continuous,
-    interaction: Enabled,
+    interaction: default_interaction,
     labels: HideLabels,
     max: default_max,
     min: default_min,

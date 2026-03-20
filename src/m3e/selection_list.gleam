@@ -8,7 +8,7 @@ import lustre/element.{type Element, element}
 
 import m3e/list_variant.{type Variant, Standard, variant_to_string}
 import m3e/types.{
-  type Interaction, type SelectionMode, Disabled, Enabled, Multi,
+  type Interaction, type SelectionMode, Disabled, Multi, default_interaction,
   default_selection_mode,
 }
 
@@ -60,7 +60,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    interaction: Enabled,
+    interaction: default_interaction,
     indicator_visibility: Visible,
     selection_mode: default_selection_mode,
     variant: Standard,
