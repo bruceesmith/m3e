@@ -11,12 +11,6 @@ import m3e/helpers.{boolean_attribute}
 
 // --- Types ---
 
-/// TriggerRole specifies if a trigger is primary or secondary for accessibility
-pub type TriggerRole {
-  Primary
-  Secondary
-}
-
 /// BottomSheetTrigger is an element, nested within a clickable element, used to trigger a bottom sheet
 /// 
 /// ## Fields:
@@ -33,6 +27,14 @@ pub opaque type BottomSheetTrigger {
   )
 }
 
+/// TriggerRole specifies if a trigger is primary or secondary for accessibility
+pub type TriggerRole {
+  Primary
+  Secondary
+}
+
+pub const default_trigger_role: TriggerRole = Primary
+
 // --- CONFIGURATION ---
 
 /// Config holds the configuration for a BottomSheetTrigger
@@ -44,7 +46,7 @@ pub type Config {
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(detent: None, for: "", label: "", role: Primary)
+  Config(detent: None, for: "", label: "", role: default_trigger_role)
 }
 
 // --- CONSTRUCTORS ---
@@ -112,5 +114,4 @@ pub fn render(b: BottomSheetTrigger) -> Element(msg) {
 pub fn render_config(config: Config) -> Element(msg) {
   render(from_config(config))
 }
-
 // --- PRIVATE INTERNAL HELPERS ---
