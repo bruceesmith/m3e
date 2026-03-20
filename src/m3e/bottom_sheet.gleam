@@ -18,23 +18,23 @@ import m3e/helpers.{boolean_attribute}
 /// - detents: Detents (discrete height states) the sheet can snap to.
 /// - handle: Whether to display a drag handle and enable the top region of the sheet as a gesture surface for dragging between detents.
 /// - handle_label: The accessible label given to the drag handle.
-/// - hideable: Whether the bottom sheet can hide when its swiped down.
+/// - hideable: Whether the bottom sheet can hide when it is swiped down.
 /// - hide_friction: The friction coefficient to hide the sheet, or set it to the next closest expanded detent.
 /// - id: The identifier of the bottom sheet.
 /// - modal: Whether the bottom sheet behaves as modal.
-/// - open: Whether the bottom sheet is open
+/// - state: Whether the bottom sheet is open
 /// 
 pub opaque type BottomSheet {
   BottomSheet(
     detent: Int,
     detents: List(Detent),
-    handle: Bool,
+    handle: Handle,
     handle_label: String,
-    hideable: Bool,
+    hideable: Hideable,
     hide_friction: Float,
     id: String,
-    modal: Bool,
-    open: Bool,
+    modal: Modal,
+    state: State,
   )
 }
 
@@ -51,6 +51,42 @@ pub type Detent {
   Full
 }
 
+/// Handle determines if the drag handle is shown
+/// 
+pub type Handle {
+  ShowHandle
+  NoHandle
+}
+
+pub const default_handle: Handle = NoHandle
+
+/// Hideable determines if the sheet can be hidden by swiping
+/// 
+pub type Hideable {
+  Hideable
+  NotHideable
+}
+
+pub const default_hideable: Hideable = NotHideable
+
+/// Modal determines if the sheet is modal
+/// 
+pub type Modal {
+  Modal
+  Standard
+}
+
+pub const default_modal: Modal = Standard
+
+/// State determines if the sheet is open or closed
+/// 
+pub type State {
+  Open
+  Closed
+}
+
+pub const default_state: State = Closed
+
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
 pub type Slot {
@@ -58,22 +94,62 @@ pub type Slot {
   // Renders the header of the sheet 
 }
 
+// --- CONFIGURATION ---
+
+/// Config allows for a declarative configuration of the BottomSheet
+/// 
+pub type Config {
+  Config(
+    detent: Int,
+    detents: List(Detent),
+    handle: Handle,
+    handle_label: String,
+    hideable: Hideable,
+    hide_friction: Float,
+    id: String,
+    modal: Modal,
+    state: State,
+  )
+}
+
+/// default_config returns a default Config
+/// 
+pub fn default_config() -> Config {
+  Config(
+    detent: 0,
+    detents: [],
+    handle: default_handle,
+    handle_label: "",
+    hideable: default_hideable,
+    hide_friction: default_hide_friction,
+    id: "",
+    modal: default_modal,
+    state: default_state,
+  )
+}
+
 // --- CONSTRUCTORS ---
+
+/// from_config creates a BottomSheet from a Config
+/// 
+pub fn from_config(c: Config) -> BottomSheet {
+  BottomSheet(
+    detent: c.detent,
+    detents: c.detents,
+    handle: c.handle,
+    handle_label: c.handle_label,
+    hideable: c.hideable,
+    hide_friction: c.hide_friction,
+    id: c.id,
+    modal: c.modal,
+    state: c.state,
+  )
+}
 
 /// new creates a new BottomSheet
 /// 
 pub fn new() -> BottomSheet {
-  BottomSheet(
-    detent: 0,
-    detents: [],
-    handle: False,
-    handle_label: "",
-    hideable: False,
-    hide_friction: default_hide_friction,
-    id: "",
-    modal: False,
-    open: False,
-  )
+  from_config(default_config())
 }
 
 // --- SETTERS ---
@@ -92,7 +168,7 @@ pub fn detents(b: BottomSheet, detents: List(Detent)) -> BottomSheet {
 
 /// handle sets the handle field of a BottomSheet
 /// 
-pub fn handle(b: BottomSheet, handle: Bool) -> BottomSheet {
+pub fn handle(b: BottomSheet, handle: Handle) -> BottomSheet {
   BottomSheet(..b, handle: handle)
 }
 
@@ -104,7 +180,7 @@ pub fn handle_label(b: BottomSheet, handle_label: String) -> BottomSheet {
 
 /// hideable sets the hideable field of a BottomSheet
 /// 
-pub fn hideable(b: BottomSheet, hideable: Bool) -> BottomSheet {
+pub fn hideable(b: BottomSheet, hideable: Hideable) -> BottomSheet {
   BottomSheet(..b, hideable: hideable)
 }
 
@@ -122,14 +198,14 @@ pub fn id(b: BottomSheet, id: String) -> BottomSheet {
 
 /// modal sets the modal field of a BottomSheet
 /// 
-pub fn modal(b: BottomSheet, modal: Bool) -> BottomSheet {
+pub fn modal(b: BottomSheet, modal: Modal) -> BottomSheet {
   BottomSheet(..b, modal: modal)
 }
 
-/// open sets the open field of a BottomSheet
+/// state sets the state field of a BottomSheet
 /// 
-pub fn open(b: BottomSheet, open: Bool) -> BottomSheet {
-  BottomSheet(..b, open: open)
+pub fn state(b: BottomSheet, state: State) -> BottomSheet {
+  BottomSheet(..b, state: state)
 }
 
 // --- RENDERING ---
@@ -145,17 +221,35 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
         [] -> none()
         _ -> attribute("detents", join(map(b.detents, detent_to_string), " "))
       },
-      boolean_attribute("handle", b.handle),
+      boolean_attribute("handle", case b.handle {
+        ShowHandle -> True
+        NoHandle -> False
+      }),
       attribute("handle-label", b.handle_label),
-      boolean_attribute("hideable", b.hideable),
+      boolean_attribute("hideable", case b.hideable {
+        Hideable -> True
+        NotHideable -> False
+      }),
       attribute("hide-friction", float.to_string(b.hide_friction)),
       attribute("id", b.id),
-      boolean_attribute("modal", b.modal),
-      boolean_attribute("open", b.open),
+      boolean_attribute("modal", case b.modal {
+        Modal -> True
+        Standard -> False
+      }),
+      boolean_attribute("open", case b.state {
+        Open -> True
+        Closed -> False
+      }),
     ]
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element from a Config
+/// 
+pub fn render_config(c: Config, children: List(Element(msg))) -> Element(msg) {
+  render(from_config(c), children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
