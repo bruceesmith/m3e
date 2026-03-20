@@ -8,7 +8,10 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type SelectionMode, Disabled, Enabled, Multi,
+  default_selection_mode,
+}
 
 // --- Types ---
 
@@ -16,12 +19,6 @@ import m3e/types.{type Interaction, Disabled, Enabled}
 pub type IndicatorVisibility {
   Visible
   Hidden
-}
-
-/// SelectionMode specifies if single or multiple options can be selected
-pub type SelectionMode {
-  Single
-  Multiple
 }
 
 /// SegmentedButton provides Lustre support for the [M3E Segmented Button component](https://matraic.github.io/m3e/#/components/segmented-button.html)
@@ -60,7 +57,7 @@ pub fn default_config() -> Config {
   Config(
     interaction: Enabled,
     indicator_visibility: Visible,
-    selection_mode: Single,
+    selection_mode: default_selection_mode,
     name: None,
   )
 }
@@ -139,7 +136,7 @@ pub fn render(
           "hide-selection-indicator",
           s.indicator_visibility == Hidden,
         ),
-        boolean_attribute("multi", s.selection_mode == Multiple),
+        boolean_attribute("multi", s.selection_mode == Multi),
         option_attribute(s.name, fn(_) { "name" }, function.identity, None),
       ],
       attributes,

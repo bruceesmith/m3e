@@ -47,6 +47,15 @@ pub type SelectionIndicator {
 
 pub const default_selection_indicator: SelectionIndicator = ShowSelectionIndicator
 
+/// SelectionMode specifies if multiple chips can be selected
+/// 
+pub type SelectionMode {
+  Single
+  Multi
+}
+
+pub const default_selection_mode: SelectionMode = Single
+
 /// SelectionState specifies if an element is selected or not
 /// 
 pub type SelectionState {

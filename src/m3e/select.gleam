@@ -9,7 +9,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/types.{
-  type Interaction, type Requirement, Disabled, Enabled, Optional, Required,
+  type Interaction, type Requirement, type SelectionMode, Disabled, Enabled,
+  Multi, Optional, Required, default_selection_mode,
 }
 
 // --- Types ---
@@ -18,12 +19,6 @@ import m3e/types.{
 pub type IndicatorVisibility {
   Visible
   Hidden
-}
-
-/// SelectionMode specifies if single or multiple options can be selected
-pub type SelectionMode {
-  Single
-  Multiple
 }
 
 /// Select provides a form control for selecting a value from a set of predefined options)
@@ -78,7 +73,7 @@ pub fn default_config() -> Config {
     interaction: Enabled,
     indicator_visibility: Visible,
     id: None,
-    selection_mode: Single,
+    selection_mode: default_selection_mode,
     name: None,
     requirement: Optional,
   )
@@ -170,7 +165,7 @@ pub fn render(
           s.indicator_visibility == Hidden,
         ),
         option_attribute(s.id, fn(_) { "id" }, function.identity, None),
-        boolean_attribute("multi", s.selection_mode == Multiple),
+        boolean_attribute("multi", s.selection_mode == Multi),
         option_attribute(s.name, fn(_) { "name" }, function.identity, None),
         boolean_attribute("required", s.requirement == Required),
       ],

@@ -7,7 +7,10 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/list_variant.{type Variant, Standard, variant_to_string}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type SelectionMode, Disabled, Enabled, Multi,
+  default_selection_mode,
+}
 
 // --- Types ---
 
@@ -15,12 +18,6 @@ import m3e/types.{type Interaction, Disabled, Enabled}
 pub type IndicatorVisibility {
   Visible
   Hidden
-}
-
-/// SelectionMode specifies if single or multiple items can be selected
-pub type SelectionMode {
-  Single
-  Multiple
 }
 
 /// SelectionList provides a container for managing selectable list items with single or multi-select capabilities
@@ -65,7 +62,7 @@ pub fn default_config() -> Config {
   Config(
     interaction: Enabled,
     indicator_visibility: Visible,
-    selection_mode: Single,
+    selection_mode: default_selection_mode,
     variant: Standard,
   )
 }
@@ -145,7 +142,7 @@ pub fn render(
           sl.indicator_visibility == Hidden,
         ),
       ],
-      [boolean_attribute("multi", sl.selection_mode == Multiple)],
+      [boolean_attribute("multi", sl.selection_mode == Multi)],
       [attribute("variant", variant_to_string(sl.variant))],
       attributes,
     ])

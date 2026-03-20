@@ -3,7 +3,7 @@ import lustre/attribute
 import lustre/element
 import m3e/list_variant
 import m3e/selection_list
-import m3e/types.{Disabled, Enabled}
+import m3e/types.{Disabled, Enabled, Multi, Single}
 
 // --- CONFIGURATION ---
 
@@ -12,7 +12,7 @@ pub fn default_config_test() {
   |> should.equal(selection_list.Config(
     interaction: Enabled,
     indicator_visibility: selection_list.Visible,
-    selection_mode: selection_list.Single,
+    selection_mode: Single,
     variant: list_variant.Standard,
   ))
 }
@@ -79,7 +79,7 @@ pub fn hide_selection_indicator_test() {
 
 pub fn multi_test() {
   selection_list.new()
-  |> selection_list.multi(selection_list.Multiple)
+  |> selection_list.multi(Multi)
   |> selection_list.render([], [])
   |> should.equal(
     element.element(
@@ -125,7 +125,7 @@ pub fn render_test() {
 
   selection_list.new()
   |> selection_list.disabled(Disabled)
-  |> selection_list.multi(selection_list.Multiple)
+  |> selection_list.multi(Multi)
   |> selection_list.render(attrs, children)
   |> should.equal(element.element(
     "m3e-selection-list",
@@ -144,7 +144,7 @@ pub fn config_full_test() {
     selection_list.Config(
       interaction: Disabled,
       indicator_visibility: selection_list.Hidden,
-      selection_mode: selection_list.Multiple,
+      selection_mode: Multi,
       variant: list_variant.Segmented,
     )
 
