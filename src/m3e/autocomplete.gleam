@@ -7,28 +7,23 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/option.{type Option}
+import m3e/types.{
+  type Requirement, type SelectionIndicator, HideSelectionIndicator, Optional,
+  Required, ShowSelectionIndicator,
+}
 
 // --- Types ---
 
 /// Activation specifies if the first option should be automatically activated
+/// 
 pub type Activation {
   AutoActivate
   ManualActivate
 }
 
-/// SelectionIndicator specifies if the selection indicator should be shown
-pub type SelectionIndicator {
-  ShowSelectionIndicator
-  HideSelectionIndicator
-}
+pub const default_activation: Activation = ManualActivate
 
-/// Requirement specifies if a selection is required
-pub type Requirement {
-  Required
-  Optional
-}
-
-/// Autocomplete holds all information to create an Autocomplete
+/// Autocomplete enhances an input field with a panel of suggested options
 ///
 /// ## Fields:
 /// - auto_activate: Whether the first option should be automatically activated
@@ -72,9 +67,6 @@ pub fn default_config() -> Config {
 // --- CONSTRUCTORS ---
 
 /// new creates a new Autocomplete
-///
-/// ## Parameters:
-/// - for: The identifier of the interactive control to which this element is attached
 ///
 pub fn new(for: String) -> Autocomplete {
   Autocomplete(

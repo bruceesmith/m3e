@@ -4,12 +4,13 @@ import lustre/attribute
 import lustre/element
 import m3e/autocomplete
 import m3e/option as m3e_opt
+import m3e/types.{HideSelectionIndicator, Required, ShowSelectionIndicator}
 
 pub fn new_test() {
   autocomplete.new("test-id")
   |> autocomplete.auto_activate(autocomplete.AutoActivate)
-  |> autocomplete.requirement(autocomplete.Required)
-  |> autocomplete.selection_indicator(autocomplete.ShowSelectionIndicator)
+  |> autocomplete.requirement(Required)
+  |> autocomplete.selection_indicator(ShowSelectionIndicator)
   |> autocomplete.render([])
   |> element.to_string
   |> should.equal(
@@ -21,8 +22,8 @@ pub fn render_test() {
   let ac =
     autocomplete.new("test-id")
     |> autocomplete.auto_activate(autocomplete.AutoActivate)
-    |> autocomplete.requirement(autocomplete.Required)
-    |> autocomplete.selection_indicator(autocomplete.HideSelectionIndicator)
+    |> autocomplete.requirement(Required)
+    |> autocomplete.selection_indicator(HideSelectionIndicator)
   let opt = m3e_opt.new() |> m3e_opt.value(Some("val"))
 
   autocomplete.render(ac, [opt])
@@ -75,7 +76,7 @@ pub fn for_test() {
 
 pub fn required_test() {
   autocomplete.new("id")
-  |> autocomplete.requirement(autocomplete.Required)
+  |> autocomplete.requirement(Required)
   |> autocomplete.render([])
   |> element.to_string
   |> should.equal("<m3e-autocomplete for=\"id\" required></m3e-autocomplete>")
@@ -83,7 +84,7 @@ pub fn required_test() {
 
 pub fn hide_selection_indicator_test() {
   autocomplete.new("id")
-  |> autocomplete.selection_indicator(autocomplete.HideSelectionIndicator)
+  |> autocomplete.selection_indicator(HideSelectionIndicator)
   |> autocomplete.render([])
   |> element.to_string
   |> should.equal(
