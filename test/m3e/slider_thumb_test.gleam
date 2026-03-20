@@ -3,6 +3,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/slider_thumb
+import m3e/types.{Disabled, Enabled}
 
 pub fn default_test() {
   slider_thumb.new()
@@ -12,7 +13,7 @@ pub fn default_test() {
 
 pub fn disabled_test() {
   slider_thumb.new()
-  |> slider_thumb.disabled(slider_thumb.Disabled)
+  |> slider_thumb.disabled(Disabled)
   |> slider_thumb.render([])
   |> should.equal(
     element.element(
@@ -59,7 +60,7 @@ pub fn custom_attributes_test() {
 
 pub fn combined_test() {
   slider_thumb.new()
-  |> slider_thumb.disabled(slider_thumb.Disabled)
+  |> slider_thumb.disabled(Disabled)
   |> slider_thumb.name(Some("vol"))
   |> slider_thumb.render([attribute.id("thumb-1")])
   |> should.equal(
@@ -78,7 +79,7 @@ pub fn combined_test() {
 pub fn config_test() {
   let c =
     slider_thumb.Config(
-      interaction: slider_thumb.Disabled,
+      interaction: Disabled,
       name: Some("config-name"),
       value: Some(10.5),
     )
@@ -102,7 +103,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = slider_thumb.default_config()
 
-  c.interaction |> should.equal(slider_thumb.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.name |> should.equal(None)
   c.value |> should.equal(None)
 }

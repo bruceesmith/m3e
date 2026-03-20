@@ -6,6 +6,7 @@ import m3e/slide_group.{
   disabled, new, next_page_label, previous_page_label, render, threshold,
   vertical,
 }
+import m3e/types.{Disabled, Enabled}
 
 pub fn slide_group_creation_test() {
   let s = new()
@@ -25,7 +26,7 @@ pub fn slide_group_creation_test() {
 pub fn slide_group_setters_test() {
   let s =
     new()
-    |> disabled(slide_group.Disabled)
+    |> disabled(Disabled)
     |> next_page_label("Next")
     |> previous_page_label("Prev")
     |> threshold(100)
@@ -49,7 +50,7 @@ pub fn slide_group_setters_test() {
 pub fn config_test() {
   let c =
     slide_group.Config(
-      interaction: slide_group.Disabled,
+      interaction: Disabled,
       next_page_label: "Forward",
       previous_page_label: "Back",
       threshold: 50,
@@ -77,7 +78,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = slide_group.default_config()
 
-  c.interaction |> should.equal(slide_group.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.next_page_label |> should.equal("Next page")
   c.previous_page_label |> should.equal("Previous page")
   c.threshold |> should.equal(0)

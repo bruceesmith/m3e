@@ -9,14 +9,9 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if a slider thumb is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// SliderThumb provides Lustre support for the [M3E Slider Thumb component](https://matraic.github.io/m3e/#/components/slider.html)
 /// 

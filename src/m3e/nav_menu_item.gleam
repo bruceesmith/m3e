@@ -7,14 +7,9 @@ import lustre/element/html
 
 import m3e/helpers.{boolean_attribute}
 import m3e/icon
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if an item is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// Selection specifies if an item is selected or unselected
 pub type Selection {

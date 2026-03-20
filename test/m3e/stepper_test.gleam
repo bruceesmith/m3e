@@ -2,7 +2,7 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 import m3e/stepper.{
-  Auto, Below, Horizontal, LabelBelow, Vertical, header_position,
+  Auto, Below, Check, Horizontal, LabelBelow, Vertical, header_position,
   label_position, linear, new, orientation, render,
 }
 
@@ -26,7 +26,7 @@ pub fn stepper_full_test() {
   new()
   |> header_position(Below)
   |> label_position(LabelBelow)
-  |> linear(True)
+  |> linear(Check)
   |> orientation(Vertical)
   |> render([attribute("id", "my-stepper")], [text("Child")])
   |> should.equal(

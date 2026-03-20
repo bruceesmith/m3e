@@ -9,6 +9,7 @@ import m3e/paginator.{
   page_index, page_size, page_size_variant, page_sizes, previous_page_label,
   render, show_first_last_buttons,
 }
+import m3e/types.{Disabled, Enabled}
 
 pub fn paginator_creation_test() {
   let p = new()
@@ -35,7 +36,7 @@ pub fn paginator_creation_test() {
 pub fn paginator_full_test() {
   let p =
     new()
-    |> disabled(paginator.Disabled)
+    |> disabled(Disabled)
     |> first_page_label("Primeira")
     |> hide_page_size(paginator.Hidden)
     |> items_per_page_label("Itens")
@@ -97,7 +98,7 @@ pub fn paginator_element_test() {
 pub fn paginator_setters_test() {
   let p = new()
 
-  let p_disabled = p |> disabled(paginator.Disabled)
+  let p_disabled = p |> disabled(Disabled)
   let expected_disabled =
     element(
       "m3e-paginator",
@@ -164,7 +165,7 @@ pub fn paginator_setters_test() {
 pub fn config_test() {
   let c =
     paginator.Config(
-      interaction: paginator.Disabled,
+      interaction: Disabled,
       first_page_label: "First",
       page_size_visibility: paginator.Hidden,
       items_per_page_label: "Items",
@@ -208,7 +209,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = paginator.default_config()
 
-  c.interaction |> should.equal(paginator.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.page_size_visibility |> should.equal(paginator.Visible)
   c.first_last_buttons_visibility |> should.equal(paginator.Omitted)
   c.length |> should.equal(0)

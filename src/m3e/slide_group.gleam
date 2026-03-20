@@ -7,14 +7,9 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if scroll buttons are enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// Orientation specifies the layout orientation of the content
 pub type Orientation {

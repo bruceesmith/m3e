@@ -4,6 +4,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/radio_group.{disabled, id, name, new, render, required}
+import m3e/types.{Disabled, Enabled}
 
 pub fn radio_group_creation_test() {
   let rg = new()
@@ -14,7 +15,7 @@ pub fn radio_group_creation_test() {
 pub fn radio_group_setters_test() {
   let rg = new()
 
-  let rg_disabled = rg |> disabled(radio_group.Disabled)
+  let rg_disabled = rg |> disabled(Disabled)
   let expected_disabled =
     element("m3e-radio-group", [attribute("disabled", "")], [])
   render(rg_disabled, [], []) |> should.equal(expected_disabled)
@@ -43,7 +44,7 @@ pub fn radio_group_element_test() {
 pub fn config_test() {
   let c =
     radio_group.Config(
-      interaction: radio_group.Disabled,
+      interaction: Disabled,
       id: Some("config-id"),
       name: Some("config-name"),
       requirement: radio_group.Required,
@@ -69,7 +70,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = radio_group.default_config()
 
-  c.interaction |> should.equal(radio_group.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.id |> should.equal(None)
   c.name |> should.equal(None)
   c.requirement |> should.equal(radio_group.Optional)

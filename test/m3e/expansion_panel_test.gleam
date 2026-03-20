@@ -4,9 +4,10 @@ import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 import lustre/element/html
 import m3e/expansion_panel.{
-  Config, Disabled, HideToggle, Open, Start, ToggleIcon, default_config,
+  Config, HideToggle, Open, Start, ToggleIcon, default_config,
 }
 import m3e/icon
+import m3e/types.{Disabled}
 
 const header_text = "Panel Header"
 

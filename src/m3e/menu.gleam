@@ -7,6 +7,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- TYPES ---
 
@@ -57,12 +58,6 @@ fn variant_to_string(variant: Variant) -> String {
 }
 
 pub const default_variant = Standard
-
-/// Interaction specifies if a menu is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// MenuState specifies if a menu is open or closed
 pub type MenuState {

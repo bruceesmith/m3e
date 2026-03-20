@@ -8,6 +8,7 @@ import lustre/element.{type Element, element}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
 
@@ -15,12 +16,6 @@ import m3e/helpers.{boolean_attribute}
 pub type CheckedState {
   Checked
   Unchecked
-}
-
-/// Interaction specifies if a radio is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
 }
 
 /// Requirement specifies if a selection is required

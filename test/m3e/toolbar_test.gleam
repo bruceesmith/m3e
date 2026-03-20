@@ -4,7 +4,8 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 
 import m3e/toolbar.{
-  Rounded, Vibrant, elevated, new, render, shape, variant, vertical,
+  Raised, Rounded, Vertical, Vibrant, elevated, new, render, shape, variant,
+  vertical,
 }
 
 pub fn toolbar_basic_test() {
@@ -24,10 +25,10 @@ pub fn toolbar_basic_test() {
 pub fn toolbar_full_test() {
   let t =
     new()
-    |> elevated(True)
+    |> elevated(Raised)
     |> shape(Rounded)
     |> variant(Vibrant)
-    |> vertical(True)
+    |> vertical(Vertical)
 
   let expected =
     element(
@@ -44,7 +45,7 @@ pub fn toolbar_full_test() {
 }
 
 pub fn toolbar_elevated_test() {
-  let t = new() |> elevated(True)
+  let t = new() |> elevated(Raised)
   let expected =
     element(
       "m3e-toolbar",
@@ -87,7 +88,7 @@ pub fn toolbar_variant_test() {
 }
 
 pub fn toolbar_vertical_test() {
-  let t = new() |> vertical(True)
+  let t = new() |> vertical(Vertical)
   let expected =
     element(
       "m3e-toolbar",

@@ -2,10 +2,10 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/chipset.{
-  Config, Disabled, Filter, HideSelectionIndicator, Input, Multi, Vertical,
-  default_config, disabled, hide_selection_indicator, multi, new, render,
-  render_config, type_, vertical,
+  Config, Filter, Input, Multi, Vertical, default_config, disabled,
+  hide_selection_indicator, multi, new, render, render_config, type_, vertical,
 }
+import m3e/types.{Disabled, HideSelectionIndicator}
 
 pub fn chipset_basic_test() {
   let c = new()
@@ -52,7 +52,8 @@ pub fn chipset_disabled_test() {
 }
 
 pub fn chipset_hide_selection_indicator_test() {
-  let c = new() |> type_(Filter) |> hide_selection_indicator(HideSelectionIndicator)
+  let c =
+    new() |> type_(Filter) |> hide_selection_indicator(HideSelectionIndicator)
 
   let expected =
     element(

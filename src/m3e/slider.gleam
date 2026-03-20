@@ -7,6 +7,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
 
@@ -14,12 +15,6 @@ import m3e/helpers.{boolean_attribute}
 pub type Discrete {
   Discrete
   Continuous
-}
-
-/// Interaction specifies if a slider is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
 }
 
 /// ValueLabels specifies if a slider shows value labels

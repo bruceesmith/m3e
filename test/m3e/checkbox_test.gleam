@@ -3,10 +3,11 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/checkbox.{
-  Checked, Disabled, Required, checked, disabled, form, new, render,
-  render_config, required, default_config, Config
+  Checked, Config, Required, checked, default_config, disabled, form, new,
+  render, render_config, required,
 }
 import m3e/form_submission
+import m3e/types.{Disabled}
 
 pub fn checkbox_basic_test() {
   let c = new()
@@ -72,8 +73,14 @@ pub fn checkbox_required_test() {
 }
 
 pub fn checkbox_render_config_test() {
-  let config = Config(..default_config(), checked: Checked, requirement: Required)
-  let expected = element("m3e-checkbox", [attribute("checked", ""), attribute("required", "")], [])
+  let config =
+    Config(..default_config(), checked: Checked, requirement: Required)
+  let expected =
+    element(
+      "m3e-checkbox",
+      [attribute("checked", ""), attribute("required", "")],
+      [],
+    )
 
   render_config(config)
   |> should.equal(expected)

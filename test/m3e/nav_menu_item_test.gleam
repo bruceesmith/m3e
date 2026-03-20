@@ -4,6 +4,7 @@ import lustre/attribute
 import lustre/element.{element, none}
 import lustre/element/html
 import m3e/nav_menu_item
+import m3e/types.{Disabled, Enabled}
 
 pub fn basic_render_test() {
   let label = "Home"
@@ -32,7 +33,7 @@ pub fn properties_test() {
   let item =
     nav_menu_item.new(label)
     |> nav_menu_item.badge(Some(badge_text))
-    |> nav_menu_item.disabled(nav_menu_item.Disabled)
+    |> nav_menu_item.disabled(Disabled)
     |> nav_menu_item.open(nav_menu_item.Open)
     |> nav_menu_item.selected(nav_menu_item.Selected)
 
@@ -65,7 +66,7 @@ pub fn config_test() {
     |> fn(c) {
       nav_menu_item.Config(
         ..c,
-        interaction: nav_menu_item.Disabled,
+        interaction: Disabled,
         expansion: nav_menu_item.Open,
         selection: nav_menu_item.Selected,
       )
@@ -98,7 +99,7 @@ pub fn default_config_test() {
   let c = nav_menu_item.default_config(label)
 
   c.label |> should.equal(label)
-  c.interaction |> should.equal(nav_menu_item.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.expansion |> should.equal(nav_menu_item.Closed)
   c.selection |> should.equal(nav_menu_item.Unselected)
   c.badge |> should.equal(None)
@@ -126,7 +127,7 @@ pub fn setters_test() {
   let label = "Test"
   let item =
     nav_menu_item.new(label)
-    |> nav_menu_item.disabled(nav_menu_item.Disabled)
+    |> nav_menu_item.disabled(Disabled)
     |> nav_menu_item.open(nav_menu_item.Open)
     |> nav_menu_item.selected(nav_menu_item.Selected)
 

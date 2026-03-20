@@ -9,14 +9,9 @@ import lustre/element.{type Element, element}
 
 import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- TYPES ---
-
-/// Interaction specifies if a paginator is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// PageSizeVisibility specifies if the page size selector is visible or hidden
 pub type PageSizeVisibility {

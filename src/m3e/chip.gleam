@@ -9,14 +9,9 @@ import lustre/element/html.{text}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if a chip is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// Removability specifies if a chip can be removed
 pub type Removability {

@@ -22,6 +22,15 @@ pub const default_next_page_label: String = "Next page"
 
 pub const default_previous_page_label: String = "Previous page"
 
+/// ScrollButtons is whether scroll buttons are disabled, defining the disable-pagination attribute
+/// 
+pub type ScrollButtons {
+  Scroll
+  NoScroll
+}
+
+pub const default_scroll_buttons: ScrollButtons = Scroll
+
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
 pub type Slot {
@@ -32,6 +41,15 @@ pub type Slot {
   PrevIcon
   // Renders the icon to present for the previous button used to paginate
 }
+
+/// Stretch defines whether tabs are stretched to fill the header
+/// 
+pub type Stretch {
+  Stretch
+  NoStretch
+}
+
+pub const default_stretch: Stretch = NoStretch
 
 /// Tabs provides a structured navigation surface for organizing content into distinct views, where only one view is visible at a time
 /// 
@@ -45,12 +63,12 @@ pub type Slot {
 ///
 pub opaque type Tabs {
   Tabs(
-    disabled_pagination: Bool,
+    disabled_pagination: ScrollButtons,
     header_position: HeaderPosition,
     next_page_label: String,
     previous_page_label: String,
-    stretch: Bool,
-    variant: String,
+    stretch: Stretch,
+    variant: Variant,
   )
 }
 
@@ -63,18 +81,52 @@ pub type Variant {
 
 pub const default_variant: Variant = Secondary
 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a Tabs
+/// 
+pub type Config {
+  Config(
+    disabled_pagination: ScrollButtons,
+    header_position: HeaderPosition,
+    next_page_label: String,
+    previous_page_label: String,
+    stretch: Stretch,
+    variant: Variant,
+  )
+}
+
+/// default_config creates a new Config with default values
+///
+pub fn default_config() -> Config {
+  Config(
+    disabled_pagination: default_scroll_buttons,
+    header_position: default_header_position,
+    next_page_label: default_next_page_label,
+    previous_page_label: default_previous_page_label,
+    stretch: default_stretch,
+    variant: default_variant,
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a new Tabs 
 /// 
 pub fn new() -> Tabs {
+  from_config(default_config())
+}
+
+/// from_config creates a Tabs from a Config
+///
+pub fn from_config(config: Config) -> Tabs {
   Tabs(
-    disabled_pagination: False,
-    header_position: default_header_position,
-    next_page_label: default_next_page_label,
-    previous_page_label: default_previous_page_label,
-    stretch: False,
-    variant: variant_to_string(default_variant),
+    disabled_pagination: config.disabled_pagination,
+    header_position: config.header_position,
+    next_page_label: config.next_page_label,
+    previous_page_label: config.previous_page_label,
+    stretch: config.stretch,
+    variant: config.variant,
   )
 }
 
@@ -82,7 +134,7 @@ pub fn new() -> Tabs {
 
 /// disabled_pagination sets the disabled_pagination field
 /// 
-pub fn disabled_pagination(t: Tabs, disabled_pagination: Bool) -> Tabs {
+pub fn disabled_pagination(t: Tabs, disabled_pagination: ScrollButtons) -> Tabs {
   Tabs(..t, disabled_pagination: disabled_pagination)
 }
 
@@ -106,14 +158,14 @@ pub fn previous_page_label(t: Tabs, previous_page_label: String) -> Tabs {
 
 /// stretch sets the stretch field
 /// 
-pub fn stretch(t: Tabs, stretch: Bool) -> Tabs {
+pub fn stretch(t: Tabs, stretch: Stretch) -> Tabs {
   Tabs(..t, stretch: stretch)
 }
 
 /// variant sets the variant field
 /// 
 pub fn variant(t: Tabs, variant: Variant) -> Tabs {
-  Tabs(..t, variant: variant_to_string(variant))
+  Tabs(..t, variant: variant)
 }
 
 // --- RENDERING ---
@@ -134,15 +186,18 @@ pub fn render(
     "m3e-tabs",
     flatten([
       [
-        boolean_attribute("disabled-pagination", t.disabled_pagination),
+        boolean_attribute(
+          "disabled-pagination",
+          t.disabled_pagination == NoScroll,
+        ),
         attribute(
           "header-position",
           header_position_to_string(t.header_position),
         ),
         attribute("next-page-label", t.next_page_label),
         attribute("previous-page-label", t.previous_page_label),
-        boolean_attribute("stretch", t.stretch),
-        attribute("variant", t.variant),
+        boolean_attribute("stretch", t.stretch == Stretch),
+        attribute("variant", variant_to_string(t.variant)),
       ],
       attributes,
     ])
@@ -150,6 +205,18 @@ pub fn render(
     children,
   )
 }
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
+}
+
+// --- ATTRIBUTES ---
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 

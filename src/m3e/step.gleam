@@ -4,6 +4,7 @@ import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
 
@@ -17,12 +18,6 @@ pub type Completed {
 pub type Editable {
   Editable
   NotEditable
-}
-
-/// Whether the element is disabled
-pub type Interaction {
-  Enabled
-  Disabled
 }
 
 /// Whether the step is optional

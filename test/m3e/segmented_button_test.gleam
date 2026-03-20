@@ -6,6 +6,7 @@ import lustre/element/html.{text}
 import m3e/segmented_button.{
   disabled, hide_selection_indicator, multi, name, new, render,
 }
+import m3e/types.{Disabled, Enabled}
 
 pub fn segmented_button_creation_test() {
   let s = new()
@@ -26,7 +27,7 @@ pub fn segmented_button_render_test() {
 pub fn segmented_button_setters_test() {
   let s =
     new()
-    |> disabled(segmented_button.Disabled)
+    |> disabled(Disabled)
     |> hide_selection_indicator(segmented_button.Hidden)
     |> multi(segmented_button.Multiple)
     |> name(Some("group"))
@@ -48,7 +49,7 @@ pub fn segmented_button_setters_test() {
 pub fn config_test() {
   let c =
     segmented_button.Config(
-      interaction: segmented_button.Disabled,
+      interaction: Disabled,
       indicator_visibility: segmented_button.Hidden,
       selection_mode: segmented_button.Multiple,
       name: Some("config-group"),
@@ -74,7 +75,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = segmented_button.default_config()
 
-  c.interaction |> should.equal(segmented_button.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.indicator_visibility |> should.equal(segmented_button.Visible)
   c.selection_mode |> should.equal(segmented_button.Single)
   c.name |> should.equal(None)

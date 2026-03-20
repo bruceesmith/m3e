@@ -8,14 +8,9 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if a segmented button is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// IndicatorVisibility specifies if the selection indicator is visible or hidden
 pub type IndicatorVisibility {
@@ -108,7 +103,10 @@ pub fn hide_selection_indicator(
 
 /// multi sets the selection_mode field
 ///
-pub fn multi(s: SegmentedButton, selection_mode: SelectionMode) -> SegmentedButton {
+pub fn multi(
+  s: SegmentedButton,
+  selection_mode: SelectionMode,
+) -> SegmentedButton {
   SegmentedButton(..s, selection_mode: selection_mode)
 }
 

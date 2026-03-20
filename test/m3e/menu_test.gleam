@@ -3,6 +3,7 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/menu
+import m3e/types.{Disabled, Enabled}
 
 pub fn basic_test() {
   let m = menu.new()
@@ -140,7 +141,7 @@ pub fn config_test() {
       menu.Config(
         ..c,
         anchor: Some("my-anchor"),
-        interaction: menu.Disabled,
+        interaction: Disabled,
         state: menu.Open,
         quick: menu.Instant,
       )
@@ -169,9 +170,9 @@ pub fn config_test() {
 
 pub fn default_config_test() {
   let c = menu.default_config()
-  
+
   c.anchor |> should.equal(None)
-  c.interaction |> should.equal(menu.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.position_x |> should.equal(menu.After)
   c.position_y |> should.equal(menu.Below)
   c.quick |> should.equal(menu.Animated)
@@ -182,7 +183,7 @@ pub fn default_config_test() {
 pub fn from_config_test() {
   let c = menu.default_config()
   let m = menu.from_config(c)
-  
+
   menu.render(m, [], [])
   |> should.equal(menu.render(menu.new(), [], []))
 }
@@ -199,7 +200,7 @@ pub fn setters_test() {
   let m =
     menu.new()
     |> menu.anchor("my-anchor")
-    |> menu.disabled(menu.Disabled)
+    |> menu.disabled(Disabled)
     |> menu.open(menu.Open)
     |> menu.quick(menu.Instant)
 

@@ -7,11 +7,11 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
-//  * @attr disabled - Whether auto-sizing is disabled.
-//  * @attr for - The identifier of the interactive control to which this element is attached.
-//  * @attr max-rows - The maximum amount of rows in the `textarea`.
-//  * @attr min-rows - The minimum amount of rows in the `textarea`.
+// --- Types ---
+
+pub const default_interaction = Enabled
 
 /// TextareaAutosize provides Lustre support for the [M3E Textarea Autosize component](https://matraic.github.io/m3e/#/components/textarea-autosize.html)
 /// 
@@ -22,18 +22,52 @@ import m3e/helpers.{boolean_attribute}
 /// - min_rows: The minimum amount of rows in the `textarea`
 ///
 pub opaque type TextareaAutosize {
-  TextareaAutosize(disabled: Bool, for: String, max_rows: Int, min_rows: Int)
+  TextareaAutosize(
+    disabled: Interaction,
+    for: String,
+    max_rows: Int,
+    min_rows: Int,
+  )
 }
 
-/// new creates a new TextareaAutosize 
+// --- CONFIGURATION ---
+
+/// Config holds the configuration for a TextareaAutosize
+/// 
+pub type Config {
+  Config(disabled: Interaction, max_rows: Int, min_rows: Int)
+}
+
+/// default_config creates a new Config with default values
+///
+pub fn default_config() -> Config {
+  Config(disabled: default_interaction, max_rows: 0, min_rows: 0)
+}
+
+// --- CONSTRUCTORS ---
+
+/// new creates a new TextareaAutosize ,
 /// 
 pub fn new(for: String) -> TextareaAutosize {
-  TextareaAutosize(for: for, disabled: False, min_rows: 0, max_rows: 0)
+  from_config(default_config(), for)
 }
+
+/// from_config creates a TextareaAutosize from a Config
+///
+pub fn from_config(config: Config, for: String) -> TextareaAutosize {
+  TextareaAutosize(
+    for: for,
+    disabled: config.disabled,
+    min_rows: config.min_rows,
+    max_rows: config.max_rows,
+  )
+}
+
+// --- SETTERS ---
 
 /// disabled sets the disabled field
 /// 
-pub fn disabled(ta: TextareaAutosize, disabled: Bool) -> TextareaAutosize {
+pub fn disabled(ta: TextareaAutosize, disabled: Interaction) -> TextareaAutosize {
   TextareaAutosize(..ta, disabled: disabled)
 }
 
@@ -72,7 +106,7 @@ pub fn render(
     flatten([
       [
         attribute("for", ta.for),
-        boolean_attribute("disabled", ta.disabled),
+        boolean_attribute("disabled", ta.disabled == Disabled),
         attribute("max-rows", to_string(ta.max_rows)),
         attribute("min-rows", to_string(ta.min_rows)),
       ],
@@ -81,4 +115,15 @@ pub fn render(
       |> filter(fn(a) { a != none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  f: String,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config, f), attributes, children)
 }

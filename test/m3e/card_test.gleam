@@ -6,12 +6,13 @@ import m3e/card.{
   Elevated, Filled, Horizontal, Outlined, Vertical, actionable, disabled, inline,
   new, orientation, render, variant,
 }
+import m3e/types.{Disabled, Enabled}
 
 pub fn card_creation_test() {
   let c =
     new()
     |> actionable(card.Actionable)
-    |> disabled(card.Disabled)
+    |> disabled(Disabled)
     |> inline(card.Inline)
     |> orientation(Horizontal)
     |> variant(Outlined)
@@ -36,7 +37,7 @@ pub fn card_element_test() {
   let c =
     new()
     |> actionable(card.Static)
-    |> disabled(card.Enabled)
+    |> disabled(Enabled)
     |> inline(card.Block)
     |> orientation(Vertical)
     |> variant(Elevated)
@@ -58,7 +59,7 @@ pub fn card_setters_test() {
   let c =
     new()
     |> actionable(card.Actionable)
-    |> disabled(card.Disabled)
+    |> disabled(Disabled)
     |> inline(card.Inline)
     |> orientation(Horizontal)
     |> variant(Filled)

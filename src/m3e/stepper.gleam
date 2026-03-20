@@ -27,6 +27,15 @@ pub type LabelPosition {
 
 pub const default_label_position = LabelEnd
 
+/// LinearValidity determines whether the validity of previous steps should be checked or not
+/// 
+pub type LinearValidity {
+  Check
+  DontCheck
+}
+
+pub const default_linear_validity = DontCheck
+
 /// Orientation is the orientation of the stepper.
 /// 
 pub type Orientation {
@@ -58,8 +67,32 @@ pub opaque type Stepper {
   Stepper(
     header_position: HeaderPosition,
     label_position: LabelPosition,
-    linear: Bool,
+    linear: LinearValidity,
     orientation: Orientation,
+  )
+}
+
+// -- CONFIGURATION --
+
+/// Config holds the configuration for a Stepper
+/// 
+pub type Config {
+  Config(
+    header_position: HeaderPosition,
+    label_position: LabelPosition,
+    linear: LinearValidity,
+    orientation: Orientation,
+  )
+}
+
+/// default_config creates a new Config with default values
+///
+pub fn default_config() -> Config {
+  Config(
+    header_position: default_header_position,
+    label_position: default_label_position,
+    linear: default_linear_validity,
+    orientation: default_orientation,
   )
 }
 
@@ -68,11 +101,17 @@ pub opaque type Stepper {
 /// new creates a new Stepper
 /// 
 pub fn new() -> Stepper {
+  from_config(default_config())
+}
+
+/// from_config creates a Stepper from a Config
+///
+pub fn from_config(config: Config) -> Stepper {
   Stepper(
-    default_header_position,
-    default_label_position,
-    False,
-    default_orientation,
+    header_position: config.header_position,
+    label_position: config.label_position,
+    linear: config.linear,
+    orientation: config.orientation,
   )
 }
 
@@ -98,7 +137,7 @@ pub fn label_position(
 
 /// linear sets the linear field of a Stepper
 ///
-pub fn linear(stepper: Stepper, linear: Bool) -> Stepper {
+pub fn linear(stepper: Stepper, linear: LinearValidity) -> Stepper {
   Stepper(..stepper, linear: linear)
 }
 
@@ -129,7 +168,7 @@ pub fn render(
           "label-position",
           label_position_to_string(stepper.label_position),
         ),
-        boolean_attribute("linear", stepper.linear),
+        boolean_attribute("linear", stepper.linear == Check),
         attribute("orientation", orientation_to_string(stepper.orientation)),
       ],
       attributes,
@@ -138,6 +177,18 @@ pub fn render(
     children,
   )
 }
+
+/// render_config creates a Lustre Element directly from a Config
+/// 
+pub fn render_config(
+  config: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(config), attributes, children)
+}
+
+// --- ATTRIBUTES ---
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
 /// 

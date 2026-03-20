@@ -3,13 +3,14 @@ import lustre/attribute
 import lustre/element
 import m3e/list_variant
 import m3e/selection_list
+import m3e/types.{Disabled, Enabled}
 
 // --- CONFIGURATION ---
 
 pub fn default_config_test() {
   selection_list.default_config()
   |> should.equal(selection_list.Config(
-    interaction: selection_list.Enabled,
+    interaction: Enabled,
     indicator_visibility: selection_list.Visible,
     selection_mode: selection_list.Single,
     variant: list_variant.Standard,
@@ -46,7 +47,7 @@ pub fn from_config_test() {
 
 pub fn disabled_test() {
   selection_list.new()
-  |> selection_list.disabled(selection_list.Disabled)
+  |> selection_list.disabled(Disabled)
   |> selection_list.render([], [])
   |> should.equal(
     element.element(
@@ -123,7 +124,7 @@ pub fn render_test() {
   let children = [element.text("content")]
 
   selection_list.new()
-  |> selection_list.disabled(selection_list.Disabled)
+  |> selection_list.disabled(Disabled)
   |> selection_list.multi(selection_list.Multiple)
   |> selection_list.render(attrs, children)
   |> should.equal(element.element(
@@ -139,12 +140,13 @@ pub fn render_test() {
 }
 
 pub fn config_full_test() {
-  let config = selection_list.Config(
-    interaction: selection_list.Disabled,
-    indicator_visibility: selection_list.Hidden,
-    selection_mode: selection_list.Multiple,
-    variant: list_variant.Segmented,
-  )
+  let config =
+    selection_list.Config(
+      interaction: Disabled,
+      indicator_visibility: selection_list.Hidden,
+      selection_mode: selection_list.Multiple,
+      variant: list_variant.Segmented,
+    )
 
   selection_list.render_config(config, [], [])
   |> should.equal(

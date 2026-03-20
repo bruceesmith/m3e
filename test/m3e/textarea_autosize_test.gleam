@@ -4,6 +4,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 
 import m3e/textarea_autosize.{disabled, for, max_rows, min_rows, new, render}
+import m3e/types.{Disabled}
 
 pub fn textarea_autosize_basic_test() {
   let ta = new("test_id")
@@ -24,7 +25,7 @@ pub fn textarea_autosize_full_test() {
   let ta =
     new("test_id")
     |> for("another_id")
-    |> disabled(True)
+    |> disabled(Disabled)
     |> max_rows(10)
     |> min_rows(2)
 
@@ -43,7 +44,7 @@ pub fn textarea_autosize_full_test() {
 }
 
 pub fn textarea_autosize_disabled_test() {
-  let ta = new("test_id") |> disabled(True)
+  let ta = new("test_id") |> disabled(Disabled)
   let expected =
     element(
       "m3e-textarea-autosize",

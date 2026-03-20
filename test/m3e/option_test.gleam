@@ -3,11 +3,12 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/option as opt
+import m3e/types.{Disabled, Enabled}
 
 pub fn render_test() {
   let o =
     opt.new()
-    |> opt.disabled(opt.Disabled)
+    |> opt.disabled(Disabled)
     |> opt.selected(opt.Selected)
     |> opt.value(Some("test-value"))
 
@@ -35,7 +36,7 @@ pub fn render_defaults_test() {
 pub fn config_test() {
   let c =
     opt.Config(
-      interaction: opt.Disabled,
+      interaction: Disabled,
       selection: opt.Selected,
       value: Some("test-value"),
     )
@@ -59,7 +60,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = opt.default_config()
 
-  c.interaction |> should.equal(opt.Enabled)
+  c.interaction |> should.equal(Enabled)
   c.selection |> should.equal(opt.Unselected)
   c.value |> should.equal(None)
 }
@@ -83,7 +84,7 @@ pub fn render_config_test() {
 pub fn setters_test() {
   let o =
     opt.new()
-    |> opt.disabled(opt.Disabled)
+    |> opt.disabled(Disabled)
     |> opt.selected(opt.Selected)
     |> opt.value(Some("test-value"))
 

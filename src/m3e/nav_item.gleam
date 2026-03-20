@@ -8,6 +8,7 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
 
@@ -15,12 +16,6 @@ import m3e/link.{type Link}
 pub type Focusability {
   Interactive
   Static
-}
-
-/// Interaction specifies if an item is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
 }
 
 /// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)

@@ -7,6 +7,7 @@ import lustre/element.{type Element, element, text}
 import lustre/element/html
 import m3e/helpers.{boolean_attribute}
 import m3e/icon
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
 
@@ -42,13 +43,6 @@ pub opaque type ExpansionPanel(msg) {
     toggle_icon_name: Option(String),
     actions: Option(List(Element(msg))),
   )
-}
-
-/// Interaction specifies if the panel is enabled or disabled
-/// 
-pub type Interaction {
-  Enabled
-  Disabled
 }
 
 /// PanelState specifies if the panel is expanded or collapsed

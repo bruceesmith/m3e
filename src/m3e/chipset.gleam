@@ -5,25 +5,17 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{
+  type Interaction, type SelectionIndicator, Disabled, Enabled,
+  HideSelectionIndicator, ShowSelectionIndicator,
+}
 
 // --- Types ---
-
-/// Interaction specifies if a chipset is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// Orientation specifies the layout orientation of the chipset
 pub type Orientation {
   Horizontal
   Vertical
-}
-
-/// SelectionIndicatorState specifies if selection indicators should be hidden
-pub type SelectionIndicatorState {
-  ShowSelectionIndicator
-  HideSelectionIndicator
 }
 
 /// SelectionMode specifies if multiple chips can be selected
@@ -52,7 +44,7 @@ pub type Type {
 pub opaque type ChipSet {
   ChipSet(
     interaction: Interaction,
-    selection_indicator: SelectionIndicatorState,
+    selection_indicator: SelectionIndicator,
     selection_mode: SelectionMode,
     type_: Type,
     orientation: Orientation,
@@ -66,7 +58,7 @@ pub opaque type ChipSet {
 pub type Config {
   Config(
     interaction: Interaction,
-    selection_indicator: SelectionIndicatorState,
+    selection_indicator: SelectionIndicator,
     selection_mode: SelectionMode,
     type_: Type,
     orientation: Orientation,
@@ -120,7 +112,7 @@ pub fn disabled(c: ChipSet, interaction: Interaction) -> ChipSet {
 ///
 pub fn hide_selection_indicator(
   c: ChipSet,
-  indicator: SelectionIndicatorState,
+  indicator: SelectionIndicator,
 ) -> ChipSet {
   case c.type_ {
     Filter -> ChipSet(..c, selection_indicator: indicator)
@@ -195,7 +187,7 @@ fn disabled_attr(t: Type, interaction: Interaction) -> Attribute(msg) {
 
 fn hide_selection_indicator_attr(
   t: Type,
-  hsi: SelectionIndicatorState,
+  hsi: SelectionIndicator,
 ) -> Attribute(msg) {
   case t, hsi {
     Filter, HideSelectionIndicator -> attribute("hide-selection-indicator", "")

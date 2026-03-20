@@ -7,14 +7,9 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/list_variant.{type Variant, Standard, variant_to_string}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if a selection list is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// IndicatorVisibility specifies if the selection indicator is visible or hidden
 pub type IndicatorVisibility {

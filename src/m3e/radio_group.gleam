@@ -8,14 +8,9 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/types.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
-
-/// Interaction specifies if a radio group is enabled or disabled
-pub type Interaction {
-  Enabled
-  Disabled
-}
 
 /// Requirement specifies if a selection is required
 pub type Requirement {

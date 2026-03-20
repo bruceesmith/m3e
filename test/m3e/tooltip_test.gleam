@@ -1,7 +1,8 @@
 import gleeunit/should
 import lustre/attribute.{attribute, for}
 import lustre/element.{element as lustre_element, text}
-import m3e/tooltip
+import m3e/tooltip.{Above, After, Before, Below}
+import m3e/types.{Disabled, Enabled}
 
 const tip_text = "Hello, Tooltip!"
 
@@ -10,7 +11,7 @@ const for_id_text = "element-id"
 pub fn tooltip_test() {
   let t =
     tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(tooltip.Above)
+    |> tooltip.position(Above)
     |> tooltip.hide_delay(100)
     |> tooltip.show_delay(200)
     |> tooltip.gestures(tooltip.On)
@@ -33,7 +34,7 @@ pub fn tooltip_test() {
 pub fn tooltip_validation_test() {
   let t =
     tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(tooltip.Below)
+    |> tooltip.position(Below)
     |> tooltip.hide_delay(9999)
     |> tooltip.show_delay(9999)
 
@@ -53,7 +54,7 @@ pub fn tooltip_validation_test() {
 
   let t_neg =
     tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(tooltip.Below)
+    |> tooltip.position(Below)
     |> tooltip.hide_delay(-1)
     |> tooltip.show_delay(-1)
 
@@ -63,10 +64,10 @@ pub fn tooltip_validation_test() {
 pub fn element_test() {
   let t =
     tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(tooltip.After)
+    |> tooltip.position(After)
     |> tooltip.hide_delay(100)
     |> tooltip.show_delay(200)
-    |> tooltip.disabled(True)
+    |> tooltip.disabled(Disabled)
     |> tooltip.gestures(tooltip.Off)
 
   let expected =
@@ -111,7 +112,7 @@ pub fn disabled_test() {
     |> tooltip.hide_delay(100)
     |> tooltip.show_delay(200)
 
-  let t = t |> tooltip.disabled(True)
+  let t = t |> tooltip.disabled(Disabled)
   let expected_true =
     lustre_element(
       "m3e-tooltip",
@@ -127,7 +128,7 @@ pub fn disabled_test() {
     )
   tooltip.render(t, []) |> should.equal(expected_true)
 
-  let t = t |> tooltip.disabled(False)
+  let t = t |> tooltip.disabled(Enabled)
   let expected_false =
     lustre_element(
       "m3e-tooltip",
@@ -241,7 +242,7 @@ pub fn position_test() {
     |> tooltip.hide_delay(100)
     |> tooltip.show_delay(200)
 
-  let t = t |> tooltip.position(tooltip.Above)
+  let t = t |> tooltip.position(Above)
   let expected_above =
     lustre_element(
       "m3e-tooltip",
@@ -256,7 +257,7 @@ pub fn position_test() {
     )
   tooltip.render(t, []) |> should.equal(expected_above)
 
-  let t = t |> tooltip.position(tooltip.After)
+  let t = t |> tooltip.position(After)
   let expected_after =
     lustre_element(
       "m3e-tooltip",
@@ -271,7 +272,7 @@ pub fn position_test() {
     )
   tooltip.render(t, []) |> should.equal(expected_after)
 
-  let t = t |> tooltip.position(tooltip.Before)
+  let t = t |> tooltip.position(Before)
   let expected_before =
     lustre_element(
       "m3e-tooltip",
@@ -286,7 +287,7 @@ pub fn position_test() {
     )
   tooltip.render(t, []) |> should.equal(expected_before)
 
-  let t = t |> tooltip.position(tooltip.Below)
+  let t = t |> tooltip.position(Below)
   let expected_below =
     lustre_element(
       "m3e-tooltip",

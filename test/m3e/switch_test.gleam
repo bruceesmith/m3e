@@ -6,8 +6,9 @@ import lustre/element.{element, text}
 
 import m3e/form_submission
 import m3e/switch.{
-  Both, Selected, checked, disabled, form, icon, label, new, render,
+  Both, Checked, Selected, checked, disabled, form, icon, label, new, render,
 }
+import m3e/types.{Disabled}
 
 pub fn switch_basic_test() {
   let s = new("test_id") |> label(Some("Test Label"))
@@ -22,8 +23,8 @@ pub fn switch_full_test() {
   let s =
     new("test_id")
     |> label(Some("Test Label"))
-    |> checked(True)
-    |> disabled(True)
+    |> checked(Checked)
+    |> disabled(Disabled)
     |> form(Some(
       form_submission.new()
       |> form_submission.name("key")
@@ -66,7 +67,7 @@ pub fn switch_checked_test() {
   let s =
     new("test_id")
     |> label(Some("Test Label"))
-    |> checked(True)
+    |> checked(Checked)
 
   let expected = [
     element(
@@ -89,7 +90,7 @@ pub fn switch_disabled_test() {
   let s =
     new("test_id")
     |> label(Some("Test Label"))
-    |> disabled(True)
+    |> disabled(Disabled)
 
   let expected = [
     element(
