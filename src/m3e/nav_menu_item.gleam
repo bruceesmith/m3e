@@ -7,15 +7,11 @@ import lustre/element/html
 
 import m3e/helpers.{boolean_attribute}
 import m3e/icon
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type SelectionState, Disabled, Enabled, Selected, Unselected,
+}
 
 // --- Types ---
-
-/// Selection specifies if an item is selected or unselected
-pub type Selection {
-  Selected
-  Unselected
-}
 
 /// Expansion specifies if an item is open or closed
 pub type Expansion {
@@ -42,7 +38,7 @@ pub opaque type NavMenuItem {
     leading_icon_name: Option(String),
     label: String,
     expansion: Expansion,
-    selection: Selection,
+    selection: SelectionState,
     selected_icon_name: Option(String),
     toggle_icon_name: Option(String),
   )
@@ -74,7 +70,7 @@ pub type Config {
     leading_icon_name: Option(String),
     label: String,
     expansion: Expansion,
-    selection: Selection,
+    selection: SelectionState,
     selected_icon_name: Option(String),
     toggle_icon_name: Option(String),
   )
@@ -158,7 +154,7 @@ pub fn open(item: NavMenuItem, expansion: Expansion) -> NavMenuItem {
 
 /// selected sets the selection field
 /// 
-pub fn selected(item: NavMenuItem, selection: Selection) -> NavMenuItem {
+pub fn selected(item: NavMenuItem, selection: SelectionState) -> NavMenuItem {
   NavMenuItem(..item, selection: selection)
 }
 

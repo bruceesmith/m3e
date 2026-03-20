@@ -9,12 +9,12 @@ import lustre/element.{element}
 import m3e/app_bar
 import m3e/icon_button.{
   Config, Disabled, DisabledInteractive, ExtraLarge, ExtraSmall, Filled, Large,
-  Narrow, Selected, Square, Toggle, default_config, disabled, form,
-  new, purpose, render, render_config, selected, shape, size, toggle, variant,
-  width,
+  Narrow, Square, Toggle, default_config, disabled, form, new, purpose, render,
+  render_config, selected, shape, size, toggle, variant, width,
 }
 
 import m3e/form_submission.{FormSubmission, Submit}
+import m3e/types.{Selected}
 
 pub fn icon_button_creation_test() {
   let b = new()

@@ -8,15 +8,11 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type SelectionState, Disabled, Enabled, Selected, Unselected,
+}
 
 // --- TYPES ---
-
-/// Selection specifies if an option is selected or unselected
-pub type Selection {
-  Selected
-  Unselected
-}
 
 /// Option holds all information to create an Option
 ///
@@ -28,7 +24,7 @@ pub type Selection {
 pub opaque type Option {
   Option(
     interaction: Interaction,
-    selection: Selection,
+    selection: SelectionState,
     value: GleamOption(String),
   )
 }
@@ -40,7 +36,7 @@ pub opaque type Option {
 pub type Config {
   Config(
     interaction: Interaction,
-    selection: Selection,
+    selection: SelectionState,
     value: GleamOption(String),
   )
 }
@@ -75,7 +71,7 @@ pub fn disabled(o: Option, interaction: Interaction) -> Option {
 
 /// selected sets the selection field
 /// 
-pub fn selected(o: Option, selection: Selection) -> Option {
+pub fn selected(o: Option, selection: SelectionState) -> Option {
   Option(..o, selection: selection)
 }
 

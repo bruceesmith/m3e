@@ -46,3 +46,12 @@ pub type SelectionIndicator {
 }
 
 pub const default_selection_indicator: SelectionIndicator = ShowSelectionIndicator
+
+/// SelectionState specifies if an element is selected or not
+/// 
+pub type SelectionState {
+  Selected
+  Unselected
+}
+
+pub const default_selection_state: SelectionState = Unselected

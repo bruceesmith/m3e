@@ -9,8 +9,8 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 import m3e/types.{
-  type Interaction, type Orientation, Disabled, Enabled, Vertical,
-  orientation_to_string,
+  type Interaction, type Orientation, type SelectionState, Disabled, Enabled,
+  Selected, Unselected, Vertical, orientation_to_string,
 }
 
 // --- Types ---
@@ -36,14 +36,8 @@ pub opaque type NavItem {
     interaction: Interaction,
     link: Option(Link),
     orientation: Orientation,
-    selection: Selection,
+    selection: SelectionState,
   )
-}
-
-/// Selection specifies if an item is selected or unselected
-pub type Selection {
-  Selected
-  Unselected
 }
 
 /// Slot gives type-safe names to each of the defined HTML named slots
@@ -65,7 +59,7 @@ pub type Config {
     interaction: Interaction,
     link: Option(Link),
     orientation: Orientation,
-    selection: Selection,
+    selection: SelectionState,
   )
 }
 
@@ -132,7 +126,7 @@ pub fn orientation(item: NavItem, orientation: Orientation) -> NavItem {
 
 /// selected sets the selection field
 /// 
-pub fn selected(item: NavItem, selection: Selection) -> NavItem {
+pub fn selected(item: NavItem, selection: SelectionState) -> NavItem {
   NavItem(..item, selection: selection)
 }
 

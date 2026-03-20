@@ -8,6 +8,7 @@ import lustre/element.{type Element, element}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
+import m3e/types.{type SelectionState, Selected, Unselected}
 
 // --- Types ---
 
@@ -46,13 +47,6 @@ pub type Interaction {
   Enabled
   Disabled
   DisabledInteractive
-}
-
-/// SelectionState specifies if the toggle button is selected
-/// 
-pub type SelectionState {
-  Selected
-  Unselected
 }
 
 /// Shape

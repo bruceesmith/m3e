@@ -9,7 +9,9 @@ import lustre/element/html.{text}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type SelectionState, Disabled, Enabled, Selected, Unselected,
+}
 
 // --- Types ---
 
@@ -17,12 +19,6 @@ import m3e/types.{type Interaction, Disabled, Enabled}
 pub type Removability {
   Removable
   Permanent
-}
-
-/// SelectionState specifies if a chip is selected or not
-pub type SelectionState {
-  Selected
-  Unselected
 }
 
 /// Behaviour controls the behavior of an assist or suggestion chip

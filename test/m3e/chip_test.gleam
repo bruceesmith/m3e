@@ -6,13 +6,12 @@ import lustre/element.{element}
 import lustre/element/html.{text}
 
 import m3e/chip.{
-  Config, Removable, Selected, assist, behaviour, default_config, disabled,
-  filter, form, icon, information, input, removable, render, render_config,
-  selected,
+  Config, Removable, assist, behaviour, default_config, disabled, filter, form,
+  icon, information, input, removable, render, render_config, selected,
 }
 import m3e/form_submission
 import m3e/icon
-import m3e/types.{Disabled}
+import m3e/types.{Disabled, Selected}
 
 pub fn chip_creation_test() {
   let c = assist("Assist")
