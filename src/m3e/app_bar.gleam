@@ -11,13 +11,8 @@ import m3e/helpers.{boolean_attribute, option_attribute}
 
 // --- Types ---
 
-/// TitleAlignment specifies if the title and subtitle are centered
-pub type TitleAlignment {
-  Centered
-  Standard
-}
-
-/// AppBar holds all information to create a App Bar
+/// AppBar is a prominent user interface component that provides consistent access to key actions, 
+/// navigation, and contextual information at the top of an application screen
 /// 
 /// ## Fields:
 /// - alignment: Whether the title and subtitle are centered
@@ -53,6 +48,14 @@ pub type Slot {
   // Renders a trailing icon
 }
 
+/// TitleAlignment specifies if the title and subtitle are centered
+pub type TitleAlignment {
+  Centered
+  Standard
+}
+
+pub const default_title_alignment: TitleAlignment = Standard
+
 // --- CONFIGURATION ---
 
 /// Config holds the configuration for an AppBar
@@ -64,7 +67,7 @@ pub type Config {
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(alignment: Standard, for: None, size: default_size)
+  Config(alignment: default_title_alignment, for: None, size: default_size)
 }
 
 // --- CONSTRUCTORS ---
