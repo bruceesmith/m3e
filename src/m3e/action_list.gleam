@@ -4,7 +4,7 @@ import gleam/list.{filter, flatten}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/list_variant.{type Variant, Standard, variant_to_string}
+import m3e/list_variant.{type Variant, variant_to_string}
 
 // --- TYPES ---
 
@@ -18,31 +18,9 @@ pub opaque type ActionList {
 }
 
 // --- CONFIGURATION ---
-
-/// Config is the configuration of an ActionList
-/// 
-pub type Config {
-  Config(variant: Variant)
-}
-
-/// default_config creates a Config with default values
-/// 
-pub fn default_config() -> Config {
-  Config(variant: Standard)
-}
-
 // --- CONSTRUCTORS ---
 
-/// from_config creates an ActionList from a Config
-/// 
-pub fn from_config(config: Config) -> ActionList {
-  ActionList(variant: config.variant)
-}
-
 /// new creates an ActionList with default values
-/// 
-/// ## Parameters:
-/// - variant: The appearance variant of the list
 /// 
 pub fn new(variant: Variant) -> ActionList {
   ActionList(variant)
@@ -75,14 +53,3 @@ pub fn render(
     children,
   )
 }
-
-/// render_config creates a Lustre Element directly from a Config
-/// 
-pub fn render_config(
-  config: Config,
-  attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
-) -> Element(msg) {
-  render(from_config(config), attributes, children)
-}
-// --- PRIVATE INTERNAL HELPERS ---
