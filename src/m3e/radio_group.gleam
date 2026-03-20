@@ -8,15 +8,11 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type Requirement, Disabled, Enabled, Optional, Required,
+}
 
 // --- Types ---
-
-/// Requirement specifies if a selection is required
-pub type Requirement {
-  Required
-  Optional
-}
 
 /// RadioGroup provides Lustre support for the [M3E Radio Group component](https://matraic.github.io/m3e/#/components/radio-group.html)
 /// 

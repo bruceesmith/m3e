@@ -8,7 +8,9 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type Requirement, Disabled, Enabled, Optional, Required,
+}
 
 // --- Types ---
 
@@ -22,12 +24,6 @@ pub type IndicatorVisibility {
 pub type SelectionMode {
   Single
   Multiple
-}
-
-/// Requirement specifies if a selection is required
-pub type Requirement {
-  Required
-  Optional
 }
 
 /// Select provides a form control for selecting a value from a set of predefined options)

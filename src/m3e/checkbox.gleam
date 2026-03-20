@@ -8,7 +8,9 @@ import lustre/element.{type Element, element}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type Requirement, Disabled, Enabled, Optional, Required,
+}
 
 // --- Types ---
 
@@ -16,12 +18,6 @@ import m3e/types.{type Interaction, Disabled, Enabled}
 pub type CheckedState {
   Checked
   Unchecked
-}
-
-/// Requirement specifies if a selection is required
-pub type Requirement {
-  Required
-  Optional
 }
 
 /// Checkbox holds all the values necessary to construct am M3E Checkbox

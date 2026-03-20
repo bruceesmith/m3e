@@ -6,7 +6,7 @@ import lustre/element/html.{text}
 import m3e/select.{
   disabled, hide_selection_indicator, id, multi, name, new, render, required,
 }
-import m3e/types.{Disabled, Enabled}
+import m3e/types.{Disabled, Enabled, Optional, Required}
 
 pub fn select_creation_test() {
   let s = new()
@@ -30,7 +30,7 @@ pub fn select_setters_test() {
     |> id(Some("my-id"))
     |> multi(select.Multiple)
     |> name(Some("my-name"))
-    |> required(select.Required)
+    |> required(Required)
 
   let expected =
     element(
@@ -56,7 +56,7 @@ pub fn config_test() {
       id: Some("config-id"),
       selection_mode: select.Multiple,
       name: Some("config-name"),
-      requirement: select.Required,
+      requirement: Required,
     )
 
   let s = select.from_config(c)
@@ -86,7 +86,7 @@ pub fn default_config_test() {
   c.id |> should.equal(None)
   c.selection_mode |> should.equal(select.Single)
   c.name |> should.equal(None)
-  c.requirement |> should.equal(select.Optional)
+  c.requirement |> should.equal(Optional)
 }
 
 pub fn from_config_test() {

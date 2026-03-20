@@ -3,11 +3,11 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import m3e/checkbox.{
-  Checked, Config, Required, checked, default_config, disabled, form, new,
-  render, render_config, required,
+  Checked, Config, checked, default_config, disabled, form, new, render,
+  render_config, required,
 }
 import m3e/form_submission
-import m3e/types.{Disabled}
+import m3e/types.{Disabled, Required}
 
 pub fn checkbox_basic_test() {
   let c = new()
