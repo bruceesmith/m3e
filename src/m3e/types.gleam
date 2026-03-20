@@ -18,6 +18,15 @@ pub type Orientation {
   Vertical
 }
 
+/// orientation_to_string converts an Orientation to a string
+/// 
+pub fn orientation_to_string(o: Orientation) -> String {
+  case o {
+    Horizontal -> "horizontal"
+    Vertical -> "vertical"
+  }
+}
+
 pub const default_orientation: Orientation = Horizontal
 
 /// Requirement specifies if a selection is required

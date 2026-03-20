@@ -6,17 +6,11 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/types.{
-  type Interaction, type SelectionIndicator, Disabled, Enabled,
-  HideSelectionIndicator, ShowSelectionIndicator,
+  type Interaction, type Orientation, type SelectionIndicator, Disabled, Enabled,
+  HideSelectionIndicator, Horizontal, ShowSelectionIndicator, Vertical,
 }
 
 // --- Types ---
-
-/// Orientation specifies the layout orientation of the chipset
-pub type Orientation {
-  Horizontal
-  Vertical
-}
 
 /// SelectionMode specifies if multiple chips can be selected
 pub type SelectionMode {

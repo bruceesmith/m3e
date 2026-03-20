@@ -4,7 +4,7 @@ import lustre/attribute
 import lustre/element.{element}
 import m3e/link
 import m3e/nav_item
-import m3e/types.{Disabled, Enabled}
+import m3e/types.{Disabled, Enabled, Horizontal, Vertical}
 
 pub fn basic_render_test() {
   nav_item.new()
@@ -44,7 +44,7 @@ pub fn properties_test() {
   |> nav_item.disabled(Disabled)
   |> nav_item.disabled_interactive(nav_item.Interactive)
   |> nav_item.selected(nav_item.Selected)
-  |> nav_item.orientation(nav_item.Horizontal)
+  |> nav_item.orientation(Horizontal)
   |> nav_item.render([], [])
   |> should.equal(
     element(
@@ -69,7 +69,7 @@ pub fn config_test() {
         interaction: Disabled,
         focusability: nav_item.Interactive,
         selection: nav_item.Selected,
-        orientation: nav_item.Horizontal,
+        orientation: Horizontal,
       )
     }
 
@@ -96,7 +96,7 @@ pub fn default_config_test() {
   c.interaction |> should.equal(Enabled)
   c.focusability |> should.equal(nav_item.Static)
   c.selection |> should.equal(nav_item.Unselected)
-  c.orientation |> should.equal(nav_item.Vertical)
+  c.orientation |> should.equal(Vertical)
   c.link |> should.equal(None)
 }
 
@@ -122,7 +122,7 @@ pub fn setters_test() {
     |> nav_item.disabled(Disabled)
     |> nav_item.disabled_interactive(nav_item.Interactive)
     |> nav_item.selected(nav_item.Selected)
-    |> nav_item.orientation(nav_item.Horizontal)
+    |> nav_item.orientation(Horizontal)
 
   nav_item.render(item, [], [])
   |> should.equal(

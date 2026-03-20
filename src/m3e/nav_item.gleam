@@ -8,7 +8,10 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type Orientation, Disabled, Enabled, Vertical,
+  orientation_to_string,
+}
 
 // --- Types ---
 
@@ -35,13 +38,6 @@ pub opaque type NavItem {
     orientation: Orientation,
     selection: Selection,
   )
-}
-
-/// Orientation is the layout orientation of the item
-/// 
-pub type Orientation {
-  Horizontal
-  Vertical
 }
 
 /// Selection specifies if an item is selected or unselected
@@ -191,12 +187,4 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     SelectedIcon -> attribute("slot", "selected-icon")
   }
 }
-
 // --- PRIVATE INTERNAL HELPERS ---
-
-fn orientation_to_string(orientation: Orientation) -> String {
-  case orientation {
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
-  }
-}

@@ -6,6 +6,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type Orientation, Vertical, default_orientation}
 
 // --- Types ---
 
@@ -17,15 +18,6 @@ pub type Elevation {
 }
 
 pub const default_elevation: Elevation = Lowered
-
-/// Orientation is the layout orientation of the item
-/// 
-pub type Orientation {
-  Horizontal
-  Vertical
-}
-
-pub const default_orientation: Orientation = Horizontal
 
 /// Shape is the possible shape variants of a toolbar
 /// 

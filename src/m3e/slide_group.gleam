@@ -7,15 +7,11 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type Orientation, Disabled, Enabled, Horizontal, Vertical,
+}
 
 // --- Types ---
-
-/// Orientation specifies the layout orientation of the content
-pub type Orientation {
-  Horizontal
-  Vertical
-}
 
 /// SlideGroup provides Lustre support for the [M3E Slide Group component](https://matraic.github.io/m3e/#/components/slide_group.html)
 /// 

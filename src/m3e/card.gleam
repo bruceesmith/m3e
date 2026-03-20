@@ -8,7 +8,10 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{
+  type Interaction, type Orientation, Disabled, Enabled, default_orientation,
+  orientation_to_string,
+}
 
 // --- Types ---
 
@@ -44,16 +47,6 @@ pub opaque type Card {
     variant: Variant,
   )
 }
-
-/// Orientation is the orientation of the card
-/// 
-pub type Orientation {
-  Horizontal
-  Vertical
-}
-
-/// Default orientation
-pub const default_orientation = Vertical
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -220,13 +213,6 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 }
 
 // --- PRIVATE INTERNAL HELPERS ---
-
-fn orientation_to_string(o: Orientation) -> String {
-  case o {
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
-  }
-}
 
 fn variant_to_string(v: Variant) -> String {
   case v {
