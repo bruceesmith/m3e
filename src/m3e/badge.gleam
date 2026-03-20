@@ -10,19 +10,26 @@ import m3e/helpers.{option_attribute}
 
 // --- Types ---
 
-/// Size is the size of the badge
+/// Badge is a compact visual indicator for counts, presence, or emphasis that can be attached to icons, buttons, or other components
 /// 
-pub type Size {
-  Large
-  Medium
-  Small
+/// ## Fields:
+/// - for: the identifier of the interactive control to which this element is attached
+/// - label: the text content of the badge
+/// - size: the size of the badge
+/// - badge_position: the position of the badge, when attached to another element
+/// 
+pub opaque type Badge {
+  Badge(
+    for: Option(String),
+    label: String,
+    size: Size,
+    badge_position: BadgePosition,
+  )
 }
 
-pub const default_size: Size = Medium
-
-/// Anchoring is the position of the badge, when attached to another element
+/// BadgePosition is the position of the badge, when attached to another element
 ///
-pub type Anchoring {
+pub type BadgePosition {
   Above
   AboveAfter
   AboveBefore
@@ -33,32 +40,40 @@ pub type Anchoring {
   BelowBefore
 }
 
-pub const default_anchoring: Anchoring = AboveAfter
+pub const default_badge_position: BadgePosition = AboveAfter
 
-/// Badge is a compact visual indicator for counts, presence, or emphasis that can be attached to icons, buttons, or other components
+/// Size is the size of the badge
 /// 
-/// ## Fields:
-/// - for: the identifier of the interactive control to which this element is attached
-/// - label: the text content of the badge
-/// - size: the size of the badge
-/// - anchoring: the position of the badge, when attached to another element
-/// 
-pub opaque type Badge {
-  Badge(for: Option(String), label: String, size: Size, anchoring: Anchoring)
+pub type Size {
+  Large
+  Medium
+  Small
 }
+
+pub const default_size: Size = Medium
 
 // --- CONFIGURATION ---
 
 /// Config holds the configuration for a Badge
 /// 
 pub type Config {
-  Config(for: Option(String), label: String, size: Size, anchoring: Anchoring)
+  Config(
+    for: Option(String),
+    label: String,
+    size: Size,
+    badge_position: BadgePosition,
+  )
 }
 
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(for: None, label: "", size: default_size, anchoring: default_anchoring)
+  Config(
+    for: None,
+    label: "",
+    size: default_size,
+    badge_position: default_badge_position,
+  )
 }
 
 // --- CONSTRUCTORS ---
@@ -72,15 +87,20 @@ pub fn new(label: String) -> Badge {
 /// from_config creates a Badge from a Config record
 /// 
 pub fn from_config(c: Config) -> Badge {
-  Badge(for: c.for, label: c.label, size: c.size, anchoring: c.anchoring)
+  Badge(
+    for: c.for,
+    label: c.label,
+    size: c.size,
+    badge_position: c.badge_position,
+  )
 }
 
 // --- SETTERS ---
 
-/// anchoring sets the anchoring field
+/// badge_position sets the badge_position field
 /// 
-pub fn anchoring(b: Badge, anchoring: Anchoring) -> Badge {
-  Badge(..b, anchoring: anchoring)
+pub fn badge_position(b: Badge, badge_position: BadgePosition) -> Badge {
+  Badge(..b, badge_position: badge_position)
 }
 
 /// for sets the for field
@@ -111,7 +131,7 @@ pub fn render(b: Badge) -> Element(msg) {
     [
       option_attribute(b.for, fn(_) { "for" }, function.identity, None),
       attribute("size", size_to_string(b.size)),
-      attribute("anchoring", anchoring_to_string(b.anchoring)),
+      attribute("position", badge_position_to_string(b.badge_position)),
     ],
     [text(b.label)],
   )
@@ -125,8 +145,8 @@ pub fn render_config(config: Config) -> Element(msg) {
 
 // --- PRIVATE INTERNAL HELPERS ---
 
-fn anchoring_to_string(anchoring: Anchoring) -> String {
-  case anchoring {
+fn badge_position_to_string(badge_position: BadgePosition) -> String {
+  case badge_position {
     Above -> "above"
     AboveAfter -> "above-after"
     AboveBefore -> "above-before"

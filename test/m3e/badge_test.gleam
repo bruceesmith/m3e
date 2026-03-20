@@ -5,7 +5,8 @@ import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 
 import m3e/badge.{
-  Before, Below, Large, Medium, Small, anchoring, for, label, new, render, size,
+  Before, Below, Large, Medium, Small, badge_position, for, label, new, render,
+  size,
 }
 
 pub fn badge_basic_test() {
@@ -15,7 +16,7 @@ pub fn badge_basic_test() {
       "m3e-badge",
       [
         attribute("size", "medium"),
-        attribute("anchoring", "above-after"),
+        attribute("position", "above-after"),
       ],
       [text("Test Badge")],
     )
@@ -27,7 +28,7 @@ pub fn badge_full_test() {
     new("Original Label")
     |> for(Some("element_id"))
     |> size(Large)
-    |> anchoring(Below)
+    |> badge_position(Below)
     |> label("Final Label")
 
   let expected =
@@ -36,7 +37,7 @@ pub fn badge_full_test() {
       [
         attribute("for", "element_id"),
         attribute("size", "large"),
-        attribute("anchoring", "below"),
+        attribute("position", "below"),
       ],
       [text("Final Label")],
     )
@@ -50,7 +51,7 @@ pub fn badge_size_test() {
       "m3e-badge",
       [
         attribute("size", "small"),
-        attribute("anchoring", "above-after"),
+        attribute("position", "above-after"),
       ],
       [text("Test")],
     )
@@ -62,7 +63,7 @@ pub fn badge_size_test() {
       "m3e-badge",
       [
         attribute("size", "large"),
-        attribute("anchoring", "above-after"),
+        attribute("position", "above-after"),
       ],
       [text("Test")],
     )
@@ -74,21 +75,21 @@ pub fn badge_size_test() {
       "m3e-badge",
       [
         attribute("size", "medium"),
-        attribute("anchoring", "above-after"),
+        attribute("position", "above-after"),
       ],
       [text("Test")],
     )
   render(b) |> should.equal(expected)
 }
 
-pub fn badge_anchoring_test() {
-  let b = new("Test") |> anchoring(Before)
+pub fn badge_position_test() {
+  let b = new("Test") |> badge_position(Before)
   let expected =
     element(
       "m3e-badge",
       [
         attribute("size", "medium"),
-        attribute("anchoring", "before"),
+        attribute("position", "before"),
       ],
       [text("Test")],
     )
@@ -103,7 +104,7 @@ pub fn badge_for_test() {
       [
         attribute("for", "other_element"),
         attribute("size", "medium"),
-        attribute("anchoring", "above-after"),
+        attribute("position", "above-after"),
       ],
       [text("Test")],
     )
@@ -117,7 +118,7 @@ pub fn badge_label_test() {
       "m3e-badge",
       [
         attribute("size", "medium"),
-        attribute("anchoring", "above-after"),
+        attribute("position", "above-after"),
       ],
       [text("New Label")],
     )
