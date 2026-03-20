@@ -7,6 +7,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{type Element, element, text}
 
 import m3e/helpers.{option_attribute}
+import m3e/size_few.{type Size, default_size, size_to_string}
 
 // --- Types ---
 
@@ -41,16 +42,6 @@ pub type BadgePosition {
 }
 
 pub const default_badge_position: BadgePosition = AboveAfter
-
-/// Size is the size of the badge
-/// 
-pub type Size {
-  Large
-  Medium
-  Small
-}
-
-pub const default_size: Size = Medium
 
 // --- CONFIGURATION ---
 
@@ -155,13 +146,5 @@ fn badge_position_to_string(badge_position: BadgePosition) -> String {
     Below -> "below"
     BelowAfter -> "below-after"
     BelowBefore -> "below-before"
-  }
-}
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    Large -> "large"
-    Medium -> "medium"
-    Small -> "small"
   }
 }

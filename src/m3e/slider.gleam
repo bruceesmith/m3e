@@ -7,6 +7,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/size_many.{type Size, ExtraSmall, size_to_string}
 import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
@@ -21,16 +22,6 @@ pub type Discrete {
 pub type ValueLabels {
   ShowLabels
   HideLabels
-}
-
-/// Size of the slider
-/// 
-pub type Size {
-  ExtraSmall
-  Small
-  Medium
-  Large
-  ExtraLarge
 }
 
 pub const default_max = 100.0
@@ -158,16 +149,6 @@ pub fn size(s: Slider, size: Size) -> Slider {
 ///
 pub fn step(s: Slider, step: Float) -> Slider {
   Slider(..s, step: step)
-}
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    ExtraSmall -> "extra-small"
-    Small -> "small"
-    Medium -> "medium"
-    Large -> "large"
-    ExtraLarge -> "extra-large"
-  }
 }
 
 // --- RENDERING ---

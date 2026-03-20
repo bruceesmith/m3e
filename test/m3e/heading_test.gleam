@@ -3,9 +3,10 @@ import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
 import m3e/heading.{
-  Config, Emphasized, Headline, Large, Small, Title, default_config,
-  emphasized, new, render, render_config, size, variant,
+  Config, Emphasized, Headline, Title, default_config, emphasized, new, render,
+  render_config, size, variant,
 }
+import m3e/size_few.{Large, Small}
 
 pub fn heading_test() {
   let h = new("Hello") |> size(Large)

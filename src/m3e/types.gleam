@@ -1,7 +1,5 @@
 // types provides a library-wide location for shared semantic enumerations
 
-// pub const default_anchoring: AnchorPosition = AnchorAboveAfter
-
 /// Interaction specifies if a chipset is enabled or disabled
 /// 
 pub type Interaction {

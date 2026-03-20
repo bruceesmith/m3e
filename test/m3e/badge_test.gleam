@@ -4,10 +4,8 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 
-import m3e/badge.{
-  Before, Below, Large, Medium, Small, badge_position, for, label, new, render,
-  size,
-}
+import m3e/badge.{Before, Below, badge_position, for, label, new, render, size}
+import m3e/size_few.{Large, Medium, Small}
 
 pub fn badge_basic_test() {
   let b = new("Test Badge")

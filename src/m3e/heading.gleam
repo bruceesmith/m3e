@@ -6,6 +6,7 @@ import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/size_few.{type Size, Medium, size_to_string}
 
 // --- Types ---
 
@@ -20,14 +21,6 @@ pub type Emphasis {
 /// 
 pub opaque type Heading {
   Heading(emphasis: Emphasis, size: Size, variant: Variant, text: String)
-}
-
-/// Size is the size of the heading
-/// 
-pub type Size {
-  Large
-  Medium
-  Small
 }
 
 pub const default_size = Medium
@@ -127,14 +120,6 @@ pub fn render_config(
 }
 
 // --- PRIVATE INTERNAL HELPERS ---
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    Large -> "large"
-    Medium -> "medium"
-    Small -> "small"
-  }
-}
 
 fn variant_to_string(variant: Variant) -> String {
   case variant {

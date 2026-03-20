@@ -8,6 +8,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/size_few.{type Size, Small, size_to_string}
 
 // --- Types ---
 
@@ -21,14 +22,6 @@ import m3e/helpers.{boolean_attribute, option_attribute}
 /// 
 pub opaque type AppBar {
   AppBar(alignment: TitleAlignment, for: Option(String), size: Size)
-}
-
-/// Size is the size of the bar
-/// 
-pub type Size {
-  Large
-  Medium
-  Small
 }
 
 /// Default size
@@ -148,13 +141,4 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     TrailingIcon -> attribute("slot", "trailing-icon")
   }
 }
-
 // --- PRIVATE INTERNAL HELPERS ---
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    Large -> "large"
-    Medium -> "medium"
-    Small -> "small"
-  }
-}

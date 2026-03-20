@@ -3,17 +3,18 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/app_bar
+import m3e/size_few.{Large}
 
 pub fn new_test() {
   app_bar.new()
   |> app_bar.alignment(app_bar.Centered)
   |> app_bar.for(Some("nav-id"))
-  |> app_bar.size(app_bar.Large)
+  |> app_bar.size(Large)
   |> should.equal(
     app_bar.from_config(app_bar.Config(
       alignment: app_bar.Centered,
       for: Some("nav-id"),
-      size: app_bar.Large,
+      size: Large,
     )),
   )
 }
@@ -36,9 +37,9 @@ pub fn for_test() {
 
 pub fn size_test() {
   app_bar.new()
-  |> app_bar.size(app_bar.Large)
+  |> app_bar.size(Large)
   |> should.equal(app_bar.from_config(
-    app_bar.Config(..app_bar.default_config(), size: app_bar.Large),
+    app_bar.Config(..app_bar.default_config(), size: Large),
   ))
 }
 
@@ -47,7 +48,7 @@ pub fn render_test() {
     app_bar.new()
     |> app_bar.alignment(app_bar.Centered)
     |> app_bar.for(Some("nav-id"))
-    |> app_bar.size(app_bar.Large)
+    |> app_bar.size(Large)
 
   app_bar.render(bar, [], [])
   |> should.equal(

@@ -4,18 +4,9 @@ import gleam/list.{flatten}
 
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
+import m3e/size_many.{type Size, default_size, size_to_string}
 
 // --- Types ---
-
-/// Size is the size of the Split Button
-/// 
-pub type Size {
-  ExtraSmall
-  Small
-  Medium
-  Large
-  ExtraLarge
-}
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -25,8 +16,6 @@ pub type Slot {
   TrailingButton
   // The trailing icon button to open a menu of related actions
 }
-
-pub const default_size = Small
 
 /// SplitButton provides a primary action alongside a menu of related actions, uniting two buttons in a single expressive surface
 /// 
@@ -172,16 +161,6 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 }
 
 // --- PRIVATE INTERNAL HELPERS ---
-
-fn size_to_string(s: Size) -> String {
-  case s {
-    ExtraSmall -> "extra-small"
-    Small -> "small"
-    Medium -> "medium"
-    Large -> "large"
-    ExtraLarge -> "extra-large"
-  }
-}
 
 fn variant_to_string(v: Variant) -> String {
   case v {

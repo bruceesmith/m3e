@@ -2,9 +2,8 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
-import m3e/split_button.{
-  Elevated, ExtraLarge, Large, Outlined, Tonal, new, render, size, variant,
-}
+import m3e/size_many.{ExtraLarge, Large, Small}
+import m3e/split_button.{Elevated, Outlined, Tonal, new, render, size, variant}
 
 pub fn split_button_new_test() {
   let leading = text("Leading")
@@ -128,14 +127,12 @@ pub fn config_test() {
   let leading = text("L")
   let trailing = text("T")
   split_button.default_config(leading, trailing)
-  |> should.equal(
-    split_button.Config(
-      leading: leading,
-      size: split_button.Small,
-      trailing: trailing,
-      variant: split_button.Filled,
-    ),
-  )
+  |> should.equal(split_button.Config(
+    leading: leading,
+    size: Small,
+    trailing: trailing,
+    variant: split_button.Filled,
+  ))
 }
 
 pub fn from_config_test() {

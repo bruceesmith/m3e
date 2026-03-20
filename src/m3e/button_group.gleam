@@ -6,28 +6,7 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-
-/// Size variants control spacing between button
-///
-pub type Size {
-  ExtraSmall
-  Small
-  Medium
-  Large
-  ExtraLarge
-}
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    ExtraSmall -> "extra-small"
-    Small -> "small"
-    Medium -> "medium"
-    Large -> "large"
-    ExtraLarge -> "extra-large"
-  }
-}
-
-pub const default_size = Small
+import m3e/size_many.{type Size, default_size, size_to_string}
 
 /// Variant is the appearance variant of the group
 ///

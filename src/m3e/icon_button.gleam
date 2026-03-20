@@ -8,6 +8,7 @@ import lustre/element.{type Element, element}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
+import m3e/size_many.{type Size, default_size, size_to_string}
 import m3e/types.{type SelectionState, Selected, Unselected}
 
 // --- Types ---
@@ -57,19 +58,6 @@ pub type Shape {
 }
 
 pub const default_shape = Rounded
-
-/// Size is the size of the button
-/// extra-small, small (default), medium, large, and extra-large
-/// 
-pub type Size {
-  ExtraSmall
-  Small
-  Medium
-  Large
-  ExtraLarge
-}
-
-pub const default_size = Small
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -304,18 +292,6 @@ fn shape_to_string(s: Shape) -> String {
   case s {
     Rounded -> "rounded"
     Square -> "square"
-  }
-}
-
-/// size_to_string converts a Size to a string
-/// 
-fn size_to_string(s: Size) -> String {
-  case s {
-    ExtraSmall -> "extra-small"
-    Small -> "small"
-    Medium -> "medium"
-    Large -> "large"
-    ExtraLarge -> "extra-large"
   }
 }
 

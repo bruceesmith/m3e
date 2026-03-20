@@ -10,6 +10,7 @@ import lustre/element/html.{span, text}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
+import m3e/size_few.{type Size, Medium, size_to_string}
 
 // --- Types ---
 
@@ -58,14 +59,6 @@ pub type Interaction {
   Enabled
   Disabled
   DisabledInteractive
-}
-
-/// Size is the size of the bar
-/// 
-pub type Size {
-  Large
-  Medium
-  Small
 }
 
 /// Default size
@@ -268,14 +261,6 @@ fn extended_label_elt(el: Option(String)) -> Element(msg) {
   case el {
     Some(label) -> span([slot(Label)], [text(label)])
     None -> element.none()
-  }
-}
-
-fn size_to_string(size: Size) -> String {
-  case size {
-    Large -> "large"
-    Medium -> "medium"
-    Small -> "small"
   }
 }
 

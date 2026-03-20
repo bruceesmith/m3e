@@ -3,10 +3,8 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
-import m3e/button_group.{
-  Connected, ExtraSmall, Large, Medium, Small, Standard, multi, new, render,
-  size, variant,
-}
+import m3e/button_group.{Connected, Standard, multi, new, render, size, variant}
+import m3e/size_many.{ExtraSmall, Large, Medium, Small}
 
 pub fn button_group_creation_test() {
   let bg =

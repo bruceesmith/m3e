@@ -4,10 +4,11 @@ import lustre/attribute.{attribute, disabled, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
-  Elevated, Filled, Large, Outlined, Square, Text, form, icons, label, new,
-  render, selected_label, shape, size, toggle, variant,
+  Elevated, Filled, Outlined, Square, Text, form, icons, label, new, render,
+  selected_label, shape, size, toggle, variant,
 }
 import m3e/form_submission.{FormSubmission, Submit}
+import m3e/size_many.{Large}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)
