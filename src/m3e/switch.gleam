@@ -9,18 +9,12 @@ import lustre/element/html.{text}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, default_interaction}
-
-// --- TYPES ---
-
-/// CheckedState specfies if a switch is checked or not
-/// 
-pub type CheckedState {
-  Checked
-  Unchecked
+import m3e/types.{
+  type CheckedState, type Interaction, Checked, Disabled, default_checked_state,
+  default_interaction,
 }
 
-pub const default_checked_state = Unchecked
+// --- TYPES ---
 
 pub type Icons {
   Both
@@ -69,7 +63,7 @@ pub fn default_config() -> Config {
   Config(
     label: None,
     icons: Neither,
-    checked: Unchecked,
+    checked: default_checked_state,
     disabled: default_interaction,
     form_submission: None,
   )

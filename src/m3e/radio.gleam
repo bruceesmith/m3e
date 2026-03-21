@@ -9,17 +9,11 @@ import lustre/element.{type Element, element}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/types.{
-  type Interaction, type Requirement, Disabled, Optional, Required,
-  default_interaction,
+  type CheckedState, type Interaction, type Requirement, Checked, Disabled,
+  Optional, Required, default_checked_state, default_interaction,
 }
 
 // --- Types ---
-
-/// CheckedState specifies if a radio is checked or unchecked
-pub type CheckedState {
-  Checked
-  Unchecked
-}
 
 /// Radio provides Lustre support for the [M3E Radio component](https://matraic.github.io/m3e/#/components/radio.html)
 /// 
@@ -55,7 +49,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    checked: Unchecked,
+    checked: default_checked_state,
     interaction: default_interaction,
     form_submission: None,
     requirement: Optional,

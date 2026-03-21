@@ -4,7 +4,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/radio.{checked, disabled, new, render, required}
-import m3e/types.{Disabled, Enabled, Optional, Required}
+import m3e/types.{Checked, Disabled, Enabled, Optional, Required, Unchecked}
 
 pub fn radio_creation_test() {
   let r = new()
@@ -15,7 +15,7 @@ pub fn radio_creation_test() {
 pub fn radio_setters_test() {
   let r = new()
 
-  let r_checked = r |> checked(radio.Checked)
+  let r_checked = r |> checked(Checked)
   let expected_checked = element("m3e-radio", [attribute("checked", "")], [])
   render(r_checked, [], []) |> should.equal(expected_checked)
 
@@ -37,7 +37,7 @@ pub fn radio_element_test() {
 pub fn config_test() {
   let c =
     radio.Config(
-      checked: radio.Checked,
+      checked: Checked,
       interaction: Disabled,
       form_submission: None,
       requirement: Required,
@@ -62,7 +62,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = radio.default_config()
 
-  c.checked |> should.equal(radio.Unchecked)
+  c.checked |> should.equal(Unchecked)
   c.interaction |> should.equal(Enabled)
   c.form_submission |> should.equal(None)
   c.requirement |> should.equal(Optional)
