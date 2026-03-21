@@ -21,6 +21,8 @@ pub type IndicatorVisibility {
   Hidden
 }
 
+pub const default_indicator_visibility: IndicatorVisibility = Visible
+
 /// SegmentedButton provides Lustre support for the [M3E Segmented Button component](https://matraic.github.io/m3e/#/components/segmented-button.html)
 ///
 /// ## Fields:
@@ -56,7 +58,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
-    indicator_visibility: Visible,
+    indicator_visibility: default_indicator_visibility,
     selection_mode: default_selection_mode,
     name: None,
   )
