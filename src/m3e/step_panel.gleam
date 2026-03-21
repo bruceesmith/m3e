@@ -3,6 +3,8 @@
 import lustre/attribute.{attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// StepPanel provides Lustre support for the [M3E Step Panel component
 /// 
 /// ## Fields:
@@ -12,17 +14,23 @@ pub opaque type StepPanel {
   StepPanel(id: String)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new StepPanel
 /// 
 pub fn new(id: String) -> StepPanel {
   StepPanel(id: id)
 }
 
+// --- SETTERS ---
+
 /// id sets the id field
 /// 
 pub fn id(_: StepPanel, id: String) -> StepPanel {
   StepPanel(id: id)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a StepPanel
 /// 
