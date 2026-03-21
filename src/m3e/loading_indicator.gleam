@@ -5,21 +5,7 @@ import gleam/list.{filter, flatten}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-/// Variant is the appearance variant of the indicator
-/// 
-pub type Variant {
-  Contained
-  Uncontained
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Contained -> "contained"
-    Uncontained -> "uncontained"
-  }
-}
-
-pub const default_variant: Variant = Uncontained
+// --- Types ---
 
 /// LoadingIndicator shows indeterminate progress for a short wait time
 /// 
@@ -30,11 +16,32 @@ pub opaque type LoadingIndicator {
   LoadingIndicator(variant: Variant)
 }
 
+/// Variant is the appearance variant of the indicator
+/// 
+pub type Variant {
+  Contained
+  Uncontained
+}
+
+pub const default_variant: Variant = Uncontained
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new LoadingIndicator
 /// 
 pub fn new() -> LoadingIndicator {
   LoadingIndicator(variant: default_variant)
 }
+
+// --- SETTERS ---
+
+/// variant sets the variant field
+/// 
+pub fn variant(_: LoadingIndicator, variant: Variant) -> LoadingIndicator {
+  LoadingIndicator(variant: variant)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a LoadingIndicator
 ///
@@ -61,8 +68,11 @@ pub fn render(
   )
 }
 
-/// variant sets the variant field
-/// 
-pub fn variant(_: LoadingIndicator, variant: Variant) -> LoadingIndicator {
-  LoadingIndicator(variant: variant)
+// --- PRIVATE HELPER FUNCTIONS ---
+
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Contained -> "contained"
+    Uncontained -> "uncontained"
+  }
 }
