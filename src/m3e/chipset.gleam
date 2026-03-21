@@ -13,14 +13,6 @@ import m3e/types.{
 
 // --- Types ---
 
-/// Type of chipset
-///
-pub type Type {
-  Information
-  Filter
-  Input
-}
-
 /// Chipset contains all the information for a ChipSet
 /// 
 /// ## Fields:
@@ -40,10 +32,20 @@ pub opaque type ChipSet {
   )
 }
 
+/// Type of chipset
+///
+pub type Type {
+  Information
+  Filter
+  Input
+}
+
+pub const default_type: Type = Information
+
 // --- CONFIGURATION ---
 
 /// Config holds the configuration for a ChipSet
-/// 
+///  
 pub type Config {
   Config(
     interaction: Interaction,
@@ -61,7 +63,7 @@ pub fn default_config() -> Config {
     interaction: default_interaction,
     selection_indicator: ShowSelectionIndicator,
     selection_mode: default_selection_mode,
-    type_: Information,
+    type_: default_type,
     orientation: Horizontal,
   )
 }
