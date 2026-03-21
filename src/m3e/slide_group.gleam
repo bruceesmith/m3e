@@ -8,8 +8,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/types.{
-  type Interaction, type Orientation, Disabled, Horizontal, Vertical,
-  default_interaction,
+  type Interaction, type Orientation, Disabled, Vertical, default_interaction,
+  default_orientation,
 }
 
 // --- Types ---
@@ -64,7 +64,7 @@ pub fn default_config() -> Config {
     next_page_label: "Next page",
     previous_page_label: "Previous page",
     threshold: 0,
-    orientation: Horizontal,
+    orientation: default_orientation,
   )
 }
 

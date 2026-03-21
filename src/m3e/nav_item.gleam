@@ -10,7 +10,7 @@ import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 import m3e/types.{
   type Interaction, type Orientation, type SelectionState, Disabled, Selected,
-  Unselected, Vertical, default_interaction, orientation_to_string,
+  Vertical, default_interaction, default_selection_state, orientation_to_string,
 }
 
 // --- Types ---
@@ -20,6 +20,8 @@ pub type Focusability {
   Interactive
   Static
 }
+
+pub const default_focusability: Focusability = Static
 
 /// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
@@ -39,6 +41,8 @@ pub opaque type NavItem {
     selection: SelectionState,
   )
 }
+
+pub const default_orientation: Orientation = Vertical
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -67,11 +71,11 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    focusability: Static,
+    focusability: default_focusability,
     interaction: default_interaction,
     link: None,
-    orientation: Vertical,
-    selection: Unselected,
+    orientation: default_orientation,
+    selection: default_selection_state,
   )
 }
 
