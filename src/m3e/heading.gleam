@@ -17,6 +17,8 @@ pub type Emphasis {
   Standard
 }
 
+pub const default_emphasis = Standard
+
 /// Heading is the basis for constructing an HTML m3e-heading component
 /// 
 pub opaque type Heading {
@@ -48,7 +50,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    emphasis: Standard,
+    emphasis: default_emphasis,
     size: default_size,
     variant: default_variant,
     text: "",
