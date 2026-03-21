@@ -10,17 +10,11 @@ import lustre/element/html.{text}
 import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
 import m3e/types.{
-  type Interaction, type SelectionState, Disabled, Selected, Unselected,
-  default_interaction,
+  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
+  default_selection_state,
 }
 
 // --- Types ---
-
-/// Removability specifies if a chip can be removed
-pub type Removability {
-  Removable
-  Permanent
-}
 
 /// Behaviour controls the behavior of an assist or suggestion chip
 ///
@@ -29,6 +23,8 @@ pub type Behaviour {
   Reset
   Submit
 }
+
+pub const default_behaviour: Behaviour = Normal
 
 /// Chip provides expressive, accessible chip components for actions, input, filtering, and suggestions
 ///
@@ -55,6 +51,14 @@ pub opaque type Chip(msg) {
     variant: Variant,
   )
 }
+
+/// Removability specifies if a chip can be removed
+pub type Removability {
+  Removable
+  Permanent
+}
+
+pub const default_removability: Removability = Permanent
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -91,13 +95,17 @@ pub type Type {
   Suggestion
 }
 
+pub const default_type: Type = Information
+
 /// Variant is the style of chip
+/// 
 pub type Variant {
   Elevated
   Outlined
 }
 
 /// Default Variant
+/// 
 pub const default_variant = Outlined
 
 // --- CONFIGURATION ---
@@ -123,13 +131,13 @@ pub type Config(msg) {
 pub fn default_config() -> Config(msg) {
   Config(
     label: "",
-    behaviour: Normal,
+    behaviour: default_behaviour,
     interaction: default_interaction,
     form_submission: None,
     icon: None,
-    removability: Permanent,
-    selection: Unselected,
-    type_: Information,
+    removability: default_removability,
+    selection: default_selection_state,
+    type_: default_type,
     variant: default_variant,
   )
 }
@@ -266,7 +274,7 @@ pub fn render(
         disabled_attr(c.type_, c.interaction),
         removable_attr(c.type_, c.removability),
         selected_attr(c.type_, c.selection),
-        variant_attr(c.variant),
+        attribute("variant", variant_to_string(c.variant)),
       ],
       form_submission.attributes(c.form_submission),
       attributes,
@@ -351,10 +359,6 @@ fn type_to_string(t: Type) -> String {
     Input -> "m3e-input-chip"
     Suggestion -> "m3e-suggestion-chip"
   }
-}
-
-fn variant_attr(v: Variant) -> Attribute(msg) {
-  attribute("variant", variant_to_string(v))
 }
 
 fn variant_to_string(v: Variant) -> String {
