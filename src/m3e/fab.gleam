@@ -21,6 +21,9 @@ pub type Elevation {
   Lowered
 }
 
+pub const default_elevation: Elevation = Raised
+
+///
 /// Extension specifies if the element is extended
 /// 
 pub type Extension {
@@ -28,6 +31,9 @@ pub type Extension {
   NotExtended
 }
 
+pub const default_extension: Extension = NotExtended
+
+///
 /// FAB is a floating action button (FAB) used to present important actions
 /// 
 /// ## Fields:
@@ -60,6 +66,8 @@ pub type Interaction {
   Disabled
   DisabledInteractive
 }
+
+pub const default_interaction: Interaction = Enabled
 
 /// Default size
 /// 
@@ -111,12 +119,12 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: Enabled,
-    extension: NotExtended,
+    interaction: default_interaction,
+    extension: default_extension,
     extended_label: None,
     form_submission: None,
     link: None,
-    elevation: Raised,
+    elevation: default_elevation,
     size: default_size,
     variant: default_variant,
   )
