@@ -1,5 +1,14 @@
 // types provides a library-wide location for shared semantic enumerations
 
+/// CheckedState specifies if a checkbox is checked or unchecked
+/// 
+pub type CheckedState {
+  Checked
+  Unchecked
+}
+
+pub const default_checked_state: CheckedState = Unchecked
+
 /// Interaction specifies if a chipset is enabled or disabled
 /// 
 pub type Interaction {
