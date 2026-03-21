@@ -8,6 +8,8 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 
+// --- Types ---
+
 /// Diameter is an alias to Int for clarity
 ///
 pub type Diameter =
@@ -31,14 +33,7 @@ pub type Mode {
   Query
 }
 
-fn mode_to_string(mode: Mode) -> String {
-  case mode {
-    Buffer -> "buffer"
-    Determinate -> "determinate"
-    Indeterminate -> "indeterminate"
-    Query -> "query"
-  }
-}
+pub const default_mode = Determinate
 
 /// StrokeWidth is an alias to Int for clarity
 ///
@@ -59,12 +54,7 @@ pub type Variant {
   Linear
 }
 
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Circular -> "m3e-circular-progress-indicator"
-    Linear -> "m3e-linear-progress-indicator"
-  }
-}
+pub const default_variant = Linear
 
 /// ProgressIndicator holds all the values necessary to construct an M3E Progress Indicator
 ///
@@ -115,10 +105,10 @@ pub fn default_config() -> Config {
     content: None,
     diameter: default_diameter,
     max: default_max,
-    mode: Determinate,
+    mode: default_mode,
     stroke_width: default_stroke_width,
     value: 0,
-    variant: Linear,
+    variant: default_variant,
   )
 }
 
@@ -189,10 +179,7 @@ pub fn diameter(pi: ProgressIndicator, diameter: Diameter) -> ProgressIndicator 
 
 /// indeterminate sets the `mode` field for Circular (semantic enum support)
 ///
-pub fn indeterminate(
-  pi: ProgressIndicator,
-  mode: Mode,
-) -> ProgressIndicator {
+pub fn indeterminate(pi: ProgressIndicator, mode: Mode) -> ProgressIndicator {
   case pi.variant {
     Circular -> ProgressIndicator(..pi, mode: mode)
     Linear -> pi
@@ -357,6 +344,15 @@ fn mode_attr(variant: Variant, mode: Mode) -> Attribute(msg) {
   }
 }
 
+fn mode_to_string(mode: Mode) -> String {
+  case mode {
+    Buffer -> "buffer"
+    Determinate -> "determinate"
+    Indeterminate -> "indeterminate"
+    Query -> "query"
+  }
+}
+
 fn stroke_width_attr(variant: Variant, width: StrokeWidth) -> Attribute(msg) {
   case variant {
     Circular ->
@@ -371,4 +367,11 @@ fn stroke_width_validate(stroke_width: StrokeWidth) -> StrokeWidth {
 
 fn value_validate(max: Maximum, value: Value) -> Value {
   value |> int.max(0) |> int.min(max)
+}
+
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Circular -> "m3e-circular-progress-indicator"
+    Linear -> "m3e-linear-progress-indicator"
+  }
 }
