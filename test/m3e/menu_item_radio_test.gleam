@@ -1,7 +1,9 @@
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
+
 import m3e/menu_item_radio
+import m3e/types.{Checked, Unchecked}
 
 pub fn basic_test() {
   let m = menu_item_radio.new()
@@ -15,17 +17,16 @@ pub fn basic_test() {
 pub fn checked_test() {
   let m =
     menu_item_radio.new()
-    |> menu_item_radio.checked(True)
+    |> menu_item_radio.checked(Checked)
 
-  let expected =
-    element("m3e-menu-item-radio", [attribute("checked", "")], [])
+  let expected = element("m3e-menu-item-radio", [attribute("checked", "")], [])
 
   menu_item_radio.render(m, [], [])
   |> should.equal(expected)
 
   let m2 =
     m
-    |> menu_item_radio.checked(False)
+    |> menu_item_radio.checked(Unchecked)
 
   let expected2 = element("m3e-menu-item-radio", [], [])
 
@@ -38,8 +39,7 @@ pub fn disabled_test() {
     menu_item_radio.new()
     |> menu_item_radio.disabled(True)
 
-  let expected =
-    element("m3e-menu-item-radio", [attribute("disabled", "")], [])
+  let expected = element("m3e-menu-item-radio", [attribute("disabled", "")], [])
 
   menu_item_radio.render(m, [], [])
   |> should.equal(expected)

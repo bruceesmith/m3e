@@ -6,6 +6,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/types.{type CheckedState, Checked, default_checked_state}
 
 // --- Types ---
 
@@ -16,7 +17,7 @@ import m3e/helpers.{boolean_attribute}
 /// - disabled: Whether the element is disabled
 /// 
 pub opaque type MenuItemRadio {
-  MenuItemRadio(checked: Bool, disabled: Bool)
+  MenuItemRadio(checked: CheckedState, disabled: Bool)
 }
 
 /// Slot gives type-safe names to each of the defined HTML named slots
@@ -33,14 +34,14 @@ pub type Slot {
 /// new creates a new MenuItemRadio
 ///
 pub fn new() -> MenuItemRadio {
-  MenuItemRadio(checked: False, disabled: False)
+  MenuItemRadio(checked: default_checked_state, disabled: False)
 }
 
 // --- SETTERS ---
 
 /// checked sets the checked field
 ///
-pub fn checked(m: MenuItemRadio, checked: Bool) -> MenuItemRadio {
+pub fn checked(m: MenuItemRadio, checked: CheckedState) -> MenuItemRadio {
   MenuItemRadio(..m, checked: checked)
 }
 
@@ -62,7 +63,7 @@ pub fn render(
   element(
     "m3e-menu-item-radio",
     [
-      boolean_attribute("checked", m.checked),
+      boolean_attribute("checked", m.checked == Checked),
       boolean_attribute("disabled", m.disabled),
       ..attributes
     ]
