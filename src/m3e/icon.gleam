@@ -16,6 +16,8 @@ pub type Fill {
   NotFilled
 }
 
+pub const default_fill: Fill = NotFilled
+
 /// The Grade of the variable font icon
 /// [Refer](https://m3.material.io/styles/icons/applying-icons)
 ///
@@ -23,14 +25,6 @@ pub type Grade {
   Low
   Medium
   High
-}
-
-fn grade_to_string(grade: Grade) -> String {
-  case grade {
-    Low -> "low"
-    Medium -> "medium"
-    High -> "high"
-  }
 }
 
 /// Default grade
@@ -83,14 +77,6 @@ pub type Variant {
   Sharp
 }
 
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Outlined -> "outlined"
-    Rounded -> "rounded"
-    Sharp -> "sharp"
-  }
-}
-
 /// Default variant
 pub const default_variant = Outlined
 
@@ -130,7 +116,7 @@ pub type Config(msg) {
 pub fn default_config() -> Config(msg) {
   Config(
     name: "",
-    fill: NotFilled,
+    fill: default_fill,
     grade: default_grade,
     optical_size: default_optical_size,
     purpose: none(),
@@ -254,6 +240,14 @@ fn filled_attr(f: Fill) -> Attribute(msg) {
   }
 }
 
+fn grade_to_string(grade: Grade) -> String {
+  case grade {
+    Low -> "low"
+    Medium -> "medium"
+    High -> "high"
+  }
+}
+
 fn optical_size_validate(os: OpticalSize) -> OpticalSize {
   clamp_with_default(
     os,
@@ -261,6 +255,14 @@ fn optical_size_validate(os: OpticalSize) -> OpticalSize {
     largest_optical_size,
     default_optical_size,
   )
+}
+
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Outlined -> "outlined"
+    Rounded -> "rounded"
+    Sharp -> "sharp"
+  }
 }
 
 fn weight_validate(weight: Weight) -> Weight {
