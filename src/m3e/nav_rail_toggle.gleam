@@ -3,6 +3,8 @@
 import lustre/attribute
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// NavRailToggle is an element, nested within a clickable element, used to toggle the expanded state of a navigation rail.
 ///
 /// ## Fields:
@@ -12,20 +14,26 @@ pub opaque type NavRailToggle {
   NavRailToggle(for: String)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a NavRailToggle
 ///
 pub fn new(for: String) -> NavRailToggle {
   NavRailToggle(for: for)
 }
 
-/// render creates a Lustre Element from a NavRailToggle
-///
-pub fn render(m: NavRailToggle) -> Element(msg) {
-  element("m3e-nav-rail-toggle", [attribute.for(m.for)], [])
-}
+// --- SETTERS ---
 
 /// for sets the for field
 ///
 pub fn for(_: NavRailToggle, for: String) -> NavRailToggle {
   NavRailToggle(for: for)
+}
+
+// --- RENDERERING ---
+
+/// render creates a Lustre Element from a NavRailToggle
+///
+pub fn render(m: NavRailToggle) -> Element(msg) {
+  element("m3e-nav-rail-toggle", [attribute.for(m.for)], [])
 }
