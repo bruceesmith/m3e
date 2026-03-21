@@ -13,17 +13,13 @@ import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- TYPES ---
 
-/// PageSizeVisibility specifies if the page size selector is visible or hidden
-pub type PageSizeVisibility {
-  Visible
-  Hidden
-}
-
 /// FirstLastButtonsVisibility specifies if first/last buttons are visible or hidden
 pub type FirstLastButtonsVisibility {
   Shown
   Omitted
 }
+
+pub const default_first_last_buttons_visibility = Omitted
 
 /// PageSize captures the semantics of the page-size attribute
 /// 
@@ -41,6 +37,14 @@ pub const default_page_sizes = [
   PageSize(50),
   PageSize(100),
 ]
+
+/// PageSizeVisibility specifies if the page size selector is visible or hidden
+pub type PageSizeVisibility {
+  Visible
+  Hidden
+}
+
+pub const default_page_size_visibility = Visible
 
 /// Paginator provides Lustre support for the [M3E Paginator component](https://matraic.github.io/m3e/#/components/paginator.html)
 /// 
@@ -112,13 +116,23 @@ pub type Config {
   )
 }
 
+pub const default_first_page_label = "First page"
+
+pub const default_items_per_page_label = "Items per page"
+
+pub const default_last_page_label = "Last page"
+
+pub const default_next_page_label = "Next page"
+
+pub const default_previous_page_label = "Previous page"
+
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
     first_page_label: "First page",
-    page_size_visibility: Visible,
+    page_size_visibility: default_page_size_visibility,
     items_per_page_label: "Items per page",
     last_page_label: "Last page",
     length: 0,
