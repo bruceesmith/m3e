@@ -4,23 +4,7 @@ import gleam/list.{filter, flatten}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
-/// Variant is the appearance variant of the menu
-/// 
-pub type Variant {
-  Primary
-  Secondary
-  Tertiary
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Primary -> "primary"
-    Secondary -> "secondary"
-    Tertiary -> "tertiary"
-  }
-}
-
-pub const default_variant = Primary
+// --- Types ---
 
 /// FabMenu ia a menu, opened from a floating action button (FAB), used to display multiple related actions
 /// 
@@ -32,11 +16,39 @@ pub opaque type FabMenu {
   FabMenu(id: String, variant: Variant)
 }
 
+/// Variant is the appearance variant of the menu
+/// 
+pub type Variant {
+  Primary
+  Secondary
+  Tertiary
+}
+
+pub const default_variant = Primary
+
+// --- CONSTRUCTORS ---
+
 /// new creates a new FabMenu
 /// 
 pub fn new(id: String) -> FabMenu {
   FabMenu(id: id, variant: default_variant)
 }
+
+// --- SETTERS ---
+
+/// id sets the id field
+///
+pub fn id(f: FabMenu, id: String) -> FabMenu {
+  FabMenu(..f, id: id)
+}
+
+/// variant sets the variant field
+///
+pub fn variant(f: FabMenu, variant: Variant) -> FabMenu {
+  FabMenu(..f, variant: variant)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a FabMenu
 ///
@@ -64,14 +76,12 @@ pub fn render(
   )
 }
 
-/// id sets the id field
-///
-pub fn id(f: FabMenu, id: String) -> FabMenu {
-  FabMenu(..f, id: id)
-}
+// --- PRIVATE HELPER FUNCTIONS ---
 
-/// variant sets the variant field
-///
-pub fn variant(f: FabMenu, variant: Variant) -> FabMenu {
-  FabMenu(..f, variant: variant)
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Primary -> "primary"
+    Secondary -> "secondary"
+    Tertiary -> "tertiary"
+  }
 }
