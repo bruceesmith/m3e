@@ -12,6 +12,21 @@ import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
 
+/// Position is the possible positions for a rich tooltip
+///
+pub type Position {
+  Above
+  AboveAfter
+  AboveBefore
+  After
+  Before
+  Below
+  BelowBefore
+  BelowAfter
+}
+
+pub const default_position: Position = Below
+
 /// RichTooltip is an element, nested within a clickable element, used to dismiss a parenting rich tooltip
 ///
 /// ## Fields:
@@ -29,19 +44,6 @@ pub opaque type RichTooltip {
     position: Position,
     show_delay: Int,
   )
-}
-
-/// Position is the possible positions for a rich tooltip
-///
-pub type Position {
-  AboveAfter
-  AboveBefore
-  BelowBefore
-  BelowAfter
-  Before
-  After
-  Above
-  Below
 }
 
 /// Slot gives type-safe names to each of the defined HTML named slots
@@ -81,7 +83,7 @@ pub fn default_config() -> Config {
     interaction: default_interaction,
     for: "",
     hide_delay: 1500,
-    position: Below,
+    position: default_position,
     show_delay: 0,
   )
 }
