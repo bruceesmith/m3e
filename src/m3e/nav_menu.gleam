@@ -3,17 +3,23 @@
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// NavMenu provides Lustre support for the [M3E Nav Menu component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 /// 
 pub opaque type NavMenu {
   NavMenu
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a NavMenu
 ///
 pub fn new() -> NavMenu {
   NavMenu
 }
+
+// --- RENDERING ---
 
 /// render creates an HTML m3e-nav-menu component from a NavMenu
 ///
