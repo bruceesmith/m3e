@@ -3,6 +3,8 @@
 import gleam/option.{type Option, None, Some, unwrap}
 import lustre/effect.{type Effect}
 
+import m3e/types.{type Dismissibility, Dismissible, default_dismissibility}
+
 pub const default_action_label = ""
 
 pub const default_close_label = "Close"
@@ -10,12 +12,6 @@ pub const default_close_label = "Close"
 pub const default_duration = 3000
 
 // --- Types ---
-
-/// Dismissibility specifies if a snackbar can be dismissed by the user
-pub type Dismissibility {
-  Dismissible
-  NotDismissible
-}
 
 /// Options represents the SnackbarOptions JavaScript object
 /// 
@@ -90,7 +86,7 @@ pub fn default_config(message: String) -> Config {
     message: message,
     action_label: None,
     close_label: None,
-    dismissibility: NotDismissible,
+    dismissibility: default_dismissibility,
     duration: None,
   )
 }

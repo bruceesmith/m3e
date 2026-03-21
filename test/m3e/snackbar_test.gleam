@@ -1,13 +1,15 @@
 import gleam/option.{None, Some}
 import gleeunit/should
+
 import m3e/snackbar
+import m3e/types.{Dismissible, NotDismissible}
 
 pub fn snackbar_new_test() {
   let s = snackbar.new("Hello")
   s.message |> should.equal("Hello")
   s.action_label |> should.equal(None)
   s.close_label |> should.equal(None)
-  s.dismissibility |> should.equal(snackbar.NotDismissible)
+  s.dismissibility |> should.equal(NotDismissible)
   s.duration |> should.equal(None)
 }
 
@@ -16,17 +18,15 @@ pub fn snackbar_setters_test() {
   |> snackbar.message("New")
   |> snackbar.action_label(Some("Action"))
   |> snackbar.close_label(Some("Close"))
-  |> snackbar.dismissible(snackbar.Dismissible)
+  |> snackbar.dismissible(Dismissible)
   |> snackbar.duration(Some(5000))
-  |> should.equal(
-    snackbar.Snackbar(
-      message: "New",
-      action_label: Some("Action"),
-      close_label: Some("Close"),
-      dismissibility: snackbar.Dismissible,
-      duration: Some(5000),
-    ),
-  )
+  |> should.equal(snackbar.Snackbar(
+    message: "New",
+    action_label: Some("Action"),
+    close_label: Some("Close"),
+    dismissibility: Dismissible,
+    duration: Some(5000),
+  ))
 }
 
 pub fn snackbar_to_action_pure_test() {
@@ -34,7 +34,7 @@ pub fn snackbar_to_action_pure_test() {
     snackbar.new("Hello")
     |> snackbar.action_label(Some("Action"))
     |> snackbar.close_label(Some("Close"))
-    |> snackbar.dismissible(snackbar.Dismissible)
+    |> snackbar.dismissible(Dismissible)
     |> snackbar.duration(Some(5000))
 
   // to_action() is pure and can be tested with should.equal
@@ -80,15 +80,13 @@ pub fn snackbar_to_effect_test() {
 
 pub fn config_test() {
   snackbar.default_config("Hello")
-  |> should.equal(
-    snackbar.Config(
-      message: "Hello",
-      action_label: None,
-      close_label: None,
-      dismissibility: snackbar.NotDismissible,
-      duration: None,
-    ),
-  )
+  |> should.equal(snackbar.Config(
+    message: "Hello",
+    action_label: None,
+    close_label: None,
+    dismissibility: NotDismissible,
+    duration: None,
+  ))
 }
 
 pub fn from_config_test() {

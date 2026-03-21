@@ -3,9 +3,9 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
-import m3e/dialog.{
-  Alert, CloseDisabled, Dismissible, NoFocusTrap,
-}
+
+import m3e/dialog.{Alert, CloseDisabled, NoFocusTrap}
+import m3e/types.{Dismissible}
 
 pub fn basic_render_test() {
   let content = [html.text("This is the dialog content.")]
@@ -86,14 +86,15 @@ pub fn render_config_test() {
   let id = "config-dialog"
   let header = "Config Headline"
   let content = [html.text("Config Content")]
-  
-  let config = dialog.Config(
-    ..dialog.default_config(),
-    id: id,
-    header: header,
-    alert: Alert,
-    dismissibility: Dismissible,
-  )
+
+  let config =
+    dialog.Config(
+      ..dialog.default_config(),
+      id: id,
+      header: header,
+      alert: Alert,
+      dismissibility: Dismissible,
+    )
 
   dialog.render_config(config, [], content)
   |> should.equal(

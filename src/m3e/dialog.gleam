@@ -9,6 +9,7 @@ import lustre/element/html
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/icon
+import m3e/types.{type Dismissibility, Dismissible, default_dismissibility}
 
 // --- Types ---
 
@@ -24,13 +25,6 @@ pub type AlertStatus {
 pub type CloseBehavior {
   CloseDisabled
   CloseEnabled
-}
-
-/// Dismissibility specifies if a close button is presented
-/// 
-pub type Dismissibility {
-  Dismissible
-  NotDismissible
 }
 
 /// FocusTrap specifies if focus trapping is enabled
@@ -105,7 +99,7 @@ pub fn default_config() -> Config(msg) {
     close_label: None,
     focus_trap: TrapFocus,
     close_behavior: CloseEnabled,
-    dismissibility: NotDismissible,
+    dismissibility: default_dismissibility,
     header: "",
     close_icon_name: None,
     actions: [],
