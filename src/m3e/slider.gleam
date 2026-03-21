@@ -18,11 +18,7 @@ pub type Discrete {
   Continuous
 }
 
-/// ValueLabels specifies if a slider shows value labels
-pub type ValueLabels {
-  ShowLabels
-  HideLabels
-}
+pub const default_discrete: Discrete = Continuous
 
 pub const default_max = 100.0
 
@@ -55,6 +51,14 @@ pub opaque type Slider {
   )
 }
 
+/// ValueLabels specifies if a slider shows value labels
+pub type ValueLabels {
+  ShowLabels
+  HideLabels
+}
+
+pub const default_value_labels: ValueLabels = HideLabels
+
 // --- CONFIGURATION ---
 
 /// Config holds the configuration for a Slider
@@ -75,9 +79,9 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    discrete: Continuous,
+    discrete: default_discrete,
     interaction: default_interaction,
-    labels: HideLabels,
+    labels: default_value_labels,
     max: default_max,
     min: default_min,
     size: default_size,
