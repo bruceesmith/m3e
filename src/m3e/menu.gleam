@@ -11,65 +11,13 @@ import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- TYPES ---
 
-/// PositionX is the position of the menu, on the x-axis
-/// 
-pub type PositionX {
-  After
-  Before
-}
-
-fn position_x_to_string(position_x: PositionX) -> String {
-  case position_x {
-    After -> "after"
-    Before -> "before"
-  }
-}
-
-pub const default_position_x = After
-
-/// PositionY is the position of the menu, on the y-axis
-/// 
-pub type PositionY {
-  Above
-  Below
-}
-
-fn position_y_to_string(position_y: PositionY) -> String {
-  case position_y {
-    Above -> "above"
-    Below -> "below"
-  }
-}
-
-pub const default_position_y = Below
-
-/// Variant is the appearance variant of the menu
-/// 
-pub type Variant {
-  Standard
-  Vibrant
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Standard -> "standard"
-    Vibrant -> "vibrant"
-  }
-}
-
-pub const default_variant = Standard
-
-/// MenuState specifies if a menu is open or closed
-pub type MenuState {
-  Open
-  Closed
-}
-
 /// AnimationState specifies if a menu uses animations or is instant
 pub type AnimationState {
   Animated
   Instant
 }
+
+pub const default_animation_state: AnimationState = Animated
 
 /// Menu presents a list of choices on a temporary surface
 /// 
@@ -93,6 +41,41 @@ pub opaque type Menu {
     variant: Variant,
   )
 }
+
+/// MenuState specifies if a menu is open or closed
+pub type MenuState {
+  Open
+  Closed
+}
+
+pub const default_menu_state: MenuState = Closed
+
+/// PositionX is the position of the menu, on the x-axis
+/// 
+pub type PositionX {
+  After
+  Before
+}
+
+pub const default_position_x = After
+
+/// PositionY is the position of the menu, on the y-axis
+/// 
+pub type PositionY {
+  Above
+  Below
+}
+
+pub const default_position_y = Below
+
+/// Variant is the appearance variant of the menu
+/// 
+pub type Variant {
+  Standard
+  Vibrant
+}
+
+pub const default_variant = Standard
 
 // --- CONFIGURATION ---
 
@@ -118,8 +101,8 @@ pub fn default_config() -> Config {
     interaction: default_interaction,
     position_x: default_position_x,
     position_y: default_position_y,
-    quick: Animated,
-    state: Closed,
+    quick: default_animation_state,
+    state: default_menu_state,
     variant: default_variant,
   )
 }
@@ -226,4 +209,27 @@ pub fn render_config(
   children: List(Element(msg)),
 ) -> Element(msg) {
   render(from_config(config), attributes, children)
+}
+
+// --- PRIVATE HELPER FUNCTIONS ---
+
+fn position_x_to_string(position_x: PositionX) -> String {
+  case position_x {
+    After -> "after"
+    Before -> "before"
+  }
+}
+
+fn position_y_to_string(position_y: PositionY) -> String {
+  case position_y {
+    Above -> "above"
+    Below -> "below"
+  }
+}
+
+fn variant_to_string(variant: Variant) -> String {
+  case variant {
+    Standard -> "standard"
+    Vibrant -> "vibrant"
+  }
 }
