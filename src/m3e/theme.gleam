@@ -68,14 +68,6 @@ pub type Scheme {
   Light
 }
 
-fn scheme_to_string(s: Scheme) -> String {
-  case s {
-    Auto -> "auto"
-    Dark -> "dark"
-    Light -> "light"
-  }
-}
-
 /// Default Scheme
 ///
 pub const default_scheme = Auto
@@ -252,5 +244,13 @@ fn motion_to_string(m: Motion) -> String {
   case m {
     Expressive -> "expressive"
     Standard -> "standard"
+  }
+}
+
+fn scheme_to_string(s: Scheme) -> String {
+  case s {
+    Auto -> "auto"
+    Dark -> "dark"
+    Light -> "light"
   }
 }
