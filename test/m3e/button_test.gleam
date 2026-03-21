@@ -1,14 +1,15 @@
-import gleam/option.{Some}
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute.{attribute, disabled, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
 import m3e/button.{
-  Elevated, Filled, Outlined, Square, Text, form, icons, label, new, render,
-  selected_label, shape, size, toggle, variant,
+  Config, Elevated, Filled, Outlined, Square, Text, form, icons, label, new,
+  render, render_config, selected_label, shape, size, toggle, variant,
 }
 import m3e/form_submission.{FormSubmission, Submit}
 import m3e/size_many.{Large}
+import m3e/types.{Disabled, Selected}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)
@@ -32,8 +33,8 @@ pub fn button_creation_test() {
     |> size(Large)
     |> selected_label("Selected")
     |> toggle(True)
-    |> button.selected(True)
-    |> button.disabled(True)
+    |> button.selected(Selected)
+    |> button.disabled(Disabled)
     |> form(Some(FormSubmission(Submit, "key", "val")))
 
   let expected_full =
@@ -70,6 +71,43 @@ pub fn button_element_test() {
       [text("Basic")],
     )
   b |> render([]) |> should.equal(expected)
+}
+
+pub fn config_test() {
+  let config =
+    Config(
+      disabled: Disabled,
+      disabled_interactive: Disabled,
+      form_submission: Some(FormSubmission(Submit, "k", "v")),
+      icons: [],
+      label: "Configured",
+      link: None,
+      selected: Selected,
+      selected_label: None,
+      shape: Some(Square),
+      size: Some(Large),
+      toggle: True,
+      variant: Some(Filled),
+    )
+
+  let expected =
+    element(
+      "m3e-button",
+      [
+        attribute.disabled(True),
+        attribute("disabled-interactive", ""),
+        selected(True),
+        attribute("shape", "square"),
+        attribute("size", "large"),
+        attribute("toggle", ""),
+        attribute("variant", "filled"),
+        attribute("type", "submit"),
+        attribute("name", "k"),
+        attribute("value", "v"),
+      ],
+      [text("Configured")],
+    )
+  render_config(config, []) |> should.equal(expected)
 }
 
 pub fn button_form_test() {

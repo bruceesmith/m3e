@@ -10,47 +10,17 @@ import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/link.{type Link}
 import m3e/size_many.{type Size, default_size, size_to_string}
+import m3e/types.{
+  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
+  default_selection_state,
+}
 
 // --- Types ---
-
-/// The visual shape of the button.
-pub type Shape {
-  Rounded
-  Square
-}
-
-/// Default shape
-pub const default_shape = Rounded
-
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
-pub type Slot {
-  Icon
-  // Renders an icon before the button's label 
-  Selected
-  // Renders the label of the button, when selected 
-  SelectedIcon
-  // Renders an icon before the button's label, when selected 
-  TrailingIcon
-  // Renders an icon after the button's label 
-}
-
-/// The visual variant (style) of the button.
-pub type Variant {
-  Elevated
-  Filled
-  Outlined
-  Text
-  Tonal
-}
-
-/// Default variant
-pub const default_variant = Text
 
 /// Button holds all the values necessary to construct am M3E Button
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
+/// - disabled: Whether the element is disabled or enabled
 /// - disabled_interactive: Whether the element is disabled and interactive
 /// - form_submission: handles this button's role in form submission
 /// - icons: Renders an icon before the button's label, Renders an icon after the button's label, Renders an icon before the button's label, when selected
@@ -65,13 +35,13 @@ pub const default_variant = Text
 ///
 pub opaque type Button(msg) {
   Button(
-    disabled: Bool,
-    disabled_interactive: Bool,
+    disabled: Interaction,
+    disabled_interactive: Interaction,
     form_submission: Option(FormSubmission),
     icons: List(Element(msg)),
     label: String,
     link: Option(Link),
-    selected: Bool,
+    selected: SelectionState,
     selected_label: Option(String),
     shape: Option(Shape),
     size: Option(Size),
@@ -80,7 +50,104 @@ pub opaque type Button(msg) {
   )
 }
 
+/// The visual shape of the button.
+///
+pub type Shape {
+  Rounded
+  Square
+}
+
+/// Default shape
+/// 
+pub const default_shape = Rounded
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Icon
+  // Renders an icon before the button's label 
+  SelectedSlot
+  // Renders the label of the button, when selected 
+  SelectedIcon
+  // Renders an icon before the button's label, when selected 
+  TrailingIcon
+  // Renders an icon after the button's label 
+}
+
+/// The visual variant (style) of the button.
+/// 
+pub type Variant {
+  Elevated
+  Filled
+  Outlined
+  Text
+  Tonal
+}
+
+/// Default variant
+/// 
+pub const default_variant = Text
+
+// --- CONFIGURATION ---
+
+/// Config allows for a declarative configuration of the Button
+///
+pub type Config(msg) {
+  Config(
+    disabled: Interaction,
+    disabled_interactive: Interaction,
+    form_submission: Option(FormSubmission),
+    icons: List(Element(msg)),
+    label: String,
+    link: Option(Link),
+    selected: SelectionState,
+    selected_label: Option(String),
+    shape: Option(Shape),
+    size: Option(Size),
+    toggle: Bool,
+    variant: Option(Variant),
+  )
+}
+
+/// default_config returns a default Config
+///
+pub fn default_config() -> Config(msg) {
+  Config(
+    disabled: default_interaction,
+    disabled_interactive: default_interaction,
+    form_submission: None,
+    icons: [],
+    label: "",
+    link: None,
+    selected: default_selection_state,
+    selected_label: None,
+    shape: None,
+    size: None,
+    toggle: False,
+    variant: None,
+  )
+}
+
 // --- CONSTRUCTORS ---
+
+/// from_config creates a Button from a Config
+///
+pub fn from_config(c: Config(msg)) -> Button(msg) {
+  Button(
+    disabled: c.disabled,
+    disabled_interactive: c.disabled_interactive,
+    form_submission: c.form_submission,
+    icons: c.icons,
+    label: c.label,
+    link: c.link,
+    selected: c.selected,
+    selected_label: c.selected_label,
+    shape: c.shape,
+    size: c.size,
+    toggle: c.toggle,
+    variant: c.variant,
+  )
+}
 
 /// new creates a new Button
 /// 
@@ -89,33 +156,23 @@ pub opaque type Button(msg) {
 /// - variant: the button variety
 ///
 pub fn new(label: String, variant: Variant) -> Button(msg) {
-  Button(
-    disabled: False,
-    disabled_interactive: False,
-    form_submission: None,
-    icons: [],
-    label: label,
-    link: None,
-    selected: False,
-    selected_label: None,
-    shape: None,
-    size: None,
-    toggle: False,
-    variant: Some(variant),
-  )
+  from_config(Config(..default_config(), label: label, variant: Some(variant)))
 }
 
 // --- SETTERS ---
 
 /// disabled sets the `disabled` field
 /// 
-pub fn disabled(b: Button(msg), disabled: Bool) -> Button(msg) {
+pub fn disabled(b: Button(msg), disabled: Interaction) -> Button(msg) {
   Button(..b, disabled: disabled)
 }
 
 /// disabled_interactive sets the `disabled_interactive` field
 ///
-pub fn disabled_interactive(b: Button(msg), disabled: Bool) -> Button(msg) {
+pub fn disabled_interactive(
+  b: Button(msg),
+  disabled: Interaction,
+) -> Button(msg) {
   Button(..b, disabled_interactive: disabled)
 }
 
@@ -149,7 +206,7 @@ pub fn link(b: Button(msg), link: Option(Link)) -> Button(msg) {
 
 /// selected sets the`selected` field of a Button
 ///
-pub fn selected(b: Button(msg), s: Bool) -> Button(msg) {
+pub fn selected(b: Button(msg), s: SelectionState) -> Button(msg) {
   Button(..b, selected: s)
 }
 
@@ -185,6 +242,15 @@ pub fn variant(b: Button(msg), v: Variant) -> Button(msg) {
 
 // --- RENDERING ---
 
+/// render_config creates a Lustre Element from a Config
+///
+pub fn render_config(
+  c: Config(msg),
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes)
+}
+
 /// render creates a Lustre Element from a Button
 ///
 /// ## Parameters:
@@ -196,9 +262,12 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
     "m3e-button",
     flatten([
       [
-        attribute.disabled(b.disabled),
-        boolean_attribute("disabled-interactive", b.disabled_interactive),
-        attribute.selected(b.selected),
+        attribute.disabled(b.disabled == Disabled),
+        boolean_attribute(
+          "disabled-interactive",
+          b.disabled_interactive == Disabled,
+        ),
+        attribute.selected(b.selected == Selected),
         option_attribute(
           b.shape,
           fn(_) { "shape" },
@@ -234,7 +303,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute("slot", "icon")
-    Selected -> attribute("slot", "selected")
+    SelectedSlot -> attribute("slot", "selected")
     SelectedIcon -> attribute("slot", "selected-icon")
     TrailingIcon -> attribute("slot", "trailing-icon")
   }
@@ -244,7 +313,7 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn selected_label_elt(sl: Option(String)) -> Element(msg) {
   case sl {
-    Some(lab) -> span([slot(Selected)], [text(lab)])
+    Some(lab) -> span([slot(SelectedSlot)], [text(lab)])
     None -> none()
   }
 }
