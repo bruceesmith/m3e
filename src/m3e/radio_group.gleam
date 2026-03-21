@@ -9,8 +9,8 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/types.{
-  type Interaction, type Requirement, Disabled, Optional, Required,
-  default_interaction,
+  type Interaction, type Requirement, Disabled, Required, default_interaction,
+  default_requirement,
 }
 
 // --- Types ---
@@ -52,7 +52,7 @@ pub fn default_config() -> Config {
     interaction: default_interaction,
     id: None,
     name: None,
-    requirement: Optional,
+    requirement: default_requirement,
   )
 }
 
