@@ -3,13 +3,16 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
-import m3e/button_group.{Connected, Standard, multi, new, render, size, variant}
+import m3e/button_group.{
+  Connected, Standard, multi, new, render, render_config, size, variant,
+}
 import m3e/size_many.{ExtraSmall, Large, Medium, Small}
+import m3e/types.{Multi}
 
 pub fn button_group_creation_test() {
   let bg =
     new()
-    |> multi(True)
+    |> multi(Multi)
     |> size(Some(Medium))
     |> variant(Some(Connected))
   let expected =
@@ -57,7 +60,7 @@ pub fn button_group_element_test() {
 }
 
 pub fn button_group_multi_test() {
-  let bg = new() |> size(Some(Small)) |> variant(Some(Standard)) |> multi(True)
+  let bg = new() |> size(Some(Small)) |> variant(Some(Standard)) |> multi(Multi)
 
   let expected =
     element(
@@ -70,6 +73,26 @@ pub fn button_group_multi_test() {
       [],
     )
   bg |> render([], []) |> should.equal(expected)
+}
+
+pub fn config_test() {
+  let config =
+    button_group.Config(
+      multi: Multi,
+      size: Some(Medium),
+      variant: Some(Connected),
+    )
+  let expected =
+    element(
+      "m3e-button-group",
+      [
+        attribute("multi", ""),
+        attribute("size", "medium"),
+        attribute("variant", "connected"),
+      ],
+      [],
+    )
+  render_config(config, [], []) |> should.equal(expected)
 }
 
 pub fn button_group_size_test() {
