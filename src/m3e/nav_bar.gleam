@@ -5,19 +5,13 @@ import gleam/list.{filter, flatten}
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// Mode specifies the possible modes in which to present items in a navigation bar
 pub type Mode {
   Auto
   Compact
   Expanded
-}
-
-pub fn mode_to_string(mode: Mode) -> String {
-  case mode {
-    Auto -> "auto"
-    Compact -> "compact"
-    Expanded -> "expanded"
-  }
 }
 
 /// NavBar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
@@ -29,17 +23,23 @@ pub opaque type NavBar {
   NavBar(mode: Mode)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new NavBar
 /// 
 pub fn new() -> NavBar {
   NavBar(mode: Compact)
 }
 
+// --- SETTERS ---
+
 /// mode sets the mode field
 /// 
 pub fn mode(_: NavBar, mode: Mode) -> NavBar {
   NavBar(mode: mode)
 }
+
+// --- RENDERERING ---
 
 /// render creates a Lustre Element(msg) from a NavBar
 /// 
@@ -64,4 +64,14 @@ pub fn render(
       |> filter(fn(a) { a != attribute.none() }),
     children,
   )
+}
+
+// --- PRIVATE HELPER FUNCTIONS ---
+
+fn mode_to_string(mode: Mode) -> String {
+  case mode {
+    Auto -> "auto"
+    Compact -> "compact"
+    Expanded -> "expanded"
+  }
 }
