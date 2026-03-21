@@ -56,13 +56,17 @@ pub type Config {
   )
 }
 
+pub const default_next_page_label: String = "Next page"
+
+pub const default_previous_page_label: String = "Previous page"
+
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
-    next_page_label: "Next page",
-    previous_page_label: "Previous page",
+    next_page_label: default_next_page_label,
+    previous_page_label: default_previous_page_label,
     threshold: 0,
     orientation: default_orientation,
   )
