@@ -3,17 +3,23 @@
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// MenuIteMGroup groups related items (such a radios) in a menu
 /// 
 pub opaque type MenuItemGroup {
   MenuItemGroup
 }
 
+// -- CONSTRUCTORS ---
+
 /// new creates a new MenuItemGroup
 /// 
 pub fn new() -> MenuItemGroup {
   MenuItemGroup
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a MenuItemGroup
 ///
