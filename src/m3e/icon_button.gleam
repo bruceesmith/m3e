@@ -9,7 +9,7 @@ import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 import m3e/size_many.{type Size, default_size, size_to_string}
-import m3e/types.{type SelectionState, Selected, Unselected}
+import m3e/types.{type SelectionState, Selected, default_selection_state}
 
 // --- Types ---
 
@@ -50,6 +50,8 @@ pub type Interaction {
   DisabledInteractive
 }
 
+pub const default_interaction: Interaction = Enabled
+
 /// Shape
 ///
 pub type Shape {
@@ -72,6 +74,8 @@ pub type ToggleMode {
   Toggle
   NotToggle
 }
+
+pub const default_toggle: ToggleMode = NotToggle
 
 /// Variant is the appearance variant of the button
 /// 
@@ -117,14 +121,14 @@ pub type Config(msg) {
 /// 
 pub fn default_config() -> Config(msg) {
   Config(
-    interaction: Enabled,
+    interaction: default_interaction,
     form_submission: None,
     link: None,
     purpose: None,
-    selection: Unselected,
+    selection: default_selection_state,
     shape: default_shape,
     size: default_size,
-    toggle: NotToggle,
+    toggle: default_toggle,
     variant: default_variant,
     width: default_width,
   )
