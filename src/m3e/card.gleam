@@ -21,11 +21,7 @@ pub type Actionability {
   Static
 }
 
-/// Layout specifies if a card is rendered inline or as a block
-pub type Layout {
-  Inline
-  Block
-}
+pub const default_actionability: Actionability = Static
 
 /// Card is a flexible, expressive container for presenting a unified subject
 /// 
@@ -47,6 +43,14 @@ pub opaque type Card {
     variant: Variant,
   )
 }
+
+/// Layout specifies if a card is rendered inline or as a block
+pub type Layout {
+  Inline
+  Block
+}
+
+pub const default_layout: Layout = Block
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -70,6 +74,7 @@ pub type Variant {
 }
 
 /// Default variant
+/// 
 pub const default_variant = Filled
 
 // --- CONFIGURATION ---
@@ -91,9 +96,9 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    actionability: Static,
+    actionability: default_actionability,
     interaction: default_interaction,
-    layout: Block,
+    layout: default_layout,
     link: None,
     orientation: default_orientation,
     variant: default_variant,
