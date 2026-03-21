@@ -2,7 +2,9 @@ import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
+
 import m3e/divider.{Both, End, Start, inset, new, render, vertical}
+import m3e/types.{Vertical}
 
 pub fn divider_basic_test() {
   let d = new()
@@ -42,7 +44,7 @@ pub fn divider_inset_test() {
 }
 
 pub fn divider_vertical_test() {
-  let d = new() |> vertical(True)
+  let d = new() |> vertical(Vertical)
 
   let expected = element("m3e-divider", [attribute("vertical", "")], [])
   d
