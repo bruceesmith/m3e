@@ -3,6 +3,8 @@
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// OptionPanel holds all information to create an OptionPanel
 ///
 /// ## Fields:
@@ -12,6 +14,8 @@ pub opaque type OptionPanel {
   OptionPanel
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new OptionPanel
 ///
 /// ## Parameters:
@@ -20,6 +24,8 @@ pub opaque type OptionPanel {
 pub fn new() -> OptionPanel {
   OptionPanel
 }
+
+// --- RENDERING ---
 
 /// render creates an M3E OptionPanel component from an OptionPanel
 ///
