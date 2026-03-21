@@ -20,6 +20,8 @@ pub type IndicatorVisibility {
   Hidden
 }
 
+pub const default_indicator_visibility: IndicatorVisibility = Visible
+
 /// SelectionList provides a container for managing selectable list items with single or multi-select capabilities
 /// 
 /// ## Fields:
@@ -56,14 +58,16 @@ pub type Config {
   )
 }
 
+pub const default_variant: Variant = Standard
+
 /// default_config creates a Config with default values
 ///
 pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
-    indicator_visibility: Visible,
+    indicator_visibility: default_indicator_visibility,
     selection_mode: default_selection_mode,
-    variant: Standard,
+    variant: default_variant,
   )
 }
 
