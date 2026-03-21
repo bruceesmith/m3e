@@ -20,6 +20,8 @@ pub type AlertStatus {
   Standard
 }
 
+pub const default_alert_status: AlertStatus = Standard
+
 /// CloseBehavior specifies if the dialog can be closed by clicking the backdrop or pressing ESC
 /// 
 pub type CloseBehavior {
@@ -27,12 +29,7 @@ pub type CloseBehavior {
   CloseEnabled
 }
 
-/// FocusTrap specifies if focus trapping is enabled
-/// 
-pub type FocusTrap {
-  TrapFocus
-  NoFocusTrap
-}
+pub const default_close_behavior: CloseBehavior = CloseEnabled
 
 /// Dialog component
 /// 
@@ -60,6 +57,15 @@ pub opaque type Dialog(msg) {
     actions: List(Element(msg)),
   )
 }
+
+/// FocusTrap specifies if focus trapping is enabled
+/// 
+pub type FocusTrap {
+  TrapFocus
+  NoFocusTrap
+}
+
+pub const default_focus_trap: FocusTrap = TrapFocus
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -95,10 +101,10 @@ pub type Config(msg) {
 pub fn default_config() -> Config(msg) {
   Config(
     id: "",
-    alert: Standard,
+    alert: default_alert_status,
     close_label: None,
-    focus_trap: TrapFocus,
-    close_behavior: CloseEnabled,
+    focus_trap: default_focus_trap,
+    close_behavior: default_close_behavior,
     dismissibility: default_dismissibility,
     header: "",
     close_icon_name: None,
