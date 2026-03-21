@@ -8,8 +8,8 @@ import lustre/element/html
 import m3e/helpers.{boolean_attribute}
 import m3e/icon
 import m3e/types.{
-  type Interaction, type SelectionState, Disabled, Selected, Unselected,
-  default_interaction,
+  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
+  default_selection_state,
 }
 
 // --- Types ---
@@ -19,6 +19,8 @@ pub type Expansion {
   Open
   Closed
 }
+
+pub const default_expansion: Expansion = Closed
 
 /// NavMenuItem represents a navigation menu item
 /// 
@@ -85,8 +87,8 @@ pub fn default_config(label: String) -> Config {
     interaction: default_interaction,
     leading_icon_name: None,
     label: label,
-    expansion: Closed,
-    selection: Unselected,
+    expansion: default_expansion,
+    selection: default_selection_state,
     selected_icon_name: None,
     toggle_icon_name: None,
   )
