@@ -22,6 +22,8 @@ pub type Icons {
   Selected
 }
 
+pub const default_icons: Icons = Neither
+
 /// Switch is a configuration type representing an M3E Switch
 /// 
 /// ## Fields:
@@ -62,7 +64,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     label: None,
-    icons: Neither,
+    icons: default_icons,
     checked: default_checked_state,
     disabled: default_interaction,
     form_submission: None,
