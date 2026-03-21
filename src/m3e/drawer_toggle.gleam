@@ -4,6 +4,8 @@ import gleam/list
 import lustre/attribute.{type Attribute, for, none}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// DrawerToggle toggles the opened state of a drawer
 /// 
 /// ## Fields:
@@ -13,6 +15,8 @@ pub opaque type DrawerToggle {
   DrawerToggle(for: String)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a DrawerToggle
 /// 
 /// ## Parameters:
@@ -21,6 +25,8 @@ pub opaque type DrawerToggle {
 pub fn new(for: String) -> DrawerToggle {
   DrawerToggle(for: for)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a DrawerToggle
 ///
