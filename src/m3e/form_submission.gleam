@@ -5,6 +5,8 @@ import gleam/option.{type Option, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
 
+// --- Types ---
+
 /// FormSubmitterType is the type of an element when used inside a form
 ///
 pub type FormSubmitterType {
@@ -36,11 +38,15 @@ pub type FormSubmission {
   FormSubmission(type_: FormSubmitterType, name: String, value: String)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new_form_submission creates a new FormSubmission
 ///
 pub fn new() -> FormSubmission {
   FormSubmission(default_form_submitter_type, "", "")
 }
+
+// --- SETTERS ---
 
 /// type_ sets the `type_` field
 ///
@@ -59,6 +65,8 @@ pub fn name(fs: FormSubmission, name: String) -> FormSubmission {
 pub fn value(fs: FormSubmission, value: String) -> FormSubmission {
   FormSubmission(..fs, value: value)
 }
+
+// --- RENDERING ---
 
 /// attributes creates Lustre Attributes for a FormSubmission
 ///
