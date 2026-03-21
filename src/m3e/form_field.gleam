@@ -44,6 +44,8 @@ pub type HideSubscript {
   NeverHide
 }
 
+pub const default_hide_subscript = AutoHide
+
 /// RequiredMarkerVisibility specifies if the required marker should be hidden or shown
 /// 
 pub type RequiredMarkerVisibility {
@@ -67,8 +69,6 @@ pub type Slot {
   SuffixText
   // Renders text after the fields's control 
 }
-
-pub const default_hide_subscript = AutoHide
 
 /// Variant is the appearance variant of the field
 /// 
