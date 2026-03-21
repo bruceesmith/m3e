@@ -8,25 +8,34 @@ import m3e/helpers.{boolean_attribute}
 
 // --- TYPES ---
 
+/// Divider determines if a divider is shown
+/// 
+pub type Divider {
+  ShowDivider
+  HideDivider
+}
+
+pub const default_divider: Divider = HideDivider
+
 /// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
 /// ## Fields:
-/// - end: Whether the end drawer is open
+/// - end: The state of the end drawer (Open or Closed)
 /// - end_mode: The behavior mode of the end drawer
-/// - end_divider: Whether to show a divider between the end drawer and content for `side` mode
-/// - start: Whether the start drawer is open
+/// - end_divider: Whether to show a divider between the end drawer and content
+/// - start: The state of the start drawer (Open or Closed)
 /// - start_mode: The behavior mode of the start drawer
-/// - start_divider: Whether to show a divider between the start drawer and content for `side` mode
+/// - start_divider: Whether to show a divider between the start drawer and content
 ///
 pub opaque type DrawerContainer(msg) {
   DrawerContainer(
-    end: Bool,
-    end_divider: Bool,
+    end: State,
+    end_divider: Divider,
     end_drawer: Option(Element(msg)),
     end_mode: Mode,
     main_content: Element(msg),
-    start: Bool,
-    start_divider: Bool,
+    start: State,
+    start_divider: Divider,
     start_drawer: Option(Element(msg)),
     start_mode: Mode,
   )
@@ -54,19 +63,28 @@ pub type Slot {
   // Renders the start drawer 
 }
 
+/// State determines if a drawer is open or closed
+/// 
+pub type State {
+  Open
+  Closed
+}
+
+pub const default_state: State = Closed
+
 // --- CONFIGURATION ---
 
 /// Config is a transparent record used for bulk configuration
 /// 
 pub type Config(msg) {
   Config(
-    end: Bool,
-    end_divider: Bool,
+    end: State,
+    end_divider: Divider,
     end_drawer: Option(Element(msg)),
     end_mode: Mode,
     main_content: Element(msg),
-    start: Bool,
-    start_divider: Bool,
+    start: State,
+    start_divider: Divider,
     start_drawer: Option(Element(msg)),
     start_mode: Mode,
   )
@@ -76,13 +94,13 @@ pub type Config(msg) {
 /// 
 pub fn default_config() -> Config(msg) {
   Config(
-    end: False,
-    end_divider: False,
+    end: default_state,
+    end_divider: default_divider,
     end_drawer: None,
     end_mode: default_mode,
     main_content: element.none(),
-    start: False,
-    start_divider: False,
+    start: default_state,
+    start_divider: default_divider,
     start_drawer: None,
     start_mode: default_mode,
   )
@@ -96,11 +114,11 @@ pub fn from_config(config: Config(msg)) -> DrawerContainer(msg) {
   DrawerContainer(
     end: case config.end_drawer {
       Some(_) -> config.end
-      None -> False
+      None -> Closed
     },
     end_divider: case config.end_drawer {
       Some(_) -> config.end_divider
-      None -> False
+      None -> HideDivider
     },
     end_drawer: config.end_drawer,
     end_mode: case config.end_drawer {
@@ -110,11 +128,11 @@ pub fn from_config(config: Config(msg)) -> DrawerContainer(msg) {
     main_content: config.main_content,
     start: case config.start_drawer {
       Some(_) -> config.start
-      None -> False
+      None -> Closed
     },
     start_divider: case config.start_drawer {
       Some(_) -> config.start_divider
-      None -> False
+      None -> HideDivider
     },
     start_drawer: config.start_drawer,
     start_mode: case config.start_drawer {
@@ -134,7 +152,7 @@ pub fn new() -> DrawerContainer(msg) {
 
 /// end sets the `end` fieldq
 /// 
-pub fn end(c: DrawerContainer(msg), end: Bool) -> DrawerContainer(msg) {
+pub fn end(c: DrawerContainer(msg), end: State) -> DrawerContainer(msg) {
   case c.end_drawer {
     Some(_) -> DrawerContainer(..c, end: end)
     None -> c
@@ -145,7 +163,7 @@ pub fn end(c: DrawerContainer(msg), end: Bool) -> DrawerContainer(msg) {
 /// 
 pub fn end_divider(
   c: DrawerContainer(msg),
-  end_divider: Bool,
+  end_divider: Divider,
 ) -> DrawerContainer(msg) {
   case c.end_drawer {
     Some(_) -> DrawerContainer(..c, end_divider: end_divider)
@@ -182,7 +200,7 @@ pub fn main_content(
 
 /// start sets the `start` field
 /// 
-pub fn start(c: DrawerContainer(msg), start: Bool) -> DrawerContainer(msg) {
+pub fn start(c: DrawerContainer(msg), start: State) -> DrawerContainer(msg) {
   case c.start_drawer {
     Some(_) -> DrawerContainer(..c, start: start)
     None -> c
@@ -193,7 +211,7 @@ pub fn start(c: DrawerContainer(msg), start: Bool) -> DrawerContainer(msg) {
 /// 
 pub fn start_divider(
   c: DrawerContainer(msg),
-  start_divider: Bool,
+  start_divider: Divider,
 ) -> DrawerContainer(msg) {
   case c.start_drawer {
     Some(_) -> DrawerContainer(..c, start_divider: start_divider)
@@ -254,8 +272,8 @@ pub fn render(
       case c.end_drawer {
         Some(_) -> {
           [
-            boolean_attribute("end", c.end),
-            boolean_attribute("end-divider", c.end_divider),
+            boolean_attribute("end", c.end == Open),
+            boolean_attribute("end-divider", c.end_divider == ShowDivider),
             attribute("end-mode", mode_to_string(c.end_mode)),
           ]
         }
@@ -264,8 +282,8 @@ pub fn render(
       case c.start_drawer {
         Some(_) -> {
           [
-            boolean_attribute("start", c.start),
-            boolean_attribute("start-divider", c.start_divider),
+            boolean_attribute("start", c.start == Open),
+            boolean_attribute("start-divider", c.start_divider == ShowDivider),
             attribute("start-mode", mode_to_string(c.start_mode)),
           ]
         }

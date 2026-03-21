@@ -42,7 +42,7 @@ pub fn start_drawer_open_test() {
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
-  |> drawer_container.start(True)
+  |> drawer_container.start(drawer_container.Open)
   |> drawer_container.render([])
   |> should.equal(
     element(
@@ -59,7 +59,7 @@ pub fn start_drawer_divider_test() {
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
-  |> drawer_container.start_divider(True)
+  |> drawer_container.start_divider(drawer_container.ShowDivider)
   |> drawer_container.render([])
   |> should.equal(
     element(
@@ -107,7 +107,7 @@ pub fn end_drawer_open_test() {
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
-  |> drawer_container.end(True)
+  |> drawer_container.end(drawer_container.Open)
   |> drawer_container.render([])
   |> should.equal(
     element(
@@ -124,7 +124,7 @@ pub fn end_drawer_divider_test() {
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
-  |> drawer_container.end_divider(True)
+  |> drawer_container.end_divider(drawer_container.ShowDivider)
   |> drawer_container.render([])
   |> should.equal(
     element(
@@ -161,13 +161,13 @@ pub fn all_content_and_options_test() {
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
-  |> drawer_container.start(True)
-  |> drawer_container.start_divider(True)
+  |> drawer_container.start(drawer_container.Open)
+  |> drawer_container.start_divider(drawer_container.ShowDivider)
   |> drawer_container.start_mode(drawer_container.Push)
   |> drawer_container.main_content(main)
   |> drawer_container.end_drawer(Some(end_drawer))
-  |> drawer_container.end(True)
-  |> drawer_container.end_divider(True)
+  |> drawer_container.end(drawer_container.Open)
+  |> drawer_container.end_divider(drawer_container.ShowDivider)
   |> drawer_container.end_mode(drawer_container.Side)
   |> drawer_container.render([])
   |> should.equal(
@@ -190,11 +190,11 @@ pub fn setters_have_no_effect_if_drawer_is_none_test() {
   let expected = element("m3e-drawer-container", [], [])
 
   drawer_container.new()
-  |> drawer_container.start(True)
-  |> drawer_container.start_divider(True)
+  |> drawer_container.start(drawer_container.Open)
+  |> drawer_container.start_divider(drawer_container.ShowDivider)
   |> drawer_container.start_mode(drawer_container.Push)
-  |> drawer_container.end(True)
-  |> drawer_container.end_divider(True)
+  |> drawer_container.end(drawer_container.Open)
+  |> drawer_container.end_divider(drawer_container.ShowDivider)
   |> drawer_container.end_mode(drawer_container.Push)
   |> drawer_container.render([])
   |> should.equal(expected)
@@ -206,8 +206,8 @@ pub fn from_config_ignores_fields_if_drawer_is_none_test() {
     |> fn(c) {
       drawer_container.Config(
         ..c,
-        start: True,
-        start_divider: True,
+        start: drawer_container.Open,
+        start_divider: drawer_container.ShowDivider,
         start_mode: drawer_container.Push,
         start_drawer: None,
       )
@@ -230,12 +230,12 @@ pub fn render_config_test() {
     |> fn(c) {
       drawer_container.Config(
         ..c,
-        start: True,
+        start: drawer_container.Open,
         start_drawer: Some(start_drawer),
         start_mode: drawer_container.Push,
         main_content: main,
         end_drawer: Some(end_drawer),
-        end_divider: True,
+        end_divider: drawer_container.ShowDivider,
       )
     }
 
