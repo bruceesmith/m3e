@@ -52,6 +52,8 @@ pub type PanelState {
   Closed
 }
 
+pub const default_panel_state: PanelState = Closed
+
 /// Position is the position of the expansion toggle
 /// It has the same values as Direction
 /// 
@@ -59,13 +61,6 @@ pub type Position =
   Direction
 
 pub const default_position = End
-
-/// ToggleVisibility specifies if the expansion toggle is hidden or shown
-/// 
-pub type ToggleVisibility {
-  ShowToggle
-  HideToggle
-}
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -77,6 +72,15 @@ pub type Slot {
   ToggleIcon
   // Renders the expansion toggle icon 
 }
+
+/// ToggleVisibility specifies if the expansion toggle is hidden or shown
+/// 
+pub type ToggleVisibility {
+  ShowToggle
+  HideToggle
+}
+
+pub const default_toggle_visibility: ToggleVisibility = ShowToggle
 
 // --- CONFIGURATION ---
 
@@ -100,8 +104,8 @@ pub type Config(msg) {
 pub fn default_config() -> Config(msg) {
   Config(
     interaction: default_interaction,
-    toggle_visibility: ShowToggle,
-    state: Closed,
+    toggle_visibility: default_toggle_visibility,
+    state: default_panel_state,
     toggle_direction: default_direction,
     toggle_position: default_position,
     header: "",
