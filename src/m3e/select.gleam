@@ -10,7 +10,7 @@ import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/types.{
   type Interaction, type Requirement, type SelectionMode, Disabled, Multi,
-  Optional, Required, default_interaction, default_selection_mode,
+  Required, default_interaction, default_requirement, default_selection_mode,
 }
 
 // --- Types ---
@@ -20,6 +20,8 @@ pub type IndicatorVisibility {
   Visible
   Hidden
 }
+
+pub const default_indicator_visibility: IndicatorVisibility = Visible
 
 /// Select provides a form control for selecting a value from a set of predefined options)
 /// 
@@ -71,11 +73,11 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
-    indicator_visibility: Visible,
+    indicator_visibility: default_indicator_visibility,
     id: None,
     selection_mode: default_selection_mode,
     name: None,
-    requirement: Optional,
+    requirement: default_requirement,
   )
 }
 
