@@ -3,6 +3,8 @@
 import lustre/attribute
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// MenuTrigger is an element, nested within a clickable element, used to open a menu
 /// 
 /// ## Fields:
@@ -12,20 +14,26 @@ pub opaque type MenuTrigger {
   MenuTrigger(for: String)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a new MenuTrigger
 /// 
 pub fn new(for: String) -> MenuTrigger {
   MenuTrigger(for: for)
 }
 
-/// render creates a Lustre Element from a MenuTrigger
-///
-pub fn render(m: MenuTrigger) -> Element(msg) {
-  element("m3e-menu-trigger", [attribute.for(m.for)], [])
-}
+// --- SETTERS ---
 
 /// for sets the for field
 ///
 pub fn for(_: MenuTrigger, for: String) -> MenuTrigger {
   MenuTrigger(for: for)
+}
+
+// --- RENDERERING ---
+
+/// render creates a Lustre Element from a MenuTrigger
+///
+pub fn render(m: MenuTrigger) -> Element(msg) {
+  element("m3e-menu-trigger", [attribute.for(m.for)], [])
 }
