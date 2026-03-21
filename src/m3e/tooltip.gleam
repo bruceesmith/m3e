@@ -38,6 +38,8 @@ pub type TouchGestures {
   On
 }
 
+pub const default_touch_gestures: TouchGestures = Auto
+
 /// ShowDelay is the amount of time, in milliseconds, before showing the tooltip
 ///
 pub type ShowDelay =
@@ -94,7 +96,7 @@ pub fn default_config() -> Config {
     hide_delay: default_hide_delay,
     show_delay: default_show_delay,
     disabled: default_interaction,
-    gestures: Auto,
+    gestures: default_touch_gestures,
   )
 }
 
