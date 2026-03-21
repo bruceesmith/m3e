@@ -10,7 +10,7 @@ import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/types.{
   type CheckedState, type Interaction, type Requirement, Checked, Disabled,
-  Optional, Required, default_checked_state, default_interaction,
+  Required, default_checked_state, default_interaction, default_requirement,
 }
 
 // --- Types ---
@@ -52,7 +52,7 @@ pub fn default_config() -> Config {
     checked: default_checked_state,
     interaction: default_interaction,
     form_submission: None,
-    requirement: Optional,
+    requirement: default_requirement,
   )
 }
 
