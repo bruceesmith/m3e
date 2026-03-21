@@ -3,7 +3,10 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
-import m3e/button_segment.{checked, disabled, new, render, value}
+import m3e/button_segment.{
+  Config, checked, disabled, new, render, render_config, value,
+}
+import m3e/types.{Disabled, Selected}
 
 pub fn button_segment_creation_test() {
   let b = new()
@@ -22,8 +25,8 @@ pub fn button_segment_render_test() {
 pub fn button_segment_setters_test() {
   let b =
     new()
-    |> checked(True)
-    |> disabled(True)
+    |> checked(Selected)
+    |> disabled(Disabled)
     |> value(Some("v"))
 
   let expected =
@@ -37,4 +40,20 @@ pub fn button_segment_setters_test() {
       [],
     )
   render(b, [], []) |> should.equal(expected)
+}
+
+pub fn config_test() {
+  let config = Config(checked: Selected, disabled: Disabled, value: Some("v"))
+
+  let expected =
+    element(
+      "m3e-button-segment",
+      [
+        attribute("checked", ""),
+        attribute("disabled", ""),
+        attribute("value", "v"),
+      ],
+      [],
+    )
+  render_config(config, [], []) |> should.equal(expected)
 }
