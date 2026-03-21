@@ -9,6 +9,15 @@ pub type CheckedState {
 
 pub const default_checked_state: CheckedState = Unchecked
 
+/// Dismissibility specifies if a close button is presented
+/// 
+pub type Dismissibility {
+  Dismissible
+  NotDismissible
+}
+
+pub const default_dismissibility: Dismissibility = NotDismissible
+
 /// Interaction specifies if a chipset is enabled or disabled
 /// 
 pub type Interaction {
