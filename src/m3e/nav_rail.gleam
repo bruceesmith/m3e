@@ -3,20 +3,14 @@
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
+// --- Types ---
+
 /// Mode is the mode in which items in the rail are presented
 /// 
 pub type Mode {
   Auto
   Compact
   Expanded
-}
-
-fn mode_to_string(mode: Mode) -> String {
-  case mode {
-    Auto -> "auto"
-    Compact -> "compact"
-    Expanded -> "expanded"
-  }
 }
 
 pub const default_mode = Auto
@@ -31,11 +25,23 @@ pub opaque type NavRail {
   NavRail(mode: Mode)
 }
 
+// --- CONSTRUCTORS ---
+
 /// new creates a NavRail
 ///
 pub fn new() -> NavRail {
   NavRail(mode: default_mode)
 }
+
+// --- SETTERS ---
+
+/// mode sets the mode field
+/// 
+pub fn mode(_: NavRail, mode: Mode) -> NavRail {
+  NavRail(mode: mode)
+}
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element from a NavRail
 /// 
@@ -51,8 +57,12 @@ pub fn render(
   )
 }
 
-/// mode sets the mode field
-/// 
-pub fn mode(_: NavRail, mode: Mode) -> NavRail {
-  NavRail(mode: mode)
+// --- PRIVATE HELPER FUNCTIONS ---
+
+fn mode_to_string(mode: Mode) -> String {
+  case mode {
+    Auto -> "auto"
+    Compact -> "compact"
+    Expanded -> "expanded"
+  }
 }
