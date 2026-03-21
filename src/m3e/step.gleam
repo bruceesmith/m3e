@@ -4,7 +4,7 @@ import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled}
+import m3e/types.{type Interaction, Disabled, Enabled, default_interaction}
 
 // --- Types ---
 
@@ -14,11 +14,15 @@ pub type Completed {
   NotCompleted
 }
 
+pub const default_completed: Completed = NotCompleted
+
 /// Whether the step is editable and users can return to it after completion
 pub type Editable {
   Editable
   NotEditable
 }
+
+pub const default_editable: Editable = NotEditable
 
 /// Whether the step is optional
 pub type Optional {
@@ -26,11 +30,15 @@ pub type Optional {
   NotOptional
 }
 
+pub const default_optional: Optional = NotOptional
+
 /// Whether the element is selected
 pub type Selected {
   Selected
   NotSelected
 }
+
+pub const default_selected: Selected = NotSelected
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 ///
@@ -72,6 +80,8 @@ pub opaque type Step {
   )
 }
 
+// -- CONFIGURATION ---
+
 /// Config is a record that contains all of the configurable options for a Step
 pub type Config {
   Config(
@@ -85,18 +95,26 @@ pub type Config {
   )
 }
 
+/// default_config creates a default Config for a Step
+///
+pub fn default_config(for: String) -> Config {
+  Config(
+    default_completed,
+    default_interaction,
+    default_editable,
+    for,
+    default_optional,
+    default_selected,
+    "",
+  )
+}
+
 // --- CONSTRUCTORS ---
 
 /// new creates a new Step
 ///
 pub fn new(for: String) -> Step {
   Step(False, False, False, for, False, False, "")
-}
-
-/// default_config creates a default Config for a Step
-///
-pub fn default_config(for: String) -> Config {
-  Config(NotCompleted, Enabled, NotEditable, for, NotOptional, NotSelected, "")
 }
 
 /// from_config creates a new Step from a Config
