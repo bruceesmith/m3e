@@ -16,7 +16,6 @@ pub fn basic_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -108,7 +107,6 @@ pub fn filled_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -131,7 +129,6 @@ pub fn grade_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "low"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -152,7 +149,6 @@ pub fn grade_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "low"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -173,7 +169,6 @@ pub fn grade_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -194,7 +189,6 @@ pub fn grade_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "high"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -217,7 +211,6 @@ pub fn optical_size_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "20"),
         attribute("variant", "outlined"),
@@ -233,7 +226,6 @@ pub fn optical_size_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "30"),
         attribute("variant", "outlined"),
@@ -249,7 +241,6 @@ pub fn optical_size_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "48"),
         attribute("variant", "outlined"),
@@ -265,7 +256,6 @@ pub fn optical_size_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -297,7 +287,6 @@ pub fn optical_size_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "36"),
         attribute("variant", "outlined"),
@@ -320,7 +309,6 @@ pub fn purpose_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("slot", "selected-icon"),
@@ -342,7 +330,6 @@ pub fn purpose_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("slot", "selected-icon"),
@@ -364,7 +351,6 @@ pub fn purpose_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("slot", "trailing-icon"),
@@ -388,7 +374,6 @@ pub fn variant_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "sharp"),
@@ -409,7 +394,6 @@ pub fn variant_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -430,7 +414,6 @@ pub fn variant_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "rounded"),
@@ -451,7 +434,6 @@ pub fn variant_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "sharp"),
@@ -474,7 +456,6 @@ pub fn weight_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -490,7 +471,6 @@ pub fn weight_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -506,7 +486,6 @@ pub fn weight_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -522,7 +501,6 @@ pub fn weight_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),
@@ -554,7 +532,6 @@ pub fn weight_attr_test() {
       "m3e-icon",
       [
         name("home"),
-        attribute("filled", "0"),
         attribute("grade", "medium"),
         attribute("optical-size", "24"),
         attribute("variant", "outlined"),

@@ -235,7 +235,8 @@ pub fn weight(i: Icon(msg), w: Weight) -> Icon(msg) {
 
 fn filled_attr(f: Fill) -> Attribute(msg) {
   case f {
-    NotFilled -> attribute("filled", "0")
+    // NotFilled -> attribute("filled", "0")
+    NotFilled -> attribute.none()
     Filled -> attribute("filled", "1")
   }
 }
