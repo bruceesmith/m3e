@@ -9,6 +9,7 @@ target = "javascript"
 gleam_stdlib = ">= 0.69.0 and < 2.0.0"
 lustre = ">= 5.6.0 and < 6.0.0"
 m3e = { path = "../" }
+monks_of_style = ">= 1.0.0 and < 2.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
