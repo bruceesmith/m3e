@@ -54,7 +54,6 @@ fn basic() -> Element(Msg) {
       styles([
         column(2),
       ]),
-      card.slot(card.Content),
     ],
     [
       html.div(
@@ -66,6 +65,7 @@ fn basic() -> Element(Msg) {
             gapp(5),
             pad(2),
           ]),
+          card.slot(card.Content),
         ],
         [
           element.text("Basic"),
@@ -83,7 +83,6 @@ fn appearance() -> Element(Msg) {
       styles([
         column(2),
       ]),
-      card.slot(card.Content),
     ],
     [
       html.div(
@@ -95,6 +94,7 @@ fn appearance() -> Element(Msg) {
             gapp(5),
             pad(2),
           ]),
+          card.slot(card.Content),
         ],
         [
           element.text("Appearance"),

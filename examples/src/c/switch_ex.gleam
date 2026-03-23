@@ -52,7 +52,6 @@ fn basic() -> Element(Msg) {
       styles([
         column(2),
       ]),
-      card.slot(card.Content),
     ],
     [
       html.div(
@@ -64,6 +63,7 @@ fn basic() -> Element(Msg) {
             gapp(5),
             pad(2),
           ]),
+          card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Basic")],
@@ -91,7 +91,6 @@ fn labels() -> Element(Msg) {
       styles([
         column(2),
       ]),
-      card.slot(card.Content),
     ],
     [
       html.div(
@@ -103,6 +102,7 @@ fn labels() -> Element(Msg) {
             gapp(5),
             pad(2),
           ]),
+          card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Labels")],
@@ -140,7 +140,6 @@ fn icons() -> Element(Msg) {
       styles([
         column(2),
       ]),
-      card.slot(card.Content),
     ],
     [
       html.div(
@@ -152,6 +151,7 @@ fn icons() -> Element(Msg) {
             gapp(5),
             pad(2),
           ]),
+          card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Icons")],
@@ -193,7 +193,6 @@ fn disabled() -> Element(Msg) {
       styles([
         column(2),
       ]),
-      card.slot(card.Content),
     ],
     [
       html.div(
@@ -205,6 +204,7 @@ fn disabled() -> Element(Msg) {
             gapp(5),
             pad(2),
           ]),
+          card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Disabled")],
