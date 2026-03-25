@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{clamp_with_default}
+import m3e/helpers
 
 // --- Types ---
 
@@ -250,7 +250,7 @@ fn grade_to_string(grade: Grade) -> String {
 }
 
 fn optical_size_validate(os: OpticalSize) -> OpticalSize {
-  clamp_with_default(
+  helpers.clamp_with_default(
     os,
     smallest_optical_size,
     largest_optical_size,
@@ -267,5 +267,10 @@ fn variant_to_string(variant: Variant) -> String {
 }
 
 fn weight_validate(weight: Weight) -> Weight {
-  clamp_with_default(weight, smallest_weight, largest_weight, default_weight)
+  helpers.clamp_with_default(
+    weight,
+    smallest_weight,
+    largest_weight,
+    default_weight,
+  )
 }

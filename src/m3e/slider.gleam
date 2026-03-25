@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
@@ -173,9 +173,9 @@ pub fn render(
     "m3e-slider",
     list.flatten([
       [
-        boolean_attribute("disabled", s.interaction == Disabled),
-        boolean_attribute("discrete", s.discrete == Discrete),
-        boolean_attribute("labelled", s.labels == ShowLabels),
+        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("discrete", s.discrete == Discrete),
+        helpers.boolean_attribute("labelled", s.labels == ShowLabels),
         attribute.attribute("max", to_string(s.max)),
         attribute.attribute("min", to_string(s.min)),
         attribute.attribute("size", config.size_to_string(s.size)),

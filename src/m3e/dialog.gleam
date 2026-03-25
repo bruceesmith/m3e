@@ -8,7 +8,7 @@ import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/config.{type Dismissibility, Dismissible}
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/icon
 
 // --- Types ---
@@ -215,16 +215,16 @@ pub fn render(
     "m3e-dialog",
     [
       attribute.id(d.id),
-      boolean_attribute("alert", d.alert == Alert),
-      option_attribute(
+      helpers.boolean_attribute("alert", d.alert == Alert),
+      helpers.option_attribute(
         d.close_label,
         fn(_) { "close-label" },
         function.identity,
         None,
       ),
-      boolean_attribute("no-focus-trap", d.focus_trap == NoFocusTrap),
-      boolean_attribute("disable-close", d.close_behavior == CloseDisabled),
-      boolean_attribute("dismissible", d.dismissibility == Dismissible),
+      helpers.boolean_attribute("no-focus-trap", d.focus_trap == NoFocusTrap),
+      helpers.boolean_attribute("disable-close", d.close_behavior == CloseDisabled),
+      helpers.boolean_attribute("dismissible", d.dismissibility == Dismissible),
       ..attributes
     ]
       |> list.filter(fn(a) { a != attribute.none() }),

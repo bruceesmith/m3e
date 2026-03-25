@@ -9,7 +9,7 @@ import lustre/element/html.{span}
 
 import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/link.{type Link}
 
 // --- Types ---
@@ -221,13 +221,13 @@ pub fn render(
     "m3e-fab",
     list.flatten([
       [
-        boolean_attribute("disabled", f.interaction == Disabled),
-        boolean_attribute(
+        helpers.boolean_attribute("disabled", f.interaction == Disabled),
+        helpers.boolean_attribute(
           "disabled-interactive",
           f.interaction == DisabledInteractive,
         ),
-        boolean_attribute("extended", f.extension == Extended),
-        boolean_attribute("lowered", f.elevation == Lowered),
+        helpers.boolean_attribute("extended", f.extension == Extended),
+        helpers.boolean_attribute("lowered", f.elevation == Lowered),
         attribute.attribute(
           "size",
           config.size_to_string(config.clamp_to_restricted_size(

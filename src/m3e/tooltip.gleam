@@ -6,7 +6,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, clamp_with_default}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 /// HideDelay is the amount of time, in milliseconds, before hiding the tooltip.
@@ -177,7 +177,7 @@ pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
     list.append(
       [
         attribute.for(t.for_id),
-        boolean_attribute("disabled", t.disabled == Disabled),
+        helpers.boolean_attribute("disabled", t.disabled == Disabled),
         attribute.attribute("touch-gestures", gestures_to_string(t.gestures)),
         attribute.attribute("hide-delay", int.to_string(t.hide_delay)),
         attribute.attribute("position", position_to_string(t.position)),
@@ -212,7 +212,7 @@ fn gestures_to_string(g: TouchGestures) -> String {
 }
 
 fn hide_delay_validate(hd: HideDelay) -> HideDelay {
-  clamp_with_default(hd, 0, maximum_hide_delay, default_hide_delay)
+  helpers.clamp_with_default(hd, 0, maximum_hide_delay, default_hide_delay)
 }
 
 fn position_to_string(p: Position) -> String {
@@ -225,5 +225,5 @@ fn position_to_string(p: Position) -> String {
 }
 
 fn show_delay_validate(sd: ShowDelay) -> ShowDelay {
-  clamp_with_default(sd, 0, maximum_show_delay, default_show_delay)
+  helpers.clamp_with_default(sd, 0, maximum_show_delay, default_show_delay)
 }

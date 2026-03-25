@@ -8,7 +8,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, Multi}
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, type Requirement, Disabled, Required}
 
 // --- Types ---
@@ -159,15 +159,15 @@ pub fn render(
     "m3e-select",
     list.flatten([
       [
-        boolean_attribute("disabled", s.interaction == Disabled),
-        boolean_attribute(
+        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute(
           "hide-selection-indicator",
           s.indicator_visibility == Hidden,
         ),
-        option_attribute(s.id, fn(_) { "id" }, function.identity, None),
-        boolean_attribute("multi", s.selection_mode == Multi),
-        option_attribute(s.name, fn(_) { "name" }, function.identity, None),
-        boolean_attribute("required", s.requirement == Required),
+        helpers.option_attribute(s.id, fn(_) { "id" }, function.identity, None),
+        helpers.boolean_attribute("multi", s.selection_mode == Multi),
+        helpers.option_attribute(s.name, fn(_) { "name" }, function.identity, None),
+        helpers.boolean_attribute("required", s.requirement == Required),
       ],
       attributes,
     ])

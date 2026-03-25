@@ -7,7 +7,7 @@ import gleam/string
 
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -222,22 +222,22 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
         _ ->
           attribute.attribute("detents", string.join(list.map(b.detents, detent_to_string), " "))
       },
-      boolean_attribute("handle", case b.handle {
+      helpers.boolean_attribute("handle", case b.handle {
         ShowHandle -> True
         NoHandle -> False
       }),
       attribute.attribute("handle-label", b.handle_label),
-      boolean_attribute("hideable", case b.hideable {
+      helpers.boolean_attribute("hideable", case b.hideable {
         Hideable -> True
         NotHideable -> False
       }),
       attribute.attribute("hide-friction", float.to_string(b.hide_friction)),
       attribute.attribute("id", b.id),
-      boolean_attribute("modal", case b.modal {
+      helpers.boolean_attribute("modal", case b.modal {
         Modal -> True
         Standard -> False
       }),
-      boolean_attribute("open", case b.state {
+      helpers.boolean_attribute("open", case b.state {
         Open -> True
         Closed -> False
       }),

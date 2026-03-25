@@ -7,7 +7,7 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -102,7 +102,7 @@ pub fn render(b: BottomSheetTrigger) -> Element(msg) {
         None -> attribute.none()
       },
       attribute.attribute("for", b.for),
-      boolean_attribute("secondary", b.role == Secondary),
+      helpers.boolean_attribute("secondary", b.role == Secondary),
     ]
       |> list.filter(fn(a) { a != attribute.none() }),
     [element.text(b.label)],

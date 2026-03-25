@@ -7,7 +7,7 @@ import lustre/attribute
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
-import m3e/helpers.{option_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -124,7 +124,7 @@ pub fn render(b: Badge) -> Element(msg) {
   element.element(
     "m3e-badge",
     [
-      option_attribute(b.for, fn(_) { "for" }, function.identity, None),
+      helpers.option_attribute(b.for, fn(_) { "for" }, function.identity, None),
       attribute.attribute(
         "size",
         config.size_to_string(config.clamp_to_restricted_size(

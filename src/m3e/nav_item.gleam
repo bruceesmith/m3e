@@ -6,7 +6,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/layout.{type Orientation, Vertical}
 import m3e/link.{type Link}
 import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
@@ -149,12 +149,12 @@ pub fn render(
     "m3e-nav-item",
     list.flatten([
       [
-        boolean_attribute("disabled", item.interaction == Disabled),
-        boolean_attribute(
+        helpers.boolean_attribute("disabled", item.interaction == Disabled),
+        helpers.boolean_attribute(
           "disabled-interactive",
           item.focusability == Interactive,
         ),
-        boolean_attribute("selected", item.selection == Selected),
+        helpers.boolean_attribute("selected", item.selection == Selected),
         attribute.attribute("orientation", layout.orientation_to_string(item.orientation)),
       ],
       link.attributes(item.link),

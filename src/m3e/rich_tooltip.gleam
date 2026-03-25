@@ -7,7 +7,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
@@ -153,7 +153,7 @@ pub fn render(
     "m3e-rich-tooltip",
     list.flatten([
       [
-        boolean_attribute("disabled", r.interaction == Disabled),
+        helpers.boolean_attribute("disabled", r.interaction == Disabled),
         attribute.attribute("for", r.for),
         attribute.attribute("hide-delay", int.to_string(r.hide_delay)),
         attribute.attribute("position", position_to_string(r.position)),

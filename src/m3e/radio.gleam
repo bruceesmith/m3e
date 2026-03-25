@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{
   type CheckedState, type Interaction, type Requirement, Checked, Disabled,
   Required,
@@ -119,9 +119,9 @@ pub fn render(
     "m3e-radio",
     list.flatten([
       [
-        boolean_attribute("checked", r.checked == Checked),
-        boolean_attribute("disabled", r.interaction == Disabled),
-        boolean_attribute("required", r.requirement == Required),
+        helpers.boolean_attribute("checked", r.checked == Checked),
+        helpers.boolean_attribute("disabled", r.interaction == Disabled),
+        helpers.boolean_attribute("required", r.requirement == Required),
       ],
       form_submission.attributes(r.form_submission),
       attributes,

@@ -6,7 +6,7 @@ import gleam/string
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, clamp_with_default}
+import m3e/helpers
 
 // --- Types ---
 
@@ -204,7 +204,7 @@ pub fn render(
         attribute.attribute("density", int.to_string(t.density)),
         attribute.attribute("motion", motion_to_string(t.motion)),
         attribute.attribute("scheme", scheme_to_string(t.scheme)),
-        boolean_attribute("strong-focus", t.strong_focus == Strong),
+        helpers.boolean_attribute("strong-focus", t.strong_focus == Strong),
       ],
       attributes,
     )
@@ -237,7 +237,7 @@ fn contrast_to_string(c: Contrast) -> String {
 /// density_validate ensures a number is within the valid density range
 ///
 fn density_validate(d: Density) -> Density {
-  clamp_with_default(d, smallest_density, largest_density, default_density)
+  helpers.clamp_with_default(d, smallest_density, largest_density, default_density)
 }
 
 fn motion_to_string(m: Motion) -> String {

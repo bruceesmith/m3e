@@ -8,7 +8,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -110,7 +110,7 @@ pub fn render(
     "m3e-app-bar",
     list.flatten([
       [
-        boolean_attribute("centered", a.alignment == Centered),
+        helpers.boolean_attribute("centered", a.alignment == Centered),
         attribute.attribute(
           "size",
           config.size_to_string(config.clamp_to_restricted_size(
@@ -118,7 +118,7 @@ pub fn render(
             default_size,
           )),
         ),
-        option_attribute(a.for, fn(_) { "for" }, function.identity, None),
+        helpers.option_attribute(a.for, fn(_) { "for" }, function.identity, None),
       ],
       attributes,
     ])

@@ -6,7 +6,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, type Size, Multi}
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -104,14 +104,14 @@ pub fn render(
   element.element(
     "m3e-button-group",
     [
-      boolean_attribute("multi", bg.multi == Multi),
-      option_attribute(
+      helpers.boolean_attribute("multi", bg.multi == Multi),
+      helpers.option_attribute(
         bg.size,
         fn(_) { "size" },
         config.size_to_string,
         Some(config.default_size),
       ),
-      option_attribute(
+      helpers.option_attribute(
         bg.variant,
         fn(_) { "variant" },
         variant_to_string,

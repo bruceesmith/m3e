@@ -8,7 +8,7 @@ import lustre/element/html.{span}
 
 import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/link.{type Link}
 import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
@@ -260,25 +260,25 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
     list.flatten([
       [
         attribute.disabled(b.disabled == Disabled),
-        boolean_attribute(
+        helpers.boolean_attribute(
           "disabled-interactive",
           b.disabled_interactive == Disabled,
         ),
         attribute.selected(b.selected == Selected),
-        option_attribute(
+        helpers.option_attribute(
           b.shape,
           fn(_) { "shape" },
           shape_to_string,
           Some(default_shape),
         ),
-        option_attribute(
+        helpers.option_attribute(
           b.size,
           fn(_) { "size" },
           config.size_to_string,
           Some(config.default_size),
         ),
-        boolean_attribute("toggle", b.toggle),
-        option_attribute(
+        helpers.boolean_attribute("toggle", b.toggle),
+        helpers.option_attribute(
           b.variant,
           fn(_) { "variant" },
           variant_to_string,

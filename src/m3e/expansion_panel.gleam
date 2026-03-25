@@ -6,7 +6,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/icon
 import m3e/state.{type Interaction, Disabled}
 
@@ -221,9 +221,9 @@ pub fn render(
   element.element(
     "m3e-expansion-panel",
     [
-      boolean_attribute("disabled", p.interaction == Disabled),
-      boolean_attribute("hide-toggle", p.toggle_visibility == HideToggle),
-      boolean_attribute("open", p.state == Open),
+      helpers.boolean_attribute("disabled", p.interaction == Disabled),
+      helpers.boolean_attribute("hide-toggle", p.toggle_visibility == HideToggle),
+      helpers.boolean_attribute("open", p.state == Open),
       attribute.attribute("toggle-direction", direction_to_string(p.toggle_direction)),
       attribute.attribute("toggle-position", position_to_string(p.toggle_position)),
       ..attributes

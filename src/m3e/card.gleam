@@ -6,7 +6,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/layout.{type Orientation}
 import m3e/link.{type Link}
 import m3e/state.{type Interaction, Disabled}
@@ -180,9 +180,9 @@ pub fn render(
     "m3e-card",
     list.flatten([
       [
-        boolean_attribute("actionable", c.actionability == Actionable),
-        boolean_attribute("disabled", c.interaction == Disabled),
-        boolean_attribute("inline", c.layout == Inline),
+        helpers.boolean_attribute("actionable", c.actionability == Actionable),
+        helpers.boolean_attribute("disabled", c.interaction == Disabled),
+        helpers.boolean_attribute("inline", c.layout == Inline),
         attribute.attribute("orientation", layout.orientation_to_string(c.orientation)),
         attribute.attribute("variant", variant_to_string(c.variant)),
       ],

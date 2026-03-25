@@ -8,7 +8,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 // --- TYPES ---
@@ -284,9 +284,9 @@ pub fn render(
     "m3e-paginator",
     list.flatten([
       [
-        boolean_attribute("disabled", p.interaction == Disabled),
+        helpers.boolean_attribute("disabled", p.interaction == Disabled),
         attribute.attribute("first-page-label", p.first_page_label),
-        boolean_attribute("hide-page-size", p.page_size_visibility == Hidden),
+        helpers.boolean_attribute("hide-page-size", p.page_size_visibility == Hidden),
         attribute.attribute("items-per-page-label", p.items_per_page_label),
         attribute.attribute("last-page-label", p.last_page_label),
         attribute.attribute("length", int.to_string(p.length)),
@@ -299,7 +299,7 @@ pub fn render(
         ),
         attribute.attribute("page-size-variant", variant_to_string(p.page_size_variant)),
         attribute.attribute("previous-page-label", p.previous_page_label),
-        boolean_attribute(
+        helpers.boolean_attribute(
           "show-first-last-buttons",
           p.first_last_buttons_visibility == Shown,
         ),

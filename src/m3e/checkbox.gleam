@@ -7,7 +7,7 @@ import lustre/attribute
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{
   type CheckedState, type Interaction, type Requirement, Checked, Disabled,
   Optional, Required,
@@ -120,9 +120,9 @@ pub fn render(checkbox: Checkbox) -> Element(msg) {
     "m3e-checkbox",
     list.flatten([
       [
-        boolean_attribute("checked", checkbox.checked == Checked),
-        boolean_attribute("disabled", checkbox.interaction == Disabled),
-        boolean_attribute("required", checkbox.requirement == Required),
+        helpers.boolean_attribute("checked", checkbox.checked == Checked),
+        helpers.boolean_attribute("disabled", checkbox.interaction == Disabled),
+        helpers.boolean_attribute("required", checkbox.requirement == Required),
       ],
       form_submission.attributes(checkbox.form_submission),
     ])

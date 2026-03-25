@@ -7,7 +7,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, type Requirement, Disabled, Required}
 
 // --- Types ---
@@ -116,10 +116,10 @@ pub fn render(
     "m3e-radio-group",
     list.flatten([
       [
-        boolean_attribute("disabled", group.interaction == Disabled),
-        option_attribute(group.id, fn(_) { "id" }, function.identity, None),
-        option_attribute(group.name, fn(_) { "name" }, function.identity, None),
-        boolean_attribute("required", group.requirement == Required),
+        helpers.boolean_attribute("disabled", group.interaction == Disabled),
+        helpers.option_attribute(group.id, fn(_) { "id" }, function.identity, None),
+        helpers.option_attribute(group.name, fn(_) { "name" }, function.identity, None),
+        helpers.boolean_attribute("required", group.requirement == Required),
       ],
       attributes,
     ])

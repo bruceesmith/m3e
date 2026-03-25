@@ -8,7 +8,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, Multi}
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
@@ -131,13 +131,13 @@ pub fn render(
     "m3e-segmented-button",
     list.flatten([
       [
-        boolean_attribute("disabled", s.interaction == Disabled),
-        boolean_attribute(
+        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute(
           "hide-selection-indicator",
           s.indicator_visibility == Hidden,
         ),
-        boolean_attribute("multi", s.selection_mode == Multi),
-        option_attribute(s.name, fn(_) { "name" }, function.identity, None),
+        helpers.boolean_attribute("multi", s.selection_mode == Multi),
+        helpers.option_attribute(s.name, fn(_) { "name" }, function.identity, None),
       ],
       attributes,
     ])

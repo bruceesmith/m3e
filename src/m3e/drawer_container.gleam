@@ -4,7 +4,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- TYPES ---
 
@@ -272,8 +272,8 @@ pub fn render(
       case c.end_drawer {
         Some(_) -> {
           [
-            boolean_attribute("end", c.end == Open),
-            boolean_attribute("end-divider", c.end_divider == ShowDivider),
+            helpers.boolean_attribute("end", c.end == Open),
+            helpers.boolean_attribute("end-divider", c.end_divider == ShowDivider),
             attribute.attribute("end-mode", mode_to_string(c.end_mode)),
           ]
         }
@@ -282,8 +282,8 @@ pub fn render(
       case c.start_drawer {
         Some(_) -> {
           [
-            boolean_attribute("start", c.start == Open),
-            boolean_attribute("start-divider", c.start_divider == ShowDivider),
+            helpers.boolean_attribute("start", c.start == Open),
+            helpers.boolean_attribute("start-divider", c.start_divider == ShowDivider),
             attribute.attribute("start-mode", mode_to_string(c.start_mode)),
           ]
         }

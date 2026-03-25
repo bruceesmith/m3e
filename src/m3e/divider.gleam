@@ -5,7 +5,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/layout.{type Orientation}
 
 // --- Types ---
@@ -62,8 +62,8 @@ pub fn render(
     "m3e-divider",
     list.append(
       [
-        option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
-        boolean_attribute("vertical", divider.vertical == layout.Vertical),
+        helpers.option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
+        helpers.boolean_attribute("vertical", divider.vertical == layout.Vertical),
       ]
         |> list.filter(fn(a) { a != attribute.none() }),
       attributes,

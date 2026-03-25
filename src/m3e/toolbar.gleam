@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/layout.{type Orientation, Vertical}
 
 // --- Types ---
@@ -141,10 +141,10 @@ pub fn render(
     "m3e-toolbar",
     list.flatten([
       [
-        boolean_attribute("elevated", t.elevated == Raised),
+        helpers.boolean_attribute("elevated", t.elevated == Raised),
         attribute.attribute("shape", shape_to_string(t.shape)),
         attribute.attribute("variant", variant_to_string(t.variant)),
-        boolean_attribute("vertical", t.vertical == Vertical),
+        helpers.boolean_attribute("vertical", t.vertical == Vertical),
       ],
       attributes,
     ])

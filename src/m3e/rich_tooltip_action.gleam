@@ -8,7 +8,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -73,7 +73,7 @@ pub fn render(
     "m3e-rich-tooltip",
     list.append(
       [
-        boolean_attribute("disable-restore-focus", r.disable_restore_focus),
+        helpers.boolean_attribute("disable-restore-focus", r.disable_restore_focus),
       ],
       attributes,
     )

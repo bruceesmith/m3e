@@ -3,7 +3,7 @@ import gleam/option.{type Option, Some}
 
 import lustre/attribute.{type Attribute}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 /// Target specifies where to open a linked document or display a form response
 /// 
@@ -46,7 +46,7 @@ pub fn new(href: String) -> Link {
 pub fn attributes(l: Option(Link)) -> List(Attribute(msg)) {
   case l {
     Some(link) if link.href != "" -> [
-      boolean_attribute("download", link.download),
+      helpers.boolean_attribute("download", link.download),
       attribute.attribute("href", link.href),
       case link.rel != "" {
         True -> attribute.attribute("rel", link.rel)

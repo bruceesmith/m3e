@@ -6,7 +6,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
@@ -106,7 +106,7 @@ pub fn render(
     list.flatten([
       [
         attribute.attribute("for", ta.for),
-        boolean_attribute("disabled", ta.disabled == Disabled),
+        helpers.boolean_attribute("disabled", ta.disabled == Disabled),
         attribute.attribute("max-rows", int.to_string(ta.max_rows)),
         attribute.attribute("min-rows", int.to_string(ta.min_rows)),
       ],

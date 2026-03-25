@@ -7,7 +7,7 @@ import lustre/element.{type Element}
 
 import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/link.{type Link}
 import m3e/state.{type SelectionState, Selected}
 
@@ -246,7 +246,7 @@ pub fn render(
     list.flatten([
       [
         attribute.disabled(i.interaction == Disabled),
-        boolean_attribute(
+        helpers.boolean_attribute(
           "disabled-interactive",
           i.interaction == DisabledInteractive,
         ),
@@ -257,7 +257,7 @@ pub fn render(
         attribute.selected(i.selection == Selected),
         attribute.attribute("shape", shape_to_string(i.shape)),
         attribute.attribute("size", config.size_to_string(i.size)),
-        boolean_attribute("toggle", i.toggle == Toggle),
+        helpers.boolean_attribute("toggle", i.toggle == Toggle),
         attribute.attribute("variant", variant_to_string(i.variant)),
         attribute.attribute("width", width_to_string(i.width)),
       ],

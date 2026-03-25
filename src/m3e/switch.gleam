@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type CheckedState, type Interaction, Checked, Disabled}
 
 // --- TYPES ---
@@ -134,8 +134,8 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
         [
           attribute.attribute("id", s.id),
           attribute.attribute("icons", icons_to_string(s.icons)),
-          boolean_attribute("checked", s.checked == Checked),
-          boolean_attribute("disabled", s.disabled == Disabled),
+          helpers.boolean_attribute("checked", s.checked == Checked),
+          helpers.boolean_attribute("disabled", s.disabled == Disabled),
         ],
         form_submission.attributes(s.form_submission),
         attributes,

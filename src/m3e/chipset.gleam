@@ -8,7 +8,7 @@ import m3e/config.{
   type SelectionIndicator, type SelectionMode, HideSelectionIndicator, Multi,
   ShowSelectionIndicator,
 }
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/layout.{type Orientation, Vertical}
 import m3e/state.{type Interaction, Disabled}
 
@@ -149,7 +149,7 @@ pub fn render(
         disabled_attr(s.type_, s.interaction),
         hide_selection_indicator_attr(s.type_, s.selection_indicator),
         multi_attr(s.type_, s.selection_mode),
-        boolean_attribute("vertical", s.orientation == Vertical),
+        helpers.boolean_attribute("vertical", s.orientation == Vertical),
       ],
       attributes,
     )

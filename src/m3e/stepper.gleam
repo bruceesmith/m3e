@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -168,7 +168,7 @@ pub fn render(
           "label-position",
           label_position_to_string(stepper.label_position),
         ),
-        boolean_attribute("linear", stepper.linear == Check),
+        helpers.boolean_attribute("linear", stepper.linear == Check),
         attribute.attribute("orientation", orientation_to_string(stepper.orientation)),
       ],
       attributes,

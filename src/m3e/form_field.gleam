@@ -4,7 +4,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -169,7 +169,7 @@ pub fn render(
     "m3e-form-field",
     [
       attribute.attribute("float-label", float_label_to_string(f.float_label)),
-      boolean_attribute(
+      helpers.boolean_attribute(
         "hide-required-marker",
         f.required_marker == HideRequiredMarker,
       ),

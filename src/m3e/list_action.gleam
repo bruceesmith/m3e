@@ -6,7 +6,7 @@ import gleam/option.{Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/link.{type Link}
 
 // --- Types ---
@@ -88,7 +88,7 @@ pub fn render(
   element.element(
     "m3e-list-action",
     list.flatten([
-      [boolean_attribute("disabled", la.disabled)],
+      [helpers.boolean_attribute("disabled", la.disabled)],
       link.attributes(Some(la.link)),
       attributes,
     ])

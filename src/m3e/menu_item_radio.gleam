@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type CheckedState, Checked}
 
 // --- Types ---
@@ -63,8 +63,8 @@ pub fn render(
   element.element(
     "m3e-menu-item-radio",
     [
-      boolean_attribute("checked", m.checked == Checked),
-      boolean_attribute("disabled", m.disabled),
+      helpers.boolean_attribute("checked", m.checked == Checked),
+      helpers.boolean_attribute("disabled", m.disabled),
       ..attributes
     ]
       |> list.filter(fn(a) { a != attribute.none() }),

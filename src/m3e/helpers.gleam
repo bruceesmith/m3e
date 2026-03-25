@@ -37,7 +37,8 @@ pub fn option_attribute(
   default_value: Option(a),
 ) -> Attribute(msg) {
   case or(option, default_value) {
-    Some(v) -> attribute.attribute(attribute_name_func(v), attribute_value_func(v))
+    Some(v) ->
+      attribute.attribute(attribute_name_func(v), attribute_value_func(v))
     None -> attribute.none()
   }
 }

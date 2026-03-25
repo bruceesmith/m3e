@@ -5,7 +5,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -101,7 +101,7 @@ pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-heading",
     [
-      boolean_attribute("emphasized", h.emphasis == Emphasized),
+      helpers.boolean_attribute("emphasized", h.emphasis == Emphasized),
       attribute.attribute(
         "size",
         config.size_to_string(config.clamp_to_restricted_size(

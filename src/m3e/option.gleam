@@ -7,7 +7,7 @@ import gleam/option.{type Option as GleamOption, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{
   type Interaction, type SelectionState, Disabled, Selected, Unselected,
 }
@@ -98,9 +98,9 @@ pub fn render(
     "m3e-option",
     list.flatten([
       [
-        boolean_attribute("disabled", o.interaction == Disabled),
-        boolean_attribute("selected", o.selection == Selected),
-        option_attribute(o.value, fn(_) { "value" }, function.identity, None),
+        helpers.boolean_attribute("disabled", o.interaction == Disabled),
+        helpers.boolean_attribute("selected", o.selection == Selected),
+        helpers.option_attribute(o.value, fn(_) { "value" }, function.identity, None),
       ],
       attributes,
     ])

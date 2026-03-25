@@ -8,7 +8,7 @@ import lustre/element.{type Element}
 import m3e/config.{
   type SelectionIndicator, HideSelectionIndicator, ShowSelectionIndicator,
 }
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/option.{type Option}
 import m3e/state.{type Requirement, Optional, Required}
 
@@ -125,13 +125,13 @@ pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
   element.element(
     "m3e-autocomplete",
     [
-      boolean_attribute("auto-activate", a.auto_activate == AutoActivate),
+      helpers.boolean_attribute("auto-activate", a.auto_activate == AutoActivate),
       attribute.attribute("for", a.for),
-      boolean_attribute(
+      helpers.boolean_attribute(
         "hide-selection-indicator",
         a.selection_indicator == HideSelectionIndicator,
       ),
-      boolean_attribute("required", a.requirement == Required),
+      helpers.boolean_attribute("required", a.requirement == Required),
     ]
       |> list.filter(fn(a) { a != attribute.none() }),
     list.map(children, fn(o) { option.render(o, [], []) }),

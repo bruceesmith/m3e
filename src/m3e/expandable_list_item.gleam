@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -98,8 +98,8 @@ pub fn render(
   element.element(
     "m3e-expandable-list-item",
     list.flatten([
-      [boolean_attribute("disabled", e.disabled)],
-      [boolean_attribute("open", e.open)],
+      [helpers.boolean_attribute("disabled", e.disabled)],
+      [helpers.boolean_attribute("open", e.open)],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),

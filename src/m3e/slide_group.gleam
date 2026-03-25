@@ -6,7 +6,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/layout.{type Orientation, Vertical}
 import m3e/state.{type Interaction, Disabled}
 
@@ -143,11 +143,11 @@ pub fn render(
     "m3e-slide-group",
     list.flatten([
       [
-        boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("disabled", s.interaction == Disabled),
         attribute.attribute("next-page-label", s.next_page_label),
         attribute.attribute("previous-page-label", s.previous_page_label),
         attribute.attribute("threshold", int.to_string(s.threshold)),
-        boolean_attribute("vertical", s.orientation == Vertical),
+        helpers.boolean_attribute("vertical", s.orientation == Vertical),
       ],
       attributes,
     ])

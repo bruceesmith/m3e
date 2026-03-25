@@ -5,7 +5,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/link.{type Link}
 
 // --- Types ---
@@ -62,7 +62,7 @@ pub fn render(
     "m3e-fab-menu-item",
     list.flatten([
       [
-        boolean_attribute("disabled", f.disabled),
+        helpers.boolean_attribute("disabled", f.disabled),
       ],
       link.attributes(f.link),
       attributes,

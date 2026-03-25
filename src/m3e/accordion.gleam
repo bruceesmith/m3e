@@ -3,7 +3,7 @@
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- TYPES ---
 
@@ -43,7 +43,7 @@ pub fn render(
 ) -> Element(msg) {
   element.element(
     "m3e-accordion",
-    [boolean_attribute("multi", a.multi), ..attributes]
+    [helpers.boolean_attribute("multi", a.multi), ..attributes]
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )

@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 
 // --- Types ---
 
@@ -186,7 +186,7 @@ pub fn render(
     "m3e-tabs",
     list.flatten([
       [
-        boolean_attribute(
+        helpers.boolean_attribute(
           "disabled-pagination",
           t.disabled_pagination == NoScroll,
         ),
@@ -196,7 +196,7 @@ pub fn render(
         ),
         attribute.attribute("next-page-label", t.next_page_label),
         attribute.attribute("previous-page-label", t.previous_page_label),
-        boolean_attribute("stretch", t.stretch == Stretch),
+        helpers.boolean_attribute("stretch", t.stretch == Stretch),
         attribute.attribute("variant", variant_to_string(t.variant)),
       ],
       attributes,

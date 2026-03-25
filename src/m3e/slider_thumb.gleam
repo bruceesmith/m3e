@@ -8,7 +8,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
@@ -89,9 +89,9 @@ pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) 
     "m3e-slider-thumb",
     list.flatten([
       [
-        boolean_attribute("disabled", s.interaction == Disabled),
-        option_attribute(s.name, fn(_) { "name" }, function.identity, None),
-        option_attribute(s.value, fn(_) { "value" }, to_string, None),
+        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.option_attribute(s.name, fn(_) { "name" }, function.identity, None),
+        helpers.option_attribute(s.value, fn(_) { "value" }, to_string, None),
       ],
       attributes,
     ])

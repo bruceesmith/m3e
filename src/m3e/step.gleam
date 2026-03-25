@@ -3,7 +3,7 @@
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
@@ -217,12 +217,12 @@ pub fn render_config(
   element.element(
     "m3e-step",
     [
-      boolean_attribute("completed", config.completed == Completed),
-      boolean_attribute("disabled", config.disabled == Disabled),
-      boolean_attribute("editable", config.editable == Editable),
+      helpers.boolean_attribute("completed", config.completed == Completed),
+      helpers.boolean_attribute("disabled", config.disabled == Disabled),
+      helpers.boolean_attribute("editable", config.editable == Editable),
       attribute.attribute("for", config.for),
-      boolean_attribute("optional", config.optional == Optional),
-      boolean_attribute("selected", config.selected == Selected),
+      helpers.boolean_attribute("optional", config.optional == Optional),
+      helpers.boolean_attribute("selected", config.selected == Selected),
     ],
     [element.text(config.text), ..children],
   )

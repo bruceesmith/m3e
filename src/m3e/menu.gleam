@@ -6,7 +6,7 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
 // --- TYPES ---
@@ -186,12 +186,12 @@ pub fn render(
     "m3e-menu",
     list.flatten([
       [
-        option_attribute(m.anchor, fn(_) { "anchor" }, fn(s) { s }, None),
-        boolean_attribute("disabled", m.interaction == Disabled),
-        boolean_attribute("open", m.state == Open),
+        helpers.option_attribute(m.anchor, fn(_) { "anchor" }, fn(s) { s }, None),
+        helpers.boolean_attribute("disabled", m.interaction == Disabled),
+        helpers.boolean_attribute("open", m.state == Open),
         attribute.attribute("position-x", position_x_to_string(m.position_x)),
         attribute.attribute("position-y", position_y_to_string(m.position_y)),
-        boolean_attribute("quick", m.quick == Instant),
+        helpers.boolean_attribute("quick", m.quick == Instant),
         attribute.attribute("variant", variant_to_string(m.variant)),
       ],
       attributes,

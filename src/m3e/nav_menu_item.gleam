@@ -5,7 +5,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/icon
 import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
@@ -191,9 +191,9 @@ pub fn render(
   element.element(
     "m3e-nav-menu-item",
     [
-      boolean_attribute("disabled", item.interaction == Disabled),
-      boolean_attribute("open", item.expansion == Open),
-      boolean_attribute("selected", item.selection == Selected),
+      helpers.boolean_attribute("disabled", item.interaction == Disabled),
+      helpers.boolean_attribute("open", item.expansion == Open),
+      helpers.boolean_attribute("selected", item.selection == Selected),
       ..attributes
     ],
     [

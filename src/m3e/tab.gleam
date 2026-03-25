@@ -5,7 +5,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
@@ -104,9 +104,9 @@ pub fn render(
     "m3e-tab",
     list.flatten([
       [
-        boolean_attribute("disabled", t.disabled == Disabled),
+        helpers.boolean_attribute("disabled", t.disabled == Disabled),
         attribute.attribute("for", t.for),
-        boolean_attribute("selected", t.selected == Selected),
+        helpers.boolean_attribute("selected", t.selected == Selected),
       ],
       attributes,
     ])

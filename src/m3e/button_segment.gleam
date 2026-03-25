@@ -7,7 +7,7 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/helpers.{boolean_attribute, option_attribute}
+import m3e/helpers
 import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
 // --- Types ---
@@ -114,9 +114,9 @@ pub fn render(
     "m3e-button-segment",
     list.flatten([
       [
-        boolean_attribute("checked", b.checked == Selected),
-        boolean_attribute("disabled", b.disabled == Disabled),
-        option_attribute(b.value, fn(_) { "value" }, function.identity, None),
+        helpers.boolean_attribute("checked", b.checked == Selected),
+        helpers.boolean_attribute("disabled", b.disabled == Disabled),
+        helpers.option_attribute(b.value, fn(_) { "value" }, function.identity, None),
       ],
       attributes,
     ])
