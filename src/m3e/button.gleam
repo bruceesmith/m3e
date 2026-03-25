@@ -4,7 +4,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import lustre/element/html.{span}
+import lustre/element/html
 
 import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
@@ -313,7 +313,7 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn selected_label_elt(sl: Option(String)) -> Element(msg) {
   case sl {
-    Some(lab) -> span([slot(SelectedSlot)], [element.text(lab)])
+    Some(lab) -> html.span([slot(SelectedSlot)], [element.text(lab)])
     None -> element.none()
   }
 }
