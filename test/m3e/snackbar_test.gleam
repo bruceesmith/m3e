@@ -1,8 +1,8 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 
+import m3e/config.{Dismissible, NotDismissible}
 import m3e/snackbar
-import m3e/types.{Dismissible, NotDismissible}
 
 pub fn snackbar_new_test() {
   let s = snackbar.new("Hello")

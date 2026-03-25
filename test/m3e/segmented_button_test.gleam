@@ -3,10 +3,12 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
+import m3e/config.{Multi, Single}
 import m3e/segmented_button.{
   disabled, hide_selection_indicator, multi, name, new, render,
 }
-import m3e/types.{Disabled, Enabled, Multi, Single}
+import m3e/types.{Disabled, Enabled}
 
 pub fn segmented_button_creation_test() {
   let s = new()

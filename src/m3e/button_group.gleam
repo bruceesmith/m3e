@@ -5,9 +5,9 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{type SelectionMode, Multi}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/size_many.{type Size, default_size, size_to_string}
-import m3e/types.{type SelectionMode, Multi, default_selection_mode}
 
 // --- Types ---
 
@@ -41,7 +41,7 @@ pub type Config {
 /// default_config returns a default Config
 ///
 pub fn default_config() -> Config {
-  Config(multi: default_selection_mode, size: None, variant: None)
+  Config(multi: config.default_selection_mode, size: None, variant: None)
 }
 
 // --- CONSTRUCTORS ---

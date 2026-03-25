@@ -3,7 +3,7 @@
 import gleam/option.{type Option, None, Some, unwrap}
 import lustre/effect.{type Effect}
 
-import m3e/types.{type Dismissibility, Dismissible, default_dismissibility}
+import m3e/config.{type Dismissibility, Dismissible}
 
 pub const default_action_label = ""
 
@@ -86,7 +86,7 @@ pub fn default_config(message: String) -> Config {
     message: message,
     action_label: None,
     close_label: None,
-    dismissibility: default_dismissibility,
+    dismissibility: config.default_dismissibility,
     duration: None,
   )
 }

@@ -5,12 +5,12 @@ import gleam/list.{filter, map}
 import lustre/attribute.{attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{
+  type SelectionIndicator, HideSelectionIndicator, ShowSelectionIndicator,
+}
 import m3e/helpers.{boolean_attribute}
 import m3e/option.{type Option}
-import m3e/types.{
-  type Requirement, type SelectionIndicator, HideSelectionIndicator, Optional,
-  Required, ShowSelectionIndicator,
-}
+import m3e/types.{type Requirement, Optional, Required}
 
 // --- Types ---
 

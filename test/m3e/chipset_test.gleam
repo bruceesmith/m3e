@@ -6,8 +6,9 @@ import m3e/chipset.{
   Config, Filter, Input, default_config, disabled, hide_selection_indicator,
   multi, new, render, render_config, type_, vertical,
 }
+import m3e/config.{HideSelectionIndicator, Multi}
 import m3e/layout.{Vertical}
-import m3e/types.{Disabled, HideSelectionIndicator, Multi}
+import m3e/types.{Disabled}
 
 pub fn chipset_basic_test() {
   let c = new()

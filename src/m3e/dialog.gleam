@@ -7,9 +7,9 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element, none as element_none}
 import lustre/element/html
 
+import m3e/config.{type Dismissibility, Dismissible}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/icon
-import m3e/types.{type Dismissibility, Dismissible, default_dismissibility}
 
 // --- Types ---
 
@@ -105,7 +105,7 @@ pub fn default_config() -> Config(msg) {
     close_label: None,
     focus_trap: default_focus_trap,
     close_behavior: default_close_behavior,
-    dismissibility: default_dismissibility,
+    dismissibility: config.default_dismissibility,
     header: "",
     close_icon_name: None,
     actions: [],

@@ -4,13 +4,13 @@ import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{
+  type SelectionIndicator, type SelectionMode, HideSelectionIndicator, Multi,
+  ShowSelectionIndicator,
+}
 import m3e/helpers.{boolean_attribute}
 import m3e/layout.{type Orientation, Vertical}
-import m3e/types.{
-  type Interaction, type SelectionIndicator, type SelectionMode, Disabled,
-  HideSelectionIndicator, Multi, ShowSelectionIndicator, default_interaction,
-  default_selection_mode,
-}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
 
@@ -63,7 +63,7 @@ pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
     selection_indicator: ShowSelectionIndicator,
-    selection_mode: default_selection_mode,
+    selection_mode: config.default_selection_mode,
     type_: default_type,
     orientation: layout.default_orientation,
   )

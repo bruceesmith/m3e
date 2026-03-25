@@ -7,10 +7,11 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{type SelectionMode, Multi}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/types.{
-  type Interaction, type Requirement, type SelectionMode, Disabled, Multi,
-  Required, default_interaction, default_requirement, default_selection_mode,
+  type Interaction, type Requirement, Disabled, Required, default_interaction,
+  default_requirement,
 }
 
 // --- Types ---
@@ -75,7 +76,7 @@ pub fn default_config() -> Config {
     interaction: default_interaction,
     indicator_visibility: default_indicator_visibility,
     id: None,
-    selection_mode: default_selection_mode,
+    selection_mode: config.default_selection_mode,
     name: None,
     requirement: default_requirement,
   )

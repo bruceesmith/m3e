@@ -1,9 +1,11 @@
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+
+import m3e/config.{Multi, Single}
 import m3e/list_variant
 import m3e/selection_list
-import m3e/types.{Disabled, Enabled, Multi, Single}
+import m3e/types.{Disabled, Enabled}
 
 // --- CONFIGURATION ---
 

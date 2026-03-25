@@ -6,8 +6,8 @@ import lustre/element/html.{text}
 import m3e/button_group.{
   Connected, Standard, multi, new, render, render_config, size, variant,
 }
+import m3e/config.{Multi}
 import m3e/size_many.{ExtraSmall, Large, Medium, Small}
-import m3e/types.{Multi}
 
 pub fn button_group_creation_test() {
   let bg =

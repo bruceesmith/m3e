@@ -4,8 +4,8 @@ import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
 
+import m3e/config.{Dismissible}
 import m3e/dialog.{Alert, CloseDisabled, NoFocusTrap}
-import m3e/types.{Dismissible}
 
 pub fn basic_render_test() {
   let content = [html.text("This is the dialog content.")]

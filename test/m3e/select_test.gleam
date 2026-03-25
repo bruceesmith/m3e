@@ -3,10 +3,12 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
+import m3e/config.{Multi, Single}
 import m3e/select.{
   disabled, hide_selection_indicator, id, multi, name, new, render, required,
 }
-import m3e/types.{Disabled, Enabled, Multi, Optional, Required, Single}
+import m3e/types.{Disabled, Enabled, Optional, Required}
 
 pub fn select_creation_test() {
   let s = new()

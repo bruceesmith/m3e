@@ -6,11 +6,9 @@ import m3e/helpers.{boolean_attribute}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{type SelectionMode, Multi}
 import m3e/list_variant.{type Variant, Standard, variant_to_string}
-import m3e/types.{
-  type Interaction, type SelectionMode, Disabled, Multi, default_interaction,
-  default_selection_mode,
-}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
 
@@ -66,7 +64,7 @@ pub fn default_config() -> Config {
   Config(
     interaction: default_interaction,
     indicator_visibility: default_indicator_visibility,
-    selection_mode: default_selection_mode,
+    selection_mode: config.default_selection_mode,
     variant: default_variant,
   )
 }
