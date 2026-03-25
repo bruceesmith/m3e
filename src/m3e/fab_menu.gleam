@@ -1,5 +1,5 @@
 /// fab_menu provides Lustre support for the [M3E FAB Menu component](https://matraic.github.io/m3e/#/components/fab-menu.html)
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -64,14 +64,14 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-fab-menu",
-    flatten([
+    list.flatten([
       [
         attribute("id", f.id),
         attribute("variant", variant_to_string(f.variant)),
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

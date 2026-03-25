@@ -1,7 +1,7 @@
 //// segmented_button provides Lustre support for the [M3E Segmented Button component](https://matraic.github.io/m3e/#/components/segmented-button.html)
 
 import gleam/function
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, none}
@@ -129,7 +129,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-segmented-button",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", s.interaction == Disabled),
         boolean_attribute(
@@ -141,7 +141,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

@@ -2,7 +2,7 @@
 
 import gleam/float
 import gleam/int
-import gleam/list.{filter, map}
+import gleam/list
 import gleam/string.{join}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -219,7 +219,8 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
       attribute("detent", int.to_string(b.detent)),
       case b.detents {
         [] -> none()
-        _ -> attribute("detents", join(map(b.detents, detent_to_string), " "))
+        _ ->
+          attribute("detents", join(list.map(b.detents, detent_to_string), " "))
       },
       boolean_attribute("handle", case b.handle {
         ShowHandle -> True
@@ -241,7 +242,7 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
         Closed -> False
       }),
     ]
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

@@ -1,6 +1,6 @@
 //// menu provides Lustre support for the [M3E Menu component](https://matraic.github.io/m3e/#/components/menu.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -184,7 +184,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-menu",
-    flatten([
+    list.flatten([
       [
         option_attribute(m.anchor, fn(_) { "anchor" }, fn(s) { s }, None),
         boolean_attribute("disabled", m.interaction == Disabled),
@@ -196,7 +196,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

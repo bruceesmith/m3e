@@ -1,6 +1,6 @@
 //// form_submitter_type provides types and related functions for handling form submission elements
 
-import gleam/list.{filter}
+import gleam/list
 import gleam/option.{type Option, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -84,7 +84,7 @@ pub fn button_attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
     }
     _ -> [none()]
   }
-  |> filter(fn(a) { a != none() })
+  |> list.filter(fn(a) { a != none() })
 }
 
 pub fn attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
@@ -97,5 +97,5 @@ pub fn attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
     }
     _ -> [none()]
   }
-  |> filter(fn(a) { a != none() })
+  |> list.filter(fn(a) { a != none() })
 }

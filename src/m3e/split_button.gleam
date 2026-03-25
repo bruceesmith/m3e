@@ -1,6 +1,6 @@
 //// split_button provides Lustre support for the [M3E Split Button component](https://matraic.github.io/m3e/#/components/split-button.html)
 
-import gleam/list.{flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
@@ -132,7 +132,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-split-button",
-    flatten([
+    list.flatten([
       [
         attribute("size", config.size_to_string(s.size)),
         attribute("variant", variant_to_string(s.variant)),

@@ -1,6 +1,6 @@
 //// toolbar provides Lustre support for the [M3E Toolbar component](https://matraic.github.io/m3e/#/components/toolbar.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -139,7 +139,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-toolbar",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("elevated", t.elevated == Raised),
         attribute("shape", shape_to_string(t.shape)),
@@ -148,7 +148,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

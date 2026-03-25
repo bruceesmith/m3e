@@ -1,7 +1,7 @@
 //// textarea_autosize provides Lustre support for the [M3E Textarea Autosize component](https://matraic.github.io/m3e/#/components/textarea-autosize.html)
 
 import gleam/int.{to_string}
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -103,7 +103,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-textarea-autosize",
-    flatten([
+    list.flatten([
       [
         attribute("for", ta.for),
         boolean_attribute("disabled", ta.disabled == Disabled),
@@ -112,7 +112,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

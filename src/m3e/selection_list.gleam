@@ -1,6 +1,6 @@
 //// selection_list provides Lustre support for the [M3E Selection List component](https://matraic.github.io/m3e/#/components/list.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import m3e/helpers.{boolean_attribute}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -136,7 +136,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-selection-list",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", sl.interaction == Disabled),
         boolean_attribute(
@@ -148,7 +148,7 @@ pub fn render(
       [attribute("variant", variant_to_string(sl.variant))],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

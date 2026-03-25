@@ -1,6 +1,6 @@
 //// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -243,7 +243,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-icon-button",
-    flatten([
+    list.flatten([
       [
         attribute.disabled(i.interaction == Disabled),
         boolean_attribute(
@@ -265,7 +265,7 @@ pub fn render(
       link.attributes(i.link),
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

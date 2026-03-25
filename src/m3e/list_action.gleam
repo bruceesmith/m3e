@@ -1,6 +1,6 @@
 //// list_action provides Lustre support for the [M3E List Action component](https://matraic.github.io/m3e/#/components/list.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -87,12 +87,12 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-list-action",
-    flatten([
+    list.flatten([
       [boolean_attribute("disabled", la.disabled)],
       link.attributes(Some(la.link)),
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

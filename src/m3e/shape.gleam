@@ -1,6 +1,6 @@
 //// shape provides Lustre support for the [M3E Shape component](https://matraic.github.io/m3e/#/components/shape.html)
 
-import gleam/list.{filter}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -40,7 +40,7 @@ pub fn render(s: Shape, attributes: List(Attribute(msg))) -> Element(msg) {
   element(
     "m3e-shape",
     [attribute("name", s.name), ..attributes]
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     [],
   )
 }

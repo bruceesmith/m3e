@@ -2,7 +2,7 @@
 
 import gleam/float.{to_string}
 import gleam/function
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, none}
@@ -87,7 +87,7 @@ pub fn value(s: SliderThumb, value: Option(Float)) -> SliderThumb {
 pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) {
   element(
     "m3e-slider-thumb",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", s.interaction == Disabled),
         option_attribute(s.name, fn(_) { "name" }, function.identity, None),
@@ -95,7 +95,7 @@ pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) 
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     [],
   )
 }

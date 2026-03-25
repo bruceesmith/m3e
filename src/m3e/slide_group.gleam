@@ -1,7 +1,7 @@
 //// slide_group provides Lustre support for the [M3E Slide Group component](https://matraic.github.io/m3e/#/components/slide_group.html)
 
 import gleam/int.{to_string}
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -141,7 +141,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-slide-group",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", s.interaction == Disabled),
         attribute("next-page-label", s.next_page_label),
@@ -151,7 +151,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

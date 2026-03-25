@@ -1,6 +1,6 @@
 //// checkbox provides Lustre support for the [M3E Checkbox component](https://matraic.github.io/m3e/#/components/checkbox.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{none}
@@ -118,7 +118,7 @@ pub fn required(checkbox: Checkbox, requirement: Requirement) -> Checkbox {
 pub fn render(checkbox: Checkbox) -> Element(msg) {
   element(
     "m3e-checkbox",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("checked", checkbox.checked == Checked),
         boolean_attribute("disabled", checkbox.interaction == Disabled),
@@ -126,7 +126,7 @@ pub fn render(checkbox: Checkbox) -> Element(msg) {
       ],
       form_submission.attributes(checkbox.form_submission),
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     [],
   )
 }

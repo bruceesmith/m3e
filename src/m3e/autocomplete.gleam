@@ -1,6 +1,6 @@
 //// autocomplete provides Lustre support for the [M3E Autocomplete component](https://matraic.github.io/m3e/#/components/autocomplete.html)
 
-import gleam/list.{filter, map}
+import gleam/list
 
 import lustre/attribute.{attribute, none}
 import lustre/element.{type Element, element}
@@ -133,8 +133,8 @@ pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
       ),
       boolean_attribute("required", a.requirement == Required),
     ]
-      |> filter(fn(a) { a != none() }),
-    map(children, fn(o) { option.render(o, [], []) }),
+      |> list.filter(fn(a) { a != none() }),
+    list.map(children, fn(o) { option.render(o, [], []) }),
   )
 }
 

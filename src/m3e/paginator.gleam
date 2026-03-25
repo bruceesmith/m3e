@@ -1,7 +1,7 @@
 //// paginator provides Lustre support for the [M3E Paginator component](https://matraic.github.io/m3e/#/components/paginator.html)
 
 import gleam/int.{to_string}
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/string.{join}
 
 import lustre/attribute.{type Attribute, attribute}
@@ -282,7 +282,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-paginator",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", p.interaction == Disabled),
         attribute("first-page-label", p.first_page_label),
@@ -306,7 +306,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != attribute.none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

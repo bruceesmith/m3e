@@ -1,6 +1,6 @@
 //// list_option provides Lustre support for the [M3E List Option component](https://matraic.github.io/m3e/#/components/list.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
@@ -92,12 +92,12 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-list-option",
-    flatten([
+    list.flatten([
       [boolean_attribute("selected", lo.selected)],
       [boolean_attribute("disabled", lo.disabled)],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

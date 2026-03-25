@@ -1,6 +1,6 @@
 //// card provides Lustre support for the [M3E Card component](https://matraic.github.io/m3e/#/components/card.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -178,7 +178,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-card",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("actionable", c.actionability == Actionable),
         boolean_attribute("disabled", c.interaction == Disabled),
@@ -189,7 +189,7 @@ pub fn render(
       link.attributes(c.link),
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

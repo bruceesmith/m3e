@@ -1,5 +1,5 @@
 /// fab_menu_trigger provides Lustre support for the [M3E FAB Menu Trigger component](https://matraic.github.io/m3e/#/components/fab-menu.html)
-import gleam/list.{filter}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -37,9 +37,9 @@ pub fn render(
   element(
     "m3e-fab-menu-trigger",
     [attribute("for", f.for), ..attributes]
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     [f.icon |> icon.render([], []), ..children]
-      |> filter(fn(a) { a != element.none() }),
+      |> list.filter(fn(a) { a != element.none() }),
   )
 }
 

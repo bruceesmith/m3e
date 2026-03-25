@@ -1,7 +1,7 @@
 //// radio_group provides Lustre support for the [M3E Radio Group component](https://matraic.github.io/m3e/#/components/radio-group.html)
 
 import gleam/function
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, none}
@@ -114,7 +114,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-radio-group",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", group.interaction == Disabled),
         option_attribute(group.id, fn(_) { "id" }, function.identity, None),
@@ -123,7 +123,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

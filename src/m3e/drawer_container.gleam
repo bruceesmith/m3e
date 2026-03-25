@@ -1,6 +1,6 @@
 //// drawer_container provides Lustre support for the [M3E DrawerContainer component](https://matraic.github.io/m3e/#/components/drawer_container.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -264,11 +264,11 @@ pub fn render(
         None -> element.none()
       },
     ]
-    |> filter(fn(e) { e != element.none() })
+    |> list.filter(fn(e) { e != element.none() })
 
   element(
     "m3e-drawer-container",
-    flatten([
+    list.flatten([
       case c.end_drawer {
         Some(_) -> {
           [
@@ -291,7 +291,7 @@ pub fn render(
       },
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     drawers,
   )
 }

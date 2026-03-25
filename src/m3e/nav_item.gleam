@@ -1,6 +1,6 @@
 //// nav_item provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -147,7 +147,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-nav-item",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", item.interaction == Disabled),
         boolean_attribute(
@@ -160,7 +160,7 @@ pub fn render(
       link.attributes(item.link),
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

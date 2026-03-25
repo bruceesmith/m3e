@@ -1,6 +1,6 @@
 //// expansion_panel provides Lustre support for the M3E Expansion Panel component
 
-import gleam/list.{filter}
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element, text}
@@ -228,7 +228,7 @@ pub fn render(
       attribute("toggle-position", position_to_string(p.toggle_position)),
       ..attributes
     ]
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     [
       html.span([slot(Header)], [text(p.header)]),
       case p.toggle_icon_name {
@@ -244,7 +244,7 @@ pub fn render(
       },
       ..children
     ]
-      |> filter(fn(a) { a != element.none() }),
+      |> list.filter(fn(a) { a != element.none() }),
   )
 }
 

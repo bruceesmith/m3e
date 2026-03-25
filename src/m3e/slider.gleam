@@ -1,7 +1,7 @@
 //// slider provides Lustre support for the [M3E Slider component](https://matraic.github.io/m3e/#/components/slider.html)
 
 import gleam/float.{to_string}
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -171,7 +171,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-slider",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("disabled", s.interaction == Disabled),
         boolean_attribute("discrete", s.discrete == Discrete),
@@ -183,7 +183,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

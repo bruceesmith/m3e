@@ -1,6 +1,6 @@
 //// chip provides Lustre support for the [M3E Chip components](https://matraic.github.io/m3e/#/components/chips.html)
 
-import gleam/list.{append, flatten}
+import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -265,7 +265,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     type_to_string(c.type_),
-    flatten([
+    list.flatten([
       [
         behaviour_attr(c.type_, c.behaviour),
         disabled_attr(c.type_, c.interaction),
@@ -277,7 +277,7 @@ pub fn render(
       attributes,
     ])
       |> list.filter(fn(a) { a != none() }),
-    append([icon_element(c.type_, c.icon), text(c.label)], children),
+    list.append([icon_element(c.type_, c.icon), text(c.label)], children),
   )
 }
 

@@ -1,6 +1,6 @@
 //// tab_panel provides Lustre support for the [M3E Tab Panel component](https://matraic.github.io/m3e/#/components/tabs.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
@@ -47,13 +47,13 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-tab-panel",
-    flatten([
+    list.flatten([
       [
         attribute("id", tp.id),
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

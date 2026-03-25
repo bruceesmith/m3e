@@ -1,6 +1,6 @@
 //// accordion provides Lustre support for the [M3E Accordion component](https://matraic.github.io/m3e/#/components/expansion-panel.html)
 
-import gleam/list.{filter}
+import gleam/list
 import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 import m3e/helpers.{boolean_attribute}
@@ -44,9 +44,8 @@ pub fn render(
   element(
     "m3e-accordion",
     [boolean_attribute("multi", a.multi), ..attributes]
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
-
 // --- PRIVATE INTERNAL HELPERS ---

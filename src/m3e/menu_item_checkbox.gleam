@@ -1,6 +1,6 @@
 //// menu_item_checkbox provides Lustre support for the [M3E Menu Item Checkbox component](https://matraic.github.io/m3e/#/components/menu.html)
 
-import gleam/list.{filter}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -66,7 +66,7 @@ pub fn render(
       boolean_attribute("disabled", m.disabled),
       ..attributes
     ]
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

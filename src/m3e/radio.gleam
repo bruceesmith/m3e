@@ -1,6 +1,6 @@
 //// radio provides Lustre support for the [M3E Radio component](https://matraic.github.io/m3e/#/components/radio-group.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, none}
@@ -117,7 +117,7 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-radio",
-    flatten([
+    list.flatten([
       [
         boolean_attribute("checked", r.checked == Checked),
         boolean_attribute("disabled", r.interaction == Disabled),
@@ -126,7 +126,7 @@ pub fn render(
       form_submission.attributes(r.form_submission),
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }

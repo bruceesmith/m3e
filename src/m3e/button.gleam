@@ -1,6 +1,6 @@
 //// button provides Lustre support for the [M3E Button component](https://matraic.github.io/m3e/#/components/button.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element, none}
@@ -257,7 +257,7 @@ pub fn render_config(
 pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
   element(
     "m3e-button",
-    flatten([
+    list.flatten([
       [
         attribute.disabled(b.disabled == Disabled),
         boolean_attribute(
@@ -289,9 +289,9 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
       link.attributes(b.link),
       attributes,
     ])
-      |> filter(fn(a) { a != attribute.none() }),
-    flatten([b.icons, [text(b.label), selected_label_elt(b.selected_label)]])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
+    list.flatten([b.icons, [text(b.label), selected_label_elt(b.selected_label)]])
+      |> list.filter(fn(a) { a != none() }),
   )
 }
 

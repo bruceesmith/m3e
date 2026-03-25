@@ -1,6 +1,6 @@
 //// nav_bar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
@@ -55,13 +55,13 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-nav-bar",
-    flatten([
+    list.flatten([
       [
         attribute("mode", mode_to_string(bar.mode)),
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != attribute.none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

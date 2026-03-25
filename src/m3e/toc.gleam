@@ -1,7 +1,7 @@
 //// toc provides Lustre support for the [M3E Toc component](https://matraic.github.io/m3e/#/components/toc.html)
 
 import gleam/int.{to_string}
-import gleam/list.{filter, flatten}
+import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -65,14 +65,14 @@ pub fn render(
 ) -> Element(msg) {
   element(
     "m3e-toc",
-    flatten([
+    list.flatten([
       [
         attribute("for", t.for),
         attribute("max-depth", to_string(t.max_depth)),
       ],
       attributes,
     ])
-      |> filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != none() }),
     children,
   )
 }
