@@ -2,7 +2,7 @@
 
 import gleam/int
 import gleam/list
-import gleam/string.{join}
+import gleam/string
 
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
@@ -295,7 +295,7 @@ pub fn render(
         attribute("page-size", page_size_to_string(p.page_size)),
         attribute(
           "page-sizes",
-          join(list.map(p.page_sizes, page_size_to_string), ","),
+          string.join(list.map(p.page_sizes, page_size_to_string), ","),
         ),
         attribute("page-size-variant", variant_to_string(p.page_size_variant)),
         attribute("previous-page-label", p.previous_page_label),

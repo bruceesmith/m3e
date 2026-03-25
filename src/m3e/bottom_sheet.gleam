@@ -3,7 +3,7 @@
 import gleam/float
 import gleam/int
 import gleam/list
-import gleam/string.{join}
+import gleam/string
 
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
@@ -220,7 +220,7 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
       case b.detents {
         [] -> none()
         _ ->
-          attribute("detents", join(list.map(b.detents, detent_to_string), " "))
+          attribute("detents", string.join(list.map(b.detents, detent_to_string), " "))
       },
       boolean_attribute("handle", case b.handle {
         ShowHandle -> True

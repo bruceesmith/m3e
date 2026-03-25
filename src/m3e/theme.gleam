@@ -2,7 +2,7 @@
 
 import gleam/int
 import gleam/list
-import gleam/string.{is_empty}
+import gleam/string
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
@@ -145,7 +145,7 @@ pub fn from_config(config: Config, color: String) -> Theme {
 /// color sets the `color` field
 ///
 pub fn color(t: Theme, hex_color: String) -> Theme {
-  case is_empty(hex_color) {
+  case string.is_empty(hex_color) {
     False -> Theme(..t, color: hex_color)
     True -> t
   }
