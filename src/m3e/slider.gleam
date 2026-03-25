@@ -1,6 +1,6 @@
 //// slider provides Lustre support for the [M3E Slider component](https://matraic.github.io/m3e/#/components/slider.html)
 
-import gleam/float.{to_string}
+import gleam/float
 import gleam/list
 
 import lustre/attribute.{type Attribute}
@@ -176,10 +176,10 @@ pub fn render(
         helpers.boolean_attribute("disabled", s.interaction == Disabled),
         helpers.boolean_attribute("discrete", s.discrete == Discrete),
         helpers.boolean_attribute("labelled", s.labels == ShowLabels),
-        attribute.attribute("max", to_string(s.max)),
-        attribute.attribute("min", to_string(s.min)),
+        attribute.attribute("max", float.to_string(s.max)),
+        attribute.attribute("min", float.to_string(s.min)),
         attribute.attribute("size", config.size_to_string(s.size)),
-        attribute.attribute("step", to_string(s.step)),
+        attribute.attribute("step", float.to_string(s.step)),
       ],
       attributes,
     ])

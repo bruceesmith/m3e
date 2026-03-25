@@ -1,6 +1,6 @@
 //// slider_thumb provides Lustre support for the [M3E Slider Thumb component](https://matraic.github.io/m3e/#/components/slider.html)
 
-import gleam/float.{to_string}
+import gleam/float
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
@@ -90,8 +90,18 @@ pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) 
     list.flatten([
       [
         helpers.boolean_attribute("disabled", s.interaction == Disabled),
-        helpers.option_attribute(s.name, fn(_) { "name" }, function.identity, None),
-        helpers.option_attribute(s.value, fn(_) { "value" }, to_string, None),
+        helpers.option_attribute(
+          s.name,
+          fn(_) { "name" },
+          function.identity,
+          None,
+        ),
+        helpers.option_attribute(
+          s.value,
+          fn(_) { "value" },
+          float.to_string,
+          None,
+        ),
       ],
       attributes,
     ])
