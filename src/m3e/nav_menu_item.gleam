@@ -2,7 +2,7 @@
 
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element, none}
+import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/helpers.{boolean_attribute}
@@ -188,7 +188,7 @@ pub fn render(
   item: NavMenuItem,
   attributes: List(Attribute(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-nav-menu-item",
     [
       boolean_attribute("disabled", item.interaction == Disabled),
@@ -199,7 +199,7 @@ pub fn render(
     [
       badge_elt(item.badge),
       leading_icon_elt(item.leading_icon_name),
-      html.span([slot(Label)], [html.text(item.label)]),
+      html.span([slot(Label)], [element.text(item.label)]),
       selected_icon_elt(item.selected_icon_name),
       toggle_icon_elt(item.toggle_icon_name),
     ],
@@ -231,21 +231,21 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn badge_elt(badge: Option(String)) -> Element(msg) {
   case badge {
-    None -> none()
-    Some(s) -> html.span([slot(Badge)], [html.text(s)])
+    None -> element.none()
+    Some(s) -> html.span([slot(Badge)], [element.text(s)])
   }
 }
 
 fn leading_icon_elt(leading_icon_name: Option(String)) -> Element(msg) {
   case leading_icon_name {
-    None -> none()
+    None -> element.none()
     Some(s) -> icon.new(s) |> icon.purpose(slot(Icon)) |> icon.render([], [])
   }
 }
 
 fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
   case selected_icon_name {
-    None -> none()
+    None -> element.none()
     Some(s) ->
       icon.new(s) |> icon.purpose(slot(SelectedIcon)) |> icon.render([], [])
   }
@@ -253,7 +253,7 @@ fn selected_icon_elt(selected_icon_name: Option(String)) -> Element(msg) {
 
 fn toggle_icon_elt(toggle_icon_name: Option(String)) -> Element(msg) {
   case toggle_icon_name {
-    None -> none()
+    None -> element.none()
     Some(s) ->
       icon.new(s) |> icon.purpose(slot(ToggleIcon)) |> icon.render([], [])
   }

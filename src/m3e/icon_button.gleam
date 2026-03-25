@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
@@ -241,7 +241,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-icon-button",
     list.flatten([
       [

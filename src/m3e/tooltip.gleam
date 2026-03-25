@@ -4,7 +4,7 @@
 import gleam/int
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, for, none}
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
 import m3e/state.{type Interaction, Disabled}
@@ -172,7 +172,7 @@ pub fn show_delay(t: Tooltip, sd: ShowDelay) -> Tooltip {
 /// - attributes: a list of additional Attributes
 ///
 pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
-  element(
+  element.element(
     "m3e-tooltip",
     list.append(
       [
@@ -186,7 +186,7 @@ pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
       attributes,
     )
       |> list.filter(fn(a) { a != none() }),
-    [text(t.tip)],
+    [element.text(t.tip)],
   )
 }
 

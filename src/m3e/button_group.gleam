@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, type Size, Multi}
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -101,7 +101,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-button-group",
     [
       boolean_attribute("multi", bg.multi == Multi),

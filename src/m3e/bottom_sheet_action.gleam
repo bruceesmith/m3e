@@ -1,6 +1,6 @@
 //// bottom_sheet_action provides Lustre support for the [M3E Bottom Sheet Action component](https://matraic.github.io/m3e/#/components/bottom-sheet.html)
 
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 
 /// BottomSheetAction is an element, nested within a clickable element, used to close a parenting bottom sheet
 /// 
@@ -26,5 +26,5 @@ pub fn label(_: BottomSheetAction, label: String) -> BottomSheetAction {
 /// render creates a Lustre Element from a BottomSheetAction
 ///
 pub fn render(b: BottomSheetAction) -> Element(msg) {
-  element("m3e-bottom-sheet-action", [], [text(b.label)])
+  element.element("m3e-bottom-sheet-action", [], [element.text(b.label)])
 }

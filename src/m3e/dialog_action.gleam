@@ -1,7 +1,7 @@
 //// dialog_action provides Lustre support for the M3E Dialog Action component
 
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 /// DialogAction holds the return value for a dialog action
 /// 
@@ -28,7 +28,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-dialog-action",
     [attribute("return-value", d.return_value), ..attributes],
     children,

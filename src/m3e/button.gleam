@@ -3,8 +3,8 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element, none}
-import lustre/element/html.{span, text}
+import lustre/element.{type Element}
+import lustre/element/html.{span}
 
 import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
@@ -255,7 +255,7 @@ pub fn render_config(
 /// - attributes: a list of additional Attributes
 ///
 pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
-  element(
+  element.element(
     "m3e-button",
     list.flatten([
       [
@@ -290,8 +290,11 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    list.flatten([b.icons, [text(b.label), selected_label_elt(b.selected_label)]])
-      |> list.filter(fn(a) { a != none() }),
+    list.flatten([
+      b.icons,
+      [element.text(b.label), selected_label_elt(b.selected_label)],
+    ])
+      |> list.filter(fn(a) { a != element.none() }),
   )
 }
 
@@ -310,8 +313,8 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn selected_label_elt(sl: Option(String)) -> Element(msg) {
   case sl {
-    Some(lab) -> span([slot(SelectedSlot)], [text(lab)])
-    None -> none()
+    Some(lab) -> span([slot(SelectedSlot)], [element.text(lab)])
+    None -> element.none()
   }
 }
 

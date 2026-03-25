@@ -4,8 +4,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
-import lustre/element/html.{text}
+import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
@@ -263,7 +262,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     type_to_string(c.type_),
     list.flatten([
       [
@@ -277,7 +276,10 @@ pub fn render(
       attributes,
     ])
       |> list.filter(fn(a) { a != none() }),
-    list.append([icon_element(c.type_, c.icon), text(c.label)], children),
+    list.append(
+      [icon_element(c.type_, c.icon), element.text(c.label)],
+      children,
+    ),
   )
 }
 

@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/helpers.{boolean_attribute}
@@ -218,7 +218,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-expansion-panel",
     [
       boolean_attribute("disabled", p.interaction == Disabled),
@@ -230,7 +230,7 @@ pub fn render(
     ]
       |> list.filter(fn(a) { a != none() }),
     [
-      html.span([slot(Header)], [text(p.header)]),
+      html.span([slot(Header)], [element.text(p.header)]),
       case p.toggle_icon_name {
         None -> element.none()
         Some(name) ->
@@ -240,7 +240,7 @@ pub fn render(
       },
       case p.actions {
         None -> element.none()
-        Some(actions) -> element("div", [slot(Actions)], actions)
+        Some(actions) -> element.element("div", [slot(Actions)], actions)
       },
       ..children
     ]

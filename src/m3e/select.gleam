@@ -5,7 +5,7 @@ import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, Multi}
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -155,7 +155,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-select",
     list.flatten([
       [

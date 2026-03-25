@@ -4,8 +4,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
-import lustre/element/html.{text}
+import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
@@ -129,7 +128,7 @@ pub fn icon(s: Switch, icons: Icons) -> Switch {
 ///
 pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg)) {
   let switch_element =
-    element(
+    element.element(
       "m3e-switch",
       list.flatten([
         [
@@ -148,7 +147,7 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
   case s.label {
     Some(label) -> [
       switch_element,
-      element("label", [attribute("for", s.id)], [text(label)]),
+      element.element("label", [attribute("for", s.id)], [element.text(label)]),
     ]
     None -> [switch_element]
   }

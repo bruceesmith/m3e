@@ -6,7 +6,7 @@ import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/state.{type Interaction, Disabled}
@@ -85,7 +85,7 @@ pub fn value(s: SliderThumb, value: Option(Float)) -> SliderThumb {
 /// - attributes: additional attributes
 ///
 pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) {
-  element(
+  element.element(
     "m3e-slider-thumb",
     list.flatten([
       [

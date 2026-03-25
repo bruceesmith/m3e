@@ -4,7 +4,7 @@ import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element, none as element_none}
+import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/config.{type Dismissibility, Dismissible}
@@ -211,7 +211,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-dialog",
     [
       attribute.id(d.id),
@@ -234,7 +234,7 @@ pub fn render(
       actions_elt(d.actions),
       ..children
     ]
-      |> list.filter(fn(a) { a != element_none() }),
+      |> list.filter(fn(a) { a != element.none() }),
   )
 }
 
@@ -262,14 +262,14 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn actions_elt(actions: List(Element(msg))) -> Element(msg) {
   case actions {
-    [] -> element_none()
+    [] -> element.none()
     items -> html.div([slot(Actions)], items)
   }
 }
 
 fn close_icon_elt(close_icon_name: Option(String)) -> Element(msg) {
   case close_icon_name {
-    None -> element_none()
+    None -> element.none()
     Some(s) ->
       icon.new(s) |> icon.purpose(slot(CloseIcon)) |> icon.render([], [])
   }

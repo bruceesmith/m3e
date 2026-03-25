@@ -3,7 +3,7 @@
 import gleam/list
 
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config.{type Size}
 
@@ -130,7 +130,7 @@ pub fn render(
   s: SplitButton(msg),
   attributes: List(Attribute(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-split-button",
     list.flatten([
       [

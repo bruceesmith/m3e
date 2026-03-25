@@ -6,7 +6,7 @@ import gleam/list
 import gleam/string
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 import m3e/helpers.{boolean_attribute}
 
 // --- Types ---
@@ -213,7 +213,7 @@ pub fn state(b: BottomSheet, state: State) -> BottomSheet {
 /// render creates a Lustre Element from a BottomSheet
 ///
 pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
-  element(
+  element.element(
     "m3e-bottom-sheet",
     [
       attribute("detent", int.to_string(b.detent)),

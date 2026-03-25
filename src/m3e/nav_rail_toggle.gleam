@@ -1,7 +1,7 @@
 //// nav_rail_toggle provides Lustre support for the [M3E Nav Rail Toggle component](https://matraic.github.io/m3e/#/components/nav-rail.html)
 
 import lustre/attribute
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -35,5 +35,5 @@ pub fn for(_: NavRailToggle, for: String) -> NavRailToggle {
 /// render creates a Lustre Element from a NavRailToggle
 ///
 pub fn render(m: NavRailToggle) -> Element(msg) {
-  element("m3e-nav-rail-toggle", [attribute.for(m.for)], [])
+  element.element("m3e-nav-rail-toggle", [attribute.for(m.for)], [])
 }

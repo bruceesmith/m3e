@@ -1,7 +1,7 @@
 //// step provides Lustre support for the [M3E Step component](https://matraic.github.io/m3e/#/components/stepper.html)
 
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/state.{type Interaction, Disabled, Enabled}
@@ -214,7 +214,7 @@ pub fn render_config(
   config: Config,
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-step",
     [
       boolean_attribute("completed", config.completed == Completed),

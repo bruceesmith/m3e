@@ -1,7 +1,7 @@
 //// nav_menu_item_group provides Lustre support for the [M3E Nav Menu Item Group component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config
 import m3e/heading
@@ -57,7 +57,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element("m3e-nav-menu-item-group", attributes, [
+  element.element("m3e-nav-menu-item-group", attributes, [
     heading.new(group.heading)
       |> heading.size(config.Large)
       |> heading.variant(heading.Label)

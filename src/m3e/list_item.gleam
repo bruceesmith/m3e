@@ -1,7 +1,7 @@
 //// list_item provides Lustre support for the [M3E List Item component](https://matraic.github.io/m3e/#/components/list.html)
 
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -27,7 +27,7 @@ pub type Slot {
 /// render creates a Lustre Element from a ListItem
 ///
 pub fn render(children: List(Element(msg))) -> Element(msg) {
-  element("m3e-list-item", [], children)
+  element.element("m3e-list-item", [], children)
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot

@@ -1,7 +1,7 @@
 //// menu_item_group provides Lustre support for the [M3E Menu Item Group component](https://matraic.github.io/m3e/#/components/menu.html)
 
 import lustre/attribute.{type Attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -28,5 +28,5 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element("m3e-menu-item-group", attributes, children)
+  element.element("m3e-menu-item-group", attributes, children)
 }

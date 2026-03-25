@@ -5,7 +5,7 @@ import gleam/list
 import gleam/option.{type Option as GleamOption, None}
 
 import lustre/attribute.{type Attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/state.{
@@ -94,7 +94,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-option",
     list.flatten([
       [

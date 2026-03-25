@@ -2,7 +2,7 @@
 
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/list_variant.{type Variant, variant_to_string}
 
@@ -43,7 +43,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-action-list",
     list.flatten([
       [attribute("variant", variant_to_string(a.variant))],

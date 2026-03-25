@@ -2,7 +2,7 @@
 
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config.{
   type SelectionIndicator, type SelectionMode, HideSelectionIndicator, Multi,
@@ -142,7 +142,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     type_to_string(s.type_),
     list.append(
       [

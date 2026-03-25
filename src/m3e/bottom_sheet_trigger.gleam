@@ -5,7 +5,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{attribute, none}
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
 
@@ -94,7 +94,7 @@ pub fn role(b: BottomSheetTrigger, role: TriggerRole) -> BottomSheetTrigger {
 /// render creates a Lustre Element from a BottomSheetTrigger
 ///
 pub fn render(b: BottomSheetTrigger) -> Element(msg) {
-  element(
+  element.element(
     "m3e-bottom-sheet-trigger",
     [
       case b.detent {
@@ -105,7 +105,7 @@ pub fn render(b: BottomSheetTrigger) -> Element(msg) {
       boolean_attribute("secondary", b.role == Secondary),
     ]
       |> list.filter(fn(a) { a != none() }),
-    [text(b.label)],
+    [element.text(b.label)],
   )
 }
 

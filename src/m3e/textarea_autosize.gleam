@@ -4,7 +4,7 @@ import gleam/int
 import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/state.{type Interaction, Disabled, Enabled}
@@ -101,7 +101,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-textarea-autosize",
     list.flatten([
       [

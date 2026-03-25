@@ -1,7 +1,7 @@
 //// option_panel provides Lustre support for the [M3E Option Panel component](https://matraic.github.io/m3e/#/components/option.html)
 
 import lustre/attribute.{type Attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -34,5 +34,5 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element("m3e-option-panel", attributes, children)
+  element.element("m3e-option-panel", attributes, children)
 }

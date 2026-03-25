@@ -4,7 +4,7 @@ import gleam/list
 import gleam/option.{type Option, None}
 
 import lustre/attribute.{none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
@@ -116,7 +116,7 @@ pub fn required(checkbox: Checkbox, requirement: Requirement) -> Checkbox {
 /// render creates an HTML m3e-checkbox component from a Checkbox
 ///
 pub fn render(checkbox: Checkbox) -> Element(msg) {
-  element(
+  element.element(
     "m3e-checkbox",
     list.flatten([
       [

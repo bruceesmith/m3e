@@ -3,7 +3,7 @@
 import gleam/list
 
 import lustre/attribute.{attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/config.{
   type SelectionIndicator, HideSelectionIndicator, ShowSelectionIndicator,
@@ -122,7 +122,7 @@ pub fn requirement(a: Autocomplete, requirement: Requirement) -> Autocomplete {
 /// render creates an M3E Autocomplete component from an Autocomplete
 ///
 pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
-  element(
+  element.element(
     "m3e-autocomplete",
     [
       boolean_attribute("auto-activate", a.auto_activate == AutoActivate),

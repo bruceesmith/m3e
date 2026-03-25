@@ -2,7 +2,7 @@
 
 import gleam/list
 import lustre/attribute.{type Attribute, for, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -40,7 +40,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-drawer-toggle",
     [for(c.for), ..attributes]
       |> list.filter(fn(a) { a != none() }),

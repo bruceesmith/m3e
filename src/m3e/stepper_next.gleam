@@ -1,6 +1,6 @@
 //// stepper_next provides Lustre support for the [M3E Stepper Next component](https://matraic.github.io/m3e/#/components/stepper.html)
 
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -34,5 +34,5 @@ pub fn label(_: StepperNext, label: String) -> StepperNext {
 /// render creates a Lustre Element(msg) from a StepperNext
 ///
 pub fn render(s: StepperNext) -> Element(msg) {
-  element("m3e-stepper-next", [], [text(s.label)])
+  element.element("m3e-stepper-next", [], [element.text(s.label)])
 }

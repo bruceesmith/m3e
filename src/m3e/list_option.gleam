@@ -2,7 +2,7 @@
 
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
 
@@ -90,7 +90,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-list-option",
     list.flatten([
       [boolean_attribute("selected", lo.selected)],

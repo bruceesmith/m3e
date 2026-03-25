@@ -1,7 +1,7 @@
 //// step_panel provides Lustre support for the [M3E Step Panel component](https://matraic.github.io/m3e/#/components/stepper.html)
 
 import lustre/attribute.{attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -35,5 +35,5 @@ pub fn id(_: StepPanel, id: String) -> StepPanel {
 /// render creates a Lustre Element(msg) from a StepPanel
 /// 
 pub fn render(s: StepPanel) -> Element(msg) {
-  element("m3e-step-panel", [attribute("id", s.id)], [])
+  element.element("m3e-step-panel", [attribute("id", s.id)], [])
 }

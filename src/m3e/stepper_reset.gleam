@@ -1,6 +1,6 @@
 //// stepper_reset provides Lustre support for the [M3E Stepper Reset component](https://matraic.github.io/m3e/#/components/stepper.html)
 
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 
 // ---  TYPES ----
 
@@ -34,5 +34,5 @@ pub fn label(_: StepperReset, label: String) -> StepperReset {
 /// render creates a Lustre Element(msg) from a StepperReset
 ///
 pub fn render(s: StepperReset) -> Element(msg) {
-  element("m3e-stepper-reset", [], [text(s.label)])
+  element.element("m3e-stepper-reset", [], [element.text(s.label)])
 }

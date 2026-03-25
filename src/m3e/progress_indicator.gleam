@@ -5,8 +5,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
-import lustre/element/html.{text}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -266,7 +265,7 @@ pub fn render(
   pi: ProgressIndicator,
   attributes: List(Attribute(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     variant_to_string(pi.variant),
     list.append(
       [
@@ -310,7 +309,7 @@ fn buffer_value_validate(max: Maximum, value: Value) -> Value {
 
 fn content_element(variant: Variant, content: Option(String)) -> Element(msg) {
   case variant, content {
-    Circular, Some(c) -> text(c)
+    Circular, Some(c) -> element.text(c)
     _, _ -> element.none()
   }
 }

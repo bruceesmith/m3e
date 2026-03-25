@@ -2,7 +2,7 @@
 import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/icon.{type Icon}
 
@@ -34,7 +34,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-fab-menu-trigger",
     [attribute("for", f.for), ..attributes]
       |> list.filter(fn(a) { a != none() }),

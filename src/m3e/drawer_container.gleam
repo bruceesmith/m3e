@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 import m3e/helpers.{boolean_attribute}
 
 // --- TYPES ---
@@ -266,7 +266,7 @@ pub fn render(
     ]
     |> list.filter(fn(e) { e != element.none() })
 
-  element(
+  element.element(
     "m3e-drawer-container",
     list.flatten([
       case c.end_drawer {

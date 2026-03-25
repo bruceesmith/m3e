@@ -3,7 +3,7 @@
 import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // ---Types ---
 
@@ -37,7 +37,7 @@ pub fn name(_: Shape, name: String) -> Shape {
 /// render creates a Lustre Element(msg) from a Shape
 /// 
 pub fn render(s: Shape, attributes: List(Attribute(msg))) -> Element(msg) {
-  element(
+  element.element(
     "m3e-shape",
     [attribute("name", s.name), ..attributes]
       |> list.filter(fn(a) { a != none() }),

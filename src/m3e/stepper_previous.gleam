@@ -1,6 +1,6 @@
 //// stepper_previous provides Lustre support for the [M3E Stepper Previous component](https://matraic.github.io/m3e/#/components/stepper.html)
 
-import lustre/element.{type Element, element, text}
+import lustre/element.{type Element}
 
 // --- TYPES ---
 
@@ -34,5 +34,5 @@ pub fn label(_: StepperPrevious, label: String) -> StepperPrevious {
 /// render creates a Lustre Element(msg) from a StepperPrevious
 ///
 pub fn render(s: StepperPrevious) -> Element(msg) {
-  element("m3e-stepper-previous", [], [text(s.label)])
+  element.element("m3e-stepper-previous", [], [element.text(s.label)])
 }

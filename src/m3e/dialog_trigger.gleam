@@ -1,7 +1,7 @@
 //// dialog_trigger provides Lustre support for the M3E Dialog Trigger component
 
 import lustre/attribute.{type Attribute, for}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 /// Dialog Trigger component
 /// 
@@ -28,5 +28,5 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element("m3e-dialog-trigger", [for(d.for), ..attributes], children)
+  element.element("m3e-dialog-trigger", [for(d.for), ..attributes], children)
 }

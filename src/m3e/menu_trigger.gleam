@@ -1,7 +1,7 @@
 //// menu_trigger provides Lustre support for the [M3E Menu Trigger component](https://matraic.github.io/m3e/#/components/menu.html)
 
 import lustre/attribute
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 // --- Types ---
 
@@ -35,5 +35,5 @@ pub fn for(_: MenuTrigger, for: String) -> MenuTrigger {
 /// render creates a Lustre Element from a MenuTrigger
 ///
 pub fn render(m: MenuTrigger) -> Element(msg) {
-  element("m3e-menu-trigger", [attribute.for(m.for)], [])
+  element.element("m3e-menu-trigger", [attribute.for(m.for)], [])
 }

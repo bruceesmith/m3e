@@ -5,7 +5,7 @@ import gleam/list
 import gleam/string
 
 import lustre/attribute.{type Attribute, attribute}
-import lustre/element.{type Element, element}
+import lustre/element.{type Element}
 
 import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
 import m3e/helpers.{boolean_attribute}
@@ -280,7 +280,7 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element(
+  element.element(
     "m3e-paginator",
     list.flatten([
       [
