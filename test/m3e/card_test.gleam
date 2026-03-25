@@ -2,11 +2,13 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
 import m3e/card.{
   Elevated, Filled, Outlined, actionable, disabled, inline, new, orientation,
   render, variant,
 }
-import m3e/types.{Disabled, Enabled, Horizontal, Vertical}
+import m3e/layout.{Horizontal, Vertical}
+import m3e/types.{Disabled, Enabled}
 
 pub fn card_creation_test() {
   let c =

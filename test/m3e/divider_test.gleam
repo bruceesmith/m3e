@@ -4,7 +4,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 
 import m3e/divider.{Both, End, Start, inset, new, render, vertical}
-import m3e/types.{Vertical}
+import m3e/layout.{Vertical}
 
 pub fn divider_basic_test() {
   let d = new()

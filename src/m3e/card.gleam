@@ -7,11 +7,9 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/layout.{type Orientation}
 import m3e/link.{type Link}
-import m3e/types.{
-  type Interaction, type Orientation, Disabled, default_interaction,
-  default_orientation, orientation_to_string,
-}
+import m3e/types.{type Interaction, Disabled, default_interaction}
 
 // --- Types ---
 
@@ -100,7 +98,7 @@ pub fn default_config() -> Config {
     interaction: default_interaction,
     layout: default_layout,
     link: None,
-    orientation: default_orientation,
+    orientation: layout.default_orientation,
     variant: default_variant,
   )
 }
@@ -185,7 +183,7 @@ pub fn render(
         boolean_attribute("actionable", c.actionability == Actionable),
         boolean_attribute("disabled", c.interaction == Disabled),
         boolean_attribute("inline", c.layout == Inline),
-        attribute("orientation", orientation_to_string(c.orientation)),
+        attribute("orientation", layout.orientation_to_string(c.orientation)),
         attribute("variant", variant_to_string(c.variant)),
       ],
       link.attributes(c.link),

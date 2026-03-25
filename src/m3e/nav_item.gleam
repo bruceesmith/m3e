@@ -7,10 +7,11 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/layout.{type Orientation, Vertical}
 import m3e/link.{type Link}
 import m3e/types.{
-  type Interaction, type Orientation, type SelectionState, Disabled, Selected,
-  Vertical, default_interaction, default_selection_state, orientation_to_string,
+  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
+  default_selection_state,
 }
 
 // --- Types ---
@@ -157,7 +158,7 @@ pub fn render(
           item.focusability == Interactive,
         ),
         boolean_attribute("selected", item.selection == Selected),
-        attribute("orientation", orientation_to_string(item.orientation)),
+        attribute("orientation", layout.orientation_to_string(item.orientation)),
       ],
       link.attributes(item.link),
       attributes,

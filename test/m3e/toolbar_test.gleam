@@ -3,10 +3,10 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 
+import m3e/layout.{Vertical}
 import m3e/toolbar.{
   Raised, Rounded, Vibrant, elevated, new, render, shape, variant, vertical,
 }
-import m3e/types.{Vertical}
 
 pub fn toolbar_basic_test() {
   let t = new()

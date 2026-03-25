@@ -2,9 +2,11 @@ import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element.{element}
+
+import m3e/layout.{Horizontal, Vertical}
 import m3e/link
 import m3e/nav_item
-import m3e/types.{Disabled, Enabled, Horizontal, Selected, Unselected, Vertical}
+import m3e/types.{Disabled, Enabled, Selected, Unselected}
 
 pub fn basic_render_test() {
   nav_item.new()

@@ -6,7 +6,7 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{type Orientation, Vertical, default_orientation}
+import m3e/layout.{type Orientation}
 
 // --- Types ---
 
@@ -34,7 +34,7 @@ pub const default_inset: Option(Inset) = None
 /// new creates a new Divider
 ///
 pub fn new() -> Divider {
-  Divider(inset: default_inset, vertical: default_orientation)
+  Divider(inset: default_inset, vertical: layout.default_orientation)
 }
 
 // --- SETTERS ---
@@ -63,7 +63,7 @@ pub fn render(
     list.append(
       [
         option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
-        boolean_attribute("vertical", divider.vertical == Vertical),
+        boolean_attribute("vertical", divider.vertical == layout.Vertical),
       ]
         |> list.filter(fn(a) { a != none() }),
       attributes,

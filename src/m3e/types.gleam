@@ -27,24 +27,6 @@ pub type Interaction {
 
 pub const default_interaction: Interaction = Enabled
 
-/// Orientation specifies the layout orientation of the chipset
-/// 
-pub type Orientation {
-  Horizontal
-  Vertical
-}
-
-/// orientation_to_string converts an Orientation to a string
-/// 
-pub fn orientation_to_string(o: Orientation) -> String {
-  case o {
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
-  }
-}
-
-pub const default_orientation: Orientation = Horizontal
-
 /// Requirement specifies if a selection is required
 /// 
 pub type Requirement {

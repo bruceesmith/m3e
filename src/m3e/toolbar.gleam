@@ -6,7 +6,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Orientation, Vertical, default_orientation}
+import m3e/layout.{type Orientation, Vertical}
 
 // --- Types ---
 
@@ -74,7 +74,7 @@ pub fn default_config() -> Config {
     elevated: default_elevation,
     shape: default_shape,
     variant: default_variant,
-    vertical: default_orientation,
+    vertical: layout.default_orientation,
   )
 }
 

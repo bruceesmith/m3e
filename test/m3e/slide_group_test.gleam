@@ -2,11 +2,13 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
+import m3e/layout.{Horizontal, Vertical}
 import m3e/slide_group.{
   disabled, new, next_page_label, previous_page_label, render, threshold,
   vertical,
 }
-import m3e/types.{Disabled, Enabled, Horizontal, Vertical}
+import m3e/types.{Disabled, Enabled}
 
 pub fn slide_group_creation_test() {
   let s = new()
