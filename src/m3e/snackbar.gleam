@@ -1,6 +1,6 @@
 //// snackbar provides Lustre support for the [M3E Snackbar component](https://matraic.github.io/m3e/#/components/snackbar.html)
 
-import gleam/option.{type Option, None, Some, unwrap}
+import gleam/option.{type Option, None, Some}
 import lustre/effect.{type Effect}
 
 import m3e/config.{type Dismissibility, Dismissible}
@@ -174,9 +174,9 @@ pub fn open_config(config: Config, callback: Option(msg)) -> Effect(msg) {
 /// 
 @internal
 pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
-  let action_label = unwrap(s.action_label, default_action_label)
-  let close_label = unwrap(s.close_label, default_close_label)
-  let duration = unwrap(s.duration, default_duration)
+  let action_label = option.unwrap(s.action_label, default_action_label)
+  let close_label = option.unwrap(s.close_label, default_close_label)
+  let duration = option.unwrap(s.duration, default_duration)
 
   Open(
     message: s.message,

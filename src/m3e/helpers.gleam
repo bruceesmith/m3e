@@ -1,4 +1,4 @@
-import gleam/option.{type Option, None, Some, or}
+import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute}
 
@@ -36,7 +36,7 @@ pub fn option_attribute(
   attribute_value_func: fn(a) -> String,
   default_value: Option(a),
 ) -> Attribute(msg) {
-  case or(option, default_value) {
+  case option.or(option, default_value) {
     Some(v) ->
       attribute.attribute(attribute_name_func(v), attribute_value_func(v))
     None -> attribute.none()
