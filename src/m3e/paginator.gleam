@@ -7,7 +7,7 @@ import gleam/string
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
+import m3e/form_field.{type Variant, Filled, Outlined}
 import m3e/helpers
 import m3e/state.{type Interaction, Disabled}
 
@@ -140,7 +140,7 @@ pub fn default_config() -> Config {
     page_index: 0,
     page_size: PageSize(default_page_size),
     page_sizes: default_page_sizes,
-    page_size_variant: default_variant,
+    page_size_variant: form_field.default_variant,
     previous_page_label: "Previous page",
     first_last_buttons_visibility: Omitted,
   )
@@ -286,7 +286,10 @@ pub fn render(
       [
         helpers.boolean_attribute("disabled", p.interaction == Disabled),
         attribute.attribute("first-page-label", p.first_page_label),
-        helpers.boolean_attribute("hide-page-size", p.page_size_visibility == Hidden),
+        helpers.boolean_attribute(
+          "hide-page-size",
+          p.page_size_visibility == Hidden,
+        ),
         attribute.attribute("items-per-page-label", p.items_per_page_label),
         attribute.attribute("last-page-label", p.last_page_label),
         attribute.attribute("length", int.to_string(p.length)),
@@ -297,7 +300,10 @@ pub fn render(
           "page-sizes",
           string.join(list.map(p.page_sizes, page_size_to_string), ","),
         ),
-        attribute.attribute("page-size-variant", variant_to_string(p.page_size_variant)),
+        attribute.attribute(
+          "page-size-variant",
+          variant_to_string(p.page_size_variant),
+        ),
         attribute.attribute("previous-page-label", p.previous_page_label),
         helpers.boolean_attribute(
           "show-first-last-buttons",
