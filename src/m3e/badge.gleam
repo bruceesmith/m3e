@@ -6,8 +6,8 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{attribute}
 import lustre/element.{type Element, element, text}
 
+import m3e/config.{type Size}
 import m3e/helpers.{option_attribute}
-import m3e/size_few.{type Size, default_size, size_to_string}
 
 // --- Types ---
 
@@ -44,6 +44,10 @@ pub type BadgePosition {
 pub const default_badge_position: BadgePosition = AboveAfter
 
 // --- CONFIGURATION ---
+
+/// Default size
+/// 
+pub const default_size: Size = config.Medium
 
 /// Config holds the configuration for a Badge
 /// 
@@ -109,7 +113,7 @@ pub fn label(b: Badge, label: String) -> Badge {
 /// size sets the size field
 /// 
 pub fn size(b: Badge, size: Size) -> Badge {
-  Badge(..b, size: size)
+  Badge(..b, size: config.clamp_to_restricted_size(size, default_size))
 }
 
 // --- RENDERING ---
@@ -121,7 +125,13 @@ pub fn render(b: Badge) -> Element(msg) {
     "m3e-badge",
     [
       option_attribute(b.for, fn(_) { "for" }, function.identity, None),
-      attribute("size", size_to_string(b.size)),
+      attribute(
+        "size",
+        config.size_to_string(config.clamp_to_restricted_size(
+          b.size,
+          default_size,
+        )),
+      ),
       attribute("position", badge_position_to_string(b.badge_position)),
     ],
     [text(b.label)],

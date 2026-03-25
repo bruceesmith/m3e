@@ -7,6 +7,7 @@ import lustre/attribute.{
 import lustre/element.{element}
 
 import m3e/app_bar
+import m3e/config
 import m3e/icon_button.{
   Config, Disabled, DisabledInteractive, Filled, Narrow, Square, Toggle,
   default_config, disabled, form, new, purpose, render, render_config, selected,
@@ -14,7 +15,6 @@ import m3e/icon_button.{
 }
 
 import m3e/form_submission.{FormSubmission, Submit}
-import m3e/size_many.{ExtraLarge, ExtraSmall, Large}
 import m3e/state.{Selected}
 
 pub fn icon_button_creation_test() {
@@ -40,7 +40,7 @@ pub fn icon_button_creation_test() {
     |> purpose(None)
     |> selected(Selected)
     |> shape(Square)
-    |> size(Large)
+    |> size(config.Large)
     |> toggle(Toggle)
     |> form(Some(FormSubmission(Submit, "key", "val")))
     |> variant(Filled)
@@ -182,7 +182,7 @@ pub fn icon_button_shape_test() {
 }
 
 pub fn icon_button_size_test() {
-  let b = new() |> size(ExtraLarge)
+  let b = new() |> size(config.ExtraLarge)
 
   let expected =
     element(
@@ -227,7 +227,7 @@ pub fn icon_button_render_config_test() {
       interaction: Disabled,
       selection: Selected,
       toggle: Toggle,
-      size: ExtraSmall,
+      size: config.ExtraSmall,
     )
   let expected =
     element(

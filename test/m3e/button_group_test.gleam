@@ -1,19 +1,20 @@
 import gleam/option.{Some}
 import gleeunit/should
+
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
 import m3e/button_group.{
   Connected, Standard, multi, new, render, render_config, size, variant,
 }
 import m3e/config.{Multi}
-import m3e/size_many.{ExtraSmall, Large, Medium, Small}
 
 pub fn button_group_creation_test() {
   let bg =
     new()
     |> multi(Multi)
-    |> size(Some(Medium))
+    |> size(Some(config.Medium))
     |> variant(Some(Connected))
   let expected =
     element(
@@ -38,7 +39,7 @@ pub fn button_group_creation_test() {
 }
 
 pub fn button_group_element_test() {
-  let bg = new() |> size(Some(Small)) |> variant(Some(Standard))
+  let bg = new() |> size(Some(config.Small)) |> variant(Some(Standard))
   let expected =
     element(
       "m3e-button-group",
@@ -60,7 +61,8 @@ pub fn button_group_element_test() {
 }
 
 pub fn button_group_multi_test() {
-  let bg = new() |> size(Some(Small)) |> variant(Some(Standard)) |> multi(Multi)
+  let bg =
+    new() |> size(Some(config.Small)) |> variant(Some(Standard)) |> multi(Multi)
 
   let expected =
     element(
@@ -79,7 +81,7 @@ pub fn config_test() {
   let config =
     button_group.Config(
       multi: Multi,
-      size: Some(Medium),
+      size: Some(config.Medium),
       variant: Some(Connected),
     )
   let expected =
@@ -96,7 +98,7 @@ pub fn config_test() {
 }
 
 pub fn button_group_size_test() {
-  let bg = new() |> size(Some(Large))
+  let bg = new() |> size(Some(config.Large))
 
   let expected =
     element(
@@ -106,7 +108,7 @@ pub fn button_group_size_test() {
     )
   bg |> render([], []) |> should.equal(expected)
 
-  let bg2 = new() |> size(Some(ExtraSmall))
+  let bg2 = new() |> size(Some(config.ExtraSmall))
   let expected2 =
     element(
       "m3e-button-group",

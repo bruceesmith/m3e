@@ -5,10 +5,10 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
-import m3e/size_many.{type Size, default_size, size_to_string}
 import m3e/state.{type SelectionState, Selected}
 
 // --- Types ---
@@ -127,7 +127,7 @@ pub fn default_config() -> Config(msg) {
     purpose: None,
     selection: state.default_selection_state,
     shape: default_shape,
-    size: default_size,
+    size: config.default_size,
     toggle: default_toggle,
     variant: default_variant,
     width: default_width,
@@ -256,7 +256,7 @@ pub fn render(
         },
         attribute.selected(i.selection == Selected),
         attribute("shape", shape_to_string(i.shape)),
-        attribute("size", size_to_string(i.size)),
+        attribute("size", config.size_to_string(i.size)),
         boolean_attribute("toggle", i.toggle == Toggle),
         attribute("variant", variant_to_string(i.variant)),
         attribute("width", width_to_string(i.width)),

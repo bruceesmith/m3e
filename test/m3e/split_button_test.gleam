@@ -1,8 +1,10 @@
 import gleeunit/should
+
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
-import m3e/size_many.{ExtraLarge, Large, Small}
+
+import m3e/config
 import m3e/split_button.{Elevated, Outlined, Tonal, new, render, size, variant}
 
 pub fn split_button_new_test() {
@@ -25,7 +27,7 @@ pub fn split_button_size_test() {
   let trailing = text("T")
 
   new(leading, trailing)
-  |> size(ExtraLarge)
+  |> size(config.ExtraLarge)
   |> render([])
   |> should.equal(
     element(
@@ -36,7 +38,7 @@ pub fn split_button_size_test() {
   )
 
   new(leading, trailing)
-  |> size(Large)
+  |> size(config.Large)
   |> render([])
   |> should.equal(
     element(
@@ -129,7 +131,7 @@ pub fn config_test() {
   split_button.default_config(leading, trailing)
   |> should.equal(split_button.Config(
     leading: leading,
-    size: Small,
+    size: config.Small,
     trailing: trailing,
     variant: split_button.Filled,
   ))

@@ -1,7 +1,8 @@
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/size_many.{ExtraSmall, Large}
+
+import m3e/config
 import m3e/slider
 import m3e/state.{Disabled, Enabled}
 
@@ -117,7 +118,7 @@ pub fn min_test() {
 
 pub fn size_test() {
   slider.new()
-  |> slider.size(Large)
+  |> slider.size(config.Large)
   |> slider.render([], [])
   |> should.equal(
     element.element(
@@ -216,7 +217,7 @@ pub fn config_test() {
     labels: slider.HideLabels,
     max: 100.0,
     min: 0.0,
-    size: ExtraSmall,
+    size: config.ExtraSmall,
     step: 1.0,
   ))
 }

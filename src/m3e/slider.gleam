@@ -6,8 +6,8 @@ import gleam/list.{filter, flatten}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{type Size}
 import m3e/helpers.{boolean_attribute}
-import m3e/size_many.{type Size, ExtraSmall, size_to_string}
 import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
@@ -22,7 +22,7 @@ pub const default_discrete: Discrete = Continuous
 
 pub const default_max = 100.0
 
-pub const default_size = ExtraSmall
+pub const default_size: Size = config.ExtraSmall
 
 pub const default_step = 1.0
 
@@ -178,7 +178,7 @@ pub fn render(
         boolean_attribute("labelled", s.labels == ShowLabels),
         attribute("max", to_string(s.max)),
         attribute("min", to_string(s.min)),
-        attribute("size", size_to_string(s.size)),
+        attribute("size", config.size_to_string(s.size)),
         attribute("step", to_string(s.step)),
       ],
       attributes,

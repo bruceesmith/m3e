@@ -5,9 +5,8 @@ import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
-import m3e/config.{type SelectionMode, Multi}
+import m3e/config.{type SelectionMode, type Size, Multi}
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/size_many.{type Size, default_size, size_to_string}
 
 // --- Types ---
 
@@ -109,8 +108,8 @@ pub fn render(
       option_attribute(
         bg.size,
         fn(_) { "size" },
-        size_to_string,
-        Some(default_size),
+        config.size_to_string,
+        Some(config.default_size),
       ),
       option_attribute(
         bg.variant,

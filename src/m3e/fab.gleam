@@ -7,10 +7,10 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{span, text}
 
+import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
-import m3e/size_few.{type Size, Medium, size_to_string}
 
 // --- Types ---
 
@@ -71,7 +71,7 @@ pub const default_interaction: Interaction = Enabled
 
 /// Default size
 /// 
-pub const default_size = Medium
+pub const default_size: Size = config.Medium
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -194,7 +194,7 @@ pub fn lowered(f: FAB, elevation: Elevation) -> FAB {
 /// size sets the size field
 /// 
 pub fn size(f: FAB, size: Size) -> FAB {
-  FAB(..f, size: size)
+  FAB(..f, size: config.clamp_to_restricted_size(size, default_size))
 }
 
 /// variant sets the variant field
@@ -228,7 +228,13 @@ pub fn render(
         ),
         boolean_attribute("extended", f.extension == Extended),
         boolean_attribute("lowered", f.elevation == Lowered),
-        attribute("size", size_to_string(f.size)),
+        attribute(
+          "size",
+          config.size_to_string(config.clamp_to_restricted_size(
+            f.size,
+            default_size,
+          )),
+        ),
         attribute("variant", variant_to_string(f.variant)),
       ],
       form_submission.button_attributes(f.form_submission),

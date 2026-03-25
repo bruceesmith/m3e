@@ -6,10 +6,10 @@ import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element, none}
 import lustre/element/html.{span, text}
 
+import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/link.{type Link}
-import m3e/size_many.{type Size, default_size, size_to_string}
 import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
 // --- Types ---
@@ -274,8 +274,8 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
         option_attribute(
           b.size,
           fn(_) { "size" },
-          size_to_string,
-          Some(default_size),
+          config.size_to_string,
+          Some(config.default_size),
         ),
         boolean_attribute("toggle", b.toggle),
         option_attribute(

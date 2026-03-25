@@ -6,8 +6,9 @@ import m3e/fab.{
   Config, Disabled, DisabledInteractive, Extended, Lowered, Tertiary,
   default_config, render_config,
 }
+
+import m3e/config
 import m3e/form_submission.{Submit}
-import m3e/size_few.{Small}
 
 pub fn default_test() {
   fab.new()
@@ -57,7 +58,7 @@ pub fn attributes_test() {
     |> form_submission.value("submitted"),
   ))
   |> fab.lowered(Lowered)
-  |> fab.size(Small)
+  |> fab.size(config.Small)
   |> fab.variant(fab.Tertiary)
   |> fab.render([], [])
   |> should.equal(

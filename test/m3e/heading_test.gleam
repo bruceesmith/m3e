@@ -1,15 +1,17 @@
 import gleeunit/should
+
 import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
+
+import m3e/config
 import m3e/heading.{
   Config, Emphasized, Headline, Title, default_config, emphasized, new, render,
   render_config, size, variant,
 }
-import m3e/size_few.{Large, Small}
 
 pub fn heading_test() {
-  let h = new("Hello") |> size(Large)
+  let h = new("Hello") |> size(config.Large)
   let expected =
     element(
       "m3e-heading",
@@ -40,7 +42,7 @@ pub fn element_test() {
   let h =
     new("Test")
     |> emphasized(Emphasized)
-    |> size(Small)
+    |> size(config.Small)
     |> variant(Title)
 
   let result = render(h, [])
@@ -105,7 +107,7 @@ pub fn emphasized_test() {
 
 pub fn size_test() {
   let h = new("Size")
-  let h2 = size(h, Large)
+  let h2 = size(h, config.Large)
   let expected =
     element(
       "m3e-heading",
@@ -117,7 +119,7 @@ pub fn size_test() {
     )
   render(h2, []) |> should.equal(expected)
 
-  let h3 = size(h2, Small)
+  let h3 = size(h2, config.Small)
   let expected_small =
     element(
       "m3e-heading",
@@ -174,7 +176,7 @@ pub fn render_config_test() {
       ..default_config(),
       text: "Config Text",
       emphasis: Emphasized,
-      size: Small,
+      size: config.Small,
     )
   let expected =
     element(

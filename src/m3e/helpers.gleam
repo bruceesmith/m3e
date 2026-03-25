@@ -1,4 +1,5 @@
 import gleam/option.{type Option, None, Some, or}
+
 import lustre/attribute.{type Attribute, attribute, none}
 
 /// boolean_attribute creates an HTML boolean attribute (or nothing)

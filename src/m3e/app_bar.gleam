@@ -7,8 +7,8 @@ import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
+import m3e/config.{type Size}
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/size_few.{type Size, Small, size_to_string}
 
 // --- Types ---
 
@@ -26,7 +26,7 @@ pub opaque type AppBar {
 
 /// Default size
 /// 
-pub const default_size = Small
+pub const default_size: Size = config.Small
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -94,7 +94,7 @@ pub fn for(a: AppBar, for: Option(String)) -> AppBar {
 /// size sets the size attribute
 /// 
 pub fn size(a: AppBar, size: Size) -> AppBar {
-  AppBar(..a, size: size)
+  AppBar(..a, size: config.clamp_to_restricted_size(size, default_size))
 }
 
 // --- RENDERING ---
@@ -111,7 +111,13 @@ pub fn render(
     flatten([
       [
         boolean_attribute("centered", a.alignment == Centered),
-        attribute("size", size_to_string(a.size)),
+        attribute(
+          "size",
+          config.size_to_string(config.clamp_to_restricted_size(
+            a.size,
+            default_size,
+          )),
+        ),
         option_attribute(a.for, fn(_) { "for" }, function.identity, None),
       ],
       attributes,

@@ -5,8 +5,8 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 import lustre/element/html.{text}
 
+import m3e/config.{type Size}
 import m3e/helpers.{boolean_attribute}
-import m3e/size_few.{type Size, Medium, size_to_string}
 
 // --- Types ---
 
@@ -25,7 +25,7 @@ pub opaque type Heading {
   Heading(emphasis: Emphasis, size: Size, variant: Variant, text: String)
 }
 
-pub const default_size = Medium
+pub const default_size: Size = config.Medium
 
 /// Variant is the appearance of the heading
 /// 
@@ -85,7 +85,7 @@ pub fn emphasized(h: Heading, emphasis: Emphasis) -> Heading {
 /// size sets the `size` field of a Heading
 /// 
 pub fn size(h: Heading, size: Size) -> Heading {
-  Heading(..h, size: size)
+  Heading(..h, size: config.clamp_to_restricted_size(size, default_size))
 }
 
 /// variant sets the `variant` field of a Heading
@@ -103,7 +103,13 @@ pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
     "m3e-heading",
     [
       boolean_attribute("emphasized", h.emphasis == Emphasized),
-      attribute("size", size_to_string(h.size)),
+      attribute(
+        "size",
+        config.size_to_string(config.clamp_to_restricted_size(
+          h.size,
+          default_size,
+        )),
+      ),
       attribute("variant", variant_to_string(h.variant)),
       ..attributes
     ]

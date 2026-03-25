@@ -1,10 +1,12 @@
 import gleeunit/should
+
 import lustre/attribute
 import lustre/element.{element}
 import lustre/element/html
+
+import m3e/config
 import m3e/heading
 import m3e/nav_menu_item_group
-import m3e/size_few.{Large}
 
 pub fn basic_render_test() {
   let heading_text = "Group Title"
@@ -12,7 +14,7 @@ pub fn basic_render_test() {
 
   let expected_heading =
     heading.new(heading_text)
-    |> heading.size(Large)
+    |> heading.size(config.Large)
     |> heading.variant(heading.Label)
     |> heading.render([attribute.attribute("slot", "group-label")])
 
@@ -29,7 +31,7 @@ pub fn heading_update_test() {
 
   let expected_heading =
     heading.new(updated)
-    |> heading.size(Large)
+    |> heading.size(config.Large)
     |> heading.variant(heading.Label)
     |> heading.render([attribute.attribute("slot", "group-label")])
 

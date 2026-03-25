@@ -3,12 +3,13 @@ import gleeunit/should
 import lustre/attribute.{attribute, disabled, selected}
 import lustre/element.{element}
 import lustre/element/html.{span, text}
+
 import m3e/button.{
   Config, Elevated, Filled, Outlined, Square, Text, form, icons, label, new,
   render, render_config, selected_label, shape, size, toggle, variant,
 }
+import m3e/config
 import m3e/form_submission.{FormSubmission, Submit}
-import m3e/size_many.{Large}
 import m3e/state.{Disabled, Selected}
 
 pub fn button_creation_test() {
@@ -30,7 +31,7 @@ pub fn button_creation_test() {
   let b_full =
     new("Full", Filled)
     |> shape(Square)
-    |> size(Large)
+    |> size(config.Large)
     |> selected_label("Selected")
     |> toggle(True)
     |> button.selected(Selected)
@@ -85,7 +86,7 @@ pub fn config_test() {
       selected: Selected,
       selected_label: None,
       shape: Some(Square),
-      size: Some(Large),
+      size: Some(config.Large),
       toggle: True,
       variant: Some(Filled),
     )
@@ -171,7 +172,7 @@ pub fn button_shape_test() {
 }
 
 pub fn button_size_test() {
-  let b = new("Size", Text) |> size(Large)
+  let b = new("Size", Text) |> size(config.Large)
 
   let expected =
     element(

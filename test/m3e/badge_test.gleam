@@ -5,7 +5,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 
 import m3e/badge.{Before, Below, badge_position, for, label, new, render, size}
-import m3e/size_few.{Large, Medium, Small}
+import m3e/config
 
 pub fn badge_basic_test() {
   let b = new("Test Badge")
@@ -25,7 +25,7 @@ pub fn badge_full_test() {
   let b =
     new("Original Label")
     |> for(Some("element_id"))
-    |> size(Large)
+    |> size(config.Large)
     |> badge_position(Below)
     |> label("Final Label")
 
@@ -43,7 +43,7 @@ pub fn badge_full_test() {
 }
 
 pub fn badge_size_test() {
-  let b = new("Test") |> size(Small)
+  let b = new("Test") |> size(config.Small)
   let expected =
     element(
       "m3e-badge",
@@ -55,7 +55,7 @@ pub fn badge_size_test() {
     )
   render(b) |> should.equal(expected)
 
-  let b = b |> size(Large)
+  let b = b |> size(config.Large)
   let expected =
     element(
       "m3e-badge",
@@ -67,7 +67,7 @@ pub fn badge_size_test() {
     )
   render(b) |> should.equal(expected)
 
-  let b = b |> size(Medium)
+  let b = b |> size(config.Medium)
   let expected =
     element(
       "m3e-badge",

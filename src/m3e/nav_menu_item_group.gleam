@@ -3,8 +3,8 @@
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
+import m3e/config
 import m3e/heading
-import m3e/size_few.{Large}
 
 // --- Types ---
 
@@ -59,7 +59,7 @@ pub fn render(
 ) -> Element(msg) {
   element("m3e-nav-menu-item-group", attributes, [
     heading.new(group.heading)
-      |> heading.size(Large)
+      |> heading.size(config.Large)
       |> heading.variant(heading.Label)
       |> heading.render([slot(Label)]),
     ..children

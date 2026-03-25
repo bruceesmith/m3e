@@ -4,7 +4,8 @@ import gleam/list.{flatten}
 
 import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
-import m3e/size_many.{type Size, default_size, size_to_string}
+
+import m3e/config.{type Size}
 
 // --- Types ---
 
@@ -66,7 +67,7 @@ pub fn default_config(
 ) -> Config(msg) {
   Config(
     leading: leading,
-    size: default_size,
+    size: config.default_size,
     trailing: trailing,
     variant: default_variant,
   )
@@ -133,7 +134,7 @@ pub fn render(
     "m3e-split-button",
     flatten([
       [
-        attribute("size", size_to_string(s.size)),
+        attribute("size", config.size_to_string(s.size)),
         attribute("variant", variant_to_string(s.variant)),
       ],
       attributes,
