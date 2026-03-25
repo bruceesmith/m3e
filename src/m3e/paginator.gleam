@@ -1,6 +1,6 @@
 //// paginator provides Lustre support for the [M3E Paginator component](https://matraic.github.io/m3e/#/components/paginator.html)
 
-import gleam/int.{to_string}
+import gleam/int
 import gleam/list
 import gleam/string.{join}
 
@@ -289,9 +289,9 @@ pub fn render(
         boolean_attribute("hide-page-size", p.page_size_visibility == Hidden),
         attribute("items-per-page-label", p.items_per_page_label),
         attribute("last-page-label", p.last_page_label),
-        attribute("length", to_string(p.length)),
+        attribute("length", int.to_string(p.length)),
         attribute("next-page-label", p.next_page_label),
-        attribute("page-index", to_string(p.page_index)),
+        attribute("page-index", int.to_string(p.page_index)),
         attribute("page-size", page_size_to_string(p.page_size)),
         attribute(
           "page-sizes",
@@ -336,7 +336,7 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn page_size_to_string(p: PageSize) -> String {
   case p {
-    PageSize(i) -> to_string(i)
+    PageSize(i) -> int.to_string(i)
     PageSizeAll -> "all"
   }
 }

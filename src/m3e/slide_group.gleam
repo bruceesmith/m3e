@@ -1,6 +1,6 @@
 //// slide_group provides Lustre support for the [M3E Slide Group component](https://matraic.github.io/m3e/#/components/slide_group.html)
 
-import gleam/int.{to_string}
+import gleam/int
 import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -146,7 +146,7 @@ pub fn render(
         boolean_attribute("disabled", s.interaction == Disabled),
         attribute("next-page-label", s.next_page_label),
         attribute("previous-page-label", s.previous_page_label),
-        attribute("threshold", to_string(s.threshold)),
+        attribute("threshold", int.to_string(s.threshold)),
         boolean_attribute("vertical", s.orientation == Vertical),
       ],
       attributes,

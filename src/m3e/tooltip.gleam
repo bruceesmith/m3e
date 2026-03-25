@@ -1,7 +1,7 @@
 //// tooltip provides Lustre support for the M3E Tooltip component
 //// https://matraic.github.io/m3e/#/components/tooltip.html
 
-import gleam/int.{to_string}
+import gleam/int
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, for, none}
 import lustre/element.{type Element, element, text}
@@ -179,9 +179,9 @@ pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
         for(t.for_id),
         boolean_attribute("disabled", t.disabled == Disabled),
         attribute("touch-gestures", gestures_to_string(t.gestures)),
-        attribute("hide-delay", to_string(t.hide_delay)),
+        attribute("hide-delay", int.to_string(t.hide_delay)),
         attribute("position", position_to_string(t.position)),
-        attribute("show-delay", to_string(t.show_delay)),
+        attribute("show-delay", int.to_string(t.show_delay)),
       ],
       attributes,
     )

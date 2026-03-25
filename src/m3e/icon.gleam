@@ -1,6 +1,6 @@
 //// icon provides Lustre support for the [M3E Icon component](https://matraic.github.io/m3e/#/components/icon.html)
 
-import gleam/int.{to_string}
+import gleam/int
 import gleam/list
 import lustre/attribute.{type Attribute, attribute, name, none}
 import lustre/element.{type Element, element}
@@ -171,10 +171,10 @@ pub fn render(
         name(i.name),
         filled_attr(i.fill),
         attribute("grade", grade_to_string(i.grade)),
-        attribute("optical-size", to_string(i.optical_size)),
+        attribute("optical-size", int.to_string(i.optical_size)),
         i.purpose,
         attribute("variant", variant_to_string(i.variant)),
-        attribute("weight", to_string(i.weight)),
+        attribute("weight", int.to_string(i.weight)),
       ],
       attributes,
     )

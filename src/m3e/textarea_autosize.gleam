@@ -1,6 +1,6 @@
 //// textarea_autosize provides Lustre support for the [M3E Textarea Autosize component](https://matraic.github.io/m3e/#/components/textarea-autosize.html)
 
-import gleam/int.{to_string}
+import gleam/int
 import gleam/list
 
 import lustre/attribute.{type Attribute, attribute, none}
@@ -107,8 +107,8 @@ pub fn render(
       [
         attribute("for", ta.for),
         boolean_attribute("disabled", ta.disabled == Disabled),
-        attribute("max-rows", to_string(ta.max_rows)),
-        attribute("min-rows", to_string(ta.min_rows)),
+        attribute("max-rows", int.to_string(ta.max_rows)),
+        attribute("min-rows", int.to_string(ta.min_rows)),
       ],
       attributes,
     ])
