@@ -1,7 +1,7 @@
 //// chipset provides Lustre support for the [M3E Chip Set component](https://matraic.github.io/m3e/#/components/chip-set.html)
 
 import gleam/list
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{
@@ -153,7 +153,7 @@ pub fn render(
       ],
       attributes,
     )
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -172,8 +172,8 @@ pub fn render_config(
 
 fn disabled_attr(t: Type, interaction: Interaction) -> Attribute(msg) {
   case t, interaction {
-    Input, Disabled -> attribute("disabled", "")
-    _, _ -> none()
+    Input, Disabled -> attribute.attribute("disabled", "")
+    _, _ -> attribute.none()
   }
 }
 
@@ -182,15 +182,15 @@ fn hide_selection_indicator_attr(
   hsi: SelectionIndicator,
 ) -> Attribute(msg) {
   case t, hsi {
-    Filter, HideSelectionIndicator -> attribute("hide-selection-indicator", "")
-    _, _ -> none()
+    Filter, HideSelectionIndicator -> attribute.attribute("hide-selection-indicator", "")
+    _, _ -> attribute.none()
   }
 }
 
 fn multi_attr(t: Type, mode: SelectionMode) -> Attribute(msg) {
   case t, mode {
-    Filter, Multi -> attribute("multi", "")
-    _, _ -> none()
+    Filter, Multi -> attribute.attribute("multi", "")
+    _, _ -> attribute.none()
   }
 }
 

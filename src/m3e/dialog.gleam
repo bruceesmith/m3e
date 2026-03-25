@@ -3,7 +3,7 @@
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -227,7 +227,7 @@ pub fn render(
       boolean_attribute("dismissible", d.dismissibility == Dismissible),
       ..attributes
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [
       html.span([slot(Header)], [html.text(d.header)]),
       close_icon_elt(d.close_icon_name),
@@ -252,9 +252,9 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute("slot", "actions")
-    CloseIcon -> attribute("slot", "close-icon")
-    Header -> attribute("slot", "header")
+    Actions -> attribute.attribute("slot", "actions")
+    CloseIcon -> attribute.attribute("slot", "close-icon")
+    Header -> attribute.attribute("slot", "header")
   }
 }
 

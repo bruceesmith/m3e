@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
@@ -189,14 +189,14 @@ pub fn render(
         option_attribute(m.anchor, fn(_) { "anchor" }, fn(s) { s }, None),
         boolean_attribute("disabled", m.interaction == Disabled),
         boolean_attribute("open", m.state == Open),
-        attribute("position-x", position_x_to_string(m.position_x)),
-        attribute("position-y", position_y_to_string(m.position_y)),
+        attribute.attribute("position-x", position_x_to_string(m.position_x)),
+        attribute.attribute("position-y", position_y_to_string(m.position_y)),
         boolean_attribute("quick", m.quick == Instant),
-        attribute("variant", variant_to_string(m.variant)),
+        attribute.attribute("variant", variant_to_string(m.variant)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

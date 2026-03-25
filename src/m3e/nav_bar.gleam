@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -57,7 +57,7 @@ pub fn render(
     "m3e-nav-bar",
     list.flatten([
       [
-        attribute("mode", mode_to_string(bar.mode)),
+        attribute.attribute("mode", mode_to_string(bar.mode)),
       ],
       attributes,
     ])

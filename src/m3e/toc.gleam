@@ -3,7 +3,7 @@
 import gleam/int
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -67,12 +67,12 @@ pub fn render(
     "m3e-toc",
     list.flatten([
       [
-        attribute("for", t.for),
-        attribute("max-depth", int.to_string(t.max_depth)),
+        attribute.attribute("for", t.for),
+        attribute.attribute("max-depth", int.to_string(t.max_depth)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -81,7 +81,7 @@ pub fn render(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Overline -> attribute("slot", "overline")
-    Title -> attribute("slot", "title")
+    Overline -> attribute.attribute("slot", "overline")
+    Title -> attribute.attribute("slot", "title")
   }
 }

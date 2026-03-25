@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -102,7 +102,7 @@ pub fn render(
       [boolean_attribute("open", e.open)],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -121,12 +121,12 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Items -> attribute("slot", "items")
-    Leading -> attribute("slot", "leading")
-    Overline -> attribute("slot", "overline")
-    SupportingText -> attribute("slot", "supporting-text")
-    ToggleIcon -> attribute("slot", "toggle-icon")
-    Trailing -> attribute("slot", "trailing")
+    Items -> attribute.attribute("slot", "items")
+    Leading -> attribute.attribute("slot", "leading")
+    Overline -> attribute.attribute("slot", "overline")
+    SupportingText -> attribute.attribute("slot", "supporting-text")
+    ToggleIcon -> attribute.attribute("slot", "toggle-icon")
+    Trailing -> attribute.attribute("slot", "trailing")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

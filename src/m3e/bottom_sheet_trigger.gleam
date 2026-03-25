@@ -4,7 +4,7 @@ import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{attribute, none}
+import lustre/attribute
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -98,13 +98,13 @@ pub fn render(b: BottomSheetTrigger) -> Element(msg) {
     "m3e-bottom-sheet-trigger",
     [
       case b.detent {
-        Some(d) -> attribute("detent", int.to_string(d))
-        None -> none()
+        Some(d) -> attribute.attribute("detent", int.to_string(d))
+        None -> attribute.none()
       },
-      attribute("for", b.for),
+      attribute.attribute("for", b.for),
       boolean_attribute("secondary", b.role == Secondary),
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [element.text(b.label)],
   )
 }

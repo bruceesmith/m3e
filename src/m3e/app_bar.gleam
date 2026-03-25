@@ -4,7 +4,7 @@ import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
@@ -111,7 +111,7 @@ pub fn render(
     list.flatten([
       [
         boolean_attribute("centered", a.alignment == Centered),
-        attribute(
+        attribute.attribute(
           "size",
           config.size_to_string(config.clamp_to_restricted_size(
             a.size,
@@ -122,7 +122,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -141,10 +141,10 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    LeadingIcon -> attribute("slot", "leading-icon")
-    Subtitle -> attribute("slot", "subtitle")
-    Title -> attribute("slot", "title")
-    TrailingIcon -> attribute("slot", "trailing-icon")
+    LeadingIcon -> attribute.attribute("slot", "leading-icon")
+    Subtitle -> attribute.attribute("slot", "subtitle")
+    Title -> attribute.attribute("slot", "title")
+    TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

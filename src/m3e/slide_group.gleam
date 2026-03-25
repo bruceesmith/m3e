@@ -3,7 +3,7 @@
 import gleam/int
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -144,14 +144,14 @@ pub fn render(
     list.flatten([
       [
         boolean_attribute("disabled", s.interaction == Disabled),
-        attribute("next-page-label", s.next_page_label),
-        attribute("previous-page-label", s.previous_page_label),
-        attribute("threshold", int.to_string(s.threshold)),
+        attribute.attribute("next-page-label", s.next_page_label),
+        attribute.attribute("previous-page-label", s.previous_page_label),
+        attribute.attribute("threshold", int.to_string(s.threshold)),
         boolean_attribute("vertical", s.orientation == Vertical),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -170,8 +170,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    NextIcon -> attribute("slot", "next-icon")
-    PrevIcon -> attribute("slot", "prev-icon")
+    NextIcon -> attribute.attribute("slot", "next-icon")
+    PrevIcon -> attribute.attribute("slot", "prev-icon")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

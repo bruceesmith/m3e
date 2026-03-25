@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // ---Types ---
@@ -39,8 +39,8 @@ pub fn name(_: Shape, name: String) -> Shape {
 pub fn render(s: Shape, attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-shape",
-    [attribute("name", s.name), ..attributes]
-      |> list.filter(fn(a) { a != none() }),
+    [attribute.attribute("name", s.name), ..attributes]
+      |> list.filter(fn(a) { a != attribute.none() }),
     [],
   )
 }

@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html.{span}
 
@@ -228,20 +228,20 @@ pub fn render(
         ),
         boolean_attribute("extended", f.extension == Extended),
         boolean_attribute("lowered", f.elevation == Lowered),
-        attribute(
+        attribute.attribute(
           "size",
           config.size_to_string(config.clamp_to_restricted_size(
             f.size,
             default_size,
           )),
         ),
-        attribute("variant", variant_to_string(f.variant)),
+        attribute.attribute("variant", variant_to_string(f.variant)),
       ],
       form_submission.button_attributes(f.form_submission),
       link.attributes(f.link),
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [extended_label_elt(f.extended_label), ..children]
       |> list.filter(fn(a) { a != element.none() }),
   )
@@ -261,9 +261,9 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    CloseIcon -> attribute("slot", "close-icon")
-    Label -> attribute("slot", "label")
-    MenuItemIcon -> attribute("slot", "icon")
+    CloseIcon -> attribute.attribute("slot", "close-icon")
+    Label -> attribute.attribute("slot", "label")
+    MenuItemIcon -> attribute.attribute("slot", "icon")
   }
 }
 

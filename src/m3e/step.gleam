@@ -1,6 +1,6 @@
 //// step provides Lustre support for the [M3E Step component](https://matraic.github.io/m3e/#/components/stepper.html)
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -220,7 +220,7 @@ pub fn render_config(
       boolean_attribute("completed", config.completed == Completed),
       boolean_attribute("disabled", config.disabled == Disabled),
       boolean_attribute("editable", config.editable == Editable),
-      attribute("for", config.for),
+      attribute.attribute("for", config.for),
       boolean_attribute("optional", config.optional == Optional),
       boolean_attribute("selected", config.selected == Selected),
     ],
@@ -232,11 +232,11 @@ pub fn render_config(
 ///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    DoneIcon -> attribute("slot", "done-icon")
-    EditIcon -> attribute("slot", "edit-icon")
-    Error -> attribute("slot", "error")
-    ErrorIcon -> attribute("slot", "error-icon")
-    Hint -> attribute("slot", "hint")
-    Icon -> attribute("slot", "icon")
+    DoneIcon -> attribute.attribute("slot", "done-icon")
+    EditIcon -> attribute.attribute("slot", "edit-icon")
+    Error -> attribute.attribute("slot", "error")
+    ErrorIcon -> attribute.attribute("slot", "error-icon")
+    Hint -> attribute.attribute("slot", "hint")
+    Icon -> attribute.attribute("slot", "icon")
   }
 }

@@ -1,6 +1,6 @@
 //// nav_rail provides Lustre support for the [M3E Nav Rail component](https://matraic.github.io/m3e/#/components/nav-rail.html)
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -52,7 +52,7 @@ pub fn render(
 ) -> Element(msg) {
   element.element(
     "m3e-nav-rail",
-    [attribute("mode", mode_to_string(m.mode)), ..attributes],
+    [attribute.attribute("mode", mode_to_string(m.mode)), ..attributes],
     children,
   )
 }

@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -155,12 +155,12 @@ pub fn render(
           item.focusability == Interactive,
         ),
         boolean_attribute("selected", item.selection == Selected),
-        attribute("orientation", layout.orientation_to_string(item.orientation)),
+        attribute.attribute("orientation", layout.orientation_to_string(item.orientation)),
       ],
       link.attributes(item.link),
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -179,8 +179,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Icon -> attribute("slot", "icon")
-    SelectedIcon -> attribute("slot", "selected-icon")
+    Icon -> attribute.attribute("slot", "icon")
+    SelectedIcon -> attribute.attribute("slot", "selected-icon")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

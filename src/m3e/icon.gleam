@@ -2,7 +2,7 @@
 
 import gleam/int
 import gleam/list
-import lustre/attribute.{type Attribute, attribute, name, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{clamp_with_default}
@@ -119,7 +119,7 @@ pub fn default_config() -> Config(msg) {
     fill: default_fill,
     grade: default_grade,
     optical_size: default_optical_size,
-    purpose: none(),
+    purpose: attribute.none(),
     variant: default_variant,
     weight: default_weight,
   )
@@ -168,17 +168,17 @@ pub fn render(
     "m3e-icon",
     list.append(
       [
-        name(i.name),
+        attribute.name(i.name),
         filled_attr(i.fill),
-        attribute("grade", grade_to_string(i.grade)),
-        attribute("optical-size", int.to_string(i.optical_size)),
+        attribute.attribute("grade", grade_to_string(i.grade)),
+        attribute.attribute("optical-size", int.to_string(i.optical_size)),
         i.purpose,
-        attribute("variant", variant_to_string(i.variant)),
-        attribute("weight", int.to_string(i.weight)),
+        attribute.attribute("variant", variant_to_string(i.variant)),
+        attribute.attribute("weight", int.to_string(i.weight)),
       ],
       attributes,
     )
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -235,9 +235,9 @@ pub fn weight(i: Icon(msg), w: Weight) -> Icon(msg) {
 
 fn filled_attr(f: Fill) -> Attribute(msg) {
   case f {
-    // NotFilled -> attribute("filled", "0")
+    // NotFilled -> attribute.attribute("filled", "0")
     NotFilled -> attribute.none()
-    Filled -> attribute("filled", "1")
+    Filled -> attribute.attribute("filled", "1")
   }
 }
 

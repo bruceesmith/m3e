@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
@@ -134,8 +134,8 @@ pub fn render(
     "m3e-split-button",
     list.flatten([
       [
-        attribute("size", config.size_to_string(s.size)),
-        attribute("variant", variant_to_string(s.variant)),
+        attribute.attribute("size", config.size_to_string(s.size)),
+        attribute.attribute("variant", variant_to_string(s.variant)),
       ],
       attributes,
     ]),
@@ -156,8 +156,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    LeadingButton -> attribute("slot", "leading-button")
-    TrailingButton -> attribute("slot", "trailing-button")
+    LeadingButton -> attribute.attribute("slot", "leading-button")
+    TrailingButton -> attribute.attribute("slot", "trailing-button")
   }
 }
 

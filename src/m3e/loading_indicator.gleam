@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -59,11 +59,11 @@ pub fn render(
     "m3e-loading-indicator",
     list.flatten([
       [
-        attribute("variant", variant_to_string(l.variant)),
+        attribute.attribute("variant", variant_to_string(l.variant)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

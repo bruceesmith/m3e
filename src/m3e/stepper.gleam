@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -160,20 +160,20 @@ pub fn render(
     "m3e-stepper",
     list.flatten([
       [
-        attribute(
+        attribute.attribute(
           "header-position",
           head_position_to_string(stepper.header_position),
         ),
-        attribute(
+        attribute.attribute(
           "label-position",
           label_position_to_string(stepper.label_position),
         ),
         boolean_attribute("linear", stepper.linear == Check),
-        attribute("orientation", orientation_to_string(stepper.orientation)),
+        attribute.attribute("orientation", orientation_to_string(stepper.orientation)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -194,8 +194,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Panel -> attribute("slot", "panel")
-    Step -> attribute("slot", "step")
+    Panel -> attribute.attribute("slot", "panel")
+    Step -> attribute.attribute("slot", "step")
   }
 }
 

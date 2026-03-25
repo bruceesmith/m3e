@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
@@ -126,7 +126,7 @@ pub fn render(
       form_submission.attributes(r.form_submission),
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

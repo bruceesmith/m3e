@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
@@ -270,12 +270,12 @@ pub fn render(
         disabled_attr(c.type_, c.interaction),
         removable_attr(c.type_, c.removability),
         selected_attr(c.type_, c.selection),
-        attribute("variant", variant_to_string(c.variant)),
+        attribute.attribute("variant", variant_to_string(c.variant)),
       ],
       form_submission.attributes(c.form_submission),
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     list.append(
       [icon_element(c.type_, c.icon), element.text(c.label)],
       children,
@@ -297,16 +297,16 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    AssistIcon -> attribute("slot", "icon")
-    ChipIcon -> attribute("slot", "icon")
-    ChipTrailingIcon -> attribute("slot", "trailing-icon")
-    FilterIcon -> attribute("slot", "icon")
-    FilterTrailingIcon -> attribute("slot", "trailing-icon")
-    InputAvatar -> attribute("slot", "avatar")
-    InputIcon -> attribute("slot", "icon")
-    InputRemoveIcon -> attribute("slot", "remove-icon")
-    InputSetInput -> attribute("slot", "input")
-    SuggestionIcon -> attribute("slot", "icon")
+    AssistIcon -> attribute.attribute("slot", "icon")
+    ChipIcon -> attribute.attribute("slot", "icon")
+    ChipTrailingIcon -> attribute.attribute("slot", "trailing-icon")
+    FilterIcon -> attribute.attribute("slot", "icon")
+    FilterTrailingIcon -> attribute.attribute("slot", "trailing-icon")
+    InputAvatar -> attribute.attribute("slot", "avatar")
+    InputIcon -> attribute.attribute("slot", "icon")
+    InputRemoveIcon -> attribute.attribute("slot", "remove-icon")
+    InputSetInput -> attribute.attribute("slot", "input")
+    SuggestionIcon -> attribute.attribute("slot", "icon")
   }
 }
 
@@ -314,17 +314,17 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn behaviour_attr(t: Type, b: Behaviour) -> Attribute(msg) {
   case t, b {
-    Assist, Reset | Suggestion, Reset -> attribute("type", "reset")
-    Assist, Submit | Suggestion, Submit -> attribute("type", "submit")
-    _, _ -> none()
+    Assist, Reset | Suggestion, Reset -> attribute.attribute("type", "reset")
+    Assist, Submit | Suggestion, Submit -> attribute.attribute("type", "submit")
+    _, _ -> attribute.none()
   }
 }
 
 fn disabled_attr(t: Type, interaction: Interaction) -> Attribute(msg) {
   case t, interaction {
     Assist, Disabled | Filter, Disabled | Suggestion, Disabled ->
-      attribute("disabled", "")
-    _, _ -> none()
+      attribute.attribute("disabled", "")
+    _, _ -> attribute.none()
   }
 }
 
@@ -338,15 +338,15 @@ fn icon_element(t: Type, icon: Option(Icon(msg))) -> Element(msg) {
 
 fn removable_attr(t: Type, removability: Removability) -> Attribute(msg) {
   case t, removability {
-    Input, Removable -> attribute("removable", "")
-    _, _ -> none()
+    Input, Removable -> attribute.attribute("removable", "")
+    _, _ -> attribute.none()
   }
 }
 
 fn selected_attr(t: Type, selection: SelectionState) -> Attribute(msg) {
   case t, selection {
-    Filter, Selected -> attribute("selected", "")
-    _, _ -> none()
+    Filter, Selected -> attribute.attribute("selected", "")
+    _, _ -> attribute.none()
   }
 }
 

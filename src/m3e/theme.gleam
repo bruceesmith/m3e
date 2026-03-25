@@ -3,7 +3,7 @@
 import gleam/int
 import gleam/list
 import gleam/string
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
@@ -199,16 +199,16 @@ pub fn render(
     "m3e-theme",
     list.append(
       [
-        attribute("color", t.color),
-        attribute("contrast", contrast_to_string(t.contrast)),
-        attribute("density", int.to_string(t.density)),
-        attribute("motion", motion_to_string(t.motion)),
-        attribute("scheme", scheme_to_string(t.scheme)),
+        attribute.attribute("color", t.color),
+        attribute.attribute("contrast", contrast_to_string(t.contrast)),
+        attribute.attribute("density", int.to_string(t.density)),
+        attribute.attribute("motion", motion_to_string(t.motion)),
+        attribute.attribute("scheme", scheme_to_string(t.scheme)),
         boolean_attribute("strong-focus", t.strong_focus == Strong),
       ],
       attributes,
     )
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

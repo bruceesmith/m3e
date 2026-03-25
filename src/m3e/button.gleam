@@ -2,7 +2,7 @@
 
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html.{span}
 
@@ -302,10 +302,10 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Icon -> attribute("slot", "icon")
-    SelectedSlot -> attribute("slot", "selected")
-    SelectedIcon -> attribute("slot", "selected-icon")
-    TrailingIcon -> attribute("slot", "trailing-icon")
+    Icon -> attribute.attribute("slot", "icon")
+    SelectedSlot -> attribute.attribute("slot", "selected")
+    SelectedIcon -> attribute.attribute("slot", "selected-icon")
+    TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
 

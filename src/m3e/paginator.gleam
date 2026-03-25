@@ -4,7 +4,7 @@ import gleam/int
 import gleam/list
 import gleam/string
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
@@ -285,20 +285,20 @@ pub fn render(
     list.flatten([
       [
         boolean_attribute("disabled", p.interaction == Disabled),
-        attribute("first-page-label", p.first_page_label),
+        attribute.attribute("first-page-label", p.first_page_label),
         boolean_attribute("hide-page-size", p.page_size_visibility == Hidden),
-        attribute("items-per-page-label", p.items_per_page_label),
-        attribute("last-page-label", p.last_page_label),
-        attribute("length", int.to_string(p.length)),
-        attribute("next-page-label", p.next_page_label),
-        attribute("page-index", int.to_string(p.page_index)),
-        attribute("page-size", page_size_to_string(p.page_size)),
-        attribute(
+        attribute.attribute("items-per-page-label", p.items_per_page_label),
+        attribute.attribute("last-page-label", p.last_page_label),
+        attribute.attribute("length", int.to_string(p.length)),
+        attribute.attribute("next-page-label", p.next_page_label),
+        attribute.attribute("page-index", int.to_string(p.page_index)),
+        attribute.attribute("page-size", page_size_to_string(p.page_size)),
+        attribute.attribute(
           "page-sizes",
           string.join(list.map(p.page_sizes, page_size_to_string), ","),
         ),
-        attribute("page-size-variant", variant_to_string(p.page_size_variant)),
-        attribute("previous-page-label", p.previous_page_label),
+        attribute.attribute("page-size-variant", variant_to_string(p.page_size_variant)),
+        attribute.attribute("previous-page-label", p.previous_page_label),
         boolean_attribute(
           "show-first-last-buttons",
           p.first_last_buttons_visibility == Shown,
@@ -325,10 +325,10 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    FirstPageIcon -> attribute("slot", "first-page-icon")
-    LastPageIcon -> attribute("slot", "last-page-icon")
-    NextPageIcon -> attribute("slot", "next-page-icon")
-    PreviousPageIcon -> attribute("slot", "previous-page-icon")
+    FirstPageIcon -> attribute.attribute("slot", "first-page-icon")
+    LastPageIcon -> attribute.attribute("slot", "last-page-icon")
+    NextPageIcon -> attribute.attribute("slot", "next-page-icon")
+    PreviousPageIcon -> attribute.attribute("slot", "previous-page-icon")
   }
 }
 

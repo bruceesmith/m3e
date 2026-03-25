@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -142,13 +142,13 @@ pub fn render(
     list.flatten([
       [
         boolean_attribute("elevated", t.elevated == Raised),
-        attribute("shape", shape_to_string(t.shape)),
-        attribute("variant", variant_to_string(t.variant)),
+        attribute.attribute("shape", shape_to_string(t.shape)),
+        attribute.attribute("variant", variant_to_string(t.variant)),
         boolean_attribute("vertical", t.vertical == Vertical),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

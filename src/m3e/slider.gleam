@@ -3,7 +3,7 @@
 import gleam/float.{to_string}
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
@@ -176,14 +176,14 @@ pub fn render(
         boolean_attribute("disabled", s.interaction == Disabled),
         boolean_attribute("discrete", s.discrete == Discrete),
         boolean_attribute("labelled", s.labels == ShowLabels),
-        attribute("max", to_string(s.max)),
-        attribute("min", to_string(s.min)),
-        attribute("size", config.size_to_string(s.size)),
-        attribute("step", to_string(s.step)),
+        attribute.attribute("max", to_string(s.max)),
+        attribute.attribute("min", to_string(s.min)),
+        attribute.attribute("size", config.size_to_string(s.size)),
+        attribute.attribute("step", to_string(s.step)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

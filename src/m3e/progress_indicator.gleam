@@ -4,7 +4,7 @@ import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -272,14 +272,14 @@ pub fn render(
         buffer_value_attr(pi.variant, pi.buffer_value),
         diameter_attr(pi.variant, pi.diameter),
         indeterminate_attr(pi.variant, pi.mode),
-        attribute("max", int.to_string(pi.max)),
+        attribute.attribute("max", int.to_string(pi.max)),
         mode_attr(pi.variant, pi.mode),
         stroke_width_attr(pi.variant, pi.stroke_width),
         attribute.value(int.to_string(pi.value)),
       ],
       attributes,
     )
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [content_element(pi.variant, pi.content)]
       |> list.filter(fn(e) { e != element.none() }),
   )
@@ -298,7 +298,7 @@ pub fn render_config(
 
 fn buffer_value_attr(variant: Variant, value: Value) -> Attribute(msg) {
   case variant {
-    Linear -> attribute("buffer-value", int.to_string(value))
+    Linear -> attribute.attribute("buffer-value", int.to_string(value))
     _ -> attribute.none()
   }
 }
@@ -316,7 +316,7 @@ fn content_element(variant: Variant, content: Option(String)) -> Element(msg) {
 
 fn diameter_attr(variant: Variant, diameter: Diameter) -> Attribute(msg) {
   case variant {
-    Circular if diameter > 0 -> attribute("diameter", int.to_string(diameter))
+    Circular if diameter > 0 -> attribute.attribute("diameter", int.to_string(diameter))
     _ -> attribute.none()
   }
 }
@@ -327,7 +327,7 @@ fn diameter_validate(diameter: Diameter) -> Diameter {
 
 fn indeterminate_attr(variant: Variant, mode: Mode) -> Attribute(msg) {
   case variant {
-    Circular if mode == Indeterminate -> attribute("indeterminate", "")
+    Circular if mode == Indeterminate -> attribute.attribute("indeterminate", "")
     _ -> attribute.none()
   }
 }
@@ -338,7 +338,7 @@ fn max_validate(max: Maximum) -> Maximum {
 
 fn mode_attr(variant: Variant, mode: Mode) -> Attribute(msg) {
   case variant {
-    Linear -> attribute("mode", mode_to_string(mode))
+    Linear -> attribute.attribute("mode", mode_to_string(mode))
     Circular -> attribute.none()
   }
 }
@@ -355,7 +355,7 @@ fn mode_to_string(mode: Mode) -> String {
 fn stroke_width_attr(variant: Variant, width: StrokeWidth) -> Attribute(msg) {
   case variant {
     Circular ->
-      attribute("stroke-width", int.to_string(stroke_width_validate(width)))
+      attribute.attribute("stroke-width", int.to_string(stroke_width_validate(width)))
     _ -> attribute.none()
   }
 }

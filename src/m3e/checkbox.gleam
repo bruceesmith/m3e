@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{none}
+import lustre/attribute
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
@@ -126,7 +126,7 @@ pub fn render(checkbox: Checkbox) -> Element(msg) {
       ],
       form_submission.attributes(checkbox.form_submission),
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [],
   )
 }

@@ -1,13 +1,13 @@
 import gleam/option.{type Option, None, Some, or}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 
 /// boolean_attribute creates an HTML boolean attribute (or nothing)
 ///
 pub fn boolean_attribute(name: String, value: Bool) -> Attribute(msg) {
   case value {
-    True -> attribute(name, "")
-    False -> none()
+    True -> attribute.attribute(name, "")
+    False -> attribute.none()
   }
 }
 
@@ -37,13 +37,13 @@ pub fn option_attribute(
   default_value: Option(a),
 ) -> Attribute(msg) {
   case or(option, default_value) {
-    Some(v) -> attribute(attribute_name_func(v), attribute_value_func(v))
-    None -> none()
+    Some(v) -> attribute.attribute(attribute_name_func(v), attribute_value_func(v))
+    None -> attribute.none()
   }
 }
 
-/// slot is a shorthand for attribute("slot", name)
+/// slot is a shorthand for attribute.attribute("slot", name)
 ///
 pub fn slot(name: String) -> Attribute(msg) {
-  attribute("slot", name)
+  attribute.attribute("slot", name)
 }

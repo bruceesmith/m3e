@@ -1,7 +1,7 @@
 //// nav_menu_item provides Lustre support for the [M3E Nav Menu Item component](https://matraic.github.io/m3e/#/components/nav-menu.html)
 
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -219,11 +219,11 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Badge -> attribute("slot", "badge")
-    Icon -> attribute("slot", "icon")
-    Label -> attribute("slot", "label")
-    SelectedIcon -> attribute("slot", "selected-icon")
-    ToggleIcon -> attribute("slot", "toggle-icon")
+    Badge -> attribute.attribute("slot", "badge")
+    Icon -> attribute.attribute("slot", "icon")
+    Label -> attribute.attribute("slot", "label")
+    SelectedIcon -> attribute.attribute("slot", "selected-icon")
+    ToggleIcon -> attribute.attribute("slot", "toggle-icon")
   }
 }
 

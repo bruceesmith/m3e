@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -190,18 +190,18 @@ pub fn render(
           "disabled-pagination",
           t.disabled_pagination == NoScroll,
         ),
-        attribute(
+        attribute.attribute(
           "header-position",
           header_position_to_string(t.header_position),
         ),
-        attribute("next-page-label", t.next_page_label),
-        attribute("previous-page-label", t.previous_page_label),
+        attribute.attribute("next-page-label", t.next_page_label),
+        attribute.attribute("previous-page-label", t.previous_page_label),
         boolean_attribute("stretch", t.stretch == Stretch),
-        attribute("variant", variant_to_string(t.variant)),
+        attribute.attribute("variant", variant_to_string(t.variant)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -222,9 +222,9 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    NextIcon -> attribute("slot", "next-icon")
-    Panel -> attribute("slot", "panel")
-    PrevIcon -> attribute("slot", "prev-icon")
+    NextIcon -> attribute.attribute("slot", "next-icon")
+    Panel -> attribute.attribute("slot", "panel")
+    PrevIcon -> attribute.attribute("slot", "prev-icon")
   }
 }
 

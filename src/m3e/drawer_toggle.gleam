@@ -1,7 +1,7 @@
 //// drawer_toggle provides Lustre support for the [M3E Drawer Toggle component](https://matraic.github.io/m3e/#/components/drawer_container.html)
 
 import gleam/list
-import lustre/attribute.{type Attribute, for, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -42,8 +42,8 @@ pub fn render(
 ) -> Element(msg) {
   element.element(
     "m3e-drawer-toggle",
-    [for(c.for), ..attributes]
-      |> list.filter(fn(a) { a != none() }),
+    [attribute.for(c.for), ..attributes]
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

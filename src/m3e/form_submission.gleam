@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, Some}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 
 // --- Types ---
 
@@ -73,29 +73,29 @@ pub fn value(fs: FormSubmission, value: String) -> FormSubmission {
 pub fn button_attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
   case fs {
     Some(sub) if sub.type_ == Button || sub.type_ == Reset -> {
-      [attribute("type", form_submitter_type_to_string(sub.type_))]
+      [attribute.attribute("type", form_submitter_type_to_string(sub.type_))]
     }
     Some(sub) if sub.type_ == Submit && sub.name != "" -> {
       [
-        attribute("type", "submit"),
-        attribute("name", sub.name),
-        attribute("value", sub.value),
+        attribute.attribute("type", "submit"),
+        attribute.attribute("name", sub.name),
+        attribute.attribute("value", sub.value),
       ]
     }
-    _ -> [none()]
+    _ -> [attribute.none()]
   }
-  |> list.filter(fn(a) { a != none() })
+  |> list.filter(fn(a) { a != attribute.none() })
 }
 
 pub fn attributes(fs: Option(FormSubmission)) -> List(Attribute(msg)) {
   case fs {
     Some(sub) if sub.name != "" -> {
       [
-        attribute("name", sub.name),
-        attribute("value", sub.value),
+        attribute.attribute("name", sub.name),
+        attribute.attribute("value", sub.value),
       ]
     }
-    _ -> [none()]
+    _ -> [attribute.none()]
   }
-  |> list.filter(fn(a) { a != none() })
+  |> list.filter(fn(a) { a != attribute.none() })
 }

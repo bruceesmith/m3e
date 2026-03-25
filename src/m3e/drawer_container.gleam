@@ -2,7 +2,7 @@
 
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/helpers.{boolean_attribute}
 
@@ -274,7 +274,7 @@ pub fn render(
           [
             boolean_attribute("end", c.end == Open),
             boolean_attribute("end-divider", c.end_divider == ShowDivider),
-            attribute("end-mode", mode_to_string(c.end_mode)),
+            attribute.attribute("end-mode", mode_to_string(c.end_mode)),
           ]
         }
         None -> []
@@ -284,14 +284,14 @@ pub fn render(
           [
             boolean_attribute("start", c.start == Open),
             boolean_attribute("start-divider", c.start_divider == ShowDivider),
-            attribute("start-mode", mode_to_string(c.start_mode)),
+            attribute.attribute("start-mode", mode_to_string(c.start_mode)),
           ]
         }
         None -> []
       },
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     drawers,
   )
 }
@@ -313,8 +313,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    End -> attribute("slot", "end")
-    Start -> attribute("slot", "start")
+    End -> attribute.attribute("slot", "end")
+    Start -> attribute.attribute("slot", "start")
   }
 }
 

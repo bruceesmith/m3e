@@ -1,7 +1,7 @@
 //// list_option provides Lustre support for the [M3E List Option component](https://matraic.github.io/m3e/#/components/list.html)
 
 import gleam/list
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -97,7 +97,7 @@ pub fn render(
       [boolean_attribute("disabled", lo.disabled)],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -119,10 +119,10 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Leading -> attribute("slot", "leading")
-    Overline -> attribute("slot", "overline")
-    SupportingText -> attribute("slot", "supporting-text")
-    Trailing -> attribute("slot", "trailing")
+    Leading -> attribute.attribute("slot", "leading")
+    Overline -> attribute.attribute("slot", "overline")
+    SupportingText -> attribute.attribute("slot", "supporting-text")
+    Trailing -> attribute.attribute("slot", "trailing")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

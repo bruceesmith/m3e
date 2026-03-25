@@ -1,6 +1,6 @@
 //// list_item provides Lustre support for the [M3E List Item component](https://matraic.github.io/m3e/#/components/list.html)
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -34,10 +34,10 @@ pub fn render(children: List(Element(msg))) -> Element(msg) {
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Leading -> attribute("slot", "leading")
-    Overline -> attribute("slot", "overline")
-    SupportingText -> attribute("slot", "supporting-text")
-    Trailing -> attribute("slot", "trailing")
+    Leading -> attribute.attribute("slot", "leading")
+    Overline -> attribute.attribute("slot", "overline")
+    SupportingText -> attribute.attribute("slot", "supporting-text")
+    Trailing -> attribute.attribute("slot", "trailing")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

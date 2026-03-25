@@ -3,7 +3,7 @@
 import gleam/function
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{attribute}
+import lustre/attribute
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
@@ -125,14 +125,17 @@ pub fn render(b: Badge) -> Element(msg) {
     "m3e-badge",
     [
       option_attribute(b.for, fn(_) { "for" }, function.identity, None),
-      attribute(
+      attribute.attribute(
         "size",
         config.size_to_string(config.clamp_to_restricted_size(
           b.size,
           default_size,
         )),
       ),
-      attribute("position", badge_position_to_string(b.badge_position)),
+      attribute.attribute(
+        "position",
+        badge_position_to_string(b.badge_position),
+      ),
     ],
     [element.text(b.label)],
   )

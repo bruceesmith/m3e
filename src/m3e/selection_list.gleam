@@ -3,7 +3,7 @@
 import gleam/list
 import m3e/helpers.{boolean_attribute}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, Multi}
@@ -145,10 +145,10 @@ pub fn render(
         ),
       ],
       [boolean_attribute("multi", sl.selection_mode == Multi)],
-      [attribute("variant", variant_to_string(sl.variant))],
+      [attribute.attribute("variant", variant_to_string(sl.variant))],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

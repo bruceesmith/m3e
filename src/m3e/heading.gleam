@@ -1,7 +1,7 @@
 //// heading provides Lustre support for the [M3E Heading component](https://matraic.github.io/m3e/#/components/heading.html)
 
 import gleam/list
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
@@ -102,17 +102,17 @@ pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
     "m3e-heading",
     [
       boolean_attribute("emphasized", h.emphasis == Emphasized),
-      attribute(
+      attribute.attribute(
         "size",
         config.size_to_string(config.clamp_to_restricted_size(
           h.size,
           default_size,
         )),
       ),
-      attribute("variant", variant_to_string(h.variant)),
+      attribute.attribute("variant", variant_to_string(h.variant)),
       ..attributes
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [element.text(h.text)],
   )
 }

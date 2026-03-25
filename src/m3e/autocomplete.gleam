@@ -2,7 +2,7 @@
 
 import gleam/list
 
-import lustre/attribute.{attribute, none}
+import lustre/attribute
 import lustre/element.{type Element}
 
 import m3e/config.{
@@ -126,14 +126,14 @@ pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
     "m3e-autocomplete",
     [
       boolean_attribute("auto-activate", a.auto_activate == AutoActivate),
-      attribute("for", a.for),
+      attribute.attribute("for", a.for),
       boolean_attribute(
         "hide-selection-indicator",
         a.selection_indicator == HideSelectionIndicator,
       ),
       boolean_attribute("required", a.requirement == Required),
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     list.map(children, fn(o) { option.render(o, [], []) }),
   )
 }

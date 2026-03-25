@@ -1,7 +1,7 @@
 //// form_field provides Lustre support for the [M3E Form Field component](https://matraic.github.io/m3e/#/components/form-field.html)
 
 import gleam/list
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -168,16 +168,16 @@ pub fn render(
   element.element(
     "m3e-form-field",
     [
-      attribute("float-label", float_label_to_string(f.float_label)),
+      attribute.attribute("float-label", float_label_to_string(f.float_label)),
       boolean_attribute(
         "hide-required-marker",
         f.required_marker == HideRequiredMarker,
       ),
-      attribute("hide-subscript", hide_subscript_to_string(f.hide_subscript)),
-      attribute("variant", variant_to_string(f.variant)),
+      attribute.attribute("hide-subscript", hide_subscript_to_string(f.hide_subscript)),
+      attribute.attribute("variant", variant_to_string(f.variant)),
       ..attributes
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -196,12 +196,12 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Error -> attribute("slot", "error")
-    Hint -> attribute("slot", "hint")
-    Prefix -> attribute("slot", "prefix")
-    PrefixText -> attribute("slot", "prefix-text")
-    Suffix -> attribute("slot", "suffix")
-    SuffixText -> attribute("slot", "suffix-text")
+    Error -> attribute.attribute("slot", "error")
+    Hint -> attribute.attribute("slot", "hint")
+    Prefix -> attribute.attribute("slot", "prefix")
+    PrefixText -> attribute.attribute("slot", "prefix-text")
+    Suffix -> attribute.attribute("slot", "suffix")
+    SuffixText -> attribute.attribute("slot", "suffix-text")
   }
 }
 

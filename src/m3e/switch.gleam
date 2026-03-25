@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
@@ -132,22 +132,24 @@ pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg))
       "m3e-switch",
       list.flatten([
         [
-          attribute("id", s.id),
-          attribute("icons", icons_to_string(s.icons)),
+          attribute.attribute("id", s.id),
+          attribute.attribute("icons", icons_to_string(s.icons)),
           boolean_attribute("checked", s.checked == Checked),
           boolean_attribute("disabled", s.disabled == Disabled),
         ],
         form_submission.attributes(s.form_submission),
         attributes,
       ])
-        |> list.filter(fn(a) { a != none() }),
+        |> list.filter(fn(a) { a != attribute.none() }),
       [],
     )
 
   case s.label {
     Some(label) -> [
       switch_element,
-      element.element("label", [attribute("for", s.id)], [element.text(label)]),
+      element.element("label", [attribute.attribute("for", s.id)], [
+        element.text(label),
+      ]),
     ]
     None -> [switch_element]
   }

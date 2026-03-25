@@ -1,7 +1,7 @@
 //// action_list provides Lustre support for the [M3E Action List component](https://matraic.github.io/m3e/#/components/list.html)
 
 import gleam/list
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/list_variant.{type Variant, variant_to_string}
@@ -46,10 +46,10 @@ pub fn render(
   element.element(
     "m3e-action-list",
     list.flatten([
-      [attribute("variant", variant_to_string(a.variant))],
+      [attribute.attribute("variant", variant_to_string(a.variant))],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

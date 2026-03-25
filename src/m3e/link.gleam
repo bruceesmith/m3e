@@ -1,7 +1,7 @@
 import gleam/list
 import gleam/option.{type Option, Some}
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 
 import m3e/helpers.{boolean_attribute}
 
@@ -47,12 +47,12 @@ pub fn attributes(l: Option(Link)) -> List(Attribute(msg)) {
   case l {
     Some(link) if link.href != "" -> [
       boolean_attribute("download", link.download),
-      attribute("href", link.href),
+      attribute.attribute("href", link.href),
       case link.rel != "" {
-        True -> attribute("rel", link.rel)
+        True -> attribute.attribute("rel", link.rel)
         False -> attribute.none()
       },
-      attribute("target", link_target_to_string(link.target)),
+      attribute.attribute("target", link_target_to_string(link.target)),
     ]
     _ -> [attribute.none()]
   }

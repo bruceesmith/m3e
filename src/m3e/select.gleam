@@ -4,7 +4,7 @@ import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, Multi}
@@ -171,7 +171,7 @@ pub fn render(
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -190,8 +190,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Arrow -> attribute("slot", "arrow")
-    Value -> attribute("slot", "value")
+    Arrow -> attribute.attribute("slot", "arrow")
+    Value -> attribute.attribute("slot", "value")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

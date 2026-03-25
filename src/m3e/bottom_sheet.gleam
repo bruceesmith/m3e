@@ -5,7 +5,7 @@ import gleam/int
 import gleam/list
 import gleam/string
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/helpers.{boolean_attribute}
 
@@ -216,23 +216,23 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
   element.element(
     "m3e-bottom-sheet",
     [
-      attribute("detent", int.to_string(b.detent)),
+      attribute.attribute("detent", int.to_string(b.detent)),
       case b.detents {
-        [] -> none()
+        [] -> attribute.none()
         _ ->
-          attribute("detents", string.join(list.map(b.detents, detent_to_string), " "))
+          attribute.attribute("detents", string.join(list.map(b.detents, detent_to_string), " "))
       },
       boolean_attribute("handle", case b.handle {
         ShowHandle -> True
         NoHandle -> False
       }),
-      attribute("handle-label", b.handle_label),
+      attribute.attribute("handle-label", b.handle_label),
       boolean_attribute("hideable", case b.hideable {
         Hideable -> True
         NotHideable -> False
       }),
-      attribute("hide-friction", float.to_string(b.hide_friction)),
-      attribute("id", b.id),
+      attribute.attribute("hide-friction", float.to_string(b.hide_friction)),
+      attribute.attribute("id", b.id),
       boolean_attribute("modal", case b.modal {
         Modal -> True
         Standard -> False
@@ -242,7 +242,7 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
         Closed -> False
       }),
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -257,7 +257,7 @@ pub fn render_config(c: Config, children: List(Element(msg))) -> Element(msg) {
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Header -> attribute("slot", "header")
+    Header -> attribute.attribute("slot", "header")
   }
 }
 

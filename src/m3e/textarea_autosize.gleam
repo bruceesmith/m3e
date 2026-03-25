@@ -3,7 +3,7 @@
 import gleam/int
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -105,14 +105,14 @@ pub fn render(
     "m3e-textarea-autosize",
     list.flatten([
       [
-        attribute("for", ta.for),
+        attribute.attribute("for", ta.for),
         boolean_attribute("disabled", ta.disabled == Disabled),
-        attribute("max-rows", int.to_string(ta.max_rows)),
-        attribute("min-rows", int.to_string(ta.min_rows)),
+        attribute.attribute("max-rows", int.to_string(ta.max_rows)),
+        attribute.attribute("min-rows", int.to_string(ta.min_rows)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

@@ -1,6 +1,6 @@
 //// optgroup provides Lustre support for the [M3E Optgroup component](https://matraic.github.io/m3e/#/components/option.html)
 
-import lustre/attribute.{type Attribute, attribute}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
@@ -48,7 +48,7 @@ pub fn render(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Label -> attribute("slot", "label")
+    Label -> attribute.attribute("slot", "label")
   }
 }
 // --- PRIVATE INTERNAL HELPERS ---

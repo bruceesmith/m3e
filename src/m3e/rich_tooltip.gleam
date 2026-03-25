@@ -4,7 +4,7 @@
 import gleam/int
 import gleam/list
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -154,14 +154,14 @@ pub fn render(
     list.flatten([
       [
         boolean_attribute("disabled", r.interaction == Disabled),
-        attribute("for", r.for),
-        attribute("hide-delay", int.to_string(r.hide_delay)),
-        attribute("position", position_to_string(r.position)),
-        attribute("show-delay", int.to_string(r.show_delay)),
+        attribute.attribute("for", r.for),
+        attribute.attribute("hide-delay", int.to_string(r.hide_delay)),
+        attribute.attribute("position", position_to_string(r.position)),
+        attribute.attribute("show-delay", int.to_string(r.show_delay)),
       ],
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -180,8 +180,8 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute("slot", "actions")
-    Subhead -> attribute("slot", "subhead")
+    Actions -> attribute.attribute("slot", "actions")
+    Subhead -> attribute.attribute("slot", "subhead")
   }
 }
 

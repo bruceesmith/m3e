@@ -5,7 +5,7 @@
 
 import gleam/list
 
-import lustre/attribute.{type Attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -77,7 +77,7 @@ pub fn render(
       ],
       attributes,
     )
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

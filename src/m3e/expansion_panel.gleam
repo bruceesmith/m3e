@@ -2,7 +2,7 @@
 
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -224,11 +224,11 @@ pub fn render(
       boolean_attribute("disabled", p.interaction == Disabled),
       boolean_attribute("hide-toggle", p.toggle_visibility == HideToggle),
       boolean_attribute("open", p.state == Open),
-      attribute("toggle-direction", direction_to_string(p.toggle_direction)),
-      attribute("toggle-position", position_to_string(p.toggle_position)),
+      attribute.attribute("toggle-direction", direction_to_string(p.toggle_direction)),
+      attribute.attribute("toggle-position", position_to_string(p.toggle_position)),
       ..attributes
     ]
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     [
       html.span([slot(Header)], [element.text(p.header)]),
       case p.toggle_icon_name {
@@ -262,9 +262,9 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute("slot", "actions")
-    Header -> attribute("slot", "header")
-    ToggleIcon -> attribute("slot", "toggle-icon")
+    Actions -> attribute.attribute("slot", "actions")
+    Header -> attribute.attribute("slot", "header")
+    ToggleIcon -> attribute.attribute("slot", "toggle-icon")
   }
 }
 

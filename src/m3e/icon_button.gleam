@@ -2,7 +2,7 @@
 
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type Size}
@@ -252,20 +252,20 @@ pub fn render(
         ),
         case i.purpose {
           Some(p) -> p
-          None -> none()
+          None -> attribute.none()
         },
         attribute.selected(i.selection == Selected),
-        attribute("shape", shape_to_string(i.shape)),
-        attribute("size", config.size_to_string(i.size)),
+        attribute.attribute("shape", shape_to_string(i.shape)),
+        attribute.attribute("size", config.size_to_string(i.size)),
         boolean_attribute("toggle", i.toggle == Toggle),
-        attribute("variant", variant_to_string(i.variant)),
-        attribute("width", width_to_string(i.width)),
+        attribute.attribute("variant", variant_to_string(i.variant)),
+        attribute.attribute("width", width_to_string(i.width)),
       ],
       form_submission.button_attributes(i.form_submission),
       link.attributes(i.link),
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -284,7 +284,7 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    SelectedIcon -> attribute("slot", "selected")
+    SelectedIcon -> attribute.attribute("slot", "selected")
   }
 }
 

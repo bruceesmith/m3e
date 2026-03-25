@@ -3,7 +3,7 @@
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute.{type Attribute, attribute, none}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/helpers.{boolean_attribute}
@@ -183,13 +183,13 @@ pub fn render(
         boolean_attribute("actionable", c.actionability == Actionable),
         boolean_attribute("disabled", c.interaction == Disabled),
         boolean_attribute("inline", c.layout == Inline),
-        attribute("orientation", layout.orientation_to_string(c.orientation)),
-        attribute("variant", variant_to_string(c.variant)),
+        attribute.attribute("orientation", layout.orientation_to_string(c.orientation)),
+        attribute.attribute("variant", variant_to_string(c.variant)),
       ],
       link.attributes(c.link),
       attributes,
     ])
-      |> list.filter(fn(a) { a != none() }),
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
@@ -208,10 +208,10 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute("slot", "actions")
-    Content -> attribute("slot", "content")
-    Footer -> attribute("slot", "footer")
-    Header -> attribute("slot", "header")
+    Actions -> attribute.attribute("slot", "actions")
+    Content -> attribute.attribute("slot", "content")
+    Footer -> attribute.attribute("slot", "footer")
+    Header -> attribute.attribute("slot", "header")
   }
 }
 
