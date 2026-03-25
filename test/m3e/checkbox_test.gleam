@@ -7,7 +7,7 @@ import m3e/checkbox.{
   required,
 }
 import m3e/form_submission
-import m3e/types.{Checked, Disabled, Required}
+import m3e/state.{Checked, Disabled, Required}
 
 pub fn checkbox_basic_test() {
   let c = new()

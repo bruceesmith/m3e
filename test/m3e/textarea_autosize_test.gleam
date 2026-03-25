@@ -3,8 +3,8 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 
+import m3e/state.{Disabled}
 import m3e/textarea_autosize.{disabled, for, max_rows, min_rows, new, render}
-import m3e/types.{Disabled}
 
 pub fn textarea_autosize_basic_test() {
   let ta = new("test_id")

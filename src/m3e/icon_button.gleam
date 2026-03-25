@@ -9,7 +9,7 @@ import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
 import m3e/link.{type Link}
 import m3e/size_many.{type Size, default_size, size_to_string}
-import m3e/types.{type SelectionState, Selected, default_selection_state}
+import m3e/state.{type SelectionState, Selected}
 
 // --- Types ---
 
@@ -125,7 +125,7 @@ pub fn default_config() -> Config(msg) {
     form_submission: None,
     link: None,
     purpose: None,
-    selection: default_selection_state,
+    selection: state.default_selection_state,
     shape: default_shape,
     size: default_size,
     toggle: default_toggle,

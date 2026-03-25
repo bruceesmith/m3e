@@ -8,7 +8,7 @@ import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
 import m3e/layout.{type Orientation, Vertical}
-import m3e/types.{type Interaction, Disabled, default_interaction}
+import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
 
@@ -62,7 +62,7 @@ pub const default_previous_page_label: String = "Previous page"
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     next_page_label: default_next_page_label,
     previous_page_label: default_previous_page_label,
     threshold: 0,

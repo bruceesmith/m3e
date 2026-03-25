@@ -3,10 +3,11 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
 import m3e/button_segment.{
   Config, checked, disabled, new, render, render_config, value,
 }
-import m3e/types.{Disabled, Selected}
+import m3e/state.{Disabled, Selected}
 
 pub fn button_segment_creation_test() {
   let b = new()

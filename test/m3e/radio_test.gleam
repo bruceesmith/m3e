@@ -4,7 +4,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
 import m3e/radio.{checked, disabled, new, render, required}
-import m3e/types.{Checked, Disabled, Enabled, Optional, Required, Unchecked}
+import m3e/state.{Checked, Disabled, Enabled, Optional, Required, Unchecked}
 
 pub fn radio_creation_test() {
   let r = new()

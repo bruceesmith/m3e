@@ -9,10 +9,7 @@ import lustre/element/html.{text}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{
-  type CheckedState, type Interaction, Checked, Disabled, default_checked_state,
-  default_interaction,
-}
+import m3e/state.{type CheckedState, type Interaction, Checked, Disabled}
 
 // --- TYPES ---
 
@@ -65,8 +62,8 @@ pub fn default_config() -> Config {
   Config(
     label: None,
     icons: default_icons,
-    checked: default_checked_state,
-    disabled: default_interaction,
+    checked: state.default_checked_state,
+    disabled: state.default_interaction,
     form_submission: None,
   )
 }

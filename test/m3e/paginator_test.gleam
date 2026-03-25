@@ -2,6 +2,7 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
 import m3e/form_field.{Filled}
 import m3e/paginator.{
   PageSize, PageSizeAll, disabled, first_page_label, hide_page_size,
@@ -9,7 +10,7 @@ import m3e/paginator.{
   page_index, page_size, page_size_variant, page_sizes, previous_page_label,
   render, show_first_last_buttons,
 }
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 pub fn paginator_creation_test() {
   let p = new()

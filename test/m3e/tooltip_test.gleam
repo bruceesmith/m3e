@@ -1,8 +1,9 @@
 import gleeunit/should
 import lustre/attribute.{attribute, for}
 import lustre/element.{element as lustre_element, text}
+
+import m3e/state.{Disabled, Enabled}
 import m3e/tooltip.{Above, After, Before, Below}
-import m3e/types.{Disabled, Enabled}
 
 const tip_text = "Hello, Tooltip!"
 

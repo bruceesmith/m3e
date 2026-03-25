@@ -1,8 +1,9 @@
 import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
+
+import m3e/state.{Disabled}
 import m3e/tab.{Selected, disabled, for, new, render, selected}
-import m3e/types.{Disabled}
 
 pub fn tab_new_test() {
   new()

@@ -6,7 +6,7 @@ import lustre/element
 import m3e/autocomplete
 import m3e/config.{HideSelectionIndicator, ShowSelectionIndicator}
 import m3e/option as m3e_opt
-import m3e/types.{Required}
+import m3e/state.{Required}
 
 pub fn new_test() {
   autocomplete.new("test-id")

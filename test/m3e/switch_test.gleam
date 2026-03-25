@@ -5,10 +5,10 @@ import lustre/attribute.{attribute, for, id}
 import lustre/element.{element, text}
 
 import m3e/form_submission
+import m3e/state.{Checked, Disabled}
 import m3e/switch.{
   Both, Selected, checked, disabled, form, icon, label, new, render,
 }
-import m3e/types.{Checked, Disabled}
 
 pub fn switch_basic_test() {
   let s = new("test_id") |> label(Some("Test Label"))

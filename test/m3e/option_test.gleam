@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/option as opt
-import m3e/types.{Disabled, Enabled, Selected, Unselected}
+import m3e/state.{Disabled, Enabled, Selected, Unselected}
 
 pub fn render_test() {
   let o =

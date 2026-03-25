@@ -8,7 +8,7 @@ import m3e/card.{
   render, variant,
 }
 import m3e/layout.{Horizontal, Vertical}
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 pub fn card_creation_test() {
   let c =

@@ -9,10 +9,7 @@ import lustre/element/html.{text}
 
 import m3e/form_submission.{type FormSubmission}
 import m3e/icon.{type Icon}
-import m3e/types.{
-  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
-  default_selection_state,
-}
+import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
 // --- Types ---
 
@@ -132,11 +129,11 @@ pub fn default_config() -> Config(msg) {
   Config(
     label: "",
     behaviour: default_behaviour,
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     form_submission: None,
     icon: None,
     removability: default_removability,
-    selection: default_selection_state,
+    selection: state.default_selection_state,
     type_: default_type,
     variant: default_variant,
   )

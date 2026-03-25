@@ -8,9 +8,8 @@ import lustre/attribute.{type Attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{
+import m3e/state.{
   type Interaction, type SelectionState, Disabled, Selected, Unselected,
-  default_interaction,
 }
 
 // --- TYPES ---
@@ -45,7 +44,11 @@ pub type Config {
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(interaction: default_interaction, selection: Unselected, value: None)
+  Config(
+    interaction: state.default_interaction,
+    selection: Unselected,
+    value: None,
+  )
 }
 
 // --- CONSTRUCTORS ---

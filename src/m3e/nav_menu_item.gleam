@@ -7,10 +7,7 @@ import lustre/element/html
 
 import m3e/helpers.{boolean_attribute}
 import m3e/icon
-import m3e/types.{
-  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
-  default_selection_state,
-}
+import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
 // --- Types ---
 
@@ -84,11 +81,11 @@ pub type Config {
 pub fn default_config(label: String) -> Config {
   Config(
     badge: None,
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     leading_icon_name: None,
     label: label,
     expansion: default_expansion,
-    selection: default_selection_state,
+    selection: state.default_selection_state,
     selected_icon_name: None,
     toggle_icon_name: None,
   )

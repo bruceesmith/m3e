@@ -8,7 +8,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, default_interaction}
+import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
 
@@ -80,7 +80,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     for: "",
     hide_delay: 1500,
     position: default_position,

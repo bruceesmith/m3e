@@ -6,7 +6,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type CheckedState, Checked, default_checked_state}
+import m3e/state.{type CheckedState, Checked}
 
 // --- Types ---
 
@@ -34,7 +34,7 @@ pub type Slot {
 /// new creates a new MenuItemRadio
 ///
 pub fn new() -> MenuItemRadio {
-  MenuItemRadio(checked: default_checked_state, disabled: False)
+  MenuItemRadio(checked: state.default_checked_state, disabled: False)
 }
 
 // --- SETTERS ---

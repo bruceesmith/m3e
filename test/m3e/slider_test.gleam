@@ -3,7 +3,7 @@ import lustre/attribute
 import lustre/element
 import m3e/size_many.{ExtraSmall, Large}
 import m3e/slider
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 pub fn default_test() {
   slider.new()

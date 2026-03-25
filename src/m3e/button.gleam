@@ -10,10 +10,7 @@ import m3e/form_submission.{type FormSubmission}
 import m3e/helpers.{boolean_attribute, option_attribute}
 import m3e/link.{type Link}
 import m3e/size_many.{type Size, default_size, size_to_string}
-import m3e/types.{
-  type Interaction, type SelectionState, Disabled, Selected, default_interaction,
-  default_selection_state,
-}
+import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
 // --- Types ---
 
@@ -113,13 +110,13 @@ pub type Config(msg) {
 ///
 pub fn default_config() -> Config(msg) {
   Config(
-    disabled: default_interaction,
-    disabled_interactive: default_interaction,
+    disabled: state.default_interaction,
+    disabled_interactive: state.default_interaction,
     form_submission: None,
     icons: [],
     label: "",
     link: None,
-    selected: default_selection_state,
+    selected: state.default_selection_state,
     selected_label: None,
     shape: None,
     size: None,

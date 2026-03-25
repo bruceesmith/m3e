@@ -3,7 +3,7 @@ import lustre/attribute.{attribute}
 import lustre/element.{element}
 
 import m3e/menu_item_radio
-import m3e/types.{Checked, Unchecked}
+import m3e/state.{Checked, Unchecked}
 
 pub fn basic_test() {
   let m = menu_item_radio.new()

@@ -8,7 +8,7 @@ import m3e/config.{Multi, Single}
 import m3e/segmented_button.{
   disabled, hide_selection_indicator, multi, name, new, render,
 }
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 pub fn segmented_button_creation_test() {
   let s = new()

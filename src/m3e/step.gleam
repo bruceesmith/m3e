@@ -4,7 +4,7 @@ import lustre/attribute.{type Attribute, attribute}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, Enabled, default_interaction}
+import m3e/state.{type Interaction, Disabled, Enabled}
 
 // --- Types ---
 
@@ -100,7 +100,7 @@ pub type Config {
 pub fn default_config(for: String) -> Config {
   Config(
     default_completed,
-    default_interaction,
+    state.default_interaction,
     default_editable,
     for,
     default_optional,

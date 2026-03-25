@@ -8,7 +8,7 @@ import m3e/slide_group.{
   disabled, new, next_page_label, previous_page_label, render, threshold,
   vertical,
 }
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 pub fn slide_group_creation_test() {
   let s = new()

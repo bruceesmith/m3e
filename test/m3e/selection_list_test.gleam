@@ -5,7 +5,7 @@ import lustre/element
 import m3e/config.{Multi, Single}
 import m3e/list_variant
 import m3e/selection_list
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 // --- CONFIGURATION ---
 

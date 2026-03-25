@@ -3,8 +3,9 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element.{element, none}
 import lustre/element/html
+
 import m3e/nav_menu_item
-import m3e/types.{Disabled, Enabled, Selected, Unselected}
+import m3e/state.{Disabled, Enabled, Selected, Unselected}
 
 pub fn basic_render_test() {
   let label = "Home"

@@ -10,7 +10,7 @@ import m3e/config.{
 }
 import m3e/helpers.{boolean_attribute}
 import m3e/layout.{type Orientation, Vertical}
-import m3e/types.{type Interaction, Disabled, default_interaction}
+import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
 
@@ -61,7 +61,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     selection_indicator: ShowSelectionIndicator,
     selection_mode: config.default_selection_mode,
     type_: default_type,

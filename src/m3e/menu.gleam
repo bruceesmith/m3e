@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute, attribute, none}
 import lustre/element.{type Element, element}
 
 import m3e/helpers.{boolean_attribute, option_attribute}
-import m3e/types.{type Interaction, Disabled, default_interaction}
+import m3e/state.{type Interaction, Disabled}
 
 // --- TYPES ---
 
@@ -98,7 +98,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     anchor: None,
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     position_x: default_position_x,
     position_y: default_position_y,
     quick: default_animation_state,

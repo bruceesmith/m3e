@@ -10,7 +10,7 @@ import m3e/config.{
 }
 import m3e/helpers.{boolean_attribute}
 import m3e/option.{type Option}
-import m3e/types.{type Requirement, Optional, Required}
+import m3e/state.{type Requirement, Optional, Required}
 
 // --- Types ---
 

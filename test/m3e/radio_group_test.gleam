@@ -3,8 +3,9 @@ import gleeunit/should
 import lustre/attribute.{attribute}
 import lustre/element.{element}
 import lustre/element/html.{text}
+
 import m3e/radio_group.{disabled, id, name, new, render, required}
-import m3e/types.{Disabled, Enabled, Optional, Required}
+import m3e/state.{Disabled, Enabled, Optional, Required}
 
 pub fn radio_group_creation_test() {
   let rg = new()

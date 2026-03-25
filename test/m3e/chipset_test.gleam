@@ -8,7 +8,7 @@ import m3e/chipset.{
 }
 import m3e/config.{HideSelectionIndicator, Multi}
 import m3e/layout.{Vertical}
-import m3e/types.{Disabled}
+import m3e/state.{Disabled}
 
 pub fn chipset_basic_test() {
   let c = new()

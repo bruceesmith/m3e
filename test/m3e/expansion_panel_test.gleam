@@ -7,7 +7,7 @@ import m3e/expansion_panel.{
   Config, HideToggle, Open, Start, ToggleIcon, default_config,
 }
 import m3e/icon
-import m3e/types.{Disabled}
+import m3e/state.{Disabled}
 
 const header_text = "Panel Header"
 

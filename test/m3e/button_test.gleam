@@ -9,7 +9,7 @@ import m3e/button.{
 }
 import m3e/form_submission.{FormSubmission, Submit}
 import m3e/size_many.{Large}
-import m3e/types.{Disabled, Selected}
+import m3e/state.{Disabled, Selected}
 
 pub fn button_creation_test() {
   let b = new("Click me", Text)

@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute, attribute, for, none}
 import lustre/element.{type Element, element, text}
 
 import m3e/helpers.{boolean_attribute, clamp_with_default}
-import m3e/types.{type Interaction, Disabled, default_interaction}
+import m3e/state.{type Interaction, Disabled}
 
 /// HideDelay is the amount of time, in milliseconds, before hiding the tooltip.
 ///
@@ -95,7 +95,7 @@ pub fn default_config() -> Config {
     position: default_position,
     hide_delay: default_hide_delay,
     show_delay: default_show_delay,
-    disabled: default_interaction,
+    disabled: state.default_interaction,
     gestures: default_touch_gestures,
   )
 }

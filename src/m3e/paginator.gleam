@@ -9,7 +9,7 @@ import lustre/element.{type Element, element}
 
 import m3e/form_field.{type Variant, Filled, Outlined, default_variant}
 import m3e/helpers.{boolean_attribute}
-import m3e/types.{type Interaction, Disabled, default_interaction}
+import m3e/state.{type Interaction, Disabled}
 
 // --- TYPES ---
 
@@ -130,7 +130,7 @@ pub const default_previous_page_label = "Previous page"
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: default_interaction,
+    interaction: state.default_interaction,
     first_page_label: "First page",
     page_size_visibility: default_page_size_visibility,
     items_per_page_label: "Items per page",

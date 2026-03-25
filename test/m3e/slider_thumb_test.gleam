@@ -3,7 +3,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/slider_thumb
-import m3e/types.{Disabled, Enabled}
+import m3e/state.{Disabled, Enabled}
 
 pub fn default_test() {
   slider_thumb.new()

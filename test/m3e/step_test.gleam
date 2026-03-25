@@ -3,12 +3,12 @@ import lustre/attribute.{attribute}
 import lustre/element.{element, text}
 
 import m3e/helpers.{boolean_attribute}
+import m3e/state.{Disabled, Enabled}
 import m3e/step.{
   Completed, Config, Editable, NotCompleted, NotEditable, NotOptional,
   NotSelected, Optional, Selected, completed, default_config, disabled, editable,
   for_, from_config, new, optional, render, render_config, selected,
 }
-import m3e/types.{Disabled, Enabled}
 
 pub fn step_new_test() {
   new("target-id")

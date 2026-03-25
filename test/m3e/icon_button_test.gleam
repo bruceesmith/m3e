@@ -15,7 +15,7 @@ import m3e/icon_button.{
 
 import m3e/form_submission.{FormSubmission, Submit}
 import m3e/size_many.{ExtraLarge, ExtraSmall, Large}
-import m3e/types.{Selected}
+import m3e/state.{Selected}
 
 pub fn icon_button_creation_test() {
   let b = new()

@@ -11,7 +11,7 @@ import m3e/chip.{
 }
 import m3e/form_submission
 import m3e/icon
-import m3e/types.{Disabled, Selected}
+import m3e/state.{Disabled, Selected}
 
 pub fn chip_creation_test() {
   let c = assist("Assist")
