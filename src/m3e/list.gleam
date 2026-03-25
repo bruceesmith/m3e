@@ -4,7 +4,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/list_variant.{type Variant, default_variant, variant_to_string}
+import m3e/list_variant.{type Variant}
 
 // --- Types ---
 
@@ -28,7 +28,7 @@ pub type Config {
 /// default_config creates a Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(variant: default_variant)
+  Config(variant: list_variant.default_variant)
 }
 
 // --- CONSTRUCTORS ---
@@ -42,7 +42,7 @@ pub fn from_config(config: Config) -> M3EList {
 /// new creates a List with default values
 /// 
 pub fn new() -> M3EList {
-  M3EList(variant: default_variant)
+  M3EList(variant: list_variant.default_variant)
 }
 
 // --- SETTERS ---
@@ -65,7 +65,12 @@ pub fn render(
   element.element(
     "m3e-list",
     list.flatten([
-      [attribute.attribute("variant", variant_to_string(l.variant))],
+      [
+        attribute.attribute(
+          "variant",
+          list_variant.variant_to_string(l.variant),
+        ),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),

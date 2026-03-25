@@ -7,7 +7,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{type SelectionMode, Multi}
-import m3e/list_variant.{type Variant, Standard, variant_to_string}
+import m3e/list_variant.{type Variant, Standard}
 import m3e/state.{type Interaction, Disabled}
 
 // --- Types ---
@@ -145,7 +145,12 @@ pub fn render(
         ),
       ],
       [helpers.boolean_attribute("multi", sl.selection_mode == Multi)],
-      [attribute.attribute("variant", variant_to_string(sl.variant))],
+      [
+        attribute.attribute(
+          "variant",
+          list_variant.variant_to_string(sl.variant),
+        ),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),

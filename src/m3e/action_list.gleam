@@ -4,7 +4,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/list_variant.{type Variant, variant_to_string}
+import m3e/list_variant.{type Variant}
 
 // --- TYPES ---
 
@@ -46,7 +46,12 @@ pub fn render(
   element.element(
     "m3e-action-list",
     list.flatten([
-      [attribute.attribute("variant", variant_to_string(a.variant))],
+      [
+        attribute.attribute(
+          "variant",
+          list_variant.variant_to_string(a.variant),
+        ),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
