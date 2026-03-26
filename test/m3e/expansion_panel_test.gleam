@@ -3,9 +3,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html
-import m3e/expansion_panel.{
-  Config, HideToggle, Open, Start, ToggleIcon, default_config,
-}
+import m3e/expansion_panel.{Config, HideToggle, Open, Start, ToggleIcon}
 import m3e/icon
 import m3e/state.{Disabled}
 
@@ -20,7 +18,11 @@ pub fn defaults_test() {
         attribute.attribute("toggle-direction", "end"),
         attribute.attribute("toggle-position", "end"),
       ],
-      [html.span([attribute.attribute("slot", "header")], [element.text(header_text)])],
+      [
+        html.span([attribute.attribute("slot", "header")], [
+          element.text(header_text),
+        ]),
+      ],
     )
   expansion_panel.render(p, [], []) |> should.equal(expected)
 }
@@ -44,7 +46,11 @@ pub fn attributes_test() {
         attribute.attribute("toggle-direction", "start"),
         attribute.attribute("toggle-position", "start"),
       ],
-      [html.span([attribute.attribute("slot", "header")], [element.text(header_text)])],
+      [
+        html.span([attribute.attribute("slot", "header")], [
+          element.text(header_text),
+        ]),
+      ],
     )
   expansion_panel.render(p, [], []) |> should.equal(expected)
 }
@@ -67,7 +73,9 @@ pub fn icon_test() {
         attribute.attribute("toggle-position", "end"),
       ],
       [
-        html.span([attribute.attribute("slot", "header")], [element.text(header_text)]),
+        html.span([attribute.attribute("slot", "header")], [
+          element.text(header_text),
+        ]),
         expected_icon,
       ],
     )
@@ -88,7 +96,9 @@ pub fn actions_test() {
         attribute.attribute("toggle-position", "end"),
       ],
       [
-        html.span([attribute.attribute("slot", "header")], [element.text(header_text)]),
+        html.span([attribute.attribute("slot", "header")], [
+          element.text(header_text),
+        ]),
         element.element("div", [attribute.attribute("slot", "actions")], [
           action_btn,
         ]),
@@ -100,7 +110,7 @@ pub fn actions_test() {
 pub fn render_config_test() {
   let config =
     Config(
-      ..default_config(),
+      ..expansion_panel.default_config(),
       header: header_text,
       interaction: Disabled,
       state: Open,
@@ -114,7 +124,11 @@ pub fn render_config_test() {
         attribute.attribute("toggle-direction", "end"),
         attribute.attribute("toggle-position", "end"),
       ],
-      [html.span([attribute.attribute("slot", "header")], [element.text(header_text)])],
+      [
+        html.span([attribute.attribute("slot", "header")], [
+          element.text(header_text),
+        ]),
+      ],
     )
 
   expansion_panel.render_config(config, [], [])

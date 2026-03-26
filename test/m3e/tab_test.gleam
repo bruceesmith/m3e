@@ -3,22 +3,22 @@ import lustre/attribute
 import lustre/element
 
 import m3e/state.{Disabled}
-import m3e/tab.{Selected, disabled, for, new, render, selected}
+import m3e/tab.{Selected}
 
 pub fn tab_new_test() {
-  new()
-  |> render([], [])
+  tab.new()
+  |> tab.render([], [])
   |> should.equal(
     element.element("m3e-tab", [attribute.attribute("for", "")], []),
   )
 }
 
 pub fn tab_full_test() {
-  new()
-  |> disabled(Disabled)
-  |> for("my-control")
-  |> selected(Selected)
-  |> render([attribute.attribute("id", "t-1")], [element.text("Tab 1")])
+  tab.new()
+  |> tab.disabled(Disabled)
+  |> tab.for("my-control")
+  |> tab.selected(Selected)
+  |> tab.render([attribute.attribute("id", "t-1")], [element.text("Tab 1")])
   |> should.equal(
     element.element(
       "m3e-tab",

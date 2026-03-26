@@ -4,7 +4,6 @@ import lustre/attribute
 import lustre/element
 import m3e/fab.{
   Config, Disabled, DisabledInteractive, Extended, Lowered, Tertiary,
-  default_config, render_config,
 }
 
 import m3e/config
@@ -98,7 +97,7 @@ pub fn disabled_interactive_test() {
 pub fn render_config_test() {
   let config =
     Config(
-      ..default_config(),
+      ..fab.default_config(),
       interaction: Disabled,
       extension: Extended,
       extended_label: Some("Config"),
@@ -122,6 +121,6 @@ pub fn render_config_test() {
       ],
     )
 
-  render_config(config, [], [])
+  fab.render_config(config, [], [])
   |> should.equal(expected)
 }

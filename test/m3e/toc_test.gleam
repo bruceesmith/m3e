@@ -3,10 +3,10 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 
-import m3e/toc.{for, max_depth, new, render}
+import m3e/toc
 
 pub fn toc_basic_test() {
-  let t = new("test_id")
+  let t = toc.new("test_id")
   let expected =
     element.element(
       "m3e-toc",
@@ -16,14 +16,14 @@ pub fn toc_basic_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toc.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toc_full_test() {
   let t =
-    new("test_id")
-    |> for("another_id")
-    |> max_depth(3)
+    toc.new("test_id")
+    |> toc.for("another_id")
+    |> toc.max_depth(3)
 
   let expected =
     element.element(
@@ -34,11 +34,11 @@ pub fn toc_full_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toc.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toc_for_test() {
-  let t = new("test_id") |> for("new_id")
+  let t = toc.new("test_id") |> toc.for("new_id")
   let expected =
     element.element(
       "m3e-toc",
@@ -48,11 +48,11 @@ pub fn toc_for_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toc.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toc_max_depth_test() {
-  let t = new("test_id") |> max_depth(5)
+  let t = toc.new("test_id") |> toc.max_depth(5)
   let expected =
     element.element(
       "m3e-toc",
@@ -62,5 +62,5 @@ pub fn toc_max_depth_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toc.render(t, [], []) |> should.equal(expected)
 }

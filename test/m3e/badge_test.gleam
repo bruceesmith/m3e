@@ -4,11 +4,11 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 
-import m3e/badge.{Before, Below, badge_position, for, label, new, render, size}
+import m3e/badge.{Before, Below}
 import m3e/config
 
 pub fn badge_basic_test() {
-  let b = new("Test Badge")
+  let b = badge.new("Test Badge")
   let expected =
     element.element(
       "m3e-badge",
@@ -18,16 +18,16 @@ pub fn badge_basic_test() {
       ],
       [element.text("Test Badge")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 }
 
 pub fn badge_full_test() {
   let b =
-    new("Original Label")
-    |> for(Some("element_id"))
-    |> size(config.Large)
-    |> badge_position(Below)
-    |> label("Final Label")
+    badge.new("Original Label")
+    |> badge.for(Some("element_id"))
+    |> badge.size(config.Large)
+    |> badge.badge_position(Below)
+    |> badge.label("Final Label")
 
   let expected =
     element.element(
@@ -39,11 +39,11 @@ pub fn badge_full_test() {
       ],
       [element.text("Final Label")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 }
 
 pub fn badge_size_test() {
-  let b = new("Test") |> size(config.Small)
+  let b = badge.new("Test") |> badge.size(config.Small)
   let expected =
     element.element(
       "m3e-badge",
@@ -53,9 +53,9 @@ pub fn badge_size_test() {
       ],
       [element.text("Test")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 
-  let b = b |> size(config.Large)
+  let b = b |> badge.size(config.Large)
   let expected =
     element.element(
       "m3e-badge",
@@ -65,9 +65,9 @@ pub fn badge_size_test() {
       ],
       [element.text("Test")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 
-  let b = b |> size(config.Medium)
+  let b = b |> badge.size(config.Medium)
   let expected =
     element.element(
       "m3e-badge",
@@ -77,11 +77,11 @@ pub fn badge_size_test() {
       ],
       [element.text("Test")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 }
 
 pub fn badge_position_test() {
-  let b = new("Test") |> badge_position(Before)
+  let b = badge.new("Test") |> badge.badge_position(Before)
   let expected =
     element.element(
       "m3e-badge",
@@ -91,11 +91,11 @@ pub fn badge_position_test() {
       ],
       [element.text("Test")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 }
 
 pub fn badge_for_test() {
-  let b = new("Test") |> for(Some("other_element"))
+  let b = badge.new("Test") |> badge.for(Some("other_element"))
   let expected =
     element.element(
       "m3e-badge",
@@ -106,11 +106,11 @@ pub fn badge_for_test() {
       ],
       [element.text("Test")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 }
 
 pub fn badge_label_test() {
-  let b = new("Test") |> label("New Label")
+  let b = badge.new("Test") |> badge.label("New Label")
   let expected =
     element.element(
       "m3e-badge",
@@ -120,5 +120,5 @@ pub fn badge_label_test() {
       ],
       [element.text("New Label")],
     )
-  render(b) |> should.equal(expected)
+  badge.render(b) |> should.equal(expected)
 }

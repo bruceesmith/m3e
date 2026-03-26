@@ -4,12 +4,12 @@ import lustre/attribute
 import lustre/element
 
 import m3e/config
-import m3e/split_button.{Elevated, Outlined, Tonal, new, render, size, variant}
+import m3e/split_button.{Elevated, Outlined, Tonal}
 
 pub fn split_button_new_test() {
   let leading = element.text("Leading")
   let trailing = element.text("Trailing")
-  let sb = new(leading, trailing)
+  let sb = split_button.new(leading, trailing)
 
   let expected =
     element.element(
@@ -21,16 +21,16 @@ pub fn split_button_new_test() {
       [leading, trailing],
     )
 
-  render(sb, []) |> should.equal(expected)
+  split_button.render(sb, []) |> should.equal(expected)
 }
 
 pub fn split_button_size_test() {
   let leading = element.text("L")
   let trailing = element.text("T")
 
-  new(leading, trailing)
-  |> size(config.ExtraLarge)
-  |> render([])
+  split_button.new(leading, trailing)
+  |> split_button.size(config.ExtraLarge)
+  |> split_button.render([])
   |> should.equal(
     element.element(
       "m3e-split-button",
@@ -42,9 +42,9 @@ pub fn split_button_size_test() {
     ),
   )
 
-  new(leading, trailing)
-  |> size(config.Large)
-  |> render([])
+  split_button.new(leading, trailing)
+  |> split_button.size(config.Large)
+  |> split_button.render([])
   |> should.equal(
     element.element(
       "m3e-split-button",
@@ -61,9 +61,9 @@ pub fn split_button_variant_test() {
   let leading = element.text("L")
   let trailing = element.text("T")
 
-  new(leading, trailing)
-  |> variant(Elevated)
-  |> render([])
+  split_button.new(leading, trailing)
+  |> split_button.variant(Elevated)
+  |> split_button.render([])
   |> should.equal(
     element.element(
       "m3e-split-button",
@@ -75,9 +75,9 @@ pub fn split_button_variant_test() {
     ),
   )
 
-  new(leading, trailing)
-  |> variant(Outlined)
-  |> render([])
+  split_button.new(leading, trailing)
+  |> split_button.variant(Outlined)
+  |> split_button.render([])
   |> should.equal(
     element.element(
       "m3e-split-button",
@@ -89,9 +89,9 @@ pub fn split_button_variant_test() {
     ),
   )
 
-  new(leading, trailing)
-  |> variant(Tonal)
-  |> render([])
+  split_button.new(leading, trailing)
+  |> split_button.variant(Tonal)
+  |> split_button.render([])
   |> should.equal(
     element.element(
       "m3e-split-button",
@@ -107,7 +107,7 @@ pub fn split_button_variant_test() {
 pub fn split_button_render_attributes_test() {
   let leading = element.text("L")
   let trailing = element.text("T")
-  let sb = new(leading, trailing)
+  let sb = split_button.new(leading, trailing)
 
   let expected =
     element.element(
@@ -120,7 +120,8 @@ pub fn split_button_render_attributes_test() {
       [leading, trailing],
     )
 
-  render(sb, [attribute.attribute("id", "test-id")]) |> should.equal(expected)
+  split_button.render(sb, [attribute.attribute("id", "test-id")])
+  |> should.equal(expected)
 }
 
 pub fn split_button_leading_trailing_update_test() {
@@ -129,10 +130,10 @@ pub fn split_button_leading_trailing_update_test() {
   let l2 = element.text("L2")
   let t2 = element.text("T2")
 
-  new(l1, t1)
+  split_button.new(l1, t1)
   |> split_button.leading(l2)
   |> split_button.trailing(t2)
-  |> render([])
+  |> split_button.render([])
   |> should.equal(
     element.element(
       "m3e-split-button",

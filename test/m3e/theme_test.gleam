@@ -1,13 +1,10 @@
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/theme.{
-  Dark, Expressive, Light, color, density, largest_density, motion, new, render,
-  scheme, smallest_density,
-}
+import m3e/theme.{Dark, Expressive, Light}
 
 pub fn basic_test() {
-  let t = new("#ff0000")
+  let t = theme.new("#ff0000")
   let expected =
     element.element(
       "m3e-theme",
@@ -20,11 +17,11 @@ pub fn basic_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  theme.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn element_test() {
-  let t = new("#ff0000")
+  let t = theme.new("#ff0000")
   let expected =
     element.element(
       "m3e-theme",
@@ -38,13 +35,13 @@ pub fn element_test() {
       [],
     )
   t
-  |> render([], [])
+  |> theme.render([], [])
   |> should.equal(expected)
 }
 
 pub fn color_test() {
-  let t = new("#abcfde")
-  let t_new = color(t, "#00ff00")
+  let t = theme.new("#abcfde")
+  let t_new = theme.color(t, "#00ff00")
   let expected =
     element.element(
       "m3e-theme",
@@ -57,12 +54,12 @@ pub fn color_test() {
       ],
       [],
     )
-  render(t_new, [], []) |> should.equal(expected)
+  theme.render(t_new, [], []) |> should.equal(expected)
 }
 
 pub fn density_test() {
-  let t = new("#abcfde")
-  let t_1 = density(t, 1)
+  let t = theme.new("#abcfde")
+  let t_1 = theme.density(t, 1)
   let expected_1 =
     element.element(
       "m3e-theme",
@@ -75,9 +72,9 @@ pub fn density_test() {
       ],
       [],
     )
-  render(t_1, [], []) |> should.equal(expected_1)
+  theme.render(t_1, [], []) |> should.equal(expected_1)
 
-  let t_small = density(t, smallest_density - 1)
+  let t_small = theme.density(t, theme.smallest_density - 1)
   let expected_default =
     element.element(
       "m3e-theme",
@@ -90,15 +87,15 @@ pub fn density_test() {
       ],
       [],
     )
-  render(t_small, [], []) |> should.equal(expected_default)
+  theme.render(t_small, [], []) |> should.equal(expected_default)
 
-  let t_large = density(t, largest_density + 1)
-  render(t_large, [], []) |> should.equal(expected_default)
+  let t_large = theme.density(t, theme.largest_density + 1)
+  theme.render(t_large, [], []) |> should.equal(expected_default)
 }
 
 pub fn motion_test() {
-  let t = new("#abcfde")
-  let t_expr = motion(t, Expressive)
+  let t = theme.new("#abcfde")
+  let t_expr = theme.motion(t, Expressive)
   let expected =
     element.element(
       "m3e-theme",
@@ -111,12 +108,12 @@ pub fn motion_test() {
       ],
       [],
     )
-  render(t_expr, [], []) |> should.equal(expected)
+  theme.render(t_expr, [], []) |> should.equal(expected)
 }
 
 pub fn scheme_test() {
-  let t = new("#abcfde")
-  let t_dark = scheme(t, Dark)
+  let t = theme.new("#abcfde")
+  let t_dark = theme.scheme(t, Dark)
   let expected_dark =
     element.element(
       "m3e-theme",
@@ -129,9 +126,9 @@ pub fn scheme_test() {
       ],
       [],
     )
-  render(t_dark, [], []) |> should.equal(expected_dark)
+  theme.render(t_dark, [], []) |> should.equal(expected_dark)
 
-  let t_light = scheme(t, Light)
+  let t_light = theme.scheme(t, Light)
   let expected_light =
     element.element(
       "m3e-theme",
@@ -144,7 +141,7 @@ pub fn scheme_test() {
       ],
       [],
     )
-  render(t_light, [], []) |> should.equal(expected_light)
+  theme.render(t_light, [], []) |> should.equal(expected_light)
 }
 // Private functions are not directly testable,
 // but we can test their effects through the public API.

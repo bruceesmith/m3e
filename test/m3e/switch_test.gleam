@@ -6,12 +6,10 @@ import lustre/element
 
 import m3e/form_submission
 import m3e/state.{Checked, Disabled}
-import m3e/switch.{
-  Both, Selected, checked, disabled, form, icon, label, new, render,
-}
+import m3e/switch.{Both, Selected}
 
 pub fn switch_basic_test() {
-  let s = new("test_id") |> label(Some("Test Label"))
+  let s = switch.new("test_id") |> switch.label(Some("Test Label"))
   let expected = [
     element.element(
       "m3e-switch",
@@ -22,21 +20,21 @@ pub fn switch_basic_test() {
       element.text("Test Label"),
     ]),
   ]
-  render(s, []) |> should.equal(expected)
+  switch.render(s, []) |> should.equal(expected)
 }
 
 pub fn switch_full_test() {
   let s =
-    new("test_id")
-    |> label(Some("Test Label"))
-    |> checked(Checked)
-    |> disabled(Disabled)
-    |> form(Some(
+    switch.new("test_id")
+    |> switch.label(Some("Test Label"))
+    |> switch.checked(Checked)
+    |> switch.disabled(Disabled)
+    |> switch.form(Some(
       form_submission.new()
       |> form_submission.name("key")
       |> form_submission.value("value"),
     ))
-    |> icon(Both)
+    |> switch.icon(Both)
 
   let expected = [
     element.element(
@@ -55,13 +53,13 @@ pub fn switch_full_test() {
       element.text("Test Label"),
     ]),
   ]
-  render(s, []) |> should.equal(expected)
+  switch.render(s, []) |> should.equal(expected)
 }
 
 pub fn switch_element_test() {
   let s =
-    new("test_id")
-    |> label(Some("Test Label"))
+    switch.new("test_id")
+    |> switch.label(Some("Test Label"))
   let expected = [
     element.element(
       "m3e-switch",
@@ -73,15 +71,15 @@ pub fn switch_element_test() {
     ]),
   ]
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }
 
 pub fn switch_checked_test() {
   let s =
-    new("test_id")
-    |> label(Some("Test Label"))
-    |> checked(Checked)
+    switch.new("test_id")
+    |> switch.label(Some("Test Label"))
+    |> switch.checked(Checked)
 
   let expected = [
     element.element(
@@ -98,15 +96,15 @@ pub fn switch_checked_test() {
     ]),
   ]
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }
 
 pub fn switch_disabled_test() {
   let s =
-    new("test_id")
-    |> label(Some("Test Label"))
-    |> disabled(Disabled)
+    switch.new("test_id")
+    |> switch.label(Some("Test Label"))
+    |> switch.disabled(Disabled)
 
   let expected = [
     element.element(
@@ -123,15 +121,15 @@ pub fn switch_disabled_test() {
     ]),
   ]
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }
 
 pub fn switch_form_test() {
   let s =
-    new("test_id")
-    |> label(Some("Test Label"))
-    |> form(Some(
+    switch.new("test_id")
+    |> switch.label(Some("Test Label"))
+    |> switch.form(Some(
       form_submission.new()
       |> form_submission.name("some_key")
       |> form_submission.value("some_value"),
@@ -153,15 +151,15 @@ pub fn switch_form_test() {
     ]),
   ]
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }
 
 pub fn switch_icon_test() {
   let s =
-    new("test_id")
-    |> label(Some("Test Label"))
-    |> icon(Both)
+    switch.new("test_id")
+    |> switch.label(Some("Test Label"))
+    |> switch.icon(Both)
 
   let expected = [
     element.element(
@@ -174,10 +172,10 @@ pub fn switch_icon_test() {
     ]),
   ]
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 
-  let s = s |> icon(Selected)
+  let s = s |> switch.icon(Selected)
   let expected = [
     element.element(
       "m3e-switch",
@@ -189,7 +187,7 @@ pub fn switch_icon_test() {
     ]),
   ]
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }
 
@@ -210,7 +208,7 @@ pub fn render_with_label_test() {
   ]
 
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }
 
@@ -228,6 +226,6 @@ pub fn render_without_label_test() {
   ]
 
   s
-  |> render([])
+  |> switch.render([])
   |> should.equal(expected)
 }

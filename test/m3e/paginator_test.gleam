@@ -3,16 +3,11 @@ import lustre/attribute
 import lustre/element
 
 import m3e/form_field.{Filled}
-import m3e/paginator.{
-  PageSize, PageSizeAll, disabled, first_page_label, hide_page_size,
-  items_per_page_label, last_page_label, length, new, next_page_label,
-  page_index, page_size, page_size_variant, page_sizes, previous_page_label,
-  render, show_first_last_buttons,
-}
+import m3e/paginator.{PageSize, PageSizeAll}
 import m3e/state.{Disabled, Enabled}
 
 pub fn paginator_creation_test() {
-  let p = new()
+  let p = paginator.new()
   let expected =
     element.element(
       "m3e-paginator",
@@ -30,25 +25,25 @@ pub fn paginator_creation_test() {
       ],
       [],
     )
-  render(p, [], []) |> should.equal(expected)
+  paginator.render(p, [], []) |> should.equal(expected)
 }
 
 pub fn paginator_full_test() {
   let p =
-    new()
-    |> disabled(Disabled)
-    |> first_page_label("Primeira")
-    |> hide_page_size(paginator.Hidden)
-    |> items_per_page_label("Itens")
-    |> last_page_label("Última")
-    |> length(1000)
-    |> next_page_label("Próxima")
-    |> page_index(1)
-    |> page_size(PageSize(10))
-    |> page_sizes([PageSize(10), PageSize(20), PageSizeAll])
-    |> page_size_variant(Filled)
-    |> previous_page_label("Anterior")
-    |> show_first_last_buttons(paginator.Shown)
+    paginator.new()
+    |> paginator.disabled(Disabled)
+    |> paginator.first_page_label("Primeira")
+    |> paginator.hide_page_size(paginator.Hidden)
+    |> paginator.items_per_page_label("Itens")
+    |> paginator.last_page_label("Última")
+    |> paginator.length(1000)
+    |> paginator.next_page_label("Próxima")
+    |> paginator.page_index(1)
+    |> paginator.page_size(PageSize(10))
+    |> paginator.page_sizes([PageSize(10), PageSize(20), PageSizeAll])
+    |> paginator.page_size_variant(Filled)
+    |> paginator.previous_page_label("Anterior")
+    |> paginator.show_first_last_buttons(paginator.Shown)
 
   let expected =
     element.element(
@@ -70,11 +65,11 @@ pub fn paginator_full_test() {
       ],
       [],
     )
-  render(p, [], []) |> should.equal(expected)
+  paginator.render(p, [], []) |> should.equal(expected)
 }
 
 pub fn paginator_element_test() {
-  let p = new()
+  let p = paginator.new()
   let expected =
     element.element(
       "m3e-paginator",
@@ -92,13 +87,13 @@ pub fn paginator_element_test() {
       ],
       [element.text("Child")],
     )
-  p |> render([], [element.text("Child")]) |> should.equal(expected)
+  p |> paginator.render([], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn paginator_setters_test() {
-  let p = new()
+  let p = paginator.new()
 
-  let p_disabled = p |> disabled(Disabled)
+  let p_disabled = p |> paginator.disabled(Disabled)
   let expected_disabled =
     element.element(
       "m3e-paginator",
@@ -117,9 +112,9 @@ pub fn paginator_setters_test() {
       ],
       [],
     )
-  render(p_disabled, [], []) |> should.equal(expected_disabled)
+  paginator.render(p_disabled, [], []) |> should.equal(expected_disabled)
 
-  let p_hide = p |> hide_page_size(paginator.Hidden)
+  let p_hide = p |> paginator.hide_page_size(paginator.Hidden)
   let expected_hide =
     element.element(
       "m3e-paginator",
@@ -138,9 +133,9 @@ pub fn paginator_setters_test() {
       ],
       [],
     )
-  render(p_hide, [], []) |> should.equal(expected_hide)
+  paginator.render(p_hide, [], []) |> should.equal(expected_hide)
 
-  let p_show = p |> show_first_last_buttons(paginator.Shown)
+  let p_show = p |> paginator.show_first_last_buttons(paginator.Shown)
   let expected_show =
     element.element(
       "m3e-paginator",
@@ -159,7 +154,7 @@ pub fn paginator_setters_test() {
       ],
       [],
     )
-  render(p_show, [], []) |> should.equal(expected_show)
+  paginator.render(p_show, [], []) |> should.equal(expected_show)
 }
 
 pub fn config_test() {
@@ -182,7 +177,7 @@ pub fn config_test() {
 
   let p = paginator.from_config(c)
 
-  render(p, [], [])
+  paginator.render(p, [], [])
   |> should.equal(
     element.element(
       "m3e-paginator",
@@ -221,13 +216,13 @@ pub fn from_config_test() {
   let c = paginator.default_config()
   let p = paginator.from_config(c)
 
-  render(p, [], [])
-  |> should.equal(render(new(), [], []))
+  paginator.render(p, [], [])
+  |> should.equal(paginator.render(paginator.new(), [], []))
 }
 
 pub fn render_config_test() {
   let c = paginator.default_config()
-  let expected = render(paginator.from_config(c), [], [])
+  let expected = paginator.render(paginator.from_config(c), [], [])
 
   paginator.render_config(c, [], [])
   |> should.equal(expected)

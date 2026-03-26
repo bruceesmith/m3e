@@ -3,38 +3,38 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 
-import m3e/radio.{checked, disabled, new, render, required}
+import m3e/radio
 import m3e/state.{Checked, Disabled, Enabled, Optional, Required, Unchecked}
 
 pub fn radio_creation_test() {
-  let r = new()
+  let r = radio.new()
   let expected = element.element("m3e-radio", [], [])
-  render(r, [], []) |> should.equal(expected)
+  radio.render(r, [], []) |> should.equal(expected)
 }
 
 pub fn radio_setters_test() {
-  let r = new()
+  let r = radio.new()
 
-  let r_checked = r |> checked(Checked)
+  let r_checked = r |> radio.checked(Checked)
   let expected_checked =
     element.element("m3e-radio", [attribute.attribute("checked", "")], [])
-  render(r_checked, [], []) |> should.equal(expected_checked)
+  radio.render(r_checked, [], []) |> should.equal(expected_checked)
 
-  let r_disabled = r |> disabled(Disabled)
+  let r_disabled = r |> radio.disabled(Disabled)
   let expected_disabled =
     element.element("m3e-radio", [attribute.attribute("disabled", "")], [])
-  render(r_disabled, [], []) |> should.equal(expected_disabled)
+  radio.render(r_disabled, [], []) |> should.equal(expected_disabled)
 
-  let r_required = r |> required(Required)
+  let r_required = r |> radio.required(Required)
   let expected_required =
     element.element("m3e-radio", [attribute.attribute("required", "")], [])
-  render(r_required, [], []) |> should.equal(expected_required)
+  radio.render(r_required, [], []) |> should.equal(expected_required)
 }
 
 pub fn radio_element_test() {
-  let r = new()
+  let r = radio.new()
   let expected = element.element("m3e-radio", [], [element.text("Child")])
-  render(r, [], [element.text("Child")]) |> should.equal(expected)
+  radio.render(r, [], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -48,7 +48,7 @@ pub fn config_test() {
 
   let r = radio.from_config(c)
 
-  render(r, [], [])
+  radio.render(r, [], [])
   |> should.equal(
     element.element(
       "m3e-radio",
@@ -75,13 +75,13 @@ pub fn from_config_test() {
   let c = radio.default_config()
   let r = radio.from_config(c)
 
-  render(r, [], [])
-  |> should.equal(render(new(), [], []))
+  radio.render(r, [], [])
+  |> should.equal(radio.render(radio.new(), [], []))
 }
 
 pub fn render_config_test() {
   let c = radio.default_config()
-  let expected = render(radio.from_config(c), [], [])
+  let expected = radio.render(radio.from_config(c), [], [])
 
   radio.render_config(c, [], [])
   |> should.equal(expected)

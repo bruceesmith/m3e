@@ -1,19 +1,20 @@
 import gleeunit/should
 import lustre/element
-import m3e/stepper_previous.{new, render}
+
+import m3e/stepper_previous
 
 pub fn stepper_previous_new_test() {
-  new("Back")
-  |> render
+  stepper_previous.new("Back")
+  |> stepper_previous.render
   |> should.equal(
     element.element("m3e-stepper-previous", [], [element.text("Back")]),
   )
 }
 
 pub fn stepper_previous_label_test() {
-  new("Original")
+  stepper_previous.new("Original")
   |> stepper_previous.label("New Label")
-  |> render
+  |> stepper_previous.render
   |> should.equal(
     element.element("m3e-stepper-previous", [], [element.text("New Label")]),
   )

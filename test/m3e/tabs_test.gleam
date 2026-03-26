@@ -1,14 +1,11 @@
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/tabs.{
-  After, NoScroll, Primary, Stretch, disabled_pagination, header_position, new,
-  next_page_label, previous_page_label, render, stretch, variant,
-}
+import m3e/tabs.{After, NoScroll, Primary, Stretch}
 
 pub fn tabs_new_test() {
-  new()
-  |> render([], [])
+  tabs.new()
+  |> tabs.render([], [])
   |> should.equal(
     element.element(
       "m3e-tabs",
@@ -24,14 +21,16 @@ pub fn tabs_new_test() {
 }
 
 pub fn tabs_full_test() {
-  new()
-  |> disabled_pagination(NoScroll)
-  |> header_position(After)
-  |> next_page_label("Following")
-  |> previous_page_label("Preceding")
-  |> stretch(Stretch)
-  |> variant(Primary)
-  |> render([attribute.attribute("id", "tabs-1")], [element.text("Children")])
+  tabs.new()
+  |> tabs.disabled_pagination(NoScroll)
+  |> tabs.header_position(After)
+  |> tabs.next_page_label("Following")
+  |> tabs.previous_page_label("Preceding")
+  |> tabs.stretch(Stretch)
+  |> tabs.variant(Primary)
+  |> tabs.render([attribute.attribute("id", "tabs-1")], [
+    element.text("Children"),
+  ])
   |> should.equal(
     element.element(
       "m3e-tabs",

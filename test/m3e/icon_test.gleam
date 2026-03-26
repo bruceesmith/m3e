@@ -3,10 +3,7 @@ import lustre/attribute
 import lustre/element
 
 import m3e/button
-import m3e/icon.{
-  Config, Filled, High, Low, Medium, NotFilled, Rounded, Sharp, default_config,
-  render_config,
-}
+import m3e/icon.{Config, Filled, High, Low, Medium, NotFilled, Rounded, Sharp}
 
 pub fn basic_test() {
   let basic_icon = icon.new("home")
@@ -547,7 +544,7 @@ pub fn weight_attr_test() {
 pub fn render_config_test() {
   let config =
     Config(
-      ..default_config(),
+      ..icon.default_config(),
       name: "settings",
       fill: Filled,
       grade: High,
@@ -569,6 +566,6 @@ pub fn render_config_test() {
       [],
     )
 
-  render_config(config, [], [])
+  icon.render_config(config, [], [])
   |> should.equal(expected)
 }

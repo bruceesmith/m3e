@@ -4,16 +4,13 @@ import lustre/attribute
 import lustre/element
 import lustre/element/html
 
-import m3e/button.{
-  Config, Elevated, Filled, Outlined, Square, Text, form, icons, label, new,
-  render, render_config, selected_label, shape, size, toggle, variant,
-}
+import m3e/button.{Config, Elevated, Filled, Outlined, Square, Text}
 import m3e/config
 import m3e/form_submission.{FormSubmission, Submit}
 import m3e/state.{Disabled, Selected}
 
 pub fn button_creation_test() {
-  let b = new("Click me", Text)
+  let b = button.new("Click me", Text)
   let expected_basic =
     element.element(
       "m3e-button",
@@ -26,17 +23,17 @@ pub fn button_creation_test() {
       ],
       [element.text("Click me")],
     )
-  render(b, []) |> should.equal(expected_basic)
+  button.render(b, []) |> should.equal(expected_basic)
 
   let b_full =
-    new("Full", Filled)
-    |> shape(Square)
-    |> size(config.Large)
-    |> selected_label("Selected")
-    |> toggle(True)
+    button.new("Full", Filled)
+    |> button.shape(Square)
+    |> button.size(config.Large)
+    |> button.selected_label("Selected")
+    |> button.toggle(True)
     |> button.selected(Selected)
     |> button.disabled(Disabled)
-    |> form(Some(FormSubmission(Submit, "key", "val")))
+    |> button.form(Some(FormSubmission(Submit, "key", "val")))
 
   let expected_full =
     element.element(
@@ -59,11 +56,11 @@ pub fn button_creation_test() {
         ]),
       ],
     )
-  render(b_full, []) |> should.equal(expected_full)
+  button.render(b_full, []) |> should.equal(expected_full)
 }
 
 pub fn button_element_test() {
-  let b = new("Basic", Text)
+  let b = button.new("Basic", Text)
   let expected =
     element.element(
       "m3e-button",
@@ -76,7 +73,7 @@ pub fn button_element_test() {
       ],
       [element.text("Basic")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -113,11 +110,13 @@ pub fn config_test() {
       ],
       [element.text("Configured")],
     )
-  render_config(config, []) |> should.equal(expected)
+  button.render_config(config, []) |> should.equal(expected)
 }
 
 pub fn button_form_test() {
-  let b = new("Submit", Filled) |> form(Some(FormSubmission(Submit, "k", "v")))
+  let b =
+    button.new("Submit", Filled)
+    |> button.form(Some(FormSubmission(Submit, "k", "v")))
 
   let expected =
     element.element(
@@ -134,11 +133,11 @@ pub fn button_form_test() {
       ],
       [element.text("Submit")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_selected_label_test() {
-  let b = new("Toggle", Outlined) |> selected_label("On")
+  let b = button.new("Toggle", Outlined) |> button.selected_label("On")
 
   let expected =
     element.element(
@@ -157,11 +156,11 @@ pub fn button_selected_label_test() {
         ]),
       ],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_shape_test() {
-  let b = new("Shape", Text) |> shape(Square)
+  let b = button.new("Shape", Text) |> button.shape(Square)
 
   let expected =
     element.element(
@@ -175,11 +174,11 @@ pub fn button_shape_test() {
       ],
       [element.text("Shape")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_size_test() {
-  let b = new("Size", Text) |> size(config.Large)
+  let b = button.new("Size", Text) |> button.size(config.Large)
 
   let expected =
     element.element(
@@ -193,11 +192,11 @@ pub fn button_size_test() {
       ],
       [element.text("Size")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_variant_test() {
-  let b = new("Variant", Text) |> variant(Elevated)
+  let b = button.new("Variant", Text) |> button.variant(Elevated)
 
   let expected =
     element.element(
@@ -211,12 +210,12 @@ pub fn button_variant_test() {
       ],
       [element.text("Variant")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_icons_test() {
   let icon = html.span([], [element.text("icon")])
-  let b = new("Icon", Text) |> icons([icon])
+  let b = button.new("Icon", Text) |> button.icons([icon])
 
   let expected =
     element.element(
@@ -230,11 +229,11 @@ pub fn button_icons_test() {
       ],
       [icon, element.text("Icon")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_label_test() {
-  let b = new("Original", Text) |> label("New Label")
+  let b = button.new("Original", Text) |> button.label("New Label")
 
   let expected =
     element.element(
@@ -248,11 +247,11 @@ pub fn button_label_test() {
       ],
       [element.text("New Label")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }
 
 pub fn button_toggle_test() {
-  let b = new("Toggle Me", Text) |> toggle(True)
+  let b = button.new("Toggle Me", Text) |> button.toggle(True)
 
   let expected =
     element.element(
@@ -267,5 +266,5 @@ pub fn button_toggle_test() {
       ],
       [element.text("Toggle Me")],
     )
-  b |> render([]) |> should.equal(expected)
+  b |> button.render([]) |> should.equal(expected)
 }

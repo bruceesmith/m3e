@@ -1,14 +1,11 @@
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/stepper.{
-  Auto, Below, Check, Horizontal, LabelBelow, Vertical, header_position,
-  label_position, linear, new, orientation, render,
-}
+import m3e/stepper.{Auto, Below, Check, Horizontal, LabelBelow, Vertical}
 
 pub fn stepper_new_test() {
-  new()
-  |> render([], [])
+  stepper.new()
+  |> stepper.render([], [])
   |> should.equal(
     element.element(
       "m3e-stepper",
@@ -23,12 +20,14 @@ pub fn stepper_new_test() {
 }
 
 pub fn stepper_full_test() {
-  new()
-  |> header_position(Below)
-  |> label_position(LabelBelow)
-  |> linear(Check)
-  |> orientation(Vertical)
-  |> render([attribute.attribute("id", "my-stepper")], [element.text("Child")])
+  stepper.new()
+  |> stepper.header_position(Below)
+  |> stepper.label_position(LabelBelow)
+  |> stepper.linear(Check)
+  |> stepper.orientation(Vertical)
+  |> stepper.render([attribute.attribute("id", "my-stepper")], [
+    element.text("Child"),
+  ])
   |> should.equal(
     element.element(
       "m3e-stepper",
@@ -45,9 +44,9 @@ pub fn stepper_full_test() {
 }
 
 pub fn stepper_orientation_test() {
-  new()
-  |> orientation(Auto)
-  |> render([], [])
+  stepper.new()
+  |> stepper.orientation(Auto)
+  |> stepper.render([], [])
   |> should.equal(
     element.element(
       "m3e-stepper",
@@ -60,9 +59,9 @@ pub fn stepper_orientation_test() {
     ),
   )
 
-  new()
-  |> orientation(Horizontal)
-  |> render([], [])
+  stepper.new()
+  |> stepper.orientation(Horizontal)
+  |> stepper.render([], [])
   |> should.equal(
     element.element(
       "m3e-stepper",

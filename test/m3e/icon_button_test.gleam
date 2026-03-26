@@ -7,15 +7,13 @@ import m3e/app_bar
 import m3e/config
 import m3e/icon_button.{
   Config, Disabled, DisabledInteractive, Filled, Narrow, Square, Toggle,
-  default_config, disabled, form, new, purpose, render, render_config, selected,
-  shape, size, toggle, variant, width,
 }
 
 import m3e/form_submission.{FormSubmission, Submit}
 import m3e/state.{Selected}
 
 pub fn icon_button_creation_test() {
-  let b = new()
+  let b = icon_button.new()
   let expected =
     element.element(
       "m3e-icon-button",
@@ -29,19 +27,19 @@ pub fn icon_button_creation_test() {
       ],
       [],
     )
-  render(b, [], []) |> should.equal(expected)
+  icon_button.render(b, [], []) |> should.equal(expected)
 
   let b =
-    new()
-    |> disabled(Disabled)
-    |> purpose(None)
-    |> selected(Selected)
-    |> shape(Square)
-    |> size(config.Large)
-    |> toggle(Toggle)
-    |> form(Some(FormSubmission(Submit, "key", "val")))
-    |> variant(Filled)
-    |> width(Narrow)
+    icon_button.new()
+    |> icon_button.disabled(Disabled)
+    |> icon_button.purpose(None)
+    |> icon_button.selected(Selected)
+    |> icon_button.shape(Square)
+    |> icon_button.size(config.Large)
+    |> icon_button.toggle(Toggle)
+    |> icon_button.form(Some(FormSubmission(Submit, "key", "val")))
+    |> icon_button.variant(Filled)
+    |> icon_button.width(Narrow)
 
   let expected_full =
     element.element(
@@ -60,11 +58,11 @@ pub fn icon_button_creation_test() {
       ],
       [],
     )
-  render(b, [], []) |> should.equal(expected_full)
+  icon_button.render(b, [], []) |> should.equal(expected_full)
 }
 
 pub fn icon_button_render_test() {
-  let b = new()
+  let b = icon_button.new()
   let expected =
     element.element(
       "m3e-icon-button",
@@ -78,11 +76,13 @@ pub fn icon_button_render_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_purpose_test() {
-  let b = new() |> purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
+  let b =
+    icon_button.new()
+    |> icon_button.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
 
   let expected =
     element.element(
@@ -98,11 +98,11 @@ pub fn icon_button_purpose_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_disabled_test() {
-  let b = new() |> disabled(Disabled)
+  let b = icon_button.new() |> icon_button.disabled(Disabled)
 
   let expected =
     element.element(
@@ -117,11 +117,11 @@ pub fn icon_button_disabled_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_disabled_interactive_test() {
-  let b = new() |> disabled(DisabledInteractive)
+  let b = icon_button.new() |> icon_button.disabled(DisabledInteractive)
 
   let expected =
     element.element(
@@ -137,11 +137,11 @@ pub fn icon_button_disabled_interactive_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_selected_test() {
-  let b = new() |> selected(Selected)
+  let b = icon_button.new() |> icon_button.selected(Selected)
 
   let expected =
     element.element(
@@ -156,11 +156,11 @@ pub fn icon_button_selected_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_shape_test() {
-  let b = new() |> shape(Square)
+  let b = icon_button.new() |> icon_button.shape(Square)
 
   let expected =
     element.element(
@@ -175,11 +175,11 @@ pub fn icon_button_shape_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_size_test() {
-  let b = new() |> size(config.ExtraLarge)
+  let b = icon_button.new() |> icon_button.size(config.ExtraLarge)
 
   let expected =
     element.element(
@@ -194,11 +194,11 @@ pub fn icon_button_size_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_toggle_test() {
-  let b = new() |> toggle(Toggle)
+  let b = icon_button.new() |> icon_button.toggle(Toggle)
 
   let expected =
     element.element(
@@ -214,13 +214,13 @@ pub fn icon_button_toggle_test() {
       ],
       [],
     )
-  b |> render([], []) |> should.equal(expected)
+  b |> icon_button.render([], []) |> should.equal(expected)
 }
 
 pub fn icon_button_render_config_test() {
   let config =
     Config(
-      ..default_config(),
+      ..icon_button.default_config(),
       interaction: Disabled,
       selection: Selected,
       toggle: Toggle,
@@ -241,6 +241,6 @@ pub fn icon_button_render_config_test() {
       [],
     )
 
-  render_config(config, [], [])
+  icon_button.render_config(config, [], [])
   |> should.equal(expected)
 }

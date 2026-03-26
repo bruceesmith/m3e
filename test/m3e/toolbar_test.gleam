@@ -4,12 +4,10 @@ import lustre/attribute
 import lustre/element
 
 import m3e/layout.{Vertical}
-import m3e/toolbar.{
-  Raised, Rounded, Vibrant, elevated, new, render, shape, variant, vertical,
-}
+import m3e/toolbar.{Raised, Rounded, Vibrant}
 
 pub fn toolbar_basic_test() {
-  let t = new()
+  let t = toolbar.new()
   let expected =
     element.element(
       "m3e-toolbar",
@@ -19,16 +17,16 @@ pub fn toolbar_basic_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toolbar.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toolbar_full_test() {
   let t =
-    new()
-    |> elevated(Raised)
-    |> shape(Rounded)
-    |> variant(Vibrant)
-    |> vertical(Vertical)
+    toolbar.new()
+    |> toolbar.elevated(Raised)
+    |> toolbar.shape(Rounded)
+    |> toolbar.variant(Vibrant)
+    |> toolbar.vertical(Vertical)
 
   let expected =
     element.element(
@@ -41,11 +39,11 @@ pub fn toolbar_full_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toolbar.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toolbar_elevated_test() {
-  let t = new() |> elevated(Raised)
+  let t = toolbar.new() |> toolbar.elevated(Raised)
   let expected =
     element.element(
       "m3e-toolbar",
@@ -56,11 +54,11 @@ pub fn toolbar_elevated_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toolbar.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toolbar_shape_test() {
-  let t = new() |> shape(Rounded)
+  let t = toolbar.new() |> toolbar.shape(Rounded)
   let expected =
     element.element(
       "m3e-toolbar",
@@ -70,11 +68,11 @@ pub fn toolbar_shape_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toolbar.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toolbar_variant_test() {
-  let t = new() |> variant(Vibrant)
+  let t = toolbar.new() |> toolbar.variant(Vibrant)
   let expected =
     element.element(
       "m3e-toolbar",
@@ -84,11 +82,11 @@ pub fn toolbar_variant_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toolbar.render(t, [], []) |> should.equal(expected)
 }
 
 pub fn toolbar_vertical_test() {
-  let t = new() |> vertical(Vertical)
+  let t = toolbar.new() |> toolbar.vertical(Vertical)
   let expected =
     element.element(
       "m3e-toolbar",
@@ -99,5 +97,5 @@ pub fn toolbar_vertical_test() {
       ],
       [],
     )
-  render(t, [], []) |> should.equal(expected)
+  toolbar.render(t, [], []) |> should.equal(expected)
 }

@@ -4,36 +4,36 @@ import lustre/attribute
 import lustre/element
 
 import m3e/config.{Multi, Single}
-import m3e/select.{
-  disabled, hide_selection_indicator, id, multi, name, new, render, required,
-}
+import m3e/select
 import m3e/state.{Disabled, Enabled, Optional, Required}
 
 pub fn select_creation_test() {
-  let s = new()
+  let s = select.new()
   let expected = element.element("m3e-select", [], [])
-  render(s, [], []) |> should.equal(expected)
+  select.render(s, [], []) |> should.equal(expected)
 }
 
 pub fn select_render_test() {
-  let s = new()
+  let s = select.new()
   let expected =
     element.element("m3e-select", [attribute.attribute("class", "extra")], [
       element.text("Option"),
     ])
-  render(s, [attribute.attribute("class", "extra")], [element.text("Option")])
+  select.render(s, [attribute.attribute("class", "extra")], [
+    element.text("Option"),
+  ])
   |> should.equal(expected)
 }
 
 pub fn select_setters_test() {
   let s =
-    new()
-    |> disabled(Disabled)
-    |> hide_selection_indicator(select.Hidden)
-    |> id(Some("my-id"))
-    |> multi(Multi)
-    |> name(Some("my-name"))
-    |> required(Required)
+    select.new()
+    |> select.disabled(Disabled)
+    |> select.hide_selection_indicator(select.Hidden)
+    |> select.id(Some("my-id"))
+    |> select.multi(Multi)
+    |> select.name(Some("my-name"))
+    |> select.required(Required)
 
   let expected =
     element.element(
@@ -48,7 +48,7 @@ pub fn select_setters_test() {
       ],
       [],
     )
-  render(s, [], []) |> should.equal(expected)
+  select.render(s, [], []) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -64,7 +64,7 @@ pub fn config_test() {
 
   let s = select.from_config(c)
 
-  render(s, [], [])
+  select.render(s, [], [])
   |> should.equal(
     element.element(
       "m3e-select",
@@ -96,13 +96,13 @@ pub fn from_config_test() {
   let c = select.default_config()
   let s = select.from_config(c)
 
-  render(s, [], [])
-  |> should.equal(render(new(), [], []))
+  select.render(s, [], [])
+  |> should.equal(select.render(select.new(), [], []))
 }
 
 pub fn render_config_test() {
   let c = select.default_config()
-  let expected = render(select.from_config(c), [], [])
+  let expected = select.render(select.from_config(c), [], [])
 
   select.render_config(c, [], [])
   |> should.equal(expected)

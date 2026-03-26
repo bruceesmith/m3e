@@ -4,19 +4,17 @@ import lustre/attribute
 import lustre/element
 
 import m3e/config.{Multi, Single}
-import m3e/segmented_button.{
-  disabled, hide_selection_indicator, multi, name, new, render,
-}
+import m3e/segmented_button
 import m3e/state.{Disabled, Enabled}
 
 pub fn segmented_button_creation_test() {
-  let s = new()
+  let s = segmented_button.new()
   let expected = element.element("m3e-segmented-button", [], [])
-  render(s, [], []) |> should.equal(expected)
+  segmented_button.render(s, [], []) |> should.equal(expected)
 }
 
 pub fn segmented_button_render_test() {
-  let s = new()
+  let s = segmented_button.new()
   let expected =
     element.element(
       "m3e-segmented-button",
@@ -25,17 +23,19 @@ pub fn segmented_button_render_test() {
         element.text("Child"),
       ],
     )
-  render(s, [attribute.attribute("class", "extra")], [element.text("Child")])
+  segmented_button.render(s, [attribute.attribute("class", "extra")], [
+    element.text("Child"),
+  ])
   |> should.equal(expected)
 }
 
 pub fn segmented_button_setters_test() {
   let s =
-    new()
-    |> disabled(Disabled)
-    |> hide_selection_indicator(segmented_button.Hidden)
-    |> multi(Multi)
-    |> name(Some("group"))
+    segmented_button.new()
+    |> segmented_button.disabled(Disabled)
+    |> segmented_button.hide_selection_indicator(segmented_button.Hidden)
+    |> segmented_button.multi(Multi)
+    |> segmented_button.name(Some("group"))
 
   let expected =
     element.element(
@@ -48,7 +48,7 @@ pub fn segmented_button_setters_test() {
       ],
       [],
     )
-  render(s, [], []) |> should.equal(expected)
+  segmented_button.render(s, [], []) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -62,7 +62,7 @@ pub fn config_test() {
 
   let s = segmented_button.from_config(c)
 
-  render(s, [], [])
+  segmented_button.render(s, [], [])
   |> should.equal(
     element.element(
       "m3e-segmented-button",
@@ -90,13 +90,14 @@ pub fn from_config_test() {
   let c = segmented_button.default_config()
   let s = segmented_button.from_config(c)
 
-  render(s, [], [])
-  |> should.equal(render(new(), [], []))
+  segmented_button.render(s, [], [])
+  |> should.equal(segmented_button.render(segmented_button.new(), [], []))
 }
 
 pub fn render_config_test() {
   let c = segmented_button.default_config()
-  let expected = render(segmented_button.from_config(c), [], [])
+  let expected =
+    segmented_button.render(segmented_button.from_config(c), [], [])
 
   segmented_button.render_config(c, [], [])
   |> should.equal(expected)

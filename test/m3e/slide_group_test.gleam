@@ -3,14 +3,11 @@ import lustre/attribute
 import lustre/element
 
 import m3e/layout.{Horizontal, Vertical}
-import m3e/slide_group.{
-  disabled, new, next_page_label, previous_page_label, render, threshold,
-  vertical,
-}
+import m3e/slide_group
 import m3e/state.{Disabled, Enabled}
 
 pub fn slide_group_creation_test() {
-  let s = new()
+  let s = slide_group.new()
   let expected =
     element.element(
       "m3e-slide-group",
@@ -21,17 +18,17 @@ pub fn slide_group_creation_test() {
       ],
       [],
     )
-  render(s, [], []) |> should.equal(expected)
+  slide_group.render(s, [], []) |> should.equal(expected)
 }
 
 pub fn slide_group_setters_test() {
   let s =
-    new()
-    |> disabled(Disabled)
-    |> next_page_label("Next")
-    |> previous_page_label("Prev")
-    |> threshold(100)
-    |> vertical(Vertical)
+    slide_group.new()
+    |> slide_group.disabled(Disabled)
+    |> slide_group.next_page_label("Next")
+    |> slide_group.previous_page_label("Prev")
+    |> slide_group.threshold(100)
+    |> slide_group.vertical(Vertical)
 
   let expected =
     element.element(
@@ -45,7 +42,7 @@ pub fn slide_group_setters_test() {
       ],
       [element.text("Child")],
     )
-  render(s, [], [element.text("Child")]) |> should.equal(expected)
+  slide_group.render(s, [], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -60,7 +57,7 @@ pub fn config_test() {
 
   let s = slide_group.from_config(c)
 
-  render(s, [], [])
+  slide_group.render(s, [], [])
   |> should.equal(
     element.element(
       "m3e-slide-group",
@@ -90,13 +87,13 @@ pub fn from_config_test() {
   let c = slide_group.default_config()
   let s = slide_group.from_config(c)
 
-  render(s, [], [])
-  |> should.equal(render(new(), [], []))
+  slide_group.render(s, [], [])
+  |> should.equal(slide_group.render(slide_group.new(), [], []))
 }
 
 pub fn render_config_test() {
   let c = slide_group.default_config()
-  let expected = render(slide_group.from_config(c), [], [])
+  let expected = slide_group.render(slide_group.from_config(c), [], [])
 
   slide_group.render_config(c, [], [])
   |> should.equal(expected)
