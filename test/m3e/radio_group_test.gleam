@@ -1,15 +1,14 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/radio_group.{disabled, id, name, new, render, required}
 import m3e/state.{Disabled, Enabled, Optional, Required}
 
 pub fn radio_group_creation_test() {
   let rg = new()
-  let expected = element("m3e-radio-group", [], [])
+  let expected = element.element("m3e-radio-group", [], [])
   render(rg, [], []) |> should.equal(expected)
 }
 
@@ -18,28 +17,45 @@ pub fn radio_group_setters_test() {
 
   let rg_disabled = rg |> disabled(Disabled)
   let expected_disabled =
-    element("m3e-radio-group", [attribute("disabled", "")], [])
+    element.element(
+      "m3e-radio-group",
+      [attribute.attribute("disabled", "")],
+      [],
+    )
   render(rg_disabled, [], []) |> should.equal(expected_disabled)
 
   let rg_id = rg |> id(Some("test-id"))
-  let expected_id = element("m3e-radio-group", [attribute("id", "test-id")], [])
+  let expected_id =
+    element.element(
+      "m3e-radio-group",
+      [attribute.attribute("id", "test-id")],
+      [],
+    )
   render(rg_id, [], []) |> should.equal(expected_id)
 
   let rg_name = rg |> name(Some("test-name"))
   let expected_name =
-    element("m3e-radio-group", [attribute("name", "test-name")], [])
+    element.element(
+      "m3e-radio-group",
+      [attribute.attribute("name", "test-name")],
+      [],
+    )
   render(rg_name, [], []) |> should.equal(expected_name)
 
   let rg_required = rg |> required(Required)
   let expected_required =
-    element("m3e-radio-group", [attribute("required", "")], [])
+    element.element(
+      "m3e-radio-group",
+      [attribute.attribute("required", "")],
+      [],
+    )
   render(rg_required, [], []) |> should.equal(expected_required)
 }
 
 pub fn radio_group_element_test() {
   let rg = new()
-  let expected = element("m3e-radio-group", [], [text("Child")])
-  render(rg, [], [text("Child")]) |> should.equal(expected)
+  let expected = element.element("m3e-radio-group", [], [element.text("Child")])
+  render(rg, [], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -55,13 +71,13 @@ pub fn config_test() {
 
   render(rg, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-radio-group",
       [
-        attribute("disabled", ""),
-        attribute("id", "config-id"),
-        attribute("name", "config-name"),
-        attribute("required", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("id", "config-id"),
+        attribute.attribute("name", "config-name"),
+        attribute.attribute("required", ""),
       ],
       [],
     ),

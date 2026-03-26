@@ -1,7 +1,7 @@
 import gleeunit/should
 
 import lustre/attribute
-import lustre/element.{element}
+import lustre/element
 import lustre/element/html
 
 import m3e/config
@@ -21,7 +21,7 @@ pub fn basic_render_test() {
   nav_menu_item_group.new(heading_text)
   |> nav_menu_item_group.render([], content)
   |> should.equal(
-    element("m3e-nav-menu-item-group", [], [expected_heading, ..content]),
+    element.element("m3e-nav-menu-item-group", [], [expected_heading, ..content]),
   )
 }
 
@@ -38,5 +38,7 @@ pub fn heading_update_test() {
   nav_menu_item_group.new(initial)
   |> nav_menu_item_group.heading(updated)
   |> nav_menu_item_group.render([], [])
-  |> should.equal(element("m3e-nav-menu-item-group", [], [expected_heading]))
+  |> should.equal(
+    element.element("m3e-nav-menu-item-group", [], [expected_heading]),
+  )
 }

@@ -1,7 +1,7 @@
 import gleeunit/should
 
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 
 import m3e/layout.{Vertical}
 import m3e/toolbar.{
@@ -11,11 +11,11 @@ import m3e/toolbar.{
 pub fn toolbar_basic_test() {
   let t = new()
   let expected =
-    element(
+    element.element(
       "m3e-toolbar",
       [
-        attribute("shape", "square"),
-        attribute("variant", "standard"),
+        attribute.attribute("shape", "square"),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -31,13 +31,13 @@ pub fn toolbar_full_test() {
     |> vertical(Vertical)
 
   let expected =
-    element(
+    element.element(
       "m3e-toolbar",
       [
-        attribute("elevated", ""),
-        attribute("shape", "rounded"),
-        attribute("variant", "vibrant"),
-        attribute("vertical", ""),
+        attribute.attribute("elevated", ""),
+        attribute.attribute("shape", "rounded"),
+        attribute.attribute("variant", "vibrant"),
+        attribute.attribute("vertical", ""),
       ],
       [],
     )
@@ -47,12 +47,12 @@ pub fn toolbar_full_test() {
 pub fn toolbar_elevated_test() {
   let t = new() |> elevated(Raised)
   let expected =
-    element(
+    element.element(
       "m3e-toolbar",
       [
-        attribute("elevated", ""),
-        attribute("shape", "square"),
-        attribute("variant", "standard"),
+        attribute.attribute("elevated", ""),
+        attribute.attribute("shape", "square"),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -62,11 +62,11 @@ pub fn toolbar_elevated_test() {
 pub fn toolbar_shape_test() {
   let t = new() |> shape(Rounded)
   let expected =
-    element(
+    element.element(
       "m3e-toolbar",
       [
-        attribute("shape", "rounded"),
-        attribute("variant", "standard"),
+        attribute.attribute("shape", "rounded"),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -76,11 +76,11 @@ pub fn toolbar_shape_test() {
 pub fn toolbar_variant_test() {
   let t = new() |> variant(Vibrant)
   let expected =
-    element(
+    element.element(
       "m3e-toolbar",
       [
-        attribute("shape", "square"),
-        attribute("variant", "vibrant"),
+        attribute.attribute("shape", "square"),
+        attribute.attribute("variant", "vibrant"),
       ],
       [],
     )
@@ -90,12 +90,12 @@ pub fn toolbar_variant_test() {
 pub fn toolbar_vertical_test() {
   let t = new() |> vertical(Vertical)
   let expected =
-    element(
+    element.element(
       "m3e-toolbar",
       [
-        attribute("shape", "square"),
-        attribute("variant", "standard"),
-        attribute("vertical", ""),
+        attribute.attribute("shape", "square"),
+        attribute.attribute("variant", "standard"),
+        attribute.attribute("vertical", ""),
       ],
       [],
     )

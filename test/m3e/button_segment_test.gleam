@@ -1,8 +1,7 @@
 import gleam/option.{Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/button_segment.{
   Config, checked, disabled, new, render, render_config, value,
@@ -11,15 +10,19 @@ import m3e/state.{Disabled, Selected}
 
 pub fn button_segment_creation_test() {
   let b = new()
-  let expected = element("m3e-button-segment", [], [])
+  let expected = element.element("m3e-button-segment", [], [])
   render(b, [], []) |> should.equal(expected)
 }
 
 pub fn button_segment_render_test() {
   let b = new()
   let expected =
-    element("m3e-button-segment", [attribute("class", "extra")], [text("Label")])
-  render(b, [attribute("class", "extra")], [text("Label")])
+    element.element(
+      "m3e-button-segment",
+      [attribute.attribute("class", "extra")],
+      [element.text("Label")],
+    )
+  render(b, [attribute.attribute("class", "extra")], [element.text("Label")])
   |> should.equal(expected)
 }
 
@@ -31,12 +34,12 @@ pub fn button_segment_setters_test() {
     |> value(Some("v"))
 
   let expected =
-    element(
+    element.element(
       "m3e-button-segment",
       [
-        attribute("checked", ""),
-        attribute("disabled", ""),
-        attribute("value", "v"),
+        attribute.attribute("checked", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("value", "v"),
       ],
       [],
     )
@@ -47,12 +50,12 @@ pub fn config_test() {
   let config = Config(checked: Selected, disabled: Disabled, value: Some("v"))
 
   let expected =
-    element(
+    element.element(
       "m3e-button-segment",
       [
-        attribute("checked", ""),
-        attribute("disabled", ""),
-        attribute("value", "v"),
+        attribute.attribute("checked", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("value", "v"),
       ],
       [],
     )

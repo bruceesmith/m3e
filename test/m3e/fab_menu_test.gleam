@@ -1,17 +1,17 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/fab_menu
 
 pub fn basic_test() {
   let m = fab_menu.new("my-menu")
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu",
       [
-        attribute("id", "my-menu"),
-        attribute("variant", "primary"),
+        attribute.attribute("id", "my-menu"),
+        attribute.attribute("variant", "primary"),
       ],
       [],
     )
@@ -26,11 +26,11 @@ pub fn id_test() {
     |> fab_menu.id("other-menu")
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu",
       [
-        attribute("id", "other-menu"),
-        attribute("variant", "primary"),
+        attribute.attribute("id", "other-menu"),
+        attribute.attribute("variant", "primary"),
       ],
       [],
     )
@@ -45,11 +45,11 @@ pub fn variant_test() {
     |> fab_menu.variant(fab_menu.Secondary)
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu",
       [
-        attribute("id", "my-menu"),
-        attribute("variant", "secondary"),
+        attribute.attribute("id", "my-menu"),
+        attribute.attribute("variant", "secondary"),
       ],
       [],
     )
@@ -62,11 +62,11 @@ pub fn variant_test() {
     |> fab_menu.variant(fab_menu.Tertiary)
 
   let expected2 =
-    element(
+    element.element(
       "m3e-fab-menu",
       [
-        attribute("id", "my-menu"),
-        attribute("variant", "tertiary"),
+        attribute.attribute("id", "my-menu"),
+        attribute.attribute("variant", "tertiary"),
       ],
       [],
     )
@@ -77,14 +77,14 @@ pub fn variant_test() {
 
 pub fn children_test() {
   let m = fab_menu.new("my-menu")
-  let child = element("div", [], [])
+  let child = element.element("div", [], [])
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu",
       [
-        attribute("id", "my-menu"),
-        attribute("variant", "primary"),
+        attribute.attribute("id", "my-menu"),
+        attribute.attribute("variant", "primary"),
       ],
       [child],
     )
@@ -95,14 +95,14 @@ pub fn children_test() {
 
 pub fn attributes_test() {
   let m = fab_menu.new("my-menu")
-  let attr = attribute("class", "custom")
+  let attr = attribute.attribute("class", "custom")
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu",
       [
-        attribute("id", "my-menu"),
-        attribute("variant", "primary"),
+        attribute.attribute("id", "my-menu"),
+        attribute.attribute("variant", "primary"),
         attr,
       ],
       [],

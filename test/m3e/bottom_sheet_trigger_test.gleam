@@ -1,13 +1,17 @@
 import gleam/option.{Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element, text}
+import lustre/attribute
+import lustre/element
 import m3e/bottom_sheet_trigger
 
 pub fn new_test() {
   let trigger = bottom_sheet_trigger.new()
   let expected =
-    element("m3e-bottom-sheet-trigger", [attribute("for", "")], [text("")])
+    element.element(
+      "m3e-bottom-sheet-trigger",
+      [attribute.attribute("for", "")],
+      [element.text("")],
+    )
 
   trigger
   |> bottom_sheet_trigger.render
@@ -19,10 +23,10 @@ pub fn detent_test() {
     bottom_sheet_trigger.new()
     |> bottom_sheet_trigger.detent(Some(1))
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet-trigger",
-      [attribute("detent", "1"), attribute("for", "")],
-      [text("")],
+      [attribute.attribute("detent", "1"), attribute.attribute("for", "")],
+      [element.text("")],
     )
 
   trigger
@@ -35,9 +39,13 @@ pub fn for_test() {
     bottom_sheet_trigger.new()
     |> bottom_sheet_trigger.for("my-sheet")
   let expected =
-    element("m3e-bottom-sheet-trigger", [attribute("for", "my-sheet")], [
-      text(""),
-    ])
+    element.element(
+      "m3e-bottom-sheet-trigger",
+      [attribute.attribute("for", "my-sheet")],
+      [
+        element.text(""),
+      ],
+    )
 
   trigger
   |> bottom_sheet_trigger.render
@@ -49,9 +57,13 @@ pub fn label_test() {
     bottom_sheet_trigger.new()
     |> bottom_sheet_trigger.label("My Label")
   let expected =
-    element("m3e-bottom-sheet-trigger", [attribute("for", "")], [
-      text("My Label"),
-    ])
+    element.element(
+      "m3e-bottom-sheet-trigger",
+      [attribute.attribute("for", "")],
+      [
+        element.text("My Label"),
+      ],
+    )
 
   trigger
   |> bottom_sheet_trigger.render
@@ -63,10 +75,10 @@ pub fn secondary_test() {
     bottom_sheet_trigger.new()
     |> bottom_sheet_trigger.role(bottom_sheet_trigger.Secondary)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet-trigger",
-      [attribute("for", ""), attribute("secondary", "")],
-      [text("")],
+      [attribute.attribute("for", ""), attribute.attribute("secondary", "")],
+      [element.text("")],
     )
 
   trigger

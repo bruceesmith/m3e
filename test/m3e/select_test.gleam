@@ -1,8 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/config.{Multi, Single}
 import m3e/select.{
@@ -12,15 +11,17 @@ import m3e/state.{Disabled, Enabled, Optional, Required}
 
 pub fn select_creation_test() {
   let s = new()
-  let expected = element("m3e-select", [], [])
+  let expected = element.element("m3e-select", [], [])
   render(s, [], []) |> should.equal(expected)
 }
 
 pub fn select_render_test() {
   let s = new()
   let expected =
-    element("m3e-select", [attribute("class", "extra")], [text("Option")])
-  render(s, [attribute("class", "extra")], [text("Option")])
+    element.element("m3e-select", [attribute.attribute("class", "extra")], [
+      element.text("Option"),
+    ])
+  render(s, [attribute.attribute("class", "extra")], [element.text("Option")])
   |> should.equal(expected)
 }
 
@@ -35,15 +36,15 @@ pub fn select_setters_test() {
     |> required(Required)
 
   let expected =
-    element(
+    element.element(
       "m3e-select",
       [
-        attribute("disabled", ""),
-        attribute("hide-selection-indicator", ""),
-        attribute("id", "my-id"),
-        attribute("multi", ""),
-        attribute("name", "my-name"),
-        attribute("required", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("id", "my-id"),
+        attribute.attribute("multi", ""),
+        attribute.attribute("name", "my-name"),
+        attribute.attribute("required", ""),
       ],
       [],
     )
@@ -65,15 +66,15 @@ pub fn config_test() {
 
   render(s, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-select",
       [
-        attribute("disabled", ""),
-        attribute("hide-selection-indicator", ""),
-        attribute("id", "config-id"),
-        attribute("multi", ""),
-        attribute("name", "config-name"),
-        attribute("required", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("id", "config-id"),
+        attribute.attribute("multi", ""),
+        attribute.attribute("name", "config-name"),
+        attribute.attribute("required", ""),
       ],
       [],
     ),

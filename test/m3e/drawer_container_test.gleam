@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/drawer_container
 
 // --- TESTS ---
@@ -9,45 +9,52 @@ import m3e/drawer_container
 pub fn render_default_test() {
   drawer_container.new()
   |> drawer_container.render([])
-  |> should.equal(element("m3e-drawer-container", [], []))
+  |> should.equal(element.element("m3e-drawer-container", [], []))
 }
 
 pub fn render_with_main_content_test() {
-  let main = element("main", [], [])
+  let main = element.element("main", [], [])
   drawer_container.new()
   |> drawer_container.main_content(main)
   |> drawer_container.render([])
-  |> should.equal(element("m3e-drawer-container", [], [main]))
+  |> should.equal(element.element("m3e-drawer-container", [], [main]))
 }
 
 // --- Start Drawer Tests ---
 
 pub fn start_drawer_test() {
   let start_drawer =
-    element("div", [drawer_container.slot(drawer_container.Start)], [])
+    element.element("div", [drawer_container.slot(drawer_container.Start)], [])
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.render([])
   |> should.equal(
-    element("m3e-drawer-container", [attribute("start-mode", "auto")], [
-      start_drawer,
-    ]),
+    element.element(
+      "m3e-drawer-container",
+      [attribute.attribute("start-mode", "auto")],
+      [
+        start_drawer,
+      ],
+    ),
   )
 }
 
 pub fn start_drawer_open_test() {
   let start_drawer =
-    element("div", [drawer_container.slot(drawer_container.Start)], [])
+    element.element("div", [drawer_container.slot(drawer_container.Start)], [])
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.start(drawer_container.Open)
   |> drawer_container.render([])
   |> should.equal(
-    element(
+    element.element(
       "m3e-drawer-container",
-      [attribute("start", ""), attribute("start-mode", "auto")],
+      [
+        attribute.attribute("start", ""),
+        attribute.attribute("start-mode", "auto"),
+      ],
       [start_drawer],
     ),
   )
@@ -55,16 +62,19 @@ pub fn start_drawer_open_test() {
 
 pub fn start_drawer_divider_test() {
   let start_drawer =
-    element("div", [drawer_container.slot(drawer_container.Start)], [])
+    element.element("div", [drawer_container.slot(drawer_container.Start)], [])
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.start_divider(drawer_container.ShowDivider)
   |> drawer_container.render([])
   |> should.equal(
-    element(
+    element.element(
       "m3e-drawer-container",
-      [attribute("start-divider", ""), attribute("start-mode", "auto")],
+      [
+        attribute.attribute("start-divider", ""),
+        attribute.attribute("start-mode", "auto"),
+      ],
       [start_drawer],
     ),
   )
@@ -72,16 +82,20 @@ pub fn start_drawer_divider_test() {
 
 pub fn start_drawer_mode_test() {
   let start_drawer =
-    element("div", [drawer_container.slot(drawer_container.Start)], [])
+    element.element("div", [drawer_container.slot(drawer_container.Start)], [])
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
   |> drawer_container.start_mode(drawer_container.Push)
   |> drawer_container.render([])
   |> should.equal(
-    element("m3e-drawer-container", [attribute("start-mode", "push")], [
-      start_drawer,
-    ]),
+    element.element(
+      "m3e-drawer-container",
+      [attribute.attribute("start-mode", "push")],
+      [
+        start_drawer,
+      ],
+    ),
   )
 }
 
@@ -89,30 +103,34 @@ pub fn start_drawer_mode_test() {
 
 pub fn end_drawer_test() {
   let end_drawer =
-    element("div", [drawer_container.slot(drawer_container.End)], [])
+    element.element("div", [drawer_container.slot(drawer_container.End)], [])
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.render([])
   |> should.equal(
-    element("m3e-drawer-container", [attribute("end-mode", "auto")], [
-      end_drawer,
-    ]),
+    element.element(
+      "m3e-drawer-container",
+      [attribute.attribute("end-mode", "auto")],
+      [
+        end_drawer,
+      ],
+    ),
   )
 }
 
 pub fn end_drawer_open_test() {
   let end_drawer =
-    element("div", [drawer_container.slot(drawer_container.End)], [])
+    element.element("div", [drawer_container.slot(drawer_container.End)], [])
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.end(drawer_container.Open)
   |> drawer_container.render([])
   |> should.equal(
-    element(
+    element.element(
       "m3e-drawer-container",
-      [attribute("end", ""), attribute("end-mode", "auto")],
+      [attribute.attribute("end", ""), attribute.attribute("end-mode", "auto")],
       [end_drawer],
     ),
   )
@@ -120,16 +138,19 @@ pub fn end_drawer_open_test() {
 
 pub fn end_drawer_divider_test() {
   let end_drawer =
-    element("div", [drawer_container.slot(drawer_container.End)], [])
+    element.element("div", [drawer_container.slot(drawer_container.End)], [])
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.end_divider(drawer_container.ShowDivider)
   |> drawer_container.render([])
   |> should.equal(
-    element(
+    element.element(
       "m3e-drawer-container",
-      [attribute("end-divider", ""), attribute("end-mode", "auto")],
+      [
+        attribute.attribute("end-divider", ""),
+        attribute.attribute("end-mode", "auto"),
+      ],
       [end_drawer],
     ),
   )
@@ -137,16 +158,20 @@ pub fn end_drawer_divider_test() {
 
 pub fn end_drawer_mode_test() {
   let end_drawer =
-    element("div", [drawer_container.slot(drawer_container.End)], [])
+    element.element("div", [drawer_container.slot(drawer_container.End)], [])
 
   drawer_container.new()
   |> drawer_container.end_drawer(Some(end_drawer))
   |> drawer_container.end_mode(drawer_container.Side)
   |> drawer_container.render([])
   |> should.equal(
-    element("m3e-drawer-container", [attribute("end-mode", "side")], [
-      end_drawer,
-    ]),
+    element.element(
+      "m3e-drawer-container",
+      [attribute.attribute("end-mode", "side")],
+      [
+        end_drawer,
+      ],
+    ),
   )
 }
 
@@ -154,10 +179,10 @@ pub fn end_drawer_mode_test() {
 
 pub fn all_content_and_options_test() {
   let start_drawer =
-    element("div", [drawer_container.slot(drawer_container.Start)], [])
-  let main = element("main", [], [])
+    element.element("div", [drawer_container.slot(drawer_container.Start)], [])
+  let main = element.element("main", [], [])
   let end_drawer =
-    element("div", [drawer_container.slot(drawer_container.End)], [])
+    element.element("div", [drawer_container.slot(drawer_container.End)], [])
 
   drawer_container.new()
   |> drawer_container.start_drawer(Some(start_drawer))
@@ -171,15 +196,15 @@ pub fn all_content_and_options_test() {
   |> drawer_container.end_mode(drawer_container.Side)
   |> drawer_container.render([])
   |> should.equal(
-    element(
+    element.element(
       "m3e-drawer-container",
       [
-        attribute("end", ""),
-        attribute("end-divider", ""),
-        attribute("end-mode", "side"),
-        attribute("start", ""),
-        attribute("start-divider", ""),
-        attribute("start-mode", "push"),
+        attribute.attribute("end", ""),
+        attribute.attribute("end-divider", ""),
+        attribute.attribute("end-mode", "side"),
+        attribute.attribute("start", ""),
+        attribute.attribute("start-divider", ""),
+        attribute.attribute("start-mode", "push"),
       ],
       [start_drawer, main, end_drawer],
     ),
@@ -187,7 +212,7 @@ pub fn all_content_and_options_test() {
 }
 
 pub fn setters_have_no_effect_if_drawer_is_none_test() {
-  let expected = element("m3e-drawer-container", [], [])
+  let expected = element.element("m3e-drawer-container", [], [])
 
   drawer_container.new()
   |> drawer_container.start(drawer_container.Open)
@@ -215,15 +240,15 @@ pub fn from_config_ignores_fields_if_drawer_is_none_test() {
 
   drawer_container.from_config(config)
   |> drawer_container.render([])
-  |> should.equal(element("m3e-drawer-container", [], []))
+  |> should.equal(element.element("m3e-drawer-container", [], []))
 }
 
 pub fn render_config_test() {
   let start_drawer =
-    element("div", [drawer_container.slot(drawer_container.Start)], [])
-  let main = element("main", [], [])
+    element.element("div", [drawer_container.slot(drawer_container.Start)], [])
+  let main = element.element("main", [], [])
   let end_drawer =
-    element("div", [drawer_container.slot(drawer_container.End)], [])
+    element.element("div", [drawer_container.slot(drawer_container.End)], [])
 
   let config =
     drawer_container.default_config()
@@ -240,13 +265,13 @@ pub fn render_config_test() {
     }
 
   let expected =
-    element(
+    element.element(
       "m3e-drawer-container",
       [
-        attribute("end-divider", ""),
-        attribute("end-mode", "auto"),
-        attribute("start", ""),
-        attribute("start-mode", "push"),
+        attribute.attribute("end-divider", ""),
+        attribute.attribute("end-mode", "auto"),
+        attribute.attribute("start", ""),
+        attribute.attribute("start-mode", "push"),
       ],
       [start_drawer, main, end_drawer],
     )
@@ -257,8 +282,8 @@ pub fn render_config_test() {
 
 pub fn slot_function_test() {
   drawer_container.slot(drawer_container.Start)
-  |> should.equal(attribute("slot", "start"))
+  |> should.equal(attribute.attribute("slot", "start"))
 
   drawer_container.slot(drawer_container.End)
-  |> should.equal(attribute("slot", "end"))
+  |> should.equal(attribute.attribute("slot", "end"))
 }

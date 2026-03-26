@@ -1,8 +1,8 @@
 import gleam/option.{Some}
 import gleeunit/should
 
-import lustre/attribute.{attribute, for, id}
-import lustre/element.{element, text}
+import lustre/attribute
+import lustre/element
 
 import m3e/form_submission
 import m3e/state.{Checked, Disabled}
@@ -13,8 +13,14 @@ import m3e/switch.{
 pub fn switch_basic_test() {
   let s = new("test_id") |> label(Some("Test Label"))
   let expected = [
-    element("m3e-switch", [id("test_id"), attribute("icons", "none")], []),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element(
+      "m3e-switch",
+      [attribute.id("test_id"), attribute.attribute("icons", "none")],
+      [],
+    ),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   render(s, []) |> should.equal(expected)
 }
@@ -33,19 +39,21 @@ pub fn switch_full_test() {
     |> icon(Both)
 
   let expected = [
-    element(
+    element.element(
       "m3e-switch",
       [
-        id("test_id"),
-        attribute("icons", "both"),
-        attribute("checked", ""),
-        attribute("disabled", ""),
-        attribute("name", "key"),
-        attribute("value", "value"),
+        attribute.id("test_id"),
+        attribute.attribute("icons", "both"),
+        attribute.attribute("checked", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("name", "key"),
+        attribute.attribute("value", "value"),
       ],
       [],
     ),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   render(s, []) |> should.equal(expected)
 }
@@ -55,8 +63,14 @@ pub fn switch_element_test() {
     new("test_id")
     |> label(Some("Test Label"))
   let expected = [
-    element("m3e-switch", [id("test_id"), attribute("icons", "none")], []),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element(
+      "m3e-switch",
+      [attribute.id("test_id"), attribute.attribute("icons", "none")],
+      [],
+    ),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   s
   |> render([])
@@ -70,16 +84,18 @@ pub fn switch_checked_test() {
     |> checked(Checked)
 
   let expected = [
-    element(
+    element.element(
       "m3e-switch",
       [
-        id("test_id"),
-        attribute("icons", "none"),
-        attribute("checked", ""),
+        attribute.id("test_id"),
+        attribute.attribute("icons", "none"),
+        attribute.attribute("checked", ""),
       ],
       [],
     ),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   s
   |> render([])
@@ -93,16 +109,18 @@ pub fn switch_disabled_test() {
     |> disabled(Disabled)
 
   let expected = [
-    element(
+    element.element(
       "m3e-switch",
       [
-        id("test_id"),
-        attribute("icons", "none"),
-        attribute("disabled", ""),
+        attribute.id("test_id"),
+        attribute.attribute("icons", "none"),
+        attribute.attribute("disabled", ""),
       ],
       [],
     ),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   s
   |> render([])
@@ -120,17 +138,19 @@ pub fn switch_form_test() {
     ))
 
   let expected = [
-    element(
+    element.element(
       "m3e-switch",
       [
-        id("test_id"),
-        attribute("icons", "none"),
-        attribute("name", "some_key"),
-        attribute("value", "some_value"),
+        attribute.id("test_id"),
+        attribute.attribute("icons", "none"),
+        attribute.attribute("name", "some_key"),
+        attribute.attribute("value", "some_value"),
       ],
       [],
     ),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   s
   |> render([])
@@ -144,8 +164,14 @@ pub fn switch_icon_test() {
     |> icon(Both)
 
   let expected = [
-    element("m3e-switch", [id("test_id"), attribute("icons", "both")], []),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element(
+      "m3e-switch",
+      [attribute.id("test_id"), attribute.attribute("icons", "both")],
+      [],
+    ),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   s
   |> render([])
@@ -153,8 +179,14 @@ pub fn switch_icon_test() {
 
   let s = s |> icon(Selected)
   let expected = [
-    element("m3e-switch", [id("test_id"), attribute("icons", "selected")], []),
-    element("label", [for("test_id")], [element.text("Test Label")]),
+    element.element(
+      "m3e-switch",
+      [attribute.id("test_id"), attribute.attribute("icons", "selected")],
+      [],
+    ),
+    element.element("label", [attribute.for("test_id")], [
+      element.text("Test Label"),
+    ]),
   ]
   s
   |> render([])
@@ -164,13 +196,16 @@ pub fn switch_icon_test() {
 pub fn render_with_label_test() {
   let s = switch.new("my-switch") |> switch.label(Some("My Label"))
   let expected = [
-    element(
+    element.element(
       "m3e-switch",
-      [attribute.attribute("id", "my-switch"), attribute("icons", "none")],
+      [
+        attribute.attribute("id", "my-switch"),
+        attribute.attribute("icons", "none"),
+      ],
       [],
     ),
-    element("label", [attribute.attribute("for", "my-switch")], [
-      text("My Label"),
+    element.element("label", [attribute.attribute("for", "my-switch")], [
+      element.text("My Label"),
     ]),
   ]
 
@@ -182,9 +217,12 @@ pub fn render_with_label_test() {
 pub fn render_without_label_test() {
   let s = switch.new("my-switch")
   let expected = [
-    element(
+    element.element(
       "m3e-switch",
-      [attribute.attribute("id", "my-switch"), attribute("icons", "none")],
+      [
+        attribute.attribute("id", "my-switch"),
+        attribute.attribute("icons", "none"),
+      ],
       [],
     ),
   ]

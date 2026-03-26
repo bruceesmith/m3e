@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/menu
 import m3e/state.{Disabled, Enabled}
 
@@ -9,12 +9,12 @@ pub fn basic_test() {
   let m = menu.new()
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("position-x", "after"),
-        attribute("position-y", "below"),
-        attribute("variant", "standard"),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -29,12 +29,12 @@ pub fn position_x_test() {
     |> menu_with_x(menu.Before)
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("position-x", "before"),
-        attribute("position-y", "below"),
-        attribute("variant", "standard"),
+        attribute.attribute("position-x", "before"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -53,12 +53,12 @@ pub fn position_y_test() {
     |> menu_with_y(menu.Above)
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("position-x", "after"),
-        attribute("position-y", "above"),
-        attribute("variant", "standard"),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "above"),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -77,12 +77,12 @@ pub fn variant_test() {
     |> menu_with_variant(menu.Vibrant)
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("position-x", "after"),
-        attribute("position-y", "below"),
-        attribute("variant", "vibrant"),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("variant", "vibrant"),
       ],
       [],
     )
@@ -97,15 +97,15 @@ fn menu_with_variant(m: menu.Menu, v: menu.Variant) -> menu.Menu {
 
 pub fn children_test() {
   let m = menu.new()
-  let child = element("span", [], [])
+  let child = element.element("span", [], [])
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("position-x", "after"),
-        attribute("position-y", "below"),
-        attribute("variant", "standard"),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("variant", "standard"),
       ],
       [child],
     )
@@ -116,15 +116,15 @@ pub fn children_test() {
 
 pub fn attributes_test() {
   let m = menu.new()
-  let attr = attribute("class", "custom")
+  let attr = attribute.attribute("class", "custom")
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("position-x", "after"),
-        attribute("position-y", "below"),
-        attribute("variant", "standard"),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("variant", "standard"),
         attr,
       ],
       [],
@@ -150,16 +150,16 @@ pub fn config_test() {
   let m = menu.from_config(c)
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("anchor", "my-anchor"),
-        attribute("disabled", ""),
-        attribute("open", ""),
-        attribute("position-x", "after"),
-        attribute("position-y", "below"),
-        attribute("quick", ""),
-        attribute("variant", "standard"),
+        attribute.attribute("anchor", "my-anchor"),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("open", ""),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("quick", ""),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )
@@ -205,16 +205,16 @@ pub fn setters_test() {
     |> menu.quick(menu.Instant)
 
   let expected =
-    element(
+    element.element(
       "m3e-menu",
       [
-        attribute("anchor", "my-anchor"),
-        attribute("disabled", ""),
-        attribute("open", ""),
-        attribute("position-x", "after"),
-        attribute("position-y", "below"),
-        attribute("quick", ""),
-        attribute("variant", "standard"),
+        attribute.attribute("anchor", "my-anchor"),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("open", ""),
+        attribute.attribute("position-x", "after"),
+        attribute.attribute("position-y", "below"),
+        attribute.attribute("quick", ""),
+        attribute.attribute("variant", "standard"),
       ],
       [],
     )

@@ -1,6 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element, text}
+import lustre/attribute
+import lustre/element
 import m3e/stepper.{
   Auto, Below, Check, Horizontal, LabelBelow, Vertical, header_position,
   label_position, linear, new, orientation, render,
@@ -10,12 +10,12 @@ pub fn stepper_new_test() {
   new()
   |> render([], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-stepper",
       [
-        attribute("header-position", "above"),
-        attribute("label-position", "end"),
-        attribute("orientation", "horizontal"),
+        attribute.attribute("header-position", "above"),
+        attribute.attribute("label-position", "end"),
+        attribute.attribute("orientation", "horizontal"),
       ],
       [],
     ),
@@ -28,18 +28,18 @@ pub fn stepper_full_test() {
   |> label_position(LabelBelow)
   |> linear(Check)
   |> orientation(Vertical)
-  |> render([attribute("id", "my-stepper")], [text("Child")])
+  |> render([attribute.attribute("id", "my-stepper")], [element.text("Child")])
   |> should.equal(
-    element(
+    element.element(
       "m3e-stepper",
       [
-        attribute("header-position", "below"),
-        attribute("label-position", "below"),
-        attribute("linear", ""),
-        attribute("orientation", "vertical"),
-        attribute("id", "my-stepper"),
+        attribute.attribute("header-position", "below"),
+        attribute.attribute("label-position", "below"),
+        attribute.attribute("linear", ""),
+        attribute.attribute("orientation", "vertical"),
+        attribute.attribute("id", "my-stepper"),
       ],
-      [text("Child")],
+      [element.text("Child")],
     ),
   )
 }
@@ -49,12 +49,12 @@ pub fn stepper_orientation_test() {
   |> orientation(Auto)
   |> render([], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-stepper",
       [
-        attribute("header-position", "above"),
-        attribute("label-position", "end"),
-        attribute("orientation", "auto"),
+        attribute.attribute("header-position", "above"),
+        attribute.attribute("label-position", "end"),
+        attribute.attribute("orientation", "auto"),
       ],
       [],
     ),
@@ -64,12 +64,12 @@ pub fn stepper_orientation_test() {
   |> orientation(Horizontal)
   |> render([], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-stepper",
       [
-        attribute("header-position", "above"),
-        attribute("label-position", "end"),
-        attribute("orientation", "horizontal"),
+        attribute.attribute("header-position", "above"),
+        attribute.attribute("label-position", "end"),
+        attribute.attribute("orientation", "horizontal"),
       ],
       [],
     ),

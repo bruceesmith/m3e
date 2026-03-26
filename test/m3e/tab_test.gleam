@@ -1,6 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 
 import m3e/state.{Disabled}
 import m3e/tab.{Selected, disabled, for, new, render, selected}
@@ -8,7 +8,9 @@ import m3e/tab.{Selected, disabled, for, new, render, selected}
 pub fn tab_new_test() {
   new()
   |> render([], [])
-  |> should.equal(element("m3e-tab", [attribute("for", "")], []))
+  |> should.equal(
+    element.element("m3e-tab", [attribute.attribute("for", "")], []),
+  )
 }
 
 pub fn tab_full_test() {
@@ -16,15 +18,15 @@ pub fn tab_full_test() {
   |> disabled(Disabled)
   |> for("my-control")
   |> selected(Selected)
-  |> render([attribute("id", "t-1")], [element.text("Tab 1")])
+  |> render([attribute.attribute("id", "t-1")], [element.text("Tab 1")])
   |> should.equal(
-    element(
+    element.element(
       "m3e-tab",
       [
-        attribute("disabled", ""),
-        attribute("for", "my-control"),
-        attribute("selected", ""),
-        attribute("id", "t-1"),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("for", "my-control"),
+        attribute.attribute("selected", ""),
+        attribute.attribute("id", "t-1"),
       ],
       [element.text("Tab 1")],
     ),

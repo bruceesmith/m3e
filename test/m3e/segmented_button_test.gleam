@@ -1,8 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/config.{Multi, Single}
 import m3e/segmented_button.{
@@ -12,17 +11,21 @@ import m3e/state.{Disabled, Enabled}
 
 pub fn segmented_button_creation_test() {
   let s = new()
-  let expected = element("m3e-segmented-button", [], [])
+  let expected = element.element("m3e-segmented-button", [], [])
   render(s, [], []) |> should.equal(expected)
 }
 
 pub fn segmented_button_render_test() {
   let s = new()
   let expected =
-    element("m3e-segmented-button", [attribute("class", "extra")], [
-      text("Child"),
-    ])
-  render(s, [attribute("class", "extra")], [text("Child")])
+    element.element(
+      "m3e-segmented-button",
+      [attribute.attribute("class", "extra")],
+      [
+        element.text("Child"),
+      ],
+    )
+  render(s, [attribute.attribute("class", "extra")], [element.text("Child")])
   |> should.equal(expected)
 }
 
@@ -35,13 +38,13 @@ pub fn segmented_button_setters_test() {
     |> name(Some("group"))
 
   let expected =
-    element(
+    element.element(
       "m3e-segmented-button",
       [
-        attribute("disabled", ""),
-        attribute("hide-selection-indicator", ""),
-        attribute("multi", ""),
-        attribute("name", "group"),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("multi", ""),
+        attribute.attribute("name", "group"),
       ],
       [],
     )
@@ -61,13 +64,13 @@ pub fn config_test() {
 
   render(s, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-segmented-button",
       [
-        attribute("disabled", ""),
-        attribute("hide-selection-indicator", ""),
-        attribute("multi", ""),
-        attribute("name", "config-group"),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("multi", ""),
+        attribute.attribute("name", "config-group"),
       ],
       [],
     ),

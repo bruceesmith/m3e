@@ -1,18 +1,19 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element, text}
+import lustre/attribute
+import lustre/element
+
 import m3e/bottom_sheet
 
 pub fn new_test() {
   let sheet = bottom_sheet.new()
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -27,13 +28,13 @@ pub fn detent_test() {
     bottom_sheet.new()
     |> bottom_sheet.detent(1)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "1"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "1"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -48,14 +49,14 @@ pub fn detents_test() {
     bottom_sheet.new()
     |> bottom_sheet.detents([bottom_sheet.Full, bottom_sheet.Half])
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("detents", "full half"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("detents", "full half"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -70,14 +71,14 @@ pub fn handle_test() {
     bottom_sheet.new()
     |> bottom_sheet.handle(bottom_sheet.ShowHandle)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle", ""),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle", ""),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -92,13 +93,13 @@ pub fn handle_label_test() {
     bottom_sheet.new()
     |> bottom_sheet.handle_label("Drag me")
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", "Drag me"),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", "Drag me"),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -113,14 +114,14 @@ pub fn hideable_test() {
     bottom_sheet.new()
     |> bottom_sheet.hideable(bottom_sheet.Hideable)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hideable", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hideable", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -135,13 +136,13 @@ pub fn hide_friction_test() {
     bottom_sheet.new()
     |> bottom_sheet.hide_friction(0.8)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.8"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.8"),
+        attribute.attribute("id", ""),
       ],
       [],
     )
@@ -156,13 +157,13 @@ pub fn id_test() {
     bottom_sheet.new()
     |> bottom_sheet.id("my-sheet")
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", "my-sheet"),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", "my-sheet"),
       ],
       [],
     )
@@ -177,14 +178,14 @@ pub fn modal_test() {
     bottom_sheet.new()
     |> bottom_sheet.modal(bottom_sheet.Modal)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
-        attribute("modal", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
+        attribute.attribute("modal", ""),
       ],
       [],
     )
@@ -199,14 +200,14 @@ pub fn open_test() {
     bottom_sheet.new()
     |> bottom_sheet.state(bottom_sheet.Open)
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
-        attribute("open", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
+        attribute.attribute("open", ""),
       ],
       [],
     )
@@ -218,15 +219,15 @@ pub fn open_test() {
 
 pub fn children_test() {
   let sheet = bottom_sheet.new()
-  let child = element("div", [], [text("content")])
+  let child = element.element("div", [], [element.text("content")])
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle-label", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle-label", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", ""),
       ],
       [child],
     )
@@ -250,17 +251,17 @@ pub fn config_test() {
       state: bottom_sheet.Open,
     )
   let expected =
-    element(
+    element.element(
       "m3e-bottom-sheet",
       [
-        attribute("detent", "0"),
-        attribute("handle", ""),
-        attribute("handle-label", "Drag me"),
-        attribute("hideable", ""),
-        attribute("hide-friction", "0.5"),
-        attribute("id", "my-sheet"),
-        attribute("modal", ""),
-        attribute("open", ""),
+        attribute.attribute("detent", "0"),
+        attribute.attribute("handle", ""),
+        attribute.attribute("handle-label", "Drag me"),
+        attribute.attribute("hideable", ""),
+        attribute.attribute("hide-friction", "0.5"),
+        attribute.attribute("id", "my-sheet"),
+        attribute.attribute("modal", ""),
+        attribute.attribute("open", ""),
       ],
       [],
     )
@@ -273,5 +274,5 @@ pub fn config_test() {
 pub fn slot_test() {
   bottom_sheet.Header
   |> bottom_sheet.slot
-  |> should.equal(attribute("slot", "header"))
+  |> should.equal(attribute.attribute("slot", "header"))
 }

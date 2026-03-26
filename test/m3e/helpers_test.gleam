@@ -1,15 +1,15 @@
 import gleam/int
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute, none}
+import lustre/attribute
 import m3e/helpers
 
 pub fn boolean_attribute_test() {
   helpers.boolean_attribute("test", True)
-  |> should.equal(attribute("test", ""))
+  |> should.equal(attribute.attribute("test", ""))
 
   helpers.boolean_attribute("test", False)
-  |> should.equal(none())
+  |> should.equal(attribute.none())
 }
 
 pub fn clamp_with_default_test() {
@@ -28,16 +28,16 @@ pub fn option_attribute_test() {
   let val_fn = fn(x: Int) { int.to_string(x) }
 
   helpers.option_attribute(Some(10), name_fn, val_fn, None)
-  |> should.equal(attribute("name", "10"))
+  |> should.equal(attribute.attribute("name", "10"))
 
   helpers.option_attribute(None, name_fn, val_fn, Some(5))
-  |> should.equal(attribute("name", "5"))
+  |> should.equal(attribute.attribute("name", "5"))
 
   helpers.option_attribute(None, name_fn, val_fn, None)
-  |> should.equal(none())
+  |> should.equal(attribute.none())
 }
 
 pub fn slot_test() {
   helpers.slot("my-slot")
-  |> should.equal(attribute("slot", "my-slot"))
+  |> should.equal(attribute.attribute("slot", "my-slot"))
 }

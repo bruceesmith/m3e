@@ -1,7 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/layout.{Horizontal, Vertical}
 import m3e/slide_group.{
@@ -13,12 +12,12 @@ import m3e/state.{Disabled, Enabled}
 pub fn slide_group_creation_test() {
   let s = new()
   let expected =
-    element(
+    element.element(
       "m3e-slide-group",
       [
-        attribute("next-page-label", "Next page"),
-        attribute("previous-page-label", "Previous page"),
-        attribute("threshold", "0"),
+        attribute.attribute("next-page-label", "Next page"),
+        attribute.attribute("previous-page-label", "Previous page"),
+        attribute.attribute("threshold", "0"),
       ],
       [],
     )
@@ -35,18 +34,18 @@ pub fn slide_group_setters_test() {
     |> vertical(Vertical)
 
   let expected =
-    element(
+    element.element(
       "m3e-slide-group",
       [
-        attribute("disabled", ""),
-        attribute("next-page-label", "Next"),
-        attribute("previous-page-label", "Prev"),
-        attribute("threshold", "100"),
-        attribute("vertical", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("next-page-label", "Next"),
+        attribute.attribute("previous-page-label", "Prev"),
+        attribute.attribute("threshold", "100"),
+        attribute.attribute("vertical", ""),
       ],
-      [text("Child")],
+      [element.text("Child")],
     )
-  render(s, [], [text("Child")]) |> should.equal(expected)
+  render(s, [], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -63,14 +62,14 @@ pub fn config_test() {
 
   render(s, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-slide-group",
       [
-        attribute("disabled", ""),
-        attribute("next-page-label", "Forward"),
-        attribute("previous-page-label", "Back"),
-        attribute("threshold", "50"),
-        attribute("vertical", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("next-page-label", "Forward"),
+        attribute.attribute("previous-page-label", "Back"),
+        attribute.attribute("threshold", "50"),
+        attribute.attribute("vertical", ""),
       ],
       [],
     ),

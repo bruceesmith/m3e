@@ -1,6 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute, name}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 
 import m3e/button
 import m3e/icon.{
@@ -12,14 +12,14 @@ pub fn basic_test() {
   let basic_icon = icon.new("home")
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -37,16 +37,16 @@ pub fn element_test() {
     |> icon.weight(600)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("filled", "1"),
-        attribute("grade", "high"),
-        attribute("optical-size", "40"),
-        attribute("slot", "trailing-icon"),
-        attribute("variant", "rounded"),
-        attribute("weight", "600"),
+        attribute.name("home"),
+        attribute.attribute("filled", "1"),
+        attribute.attribute("grade", "high"),
+        attribute.attribute("optical-size", "40"),
+        attribute.attribute("slot", "trailing-icon"),
+        attribute.attribute("variant", "rounded"),
+        attribute.attribute("weight", "600"),
       ],
       [],
     )
@@ -61,15 +61,15 @@ pub fn filled_test() {
     |> icon.filled(Filled)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("filled", "1"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("filled", "1"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -82,15 +82,15 @@ pub fn filled_attr_test() {
     |> icon.filled(Filled)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("filled", "1"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("filled", "1"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -103,14 +103,14 @@ pub fn filled_attr_test() {
     |> icon.filled(NotFilled)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -125,14 +125,14 @@ pub fn grade_test() {
     |> icon.grade(Low)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "low"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "low"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -145,14 +145,14 @@ pub fn grade_attr_test() {
     |> icon.grade(Low)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "low"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "low"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -165,14 +165,14 @@ pub fn grade_attr_test() {
     |> icon.grade(Medium)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -185,14 +185,14 @@ pub fn grade_attr_test() {
     |> icon.grade(High)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "high"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "high"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -207,14 +207,14 @@ pub fn optical_size_test() {
   // Valid cases
   let icon_os_20 = i |> icon.optical_size(20)
   let expected_20 =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "20"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "20"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -222,14 +222,14 @@ pub fn optical_size_test() {
 
   let icon_os_30 = i |> icon.optical_size(30)
   let expected_30 =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "30"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "30"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -237,14 +237,14 @@ pub fn optical_size_test() {
 
   let icon_os_48 = i |> icon.optical_size(48)
   let expected_48 =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "48"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "48"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -252,14 +252,14 @@ pub fn optical_size_test() {
 
   // Invalid cases
   let expected_default =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -283,14 +283,14 @@ pub fn optical_size_attr_test() {
     |> icon.optical_size(36)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "36"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "36"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -305,15 +305,15 @@ pub fn purpose_test() {
     |> icon.purpose(button.slot(button.SelectedIcon))
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("slot", "selected-icon"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("slot", "selected-icon"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -326,15 +326,15 @@ pub fn purpose_attr_test() {
     |> icon.purpose(button.slot(button.SelectedIcon))
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("slot", "selected-icon"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("slot", "selected-icon"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -347,15 +347,15 @@ pub fn purpose_attr_test() {
     |> icon.purpose(button.slot(button.TrailingIcon))
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("slot", "trailing-icon"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("slot", "trailing-icon"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -370,14 +370,14 @@ pub fn variant_test() {
     |> icon.variant(icon.Sharp)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "sharp"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "sharp"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -390,14 +390,14 @@ pub fn variant_attr_test() {
     |> icon.variant(icon.Outlined)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -410,14 +410,14 @@ pub fn variant_attr_test() {
     |> icon.variant(icon.Rounded)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "rounded"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "rounded"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -430,14 +430,14 @@ pub fn variant_attr_test() {
     |> icon.variant(icon.Sharp)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "sharp"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "sharp"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -452,14 +452,14 @@ pub fn weight_test() {
   // Valid cases
   let icon_w_100 = i |> icon.weight(100)
   let expected_100 =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "100"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "100"),
       ],
       [],
     )
@@ -467,14 +467,14 @@ pub fn weight_test() {
 
   let icon_w_400 = i |> icon.weight(400)
   let expected_400 =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -482,14 +482,14 @@ pub fn weight_test() {
 
   let icon_w_700 = i |> icon.weight(700)
   let expected_700 =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "700"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "700"),
       ],
       [],
     )
@@ -497,14 +497,14 @@ pub fn weight_test() {
 
   // Invalid cases
   let expected_default =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "400"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "400"),
       ],
       [],
     )
@@ -528,14 +528,14 @@ pub fn weight_attr_test() {
     |> icon.weight(600)
 
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("home"),
-        attribute("grade", "medium"),
-        attribute("optical-size", "24"),
-        attribute("variant", "outlined"),
-        attribute("weight", "600"),
+        attribute.name("home"),
+        attribute.attribute("grade", "medium"),
+        attribute.attribute("optical-size", "24"),
+        attribute.attribute("variant", "outlined"),
+        attribute.attribute("weight", "600"),
       ],
       [],
     )
@@ -556,15 +556,15 @@ pub fn render_config_test() {
       weight: 700,
     )
   let expected =
-    element(
+    element.element(
       "m3e-icon",
       [
-        name("settings"),
-        attribute("filled", "1"),
-        attribute("grade", "high"),
-        attribute("optical-size", "40"),
-        attribute("variant", "sharp"),
-        attribute("weight", "700"),
+        attribute.name("settings"),
+        attribute.attribute("filled", "1"),
+        attribute.attribute("grade", "high"),
+        attribute.attribute("optical-size", "40"),
+        attribute.attribute("variant", "sharp"),
+        attribute.attribute("weight", "700"),
       ],
       [],
     )

@@ -1,7 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/card.{
   Elevated, Filled, Outlined, actionable, disabled, inline, new, orientation,
@@ -20,14 +19,14 @@ pub fn card_creation_test() {
     |> variant(Outlined)
 
   let expected =
-    element(
+    element.element(
       "m3e-card",
       [
-        attribute("actionable", ""),
-        attribute("disabled", ""),
-        attribute("inline", ""),
-        attribute("orientation", "horizontal"),
-        attribute("variant", "outlined"),
+        attribute.attribute("actionable", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("inline", ""),
+        attribute.attribute("orientation", "horizontal"),
+        attribute.attribute("variant", "outlined"),
       ],
       [],
     )
@@ -45,16 +44,16 @@ pub fn card_element_test() {
     |> variant(Elevated)
 
   let expected =
-    element(
+    element.element(
       "m3e-card",
       [
-        attribute("orientation", "vertical"),
-        attribute("variant", "elevated"),
+        attribute.attribute("orientation", "vertical"),
+        attribute.attribute("variant", "elevated"),
       ],
-      [text("Content")],
+      [element.text("Content")],
     )
 
-  render(c, [], [text("Content")]) |> should.equal(expected)
+  render(c, [], [element.text("Content")]) |> should.equal(expected)
 }
 
 pub fn card_setters_test() {
@@ -67,14 +66,14 @@ pub fn card_setters_test() {
     |> variant(Filled)
 
   let expected =
-    element(
+    element.element(
       "m3e-card",
       [
-        attribute("actionable", ""),
-        attribute("disabled", ""),
-        attribute("inline", ""),
-        attribute("orientation", "horizontal"),
-        attribute("variant", "filled"),
+        attribute.attribute("actionable", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("inline", ""),
+        attribute.attribute("orientation", "horizontal"),
+        attribute.attribute("variant", "filled"),
       ],
       [],
     )

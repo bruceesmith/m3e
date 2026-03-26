@@ -1,14 +1,14 @@
 import gleam/option.{None}
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
+
 import m3e/radio.{checked, disabled, new, render, required}
 import m3e/state.{Checked, Disabled, Enabled, Optional, Required, Unchecked}
 
 pub fn radio_creation_test() {
   let r = new()
-  let expected = element("m3e-radio", [], [])
+  let expected = element.element("m3e-radio", [], [])
   render(r, [], []) |> should.equal(expected)
 }
 
@@ -16,22 +16,25 @@ pub fn radio_setters_test() {
   let r = new()
 
   let r_checked = r |> checked(Checked)
-  let expected_checked = element("m3e-radio", [attribute("checked", "")], [])
+  let expected_checked =
+    element.element("m3e-radio", [attribute.attribute("checked", "")], [])
   render(r_checked, [], []) |> should.equal(expected_checked)
 
   let r_disabled = r |> disabled(Disabled)
-  let expected_disabled = element("m3e-radio", [attribute("disabled", "")], [])
+  let expected_disabled =
+    element.element("m3e-radio", [attribute.attribute("disabled", "")], [])
   render(r_disabled, [], []) |> should.equal(expected_disabled)
 
   let r_required = r |> required(Required)
-  let expected_required = element("m3e-radio", [attribute("required", "")], [])
+  let expected_required =
+    element.element("m3e-radio", [attribute.attribute("required", "")], [])
   render(r_required, [], []) |> should.equal(expected_required)
 }
 
 pub fn radio_element_test() {
   let r = new()
-  let expected = element("m3e-radio", [], [text("Child")])
-  render(r, [], [text("Child")]) |> should.equal(expected)
+  let expected = element.element("m3e-radio", [], [element.text("Child")])
+  render(r, [], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn config_test() {
@@ -47,12 +50,12 @@ pub fn config_test() {
 
   render(r, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-radio",
       [
-        attribute("checked", ""),
-        attribute("disabled", ""),
-        attribute("required", ""),
+        attribute.attribute("checked", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("required", ""),
       ],
       [],
     ),

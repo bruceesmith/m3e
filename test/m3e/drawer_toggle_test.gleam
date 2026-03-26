@@ -1,12 +1,13 @@
 import gleeunit/should
 import lustre/attribute
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/element
+
 import m3e/drawer_toggle.{new, render}
 
 pub fn drawer_toggle_creation_test() {
   let dt = new("my-drawer")
-  let expected = element("m3e-drawer-toggle", [attribute.for("my-drawer")], [])
+  let expected =
+    element.element("m3e-drawer-toggle", [attribute.for("my-drawer")], [])
   dt
   |> render([], [])
   |> should.equal(expected)
@@ -15,19 +16,19 @@ pub fn drawer_toggle_creation_test() {
 pub fn drawer_toggle_element_test() {
   let dt = new("drawer-id")
   let expected =
-    element("m3e-drawer-toggle", [attribute.for("drawer-id")], [
-      text("Toggle"),
+    element.element("m3e-drawer-toggle", [attribute.for("drawer-id")], [
+      element.text("Toggle"),
     ])
 
   dt
-  |> render([], [text("Toggle")])
+  |> render([], [element.text("Toggle")])
   |> should.equal(expected)
 }
 
 pub fn drawer_toggle_element_with_attributes_test() {
   let dt = new("drawer-id")
   let expected =
-    element(
+    element.element(
       "m3e-drawer-toggle",
       [attribute.for("drawer-id"), attribute.class("extra-class")],
       [],

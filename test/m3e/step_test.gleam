@@ -1,6 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element, text}
+import lustre/attribute
+import lustre/element
 
 import m3e/helpers.{boolean_attribute}
 import m3e/state.{Disabled, Enabled}
@@ -14,7 +14,9 @@ pub fn step_new_test() {
   new("target-id")
   |> render([])
   |> should.equal(
-    element("m3e-step", [attribute("for", "target-id")], [text("")]),
+    element.element("m3e-step", [attribute.attribute("for", "target-id")], [
+      element.text(""),
+    ]),
   )
 }
 
@@ -29,17 +31,17 @@ pub fn step_full_test() {
   |> step.text("Step 1")
   |> render([])
   |> should.equal(
-    element(
+    element.element(
       "m3e-step",
       [
-        attribute("completed", ""),
-        attribute("disabled", ""),
-        attribute("editable", ""),
-        attribute("for", "new-id"),
-        attribute("optional", ""),
-        attribute("selected", ""),
+        attribute.attribute("completed", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("editable", ""),
+        attribute.attribute("for", "new-id"),
+        attribute.attribute("optional", ""),
+        attribute.attribute("selected", ""),
       ],
-      [text("Step 1")],
+      [element.text("Step 1")],
     ),
   )
 }
@@ -66,28 +68,28 @@ pub fn from_config_test() {
   let actual = from_config(config)
 
   actual
-  |> render([text("child")])
-  |> should.equal(render_config(config, [text("child")]))
+  |> render([element.text("child")])
+  |> should.equal(render_config(config, [element.text("child")]))
 }
 
 pub fn render_config_test() {
   let config =
     Config(Completed, Disabled, Editable, "c", Optional, Selected, "text")
-  let actual = render_config(config, [text("child")])
+  let actual = render_config(config, [element.text("child")])
 
   actual
   |> should.equal(
-    element(
+    element.element(
       "m3e-step",
       [
         boolean_attribute("completed", True),
         boolean_attribute("disabled", True),
         boolean_attribute("editable", True),
-        attribute("for", "c"),
+        attribute.attribute("for", "c"),
         boolean_attribute("optional", True),
         boolean_attribute("selected", True),
       ],
-      [text("text"), text("child")],
+      [element.text("text"), element.text("child")],
     ),
   )
 }

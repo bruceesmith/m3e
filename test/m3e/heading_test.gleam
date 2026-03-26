@@ -1,7 +1,7 @@
 import gleeunit/should
 
 import lustre/attribute
-import lustre/element.{element}
+import lustre/element
 import lustre/element/html
 
 import m3e/config
@@ -13,7 +13,7 @@ import m3e/heading.{
 pub fn heading_test() {
   let h = new("Hello") |> size(config.Large)
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "large"),
@@ -27,7 +27,7 @@ pub fn heading_test() {
 pub fn basic_test() {
   let h = new("World")
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -48,7 +48,7 @@ pub fn element_test() {
   let result = render(h, [])
 
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
@@ -66,7 +66,7 @@ pub fn element_basic_test() {
   let result = render(h, [])
 
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -81,7 +81,7 @@ pub fn element_basic_test() {
 pub fn emphasized_test() {
   let h = new("Emphasized")
   let expected_basic =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -93,7 +93,7 @@ pub fn emphasized_test() {
 
   let h2 = emphasized(h, Emphasized)
   let expected_emphasized =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
@@ -109,7 +109,7 @@ pub fn size_test() {
   let h = new("Size")
   let h2 = size(h, config.Large)
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "large"),
@@ -121,7 +121,7 @@ pub fn size_test() {
 
   let h3 = size(h2, config.Small)
   let expected_small =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "small"),
@@ -136,7 +136,7 @@ pub fn variant_test() {
   let h = new("Variant")
   let h2 = variant(h, Headline)
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -156,7 +156,7 @@ pub fn element_with_attributes_test() {
   let result = render(h, custom_attributes)
 
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("size", "medium"),
@@ -179,7 +179,7 @@ pub fn render_config_test() {
       size: config.Small,
     )
   let expected =
-    element(
+    element.element(
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),

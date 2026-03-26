@@ -1,7 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
-import lustre/element/html.{text}
+import lustre/attribute
+import lustre/element
 
 import m3e/form_field.{Filled}
 import m3e/paginator.{
@@ -15,19 +14,19 @@ import m3e/state.{Disabled, Enabled}
 pub fn paginator_creation_test() {
   let p = new()
   let expected =
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("first-page-label", "First page"),
-        attribute("items-per-page-label", "Items per page"),
-        attribute("last-page-label", "Last page"),
-        attribute("length", "0"),
-        attribute("next-page-label", "Next page"),
-        attribute("page-index", "0"),
-        attribute("page-size", "50"),
-        attribute("page-sizes", "5,10,25,50,100"),
-        attribute("page-size-variant", "outlined"),
-        attribute("previous-page-label", "Previous page"),
+        attribute.attribute("first-page-label", "First page"),
+        attribute.attribute("items-per-page-label", "Items per page"),
+        attribute.attribute("last-page-label", "Last page"),
+        attribute.attribute("length", "0"),
+        attribute.attribute("next-page-label", "Next page"),
+        attribute.attribute("page-index", "0"),
+        attribute.attribute("page-size", "50"),
+        attribute.attribute("page-sizes", "5,10,25,50,100"),
+        attribute.attribute("page-size-variant", "outlined"),
+        attribute.attribute("previous-page-label", "Previous page"),
       ],
       [],
     )
@@ -52,22 +51,22 @@ pub fn paginator_full_test() {
     |> show_first_last_buttons(paginator.Shown)
 
   let expected =
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("disabled", ""),
-        attribute("first-page-label", "Primeira"),
-        attribute("hide-page-size", ""),
-        attribute("items-per-page-label", "Itens"),
-        attribute("last-page-label", "Última"),
-        attribute("length", "1000"),
-        attribute("next-page-label", "Próxima"),
-        attribute("page-index", "1"),
-        attribute("page-size", "10"),
-        attribute("page-sizes", "10,20,all"),
-        attribute("page-size-variant", "filled"),
-        attribute("previous-page-label", "Anterior"),
-        attribute("show-first-last-buttons", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("first-page-label", "Primeira"),
+        attribute.attribute("hide-page-size", ""),
+        attribute.attribute("items-per-page-label", "Itens"),
+        attribute.attribute("last-page-label", "Última"),
+        attribute.attribute("length", "1000"),
+        attribute.attribute("next-page-label", "Próxima"),
+        attribute.attribute("page-index", "1"),
+        attribute.attribute("page-size", "10"),
+        attribute.attribute("page-sizes", "10,20,all"),
+        attribute.attribute("page-size-variant", "filled"),
+        attribute.attribute("previous-page-label", "Anterior"),
+        attribute.attribute("show-first-last-buttons", ""),
       ],
       [],
     )
@@ -77,23 +76,23 @@ pub fn paginator_full_test() {
 pub fn paginator_element_test() {
   let p = new()
   let expected =
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("first-page-label", "First page"),
-        attribute("items-per-page-label", "Items per page"),
-        attribute("last-page-label", "Last page"),
-        attribute("length", "0"),
-        attribute("next-page-label", "Next page"),
-        attribute("page-index", "0"),
-        attribute("page-size", "50"),
-        attribute("page-sizes", "5,10,25,50,100"),
-        attribute("page-size-variant", "outlined"),
-        attribute("previous-page-label", "Previous page"),
+        attribute.attribute("first-page-label", "First page"),
+        attribute.attribute("items-per-page-label", "Items per page"),
+        attribute.attribute("last-page-label", "Last page"),
+        attribute.attribute("length", "0"),
+        attribute.attribute("next-page-label", "Next page"),
+        attribute.attribute("page-index", "0"),
+        attribute.attribute("page-size", "50"),
+        attribute.attribute("page-sizes", "5,10,25,50,100"),
+        attribute.attribute("page-size-variant", "outlined"),
+        attribute.attribute("previous-page-label", "Previous page"),
       ],
-      [text("Child")],
+      [element.text("Child")],
     )
-  p |> render([], [text("Child")]) |> should.equal(expected)
+  p |> render([], [element.text("Child")]) |> should.equal(expected)
 }
 
 pub fn paginator_setters_test() {
@@ -101,20 +100,20 @@ pub fn paginator_setters_test() {
 
   let p_disabled = p |> disabled(Disabled)
   let expected_disabled =
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("disabled", ""),
-        attribute("first-page-label", "First page"),
-        attribute("items-per-page-label", "Items per page"),
-        attribute("last-page-label", "Last page"),
-        attribute("length", "0"),
-        attribute("next-page-label", "Next page"),
-        attribute("page-index", "0"),
-        attribute("page-size", "50"),
-        attribute("page-sizes", "5,10,25,50,100"),
-        attribute("page-size-variant", "outlined"),
-        attribute("previous-page-label", "Previous page"),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("first-page-label", "First page"),
+        attribute.attribute("items-per-page-label", "Items per page"),
+        attribute.attribute("last-page-label", "Last page"),
+        attribute.attribute("length", "0"),
+        attribute.attribute("next-page-label", "Next page"),
+        attribute.attribute("page-index", "0"),
+        attribute.attribute("page-size", "50"),
+        attribute.attribute("page-sizes", "5,10,25,50,100"),
+        attribute.attribute("page-size-variant", "outlined"),
+        attribute.attribute("previous-page-label", "Previous page"),
       ],
       [],
     )
@@ -122,20 +121,20 @@ pub fn paginator_setters_test() {
 
   let p_hide = p |> hide_page_size(paginator.Hidden)
   let expected_hide =
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("first-page-label", "First page"),
-        attribute("hide-page-size", ""),
-        attribute("items-per-page-label", "Items per page"),
-        attribute("last-page-label", "Last page"),
-        attribute("length", "0"),
-        attribute("next-page-label", "Next page"),
-        attribute("page-index", "0"),
-        attribute("page-size", "50"),
-        attribute("page-sizes", "5,10,25,50,100"),
-        attribute("page-size-variant", "outlined"),
-        attribute("previous-page-label", "Previous page"),
+        attribute.attribute("first-page-label", "First page"),
+        attribute.attribute("hide-page-size", ""),
+        attribute.attribute("items-per-page-label", "Items per page"),
+        attribute.attribute("last-page-label", "Last page"),
+        attribute.attribute("length", "0"),
+        attribute.attribute("next-page-label", "Next page"),
+        attribute.attribute("page-index", "0"),
+        attribute.attribute("page-size", "50"),
+        attribute.attribute("page-sizes", "5,10,25,50,100"),
+        attribute.attribute("page-size-variant", "outlined"),
+        attribute.attribute("previous-page-label", "Previous page"),
       ],
       [],
     )
@@ -143,20 +142,20 @@ pub fn paginator_setters_test() {
 
   let p_show = p |> show_first_last_buttons(paginator.Shown)
   let expected_show =
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("first-page-label", "First page"),
-        attribute("items-per-page-label", "Items per page"),
-        attribute("last-page-label", "Last page"),
-        attribute("length", "0"),
-        attribute("next-page-label", "Next page"),
-        attribute("page-index", "0"),
-        attribute("page-size", "50"),
-        attribute("page-sizes", "5,10,25,50,100"),
-        attribute("page-size-variant", "outlined"),
-        attribute("previous-page-label", "Previous page"),
-        attribute("show-first-last-buttons", ""),
+        attribute.attribute("first-page-label", "First page"),
+        attribute.attribute("items-per-page-label", "Items per page"),
+        attribute.attribute("last-page-label", "Last page"),
+        attribute.attribute("length", "0"),
+        attribute.attribute("next-page-label", "Next page"),
+        attribute.attribute("page-index", "0"),
+        attribute.attribute("page-size", "50"),
+        attribute.attribute("page-sizes", "5,10,25,50,100"),
+        attribute.attribute("page-size-variant", "outlined"),
+        attribute.attribute("previous-page-label", "Previous page"),
+        attribute.attribute("show-first-last-buttons", ""),
       ],
       [],
     )
@@ -185,22 +184,22 @@ pub fn config_test() {
 
   render(p, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-paginator",
       [
-        attribute("disabled", ""),
-        attribute("first-page-label", "First"),
-        attribute("hide-page-size", ""),
-        attribute("items-per-page-label", "Items"),
-        attribute("last-page-label", "Last"),
-        attribute("length", "100"),
-        attribute("next-page-label", "Next"),
-        attribute("page-index", "5"),
-        attribute("page-size", "10"),
-        attribute("page-sizes", "10,all"),
-        attribute("page-size-variant", "filled"),
-        attribute("previous-page-label", "Prev"),
-        attribute("show-first-last-buttons", ""),
+        attribute.attribute("disabled", ""),
+        attribute.attribute("first-page-label", "First"),
+        attribute.attribute("hide-page-size", ""),
+        attribute.attribute("items-per-page-label", "Items"),
+        attribute.attribute("last-page-label", "Last"),
+        attribute.attribute("length", "100"),
+        attribute.attribute("next-page-label", "Next"),
+        attribute.attribute("page-index", "5"),
+        attribute.attribute("page-size", "10"),
+        attribute.attribute("page-sizes", "10,all"),
+        attribute.attribute("page-size-variant", "filled"),
+        attribute.attribute("previous-page-label", "Prev"),
+        attribute.attribute("show-first-last-buttons", ""),
       ],
       [],
     ),

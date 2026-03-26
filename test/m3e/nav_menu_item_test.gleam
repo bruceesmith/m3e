@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
-import lustre/element.{element, none}
+import lustre/element
 import lustre/element/html
 
 import m3e/nav_menu_item
@@ -13,15 +13,15 @@ pub fn basic_render_test() {
 
   nav_menu_item.render(item, [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-menu-item",
       [attribute.none(), attribute.none(), attribute.none()],
       [
-        none(),
-        none(),
+        element.none(),
+        element.none(),
         html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        none(),
-        none(),
+        element.none(),
+        element.none(),
       ],
     ),
   )
@@ -40,7 +40,7 @@ pub fn properties_test() {
 
   nav_menu_item.render(item, [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
@@ -51,10 +51,10 @@ pub fn properties_test() {
         html.span([attribute.attribute("slot", "badge")], [
           html.text(badge_text),
         ]),
-        none(),
+        element.none(),
         html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        none(),
-        none(),
+        element.none(),
+        element.none(),
       ],
     ),
   )
@@ -77,7 +77,7 @@ pub fn config_test() {
 
   nav_menu_item.render(item, [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
@@ -85,11 +85,11 @@ pub fn config_test() {
         attribute.attribute("selected", ""),
       ],
       [
-        none(),
-        none(),
+        element.none(),
+        element.none(),
         html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        none(),
-        none(),
+        element.none(),
+        element.none(),
       ],
     ),
   )
@@ -134,7 +134,7 @@ pub fn setters_test() {
 
   nav_menu_item.render(item, [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
@@ -142,11 +142,11 @@ pub fn setters_test() {
         attribute.attribute("selected", ""),
       ],
       [
-        none(),
-        none(),
+        element.none(),
+        element.none(),
         html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        none(),
-        none(),
+        element.none(),
+        element.none(),
       ],
     ),
   )

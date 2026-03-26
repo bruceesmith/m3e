@@ -1,15 +1,15 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/loading_indicator
 
 pub fn basic_test() {
   let l = loading_indicator.new()
 
   let expected =
-    element(
+    element.element(
       "m3e-loading-indicator",
-      [attribute("variant", "uncontained")],
+      [attribute.attribute("variant", "uncontained")],
       [],
     )
 
@@ -23,9 +23,9 @@ pub fn variant_test() {
     |> loading_indicator.variant(loading_indicator.Contained)
 
   let expected =
-    element(
+    element.element(
       "m3e-loading-indicator",
-      [attribute("variant", "contained")],
+      [attribute.attribute("variant", "contained")],
       [],
     )
 
@@ -37,9 +37,9 @@ pub fn variant_test() {
     |> loading_indicator.variant(loading_indicator.Uncontained)
 
   let expected2 =
-    element(
+    element.element(
       "m3e-loading-indicator",
-      [attribute("variant", "uncontained")],
+      [attribute.attribute("variant", "uncontained")],
       [],
     )
 
@@ -49,12 +49,12 @@ pub fn variant_test() {
 
 pub fn children_test() {
   let l = loading_indicator.new()
-  let child = element("span", [], [])
+  let child = element.element("span", [], [])
 
   let expected =
-    element(
+    element.element(
       "m3e-loading-indicator",
-      [attribute("variant", "uncontained")],
+      [attribute.attribute("variant", "uncontained")],
       [child],
     )
 
@@ -64,12 +64,12 @@ pub fn children_test() {
 
 pub fn attributes_test() {
   let l = loading_indicator.new()
-  let attr = attribute("class", "custom")
+  let attr = attribute.attribute("class", "custom")
 
   let expected =
-    element(
+    element.element(
       "m3e-loading-indicator",
-      [attribute("variant", "uncontained"), attr],
+      [attribute.attribute("variant", "uncontained"), attr],
       [],
     )
 

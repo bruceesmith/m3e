@@ -1,22 +1,27 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/tab_panel.{id, new, render}
 
 pub fn tab_panel_new_test() {
   new("panel-1")
   |> render([], [])
-  |> should.equal(element("m3e-tab-panel", [attribute("id", "panel-1")], []))
+  |> should.equal(
+    element.element("m3e-tab-panel", [attribute.attribute("id", "panel-1")], []),
+  )
 }
 
 pub fn tab_panel_full_test() {
   new("original")
   |> id("new-id")
-  |> render([attribute("class", "active")], [element.text("Content")])
+  |> render([attribute.attribute("class", "active")], [element.text("Content")])
   |> should.equal(
-    element(
+    element.element(
       "m3e-tab-panel",
-      [attribute("id", "new-id"), attribute("class", "active")],
+      [
+        attribute.attribute("id", "new-id"),
+        attribute.attribute("class", "active"),
+      ],
       [element.text("Content")],
     ),
   )

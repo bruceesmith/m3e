@@ -1,17 +1,13 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/nav_rail
 
 pub fn basic_test() {
   let r = nav_rail.new()
 
   let expected =
-    element(
-      "m3e-nav-rail",
-      [attribute("mode", "auto")],
-      [],
-    )
+    element.element("m3e-nav-rail", [attribute.attribute("mode", "auto")], [])
 
   nav_rail.render(r, [], [])
   |> should.equal(expected)
@@ -23,9 +19,9 @@ pub fn mode_test() {
     |> nav_rail.mode(nav_rail.Compact)
 
   let expected =
-    element(
+    element.element(
       "m3e-nav-rail",
-      [attribute("mode", "compact")],
+      [attribute.attribute("mode", "compact")],
       [],
     )
 
@@ -37,9 +33,9 @@ pub fn mode_test() {
     |> nav_rail.mode(nav_rail.Expanded)
 
   let expected2 =
-    element(
+    element.element(
       "m3e-nav-rail",
-      [attribute("mode", "expanded")],
+      [attribute.attribute("mode", "expanded")],
       [],
     )
 
@@ -49,14 +45,12 @@ pub fn mode_test() {
 
 pub fn children_test() {
   let r = nav_rail.new()
-  let child = element("div", [], [])
+  let child = element.element("div", [], [])
 
   let expected =
-    element(
-      "m3e-nav-rail",
-      [attribute("mode", "auto")],
-      [child],
-    )
+    element.element("m3e-nav-rail", [attribute.attribute("mode", "auto")], [
+      child,
+    ])
 
   nav_rail.render(r, [], [child])
   |> should.equal(expected)
@@ -64,12 +58,12 @@ pub fn children_test() {
 
 pub fn attributes_test() {
   let r = nav_rail.new()
-  let attr = attribute("class", "custom")
+  let attr = attribute.attribute("class", "custom")
 
   let expected =
-    element(
+    element.element(
       "m3e-nav-rail",
-      [attribute("mode", "auto"), attr],
+      [attribute.attribute("mode", "auto"), attr],
       [],
     )
 

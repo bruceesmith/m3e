@@ -1,9 +1,9 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import lustre/attribute.{attribute}
+import lustre/attribute
 import m3e/link.{
-  Blank, Link, Parent, Self, Top, attributes, download, href,
-  link_target_to_string, new, rel, target,
+  Blank, Link, Parent, Self, Top, download, href, link_target_to_string, new,
+  rel, target,
 }
 
 pub fn link_target_to_string_test() {
@@ -37,14 +37,14 @@ pub fn link_updates_test() {
 
 pub fn link_attributes_test() {
   // Test None
-  attributes(None) |> should.equal([])
+  link.attributes(None) |> should.equal([])
 }
 
 pub fn link_attributes_test1() {
   // Test Some with empty href
   new("")
   |> Some
-  |> attributes
+  |> link.attributes
   |> should.equal([])
 }
 
@@ -55,21 +55,21 @@ pub fn link_attributes_test2() {
     |> download(True)
     |> rel("external")
     |> target(Blank)
-  attributes(Some(l))
+  link.attributes(Some(l))
   |> should.equal([
-    attribute("download", ""),
-    attribute("href", "https://example.com"),
-    attribute("rel", "external"),
-    attribute("target", "_blank"),
+    attribute.attribute("download", ""),
+    attribute.attribute("href", "https://example.com"),
+    attribute.attribute("rel", "external"),
+    attribute.attribute("target", "_blank"),
   ])
 }
 
 pub fn link_attributes_test3() {
   // Test Some with valid href and download False
   let l2 = new("/home")
-  attributes(Some(l2))
+  link.attributes(Some(l2))
   |> should.equal([
-    attribute("href", "/home"),
-    attribute("target", "_self"),
+    attribute.attribute("href", "/home"),
+    attribute.attribute("target", "_self"),
   ])
 }

@@ -1,7 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
-import lustre/element.{element}
+import lustre/element
 
 import m3e/layout.{Horizontal, Vertical}
 import m3e/link
@@ -12,7 +12,7 @@ pub fn basic_render_test() {
   nav_item.new()
   |> nav_item.render([], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-item",
       [attribute.attribute("orientation", "vertical")],
       [],
@@ -29,7 +29,7 @@ pub fn link_property_test() {
   |> nav_item.link(Some(test_link))
   |> nav_item.render([], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-item",
       [
         attribute.attribute("orientation", "vertical"),
@@ -49,7 +49,7 @@ pub fn properties_test() {
   |> nav_item.orientation(Horizontal)
   |> nav_item.render([], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-item",
       [
         attribute.attribute("disabled", ""),
@@ -79,7 +79,7 @@ pub fn config_test() {
 
   nav_item.render(item, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-item",
       [
         attribute.attribute("disabled", ""),
@@ -128,7 +128,7 @@ pub fn setters_test() {
 
   nav_item.render(item, [], [])
   |> should.equal(
-    element(
+    element.element(
       "m3e-nav-item",
       [
         attribute.attribute("disabled", ""),

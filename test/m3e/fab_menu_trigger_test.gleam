@@ -1,6 +1,6 @@
 import gleeunit/should
-import lustre/attribute.{attribute}
-import lustre/element.{element}
+import lustre/attribute
+import lustre/element
 import m3e/fab_menu_trigger
 import m3e/icon
 
@@ -9,9 +9,9 @@ pub fn basic_test() {
   let t = fab_menu_trigger.new("my-menu", i)
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu-trigger",
-      [attribute("for", "my-menu")],
+      [attribute.attribute("for", "my-menu")],
       [icon.render(i, [], [])],
     )
 
@@ -26,9 +26,9 @@ pub fn for_test() {
     |> fab_menu_trigger.for_("other-menu")
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu-trigger",
-      [attribute("for", "other-menu")],
+      [attribute.attribute("for", "other-menu")],
       [icon.render(i, [], [])],
     )
 
@@ -44,9 +44,9 @@ pub fn icon_test() {
     |> fab_menu_trigger.icon(i2)
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu-trigger",
-      [attribute("for", "my-menu")],
+      [attribute.attribute("for", "my-menu")],
       [icon.render(i2, [], [])],
     )
 
@@ -57,12 +57,12 @@ pub fn icon_test() {
 pub fn children_test() {
   let i = icon.new("add")
   let t = fab_menu_trigger.new("my-menu", i)
-  let child = element("span", [], [element.text("hello")])
+  let child = element.element("span", [], [element.text("hello")])
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu-trigger",
-      [attribute("for", "my-menu")],
+      [attribute.attribute("for", "my-menu")],
       [icon.render(i, [], []), child],
     )
 
@@ -73,12 +73,12 @@ pub fn children_test() {
 pub fn attributes_test() {
   let i = icon.new("add")
   let t = fab_menu_trigger.new("my-menu", i)
-  let attr = attribute("class", "custom")
+  let attr = attribute.attribute("class", "custom")
 
   let expected =
-    element(
+    element.element(
       "m3e-fab-menu-trigger",
-      [attribute("for", "my-menu"), attr],
+      [attribute.attribute("for", "my-menu"), attr],
       [icon.render(i, [], [])],
     )
 
