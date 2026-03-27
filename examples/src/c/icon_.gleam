@@ -4,7 +4,7 @@ import lustre/element/html
 import m3e/card
 import m3e/icon
 
-import c/layout
+import layout
 
 import msg.{type Msg}
 

@@ -8,7 +8,7 @@ import m3e/config
 import m3e/icon
 import m3e/state.{Disabled}
 
-import c/layout
+import layout
 
 import msg.{type Msg}
 
@@ -82,14 +82,14 @@ fn icons() -> Element(Msg) {
           element.text("Icons"),
           button.new("Send", button.Tonal)
             |> button.icons([icon.new("send") |> icon.render([], [])])
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
           button.new("Open", button.Tonal)
             |> button.icons([
               icon.new("open_in_new_window")
               |> icon.purpose(button.slot(button.TrailingIcon))
               |> icon.render([], []),
             ])
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
         ],
       ),
     ],
@@ -112,7 +112,7 @@ fn toggling() -> Element(Msg) {
           element.text("Toggle"),
           button.new("Tonal toggle", button.Tonal)
             |> button.toggle(True)
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
           button.new("Start", button.Tonal)
             |> button.toggle(True)
             |> button.icons([
@@ -122,7 +122,7 @@ fn toggling() -> Element(Msg) {
                 |> icon.render([], []),
             ])
             |> button.selected_label("Stop")
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
         ],
       ),
     ],
@@ -145,10 +145,10 @@ fn disabling() -> Element(Msg) {
           element.text("Disabling"),
           button.new("Disabled", button.Filled)
             |> button.disabled(Disabled)
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
           button.new("Disabled interactive", button.Filled)
             |> button.disabled(Disabled)
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
         ],
       ),
     ],
@@ -176,7 +176,6 @@ fn links() -> Element(Msg) {
               |> icon.render([], []),
             ])
             |> button.render([
-              attribute.class("justify-self-center"),
               attribute.href("https://google.com"),
               attribute.target("_blank"),
             ]),
@@ -201,10 +200,10 @@ fn shape() -> Element(Msg) {
         [
           element.text("Shapes"),
           button.new("Rounded Filled", button.Filled)
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
           button.new("Square Filled", button.Filled)
             |> button.shape(button.Square)
-            |> button.render([attribute.class("justify-self-center")]),
+            |> button.render([]),
         ],
       ),
     ],

@@ -6,6 +6,7 @@ import lustre/element.{type Element}
 import lustre/element/html
 import lustre/event
 
+import layout
 import model.{type Model}
 import msg.{type Msg, ButtonPageSelected, IconPageSelected, SwitchPageSelected}
 
@@ -50,7 +51,7 @@ pub fn view(model: Model) -> Element(Msg) {
 fn appbar() -> Element(Msg) {
   app_bar.new()
   |> app_bar.for(Some("main-content"))
-  |> app_bar.render([attribute.class("flex-none z-4")], [
+  |> app_bar.render([layout.app_bar_style()], [
     icon_button.new()
       |> icon_button.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
       |> icon_button.selected(Selected)
@@ -63,11 +64,23 @@ fn appbar() -> Element(Msg) {
           |> icon.render([], []),
         drawer_toggle.new("nav-drawer") |> drawer_toggle.render([], []),
       ]),
-    html.span([helpers.slot("title")], [
-      element.text("Gleam/Lustre Material 3 Expression demonstration"),
-    ]),
-    html.span([helpers.slot("subtitle")], [element.text("v0.0.1")]),
-    html.span([helpers.slot("trailing-icon")], [
+    html.span(
+      [
+        app_bar.slot(app_bar.Title),
+        layout.app_bar_title_style(),
+      ],
+      [
+        element.text("Gleam/Lustre Material 3 Expression demonstration"),
+      ],
+    ),
+    html.span(
+      [
+        app_bar.slot(app_bar.Subtitle),
+        layout.app_bar_title_style(),
+      ],
+      [element.text("v0.0.1")],
+    ),
+    html.span([app_bar.slot(app_bar.TrailingIcon)], [
       icon_button.new()
         |> icon_button.link(
           Some(link.new("https://github.com/bruceesmith/m3e")),

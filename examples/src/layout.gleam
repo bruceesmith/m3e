@@ -6,11 +6,25 @@ import lustre/attribute.{type Attribute}
 
 import monks/align_items
 import monks/display
+import monks/flex
 import monks/gap
 import monks/grid_column
 import monks/grid_template_columns
 import monks/justify_content
 import monks/padding
+import monks/z_index
+
+/// app_bar_style is the style for the App Bar
+/// 
+pub fn app_bar_style() -> Attribute(msg) {
+  attribute.styles([flex.none, z_index.raw("4")])
+}
+
+/// app_bar_title_style is the style for the App Bar
+/// 
+pub fn app_bar_title_style() -> Attribute(msg) {
+  attribute.styles([display.flex, justify_content.center])
+}
 
 /// card_style is the style for each Card on a single Frame
 /// 

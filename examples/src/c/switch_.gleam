@@ -8,7 +8,7 @@ import m3e/card
 import m3e/state.{Checked, Disabled}
 import m3e/switch
 
-import c/layout
+import layout
 
 import msg.{type Msg}
 
