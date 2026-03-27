@@ -1,14 +1,14 @@
 import lustre/element.{type Element}
 import lustre/element/html
-import lustre/event.{on_click}
+import lustre/event
 
 import msg.{type Msg, HomeSelected}
 
-import m3e/button.{new, render}
+import m3e/button
 
 pub fn home() -> Element(Msg) {
   html.div([], [
-    new("Home", button.Outlined)
-    |> render([on_click(HomeSelected)]),
+    button.new("Home", button.Outlined)
+    |> button.render([event.on_click(HomeSelected)]),
   ])
 }

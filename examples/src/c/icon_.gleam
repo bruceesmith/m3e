@@ -1,25 +1,18 @@
 import gleam/int
 
-// import gleam/list
-
-// import gleam/option.{Some}
-
-import lustre/attribute.{styles}
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
-// import lustre/event.{on_click}
-
 import m3e/card
-import m3e/icon.{new, render}
+import m3e/icon
 
-// import m3e/types.{Checked, Disabled}
-
-import monks/align_items as ai
-import monks/display.{grid}
+import monks/align_items
+import monks/display
 import monks/gap
 import monks/grid_column
 import monks/grid_template_columns
+import monks/justify_content
 import monks/padding
 
 import msg.{type Msg}
@@ -27,11 +20,11 @@ import msg.{type Msg}
 pub fn icon() -> Element(Msg) {
   html.div(
     [
-      styles([
-        grid,
+      attribute.styles([
+        align_items.center,
+        display.grid,
         frcolumns(3),
-        ai.center,
-        gapp(5),
+        gap_(5),
       ]),
     ],
     [
@@ -51,25 +44,26 @@ fn basic() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(2),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap_(5),
             pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Basic"),
-          new("home") |> render([], []),
+          icon.new("home") |> icon.render([], []),
         ],
       ),
     ],
@@ -80,37 +74,38 @@ fn appearance() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(7),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            display.flex,
+            align_items.center,
+            justify_content.flex_start,
+            gap_(5),
             pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Appearance"),
-          new("home")
+          icon.new("home")
             |> icon.variant(icon.Outlined)
-            |> render([], []),
+            |> icon.render([], []),
           html.label([], [element.text("Outlined")]),
-          new("lock")
+          icon.new("lock")
             |> icon.variant(icon.Rounded)
             |> icon.filled(icon.Filled)
-            |> render([], []),
+            |> icon.render([], []),
           html.label([], [element.text("Rounded")]),
-          new("lock")
+          icon.new("lock")
             |> icon.variant(icon.Sharp)
             |> icon.filled(icon.Filled)
-            |> render([], []),
+            |> icon.render([], []),
           html.label([], [element.text("Sharp")]),
         ],
       ),
@@ -122,7 +117,7 @@ fn frcolumns(number: Int) -> #(String, String) {
   grid_template_columns.raw("repeat(" <> int.to_string(number) <> ", 1fr)")
 }
 
-fn gapp(g: Int) -> #(String, String) {
+fn gap_(g: Int) -> #(String, String) {
   gap.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
 }
 

@@ -1,20 +1,22 @@
 import gleam/int
 
-import lustre/attribute.{class, styles}
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/button.{new, render}
+import m3e/button
 import m3e/card
+import m3e/config
 import m3e/icon
-import m3e/size_many as many
-import m3e/types.{Disabled}
+import m3e/state.{Disabled}
 
-import monks/align_items as ai
-import monks/display.{grid}
-import monks/gap
+import monks/align_items
+import monks/display
+import monks/gap as g
 import monks/grid_column
 import monks/grid_template_columns
+import monks/justify_content
+import monks/padding
 
 // import monks/grid_template_rows
 
@@ -23,10 +25,11 @@ import msg.{type Msg}
 pub fn button() -> Element(Msg) {
   html.div(
     [
-      styles([
-        grid,
+      attribute.styles([
+        align_items.center,
+        display.grid,
         frcolumns(3),
-        gapp(5),
+        gap(5),
       ]),
     ],
     [
@@ -55,38 +58,40 @@ fn sizes() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(6),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Sizes"),
-          new("Extra Small", button.Tonal)
-            |> button.size(many.ExtraSmall)
-            |> render([]),
-          new("Small", button.Tonal)
-            |> button.size(many.Small)
-            |> render([]),
-          new("Medium", button.Tonal)
-            |> button.size(many.Medium)
-            |> render([]),
-          new("Large", button.Tonal)
-            |> button.size(many.Large)
-            |> render([]),
-          new("Extra Large", button.Tonal)
-            |> button.size(many.ExtraLarge)
-            |> render([]),
+          button.new("Extra Small", button.Tonal)
+            |> button.size(config.ExtraSmall)
+            |> button.render([]),
+          button.new("Small", button.Tonal)
+            |> button.size(config.Small)
+            |> button.render([]),
+          button.new("Medium", button.Tonal)
+            |> button.size(config.Medium)
+            |> button.render([]),
+          button.new("Large", button.Tonal)
+            |> button.size(config.Large)
+            |> button.render([]),
+          button.new("Extra Large", button.Tonal)
+            |> button.size(config.ExtraLarge)
+            |> button.render([]),
         ],
       ),
     ],
@@ -106,33 +111,35 @@ fn icons() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(3),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Icons"),
-          new("Send", button.Tonal)
+          button.new("Send", button.Tonal)
             |> button.icons([icon.new("send") |> icon.render([], [])])
-            |> render([class("justify-self-center")]),
-          new("Open", button.Tonal)
+            |> button.render([attribute.class("justify-self-center")]),
+          button.new("Open", button.Tonal)
             |> button.icons([
               icon.new("open_in_new_window")
               |> icon.purpose(button.slot(button.TrailingIcon))
               |> icon.render([], []),
             ])
-            |> render([class("justify-self-center")]),
+            |> button.render([attribute.class("justify-self-center")]),
         ],
       ),
     ],
@@ -154,27 +161,29 @@ fn toggling() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(3),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Toggle"),
-          new("Tonal toggle", button.Tonal)
+          button.new("Tonal toggle", button.Tonal)
             |> button.toggle(True)
-            |> render([class("justify-self-center")]),
-          new("Start", button.Tonal)
+            |> button.render([attribute.class("justify-self-center")]),
+          button.new("Start", button.Tonal)
             |> button.toggle(True)
             |> button.icons([
               icon.new("play_arrow") |> icon.render([], []),
@@ -183,7 +192,7 @@ fn toggling() -> Element(Msg) {
                 |> icon.render([], []),
             ])
             |> button.selected_label("Stop")
-            |> render([class("justify-self-center")]),
+            |> button.render([attribute.class("justify-self-center")]),
         ],
       ),
     ],
@@ -201,29 +210,31 @@ fn disabling() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(3),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Disabling"),
-          new("Disabled", button.Filled)
+          button.new("Disabled", button.Filled)
             |> button.disabled(Disabled)
-            |> render([class("justify-self-center")]),
-          new("Disabled interactive", button.Filled)
+            |> button.render([attribute.class("justify-self-center")]),
+          button.new("Disabled interactive", button.Filled)
             |> button.disabled(Disabled)
-            |> render([class("justify-self-center")]),
+            |> button.render([attribute.class("justify-self-center")]),
         ],
       ),
     ],
@@ -242,31 +253,33 @@ fn links() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(2),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Links"),
-          new("Google", button.Tonal)
+          button.new("Google", button.Tonal)
             |> button.icons([
               icon.new("open_in_new_window")
               |> icon.purpose(button.slot(button.TrailingIcon))
               |> icon.render([], []),
             ])
-            |> render([
-              class("justify-self-center"),
+            |> button.render([
+              attribute.class("justify-self-center"),
               attribute.href("https://google.com"),
               attribute.target("_blank"),
             ]),
@@ -290,28 +303,30 @@ fn shape() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(3),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Shapes"),
-          new("Rounded Filled", button.Filled)
-            |> render([class("justify-self-center")]),
-          new("Square Filled", button.Filled)
+          button.new("Rounded Filled", button.Filled)
+            |> button.render([attribute.class("justify-self-center")]),
+          button.new("Square Filled", button.Filled)
             |> button.shape(button.Square)
-            |> render([class("justify-self-center")]),
+            |> button.render([attribute.class("justify-self-center")]),
         ],
       ),
     ],
@@ -332,47 +347,53 @@ fn variant() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(6),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap(5),
+            pad(2),
           ]),
           card.slot(card.Content),
         ],
         [
           element.text("Variants"),
-          new("Elevated", button.Elevated)
-            |> render([]),
-          new("Filled", button.Filled)
-            |> render([]),
-          new("Tonal", button.Tonal)
-            |> render([]),
-          new("Outlined", button.Outlined)
-            |> render([]),
-          new("Text", button.Text)
-            |> render([]),
+          button.new("Elevated", button.Elevated)
+            |> button.render([]),
+          button.new("Filled", button.Filled)
+            |> button.render([]),
+          button.new("Tonal", button.Tonal)
+            |> button.render([]),
+          button.new("Outlined", button.Outlined)
+            |> button.render([]),
+          button.new("Text", button.Text)
+            |> button.render([]),
         ],
       ),
     ],
   )
 }
 
+fn column(c: Int) -> #(String, String) {
+  grid_column.raw(int.to_string(c))
+}
+
 fn frcolumns(number: Int) -> #(String, String) {
   grid_template_columns.raw("repeat(" <> int.to_string(number) <> ", 1fr)")
 }
 
-fn gapp(g: Int) -> #(String, String) {
-  gap.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
+fn gap(g: Int) -> #(String, String) {
+  g.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
 }
 
-fn column(c: Int) -> #(String, String) {
-  grid_column.raw(int.to_string(c))
+fn pad(p: Int) -> #(String, String) {
+  padding.raw("calc(var(--spacing) * " <> int.to_string(p) <> ")")
 }

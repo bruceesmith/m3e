@@ -1,38 +1,38 @@
 //// view constructs the HTML for the SPA
 
 import gleam/option.{Some}
-import lustre/attribute.{attribute, class, id}
-import lustre/element.{type Element, text}
+import lustre/attribute
+import lustre/element.{type Element}
 import lustre/element/html
-import lustre/event.{on_click}
+import lustre/event
 
 import model.{type Model}
 import msg.{type Msg, ButtonPageSelected, IconPageSelected, SwitchPageSelected}
 
 import m3e/app_bar
 import m3e/drawer_container
-import m3e/drawer_toggle as dt
-import m3e/helpers.{slot}
+import m3e/drawer_toggle
+import m3e/helpers
 import m3e/icon
 import m3e/icon_button
 import m3e/link
 import m3e/nav_menu
 import m3e/nav_menu_item
+import m3e/state.{Selected}
 import m3e/theme
 import m3e/tooltip
-import m3e/types.{Selected}
 
-import c/button_ex.{button as btn}
-import c/home_ex.{home}
-import c/icon_ex.{icon as ico}
-import c/switch_ex.{switch_ as switch_}
+import c/button_
+import c/home
+import c/icon_
+import c/switch_
 
 pub fn view(model: Model) -> Element(Msg) {
   let content = case model.state {
-    model.Home -> home()
-    model.Button -> btn()
-    model.Icon -> ico()
-    model.Switch -> switch_()
+    model.Home -> home.home()
+    model.Button -> button_.button()
+    model.Icon -> icon_.icon()
+    model.Switch -> switch_.switch_()
   }
 
   theme.render(
@@ -50,7 +50,7 @@ pub fn view(model: Model) -> Element(Msg) {
 fn appbar() -> Element(Msg) {
   app_bar.new()
   |> app_bar.for(Some("main-content"))
-  |> app_bar.render([class("flex-none z-4")], [
+  |> app_bar.render([attribute.class("flex-none z-4")], [
     icon_button.new()
       |> icon_button.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
       |> icon_button.selected(Selected)
@@ -61,18 +61,18 @@ fn appbar() -> Element(Msg) {
           |> icon.filled(icon.Filled)
           |> icon.purpose(icon_button.slot(icon_button.SelectedIcon))
           |> icon.render([], []),
-        dt.new("nav-drawer") |> dt.render([], []),
+        drawer_toggle.new("nav-drawer") |> drawer_toggle.render([], []),
       ]),
-    html.span([slot("title")], [
-      text("Gleam/Lustre Material 3 Expression demonstration"),
+    html.span([helpers.slot("title")], [
+      element.text("Gleam/Lustre Material 3 Expression demonstration"),
     ]),
-    html.span([slot("subtitle")], [text("v0.0.1")]),
-    html.span([slot("trailing-icon")], [
+    html.span([helpers.slot("subtitle")], [element.text("v0.0.1")]),
+    html.span([helpers.slot("trailing-icon")], [
       icon_button.new()
         |> icon_button.link(
           Some(link.new("https://github.com/bruceesmith/m3e")),
         )
-        |> icon_button.render([id("github-button")], [
+        |> icon_button.render([attribute.id("github-button")], [
           github(),
         ]),
 
@@ -96,33 +96,33 @@ fn body(content: Element(Msg)) -> Element(Msg) {
 
 fn github() -> Element(Msg) {
   html.img([
-    attribute(
+    attribute.attribute(
       "src",
       "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
     ),
-    attribute("alt", "GitHub"),
-    attribute("height", "40"),
-    attribute("width", "40"),
+    attribute.attribute("alt", "GitHub"),
+    attribute.attribute("height", "40"),
+    attribute.attribute("width", "40"),
   ])
 }
 
 fn menu() -> Element(Msg) {
   nav_menu.new()
-  |> nav_menu.render([id("nav-drawer"), slot("start")], [
+  |> nav_menu.render([attribute.id("nav-drawer"), helpers.slot("start")], [
     nav_menu_item.new("Button")
       |> nav_menu_item.render([
-        on_click(ButtonPageSelected),
-        id("m3e-nav-menu-item-1"),
+        event.on_click(ButtonPageSelected),
+        attribute.id("m3e-nav-menu-item-1"),
       ]),
     nav_menu_item.new("Icon")
       |> nav_menu_item.render([
-        on_click(IconPageSelected),
-        id("m3e-nav-menu-item-2"),
+        event.on_click(IconPageSelected),
+        attribute.id("m3e-nav-menu-item-2"),
       ]),
     nav_menu_item.new("Switch")
       |> nav_menu_item.render([
-        on_click(SwitchPageSelected),
-        id("m3e-nav-menu-item-3"),
+        event.on_click(SwitchPageSelected),
+        attribute.id("m3e-nav-menu-item-3"),
       ]),
   ])
 }

@@ -2,30 +2,31 @@ import gleam/int
 import gleam/list
 import gleam/option.{Some}
 
-import lustre/attribute.{styles}
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 import msg.{type Msg}
 
 import m3e/card
-import m3e/switch.{new, render}
-import m3e/types.{Checked, Disabled}
+import m3e/state.{Checked, Disabled}
+import m3e/switch
 
-import monks/align_items as ai
-import monks/display.{grid}
+import monks/align_items
+import monks/display
 import monks/gap
 import monks/grid_column
 import monks/grid_template_columns
+import monks/justify_content
 import monks/padding
 
 pub fn switch_() -> Element(Msg) {
   html.div(
     [
-      styles([
-        grid,
+      attribute.styles([
+        align_items.center,
+        display.grid,
         frcolumns(3),
-        ai.center,
-        gapp(5),
+        gap_(5),
       ]),
     ],
     [
@@ -49,25 +50,26 @@ fn basic() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(2),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap_(5),
             pad(2),
           ]),
           card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Basic")],
-          new("basic") |> switch.checked(Checked) |> render([]),
+          switch.new("basic") |> switch.checked(Checked) |> switch.render([]),
         ]),
       ),
     ],
@@ -88,18 +90,19 @@ fn labels() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(5),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap_(5),
             pad(2),
           ]),
           card.slot(card.Content),
@@ -137,39 +140,40 @@ fn icons() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(7),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap_(5),
             pad(2),
           ]),
           card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Icons")],
-          new("icons-none")
+          switch.new("icons-none")
             |> switch.label(Some("None"))
             |> switch.icon(switch.Neither)
-            |> render([]),
+            |> switch.render([]),
 
-          new("icons-selected")
+          switch.new("icons-selected")
             |> switch.checked(Checked)
             |> switch.label(Some("Selected"))
             |> switch.icon(switch.Selected)
-            |> render([]),
+            |> switch.render([]),
 
-          new("icons-both")
+          switch.new("icons-both")
             |> switch.label(Some("Both"))
             |> switch.icon(switch.Both)
-            |> render([]),
+            |> switch.render([]),
         ]),
       ),
     ],
@@ -190,33 +194,34 @@ fn disabled() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      styles([
+      attribute.styles([
         column(2),
+        display.flex,
       ]),
     ],
     [
       html.div(
         [
-          styles([
-            grid,
-            frcolumns(5),
-            ai.center,
-            gapp(5),
+          attribute.styles([
+            align_items.center,
+            display.flex,
+            justify_content.flex_start,
+            gap_(5),
             pad(2),
           ]),
           card.slot(card.Content),
         ],
         list.flatten([
           [element.text("Disabled")],
-          new("disabled-off")
+          switch.new("disabled-off")
             |> switch.label(Some("Disabled Off"))
             |> switch.disabled(Disabled)
-            |> render([]),
-          new("disabled-on")
+            |> switch.render([]),
+          switch.new("disabled-on")
             |> switch.label(Some("Disabled On"))
             |> switch.checked(Checked)
             |> switch.disabled(Disabled)
-            |> render([]),
+            |> switch.render([]),
         ]),
       ),
     ],
@@ -227,7 +232,7 @@ fn frcolumns(number: Int) -> #(String, String) {
   grid_template_columns.raw("repeat(" <> int.to_string(number) <> ", 1fr)")
 }
 
-fn gapp(g: Int) -> #(String, String) {
+fn gap_(g: Int) -> #(String, String) {
   gap.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
 }
 
