@@ -23,10 +23,10 @@ import m3e/state.{Selected}
 import m3e/theme
 import m3e/tooltip
 
-import c/button_
-import c/home
-import c/icon_
-import c/switch_
+import components/button_
+import components/home
+import components/icon_
+import components/switch_
 
 pub fn view(model: Model) -> Element(Msg) {
   let content = case model.state {
