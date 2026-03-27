@@ -1,5 +1,3 @@
-import gleam/int
-
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
@@ -10,27 +8,16 @@ import m3e/config
 import m3e/icon
 import m3e/state.{Disabled}
 
-import monks/align_items
-import monks/display
-import monks/gap as g
-import monks/grid_column
-import monks/grid_template_columns
-import monks/justify_content
-import monks/padding
-
-// import monks/grid_template_rows
+import c/layout
 
 import msg.{type Msg}
 
+/// button displays all facets of the M3E Button wrapper component
+/// 
 pub fn button() -> Element(Msg) {
   html.div(
     [
-      attribute.styles([
-        align_items.center,
-        display.grid,
-        frcolumns(3),
-        gap(5),
-      ]),
+      layout.frame_style(),
     ],
     [
       variant(),
@@ -44,35 +31,16 @@ pub fn button() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="tonal" size="extra-small">Extra Small</m3e-button>
-//       <m3e-button variant="tonal" size="small">Small</m3e-button>
-//       <m3e-button variant="tonal" size="medium">Medium</m3e-button>
-//       <m3e-button variant="tonal" size="large">Large</m3e-button>
-//       <m3e-button variant="tonal" size="extra-large">Extra Large</m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn sizes() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -98,34 +66,16 @@ fn sizes() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="tonal"><m3e-icon slot="icon" name="send"></m3e-icon>Send</m3e-button>
-//       <m3e-button variant="tonal">
-//         <m3e-icon slot="trailing-icon" name="open_in_new_window"></m3e-icon>Open
-//       </m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn icons() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -146,36 +96,16 @@ fn icons() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="filled" toggle>
-//         <m3e-icon slot="icon" name="play_arrow"></m3e-icon>
-//         <m3e-icon slot="selected-icon" name="stop"></m3e-icon>
-//         Start
-//         <span slot="selected">Stop</span>
-//       </m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn toggling() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -199,32 +129,16 @@ fn toggling() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="filled" disabled>Disabled</m3e-button>
-//       <m3e-button variant="filled" disabled-interactive>Disabled Interactive</m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn disabling() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -241,33 +155,16 @@ fn disabling() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="tonal" href="https://www.google.com" target="_blank">
-//         Google<m3e-icon slot="trailing-icon" name="open_in_new_window"></m3e-icon>
-//       </m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn links() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -289,35 +186,16 @@ fn links() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="elevated" shape="square">Square Elevated</m3e-button>
-//       <m3e-button variant="filled" shape="square">Square Filled</m3e-button>
-//       <m3e-button variant="tonal" shape="square">Square Tonal</m3e-button>
-//       <m3e-button variant="outlined" shape="square">Square Outlined</m3e-button>
-//       <m3e-button variant="text" shape="square">Square Text</m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn shape() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -333,35 +211,16 @@ fn shape() -> Element(Msg) {
   )
 }
 
-//   <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-button variant="elevated">Elevated</m3e-button>
-//       <m3e-button variant="filled">Filled</m3e-button>
-//       <m3e-button variant="tonal">Tonal</m3e-button>
-//       <m3e-button variant="outlined">Outlined</m3e-button>
-//       <m3e-button variant="text">Text</m3e-button>
-//     </div>
-//   </m3e-card>
-
 fn variant() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -380,20 +239,4 @@ fn variant() -> Element(Msg) {
       ),
     ],
   )
-}
-
-fn column(c: Int) -> #(String, String) {
-  grid_column.raw(int.to_string(c))
-}
-
-fn frcolumns(number: Int) -> #(String, String) {
-  grid_template_columns.raw("repeat(" <> int.to_string(number) <> ", 1fr)")
-}
-
-fn gap(g: Int) -> #(String, String) {
-  g.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
-}
-
-fn pad(p: Int) -> #(String, String) {
-  padding.raw("calc(var(--spacing) * " <> int.to_string(p) <> ")")
 }

@@ -1,33 +1,23 @@
-import gleam/int
 import gleam/list
 import gleam/option.{Some}
 
-import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
-import msg.{type Msg}
 
 import m3e/card
 import m3e/state.{Checked, Disabled}
 import m3e/switch
 
-import monks/align_items
-import monks/display
-import monks/gap
-import monks/grid_column
-import monks/grid_template_columns
-import monks/justify_content
-import monks/padding
+import c/layout
 
+import msg.{type Msg}
+
+/// switch displays all facets of the M3E Switch wrapper component
+/// 
 pub fn switch_() -> Element(Msg) {
   html.div(
     [
-      attribute.styles([
-        align_items.center,
-        display.grid,
-        frcolumns(3),
-        gap_(5),
-      ]),
+      layout.frame_style(),
     ],
     [
       basic(),
@@ -38,33 +28,16 @@ pub fn switch_() -> Element(Msg) {
   )
 }
 
-// Basic usage
-
-// <m3e-card variant="outlined">
-//   <div slot="content">
-//     <m3e-switch checked></m3e-switch>
-//   </div>
-// </m3e-card>
-
 fn basic() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap_(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         list.flatten([
@@ -76,35 +49,16 @@ fn basic() -> Element(Msg) {
   )
 }
 
-// Labels
-
-// <m3e-card variant="outlined">
-//   <div slot="content" class="switch-box">
-//     <label><m3e-switch></m3e-switch>&nbsp;Switch 1</label>
-//     <m3e-switch id="switch2"></m3e-switch>
-//     <label for="switch2">&nbsp;Switch 2</label>
-//   </div>
-// </m3e-card>
-
 fn labels() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap_(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         list.flatten([
@@ -127,34 +81,16 @@ fn labels() -> Element(Msg) {
   )
 }
 
-// Icons
-
-//   <m3e-card variant="outlined">
-//   <div slot="content" class="switch-box">
-//     <m3e-switch icons="selected" checked></m3e-switch>
-//     <m3e-switch icons="both"></m3e-switch>
-//   </div>
-// </m3e-card>
-
 fn icons() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap_(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         list.flatten([
@@ -180,35 +116,16 @@ fn icons() -> Element(Msg) {
   )
 }
 
-// Disabling
-
-// <m3e-card variant="outlined">
-//   <div slot="content" class="switch-box">
-//     <label><m3e-switch disabled></m3e-switch>&nbsp;Disabled Switch 1</label>
-//     <m3e-switch id="chk3" disabled></m3e-switch>
-//     <label for="chk3">&nbsp;Disabled Switch 2</label>
-//   </div>
-// </m3e-card>
-
 fn disabled() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap_(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         list.flatten([
@@ -226,20 +143,4 @@ fn disabled() -> Element(Msg) {
       ),
     ],
   )
-}
-
-fn frcolumns(number: Int) -> #(String, String) {
-  grid_template_columns.raw("repeat(" <> int.to_string(number) <> ", 1fr)")
-}
-
-fn gap_(g: Int) -> #(String, String) {
-  gap.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
-}
-
-fn column(c: Int) -> #(String, String) {
-  grid_column.raw(int.to_string(c))
-}
-
-fn pad(p: Int) -> #(String, String) {
-  padding.raw("calc(var(--spacing) * " <> int.to_string(p) <> ")")
 }

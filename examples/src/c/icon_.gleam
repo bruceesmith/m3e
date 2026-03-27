@@ -1,31 +1,19 @@
-import gleam/int
-
-import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/card
 import m3e/icon
 
-import monks/align_items
-import monks/display
-import monks/gap
-import monks/grid_column
-import monks/grid_template_columns
-import monks/justify_content
-import monks/padding
+import c/layout
 
 import msg.{type Msg}
 
+/// icon displays all facets of the M3E Icon wrapper component
+/// 
 pub fn icon() -> Element(Msg) {
   html.div(
     [
-      attribute.styles([
-        align_items.center,
-        display.grid,
-        frcolumns(3),
-        gap_(5),
-      ]),
+      layout.frame_style(),
     ],
     [
       basic(),
@@ -34,31 +22,16 @@ pub fn icon() -> Element(Msg) {
   )
 }
 
-//  <m3e-card variant="outlined">
-//     <div slot="content">
-//       <m3e-icon name="home"></m3e-icon>
-//     </div>
-//   </m3e-card>
-
 fn basic() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            align_items.center,
-            display.flex,
-            justify_content.flex_start,
-            gap_(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -74,21 +47,12 @@ fn appearance() -> Element(Msg) {
   card.render_config(
     card.Config(..card.default_config(), variant: card.Outlined),
     [
-      attribute.styles([
-        column(2),
-        display.flex,
-      ]),
+      layout.card_style(),
     ],
     [
       html.div(
         [
-          attribute.styles([
-            display.flex,
-            align_items.center,
-            justify_content.flex_start,
-            gap_(5),
-            pad(2),
-          ]),
+          layout.card_content_style(),
           card.slot(card.Content),
         ],
         [
@@ -111,20 +75,4 @@ fn appearance() -> Element(Msg) {
       ),
     ],
   )
-}
-
-fn frcolumns(number: Int) -> #(String, String) {
-  grid_template_columns.raw("repeat(" <> int.to_string(number) <> ", 1fr)")
-}
-
-fn gap_(g: Int) -> #(String, String) {
-  gap.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
-}
-
-fn column(c: Int) -> #(String, String) {
-  grid_column.raw(int.to_string(c))
-}
-
-fn pad(p: Int) -> #(String, String) {
-  padding.raw("calc(var(--spacing) * " <> int.to_string(p) <> ")")
 }
