@@ -9,12 +9,13 @@ import m3e/icon
 import m3e/state.{Disabled}
 
 import layout
-
+import model
 import msg.{type Msg}
+import package.{type Package, Package}
 
 /// button displays all facets of the M3E Button wrapper component
 /// 
-pub fn button() -> Element(Msg) {
+fn button() -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),
@@ -237,5 +238,16 @@ fn variant() -> Element(Msg) {
         ],
       ),
     ],
+  )
+}
+
+/// package() describes the button showcase in the standard Package record format
+/// 
+pub fn package() -> Package {
+  Package(
+    state: model.Button,
+    label: "Button",
+    view: button,
+    msg: msg.ButtonPageSelected,
   )
 }

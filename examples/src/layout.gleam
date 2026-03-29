@@ -23,7 +23,7 @@ pub fn app_bar_style() -> Attribute(msg) {
 /// app_bar_title_style is the style for the App Bar
 /// 
 pub fn app_bar_title_style() -> Attribute(msg) {
-  attribute.styles([display.flex, justify_content.center])
+  attribute.styles([display.flex])
 }
 
 /// card_style is the style for each Card on a single Frame

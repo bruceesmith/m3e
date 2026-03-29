@@ -5,12 +5,13 @@ import m3e/card
 import m3e/icon
 
 import layout
-
+import model
 import msg.{type Msg}
+import package.{type Package, Package}
 
 /// icon displays all facets of the M3E Icon wrapper component
 /// 
-pub fn icon() -> Element(Msg) {
+fn icon() -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),
@@ -74,5 +75,16 @@ fn appearance() -> Element(Msg) {
         ],
       ),
     ],
+  )
+}
+
+/// package() describes the icon showcase in the standard Package record format
+/// 
+pub fn package() -> Package {
+  Package(
+    state: model.Icon,
+    label: "Icon",
+    view: icon,
+    msg: msg.IconPageSelected,
   )
 }

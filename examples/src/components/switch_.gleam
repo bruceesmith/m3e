@@ -9,12 +9,13 @@ import m3e/state.{Checked, Disabled}
 import m3e/switch
 
 import layout
-
+import model
 import msg.{type Msg}
+import package.{type Package, Package}
 
 /// switch displays all facets of the M3E Switch wrapper component
 /// 
-pub fn switch_() -> Element(Msg) {
+fn switch_() -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),
@@ -142,5 +143,16 @@ fn disabled() -> Element(Msg) {
         ]),
       ),
     ],
+  )
+}
+
+/// package() describes the switch showcase in the standard Package record format
+/// 
+pub fn package() -> Package {
+  Package(
+    state: model.Switch,
+    label: "Switch",
+    view: switch_,
+    msg: msg.SwitchPageSelected,
   )
 }

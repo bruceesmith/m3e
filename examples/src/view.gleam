@@ -1,19 +1,16 @@
 //// view constructs the HTML for the SPA
 
+import gleam/list
 import gleam/option.{Some}
+import gleam/result
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 import lustre/event
 
-import layout
-import model.{type Model}
-import msg.{type Msg, ButtonPageSelected, IconPageSelected, SwitchPageSelected}
-
 import m3e/app_bar
 import m3e/drawer_container
 import m3e/drawer_toggle
-import m3e/helpers
 import m3e/icon
 import m3e/icon_button
 import m3e/link
@@ -27,15 +24,15 @@ import components/button_
 import components/home
 import components/icon_
 import components/switch_
+import layout
+import model.{type Model}
+import msg.{type Msg}
+import package.{type Package}
 
+/// view is the display member of the model-view-update triumvirate (The Elm Architecture)
+/// view takes the model, as updated by update(), and renders HTML from it
+/// 
 pub fn view(model: Model) -> Element(Msg) {
-  let content = case model.state {
-    model.Home -> home.home()
-    model.Button -> button_.button()
-    model.Icon -> icon_.icon()
-    model.Switch -> switch_.switch_()
-  }
-
   theme.render(
     theme.new("app-theme")
       |> theme.contrast(theme.High)
@@ -43,11 +40,13 @@ pub fn view(model: Model) -> Element(Msg) {
     [],
     [
       appbar(),
-      body(content),
+      body(content(model.state)),
     ],
   )
 }
 
+/// appbar builds the top application bar
+/// 
 fn appbar() -> Element(Msg) {
   app_bar.new()
   |> app_bar.for(Some("main-content"))
@@ -94,6 +93,8 @@ fn appbar() -> Element(Msg) {
   ])
 }
 
+/// body builds the overall page body
+/// 
 fn body(content: Element(Msg)) -> Element(Msg) {
   drawer_container.render_config(
     drawer_container.Config(
@@ -107,6 +108,18 @@ fn body(content: Element(Msg)) -> Element(Msg) {
   )
 }
 
+/// content builds the variable content, the "start drawer", of the page. content() represents a
+/// compromise between succinctness of code (the use of list.find()) and total type safety (where
+/// a giant case statement exhaustively matches model.state with a component-specific function)
+/// 
+fn content(state: model.State) -> Element(Msg) {
+  list.find(packages(), fn(p) { p.state == state })
+  |> result.map(fn(p) { p.view() })
+  |> result.unwrap(home.home())
+}
+
+/// github builds the Github link
+/// 
 fn github() -> Element(Msg) {
   html.img([
     attribute.attribute(
@@ -119,23 +132,36 @@ fn github() -> Element(Msg) {
   ])
 }
 
+/// menu builds the left-side navigation menu
+///
 fn menu() -> Element(Msg) {
   nav_menu.new()
-  |> nav_menu.render([attribute.id("nav-drawer"), helpers.slot("start")], [
-    nav_menu_item.new("Button")
-      |> nav_menu_item.render([
-        event.on_click(ButtonPageSelected),
-        attribute.id("m3e-nav-menu-item-1"),
-      ]),
-    nav_menu_item.new("Icon")
-      |> nav_menu_item.render([
-        event.on_click(IconPageSelected),
-        attribute.id("m3e-nav-menu-item-2"),
-      ]),
-    nav_menu_item.new("Switch")
-      |> nav_menu_item.render([
-        event.on_click(SwitchPageSelected),
-        attribute.id("m3e-nav-menu-item-3"),
-      ]),
-  ])
+  |> nav_menu.render(
+    [attribute.id("nav-drawer"), drawer_container.slot(drawer_container.Start)],
+    nav_menu_items(),
+  )
+}
+
+/// nav_menu_items builds the left-side navigation menu items
+/// 
+fn nav_menu_items() -> List(Element(Msg)) {
+  list.map(packages(), fn(package) -> Element(Msg) {
+    nav_menu_item.new(package.label)
+    |> nav_menu_item.render([
+      event.on_click(package.msg),
+    ])
+  })
+}
+
+/// packages provides the "source of truth" for the components that are displayed in the
+/// showcase. It both simplifies and standardises the addition of new components. It is used 
+/// by nav_men_items to construct the left-side navigation menu, and by content() to build
+/// the variable section of the page
+/// 
+fn packages() -> List(Package) {
+  [
+    button_.package(),
+    icon_.package(),
+    switch_.package(),
+  ]
 }
