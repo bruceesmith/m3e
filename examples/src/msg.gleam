@@ -2,6 +2,7 @@
 
 pub type Msg {
   HomeSelected
+  AppBarPageSelected
   ButtonPageSelected
   IconPageSelected
   SwitchPageSelected

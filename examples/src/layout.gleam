@@ -7,6 +7,7 @@ import lustre/attribute.{type Attribute}
 import monks/align_items
 import monks/display
 import monks/flex
+import monks/flex_direction
 import monks/gap
 import monks/grid_column
 import monks/grid_template_columns
@@ -30,7 +31,6 @@ pub fn app_bar_title_style() -> Attribute(msg) {
 /// 
 pub fn card_style() -> Attribute(msg) {
   attribute.styles([
-    column(2),
     display.flex,
   ])
 }
@@ -57,9 +57,9 @@ pub fn column(c: Int) -> #(String, String) {
 /// 
 pub fn frame_style() -> Attribute(msg) {
   attribute.styles([
-    align_items.center,
-    display.grid,
-    frcolumns(3),
+    align_items.stretch,
+    display.flex,
+    flex_direction.column,
     gap(5),
   ])
 }

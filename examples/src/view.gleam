@@ -20,6 +20,7 @@ import m3e/state.{Selected}
 import m3e/theme
 import m3e/tooltip
 
+import components/app_bar_
 import components/button_
 import components/home
 import components/icon_
@@ -160,6 +161,7 @@ fn nav_menu_items() -> List(Element(Msg)) {
 /// 
 fn packages() -> List(Package) {
   [
+    app_bar_.package(),
     button_.package(),
     icon_.package(),
     switch_.package(),

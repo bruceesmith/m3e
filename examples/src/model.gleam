@@ -2,6 +2,7 @@
 
 pub type State {
   Home
+  AppBar
   Button
   Icon
   Switch
