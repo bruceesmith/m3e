@@ -39,7 +39,14 @@ pub fn render_test() {
         attribute.attribute("hide-selection-indicator", ""),
       ],
       [
-        element.element("m3e-option", [attribute.attribute("value", "val")], []),
+        element.element(
+          "m3e-option",
+          [
+            attribute.attribute("highlight-mode", "contains"),
+            attribute.attribute("value", "val"),
+          ],
+          [],
+        ),
       ],
     ),
   )

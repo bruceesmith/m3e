@@ -18,6 +18,7 @@ pub fn render_test() {
       "m3e-option",
       [
         attribute.attribute("disabled", ""),
+        attribute.attribute("highlight-mode", "contains"),
         attribute.attribute("selected", ""),
         attribute.attribute("value", "test-value"),
       ],
@@ -30,14 +31,23 @@ pub fn render_defaults_test() {
   let o = opt.new()
 
   opt.render(o, [], [])
-  |> should.equal(element.element("m3e-option", [], []))
+  |> should.equal(
+    element.element(
+      "m3e-option",
+      [attribute.attribute("highlight-mode", "contains")],
+      [],
+    ),
+  )
 }
 
 pub fn config_test() {
   let c =
     opt.Config(
-      interaction: Disabled,
+      disabled: Disabled,
+      highlighting: opt.HighlightEnabled,
+      highlight_mode: opt.Contains,
       selection: Selected,
+      term: "test-term",
       value: Some("test-value"),
     )
 
@@ -49,6 +59,8 @@ pub fn config_test() {
       "m3e-option",
       [
         attribute.attribute("disabled", ""),
+        attribute.attribute("highlight-mode", "contains"),
+        attribute.attribute("term", "test-term"),
         attribute.attribute("selected", ""),
         attribute.attribute("value", "test-value"),
       ],
@@ -60,7 +72,10 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = opt.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
+  c.highlighting |> should.equal(opt.HighlightEnabled)
+  c.highlight_mode |> should.equal(opt.Contains)
+  c.term |> should.equal("")
   c.selection |> should.equal(Unselected)
   c.value |> should.equal(None)
 }
@@ -93,7 +108,8 @@ pub fn setters_test() {
     element.element(
       "m3e-option",
       [
-        attribute.attribute("disabled", ""),
+        attribute.disabled(True),
+        attribute.attribute("highlight-mode", "contains"),
         attribute.attribute("selected", ""),
         attribute.attribute("value", "test-value"),
       ],

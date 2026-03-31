@@ -17,16 +17,36 @@ import m3e/state.{
 /// Option holds all information to create an Option
 ///
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is enabled or disabled
+/// - highlighting: Whether text highlighting is enabled
+/// - highlight_mode: The mode in which to highlight a term
 /// - selection: Whether the element is selected
+/// - term: The search term to highlight
 /// - value: A string representing the value of the option
 /// 
 pub opaque type Option {
   Option(
-    interaction: Interaction,
+    disabled: Interaction,
+    highlighting: Highlighting,
+    highlight_mode: TextHighlightMode,
     selection: SelectionState,
+    term: String,
     value: GleamOption(String),
   )
+}
+
+/// Highlighting specifies if text highlighting is active
+pub type Highlighting {
+  HighlightEnabled
+  HighlightDisabled
+}
+
+/// TextHighlightMode is the mode in which to highlight a term
+/// 
+pub type TextHighlightMode {
+  Contains
+  StartsWith
+  EndsWith
 }
 
 // --- CONFIGURATION ---
@@ -35,8 +55,11 @@ pub opaque type Option {
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
+    highlighting: Highlighting,
+    highlight_mode: TextHighlightMode,
     selection: SelectionState,
+    term: String,
     value: GleamOption(String),
   )
 }
@@ -45,9 +68,12 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
+    highlighting: HighlightEnabled,
+    highlight_mode: Contains,
     selection: Unselected,
     value: None,
+    term: "",
   )
 }
 
@@ -62,15 +88,38 @@ pub fn new() -> Option {
 /// from_config creates an Option from a Config record
 /// 
 pub fn from_config(c: Config) -> Option {
-  Option(interaction: c.interaction, selection: c.selection, value: c.value)
+  Option(
+    disabled: c.disabled,
+    highlighting: c.highlighting,
+    highlight_mode: c.highlight_mode,
+    selection: c.selection,
+    term: c.term,
+    value: c.value,
+  )
 }
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(o: Option, interaction: Interaction) -> Option {
-  Option(..o, interaction: interaction)
+pub fn disabled(o: Option, disabled: Interaction) -> Option {
+  Option(..o, disabled: disabled)
+}
+
+/// highlighting sets the highlighting field
+/// 
+pub fn highlighting(o: Option, highlighting: Highlighting) -> Option {
+  Option(..o, highlighting: highlighting)
+}
+
+/// highlight_mode sets the highlight_mode field
+pub fn highlight_mode(o: Option, mode: TextHighlightMode) -> Option {
+  Option(..o, highlight_mode: mode)
+}
+
+/// term sets the highlight term field
+pub fn term(o: Option, term: String) -> Option {
+  Option(..o, term: term)
 }
 
 /// selected sets the selection field
@@ -98,9 +147,26 @@ pub fn render(
     "m3e-option",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", o.interaction == Disabled),
+        helpers.boolean_attribute("disabled", o.disabled == Disabled),
         helpers.boolean_attribute("selected", o.selection == Selected),
-        helpers.option_attribute(o.value, fn(_) { "value" }, function.identity, None),
+        helpers.boolean_attribute(
+          "disable-highlight",
+          o.highlighting == HighlightDisabled,
+        ),
+        case o.term {
+          "" -> attribute.none()
+          _ -> attribute.attribute("term", o.term)
+        },
+        attribute.attribute(
+          "highlight-mode",
+          highlight_mode_to_string(o.highlight_mode),
+        ),
+        helpers.option_attribute(
+          o.value,
+          fn(_) { "value" },
+          function.identity,
+          None,
+        ),
       ],
       attributes,
     ])
@@ -117,4 +183,12 @@ pub fn render_config(
   children: List(Element(msg)),
 ) -> Element(msg) {
   render(from_config(config), attributes, children)
+}
+
+fn highlight_mode_to_string(mode: TextHighlightMode) -> String {
+  case mode {
+    Contains -> "contains"
+    StartsWith -> "starts-with"
+    EndsWith -> "ends-with"
+  }
 }
