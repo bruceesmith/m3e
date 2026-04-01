@@ -17,7 +17,7 @@ import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 /// Button holds all the values necessary to construct am M3E Button
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled or enabled
+/// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
 /// - form_submission: handles this button's role in form submission
 /// - icons: Renders an icon before the button's label, Renders an icon after the button's label, Renders an icon before the button's label, when selected

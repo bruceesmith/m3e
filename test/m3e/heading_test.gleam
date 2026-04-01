@@ -172,7 +172,7 @@ pub fn render_config_test() {
     Config(
       ..heading.default_config(),
       text: "Config Text",
-      emphasis: Emphasized,
+      emphasized: Emphasized,
       size: config.Small,
     )
   let expected =

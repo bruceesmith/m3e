@@ -12,6 +12,11 @@ import m3e/helpers
 
 /// Button Group component arranges multiple into a unified, expressive layout
 ///
+/// ## Fields:
+/// - multi: Whether multiple toggle buttons can be selected
+/// - size: The size of the group
+/// - variant: The appearance variant of the group
+///
 pub opaque type ButtonGroup {
   ButtonGroup(
     multi: SelectionMode,

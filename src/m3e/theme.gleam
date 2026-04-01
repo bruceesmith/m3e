@@ -75,11 +75,11 @@ pub const default_scheme = Auto
 /// Theme is the basis for an m3e-theme component
 ///
 /// ## Fields:
-/// - color: a HEX color from which to derive color palettes
+/// - color: The hex color from which to derive dynamic color palettes
 /// - contrast: The contrast level of the theme
-/// - density: The density of the theme
+/// - density: The density scale (0, -1, -2)
 /// - motion: The motion of the theme
-/// - scheme: The scheme of the theme
+/// - scheme: The color scheme of the theme
 /// - strong_focus: Whether to enable strong focus indicators
 ///
 pub opaque type Theme {
@@ -237,7 +237,12 @@ fn contrast_to_string(c: Contrast) -> String {
 /// density_validate ensures a number is within the valid density range
 ///
 fn density_validate(d: Density) -> Density {
-  helpers.clamp_with_default(d, smallest_density, largest_density, default_density)
+  helpers.clamp_with_default(
+    d,
+    smallest_density,
+    largest_density,
+    default_density,
+  )
 }
 
 fn motion_to_string(m: Motion) -> String {

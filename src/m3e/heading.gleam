@@ -16,12 +16,18 @@ pub type Emphasis {
   Standard
 }
 
-pub const default_emphasis = Standard
+pub const default_emphasized = Standard
 
 /// Heading is the basis for constructing an HTML m3e-heading component
 /// 
+/// ## Fields:
+/// - emphasized: Whether the heading uses an emphasized typescale
+/// - size: The size of the heading
+/// - variant: The appearance variant of the heading
+/// - text: The heading text
+/// 
 pub opaque type Heading {
-  Heading(emphasis: Emphasis, size: Size, variant: Variant, text: String)
+  Heading(emphasized: Emphasis, size: Size, variant: Variant, text: String)
 }
 
 pub const default_size: Size = config.Medium
@@ -42,14 +48,14 @@ pub const default_variant = Display
 /// Config holds the configuration for a Heading
 /// 
 pub type Config {
-  Config(emphasis: Emphasis, size: Size, variant: Variant, text: String)
+  Config(emphasized: Emphasis, size: Size, variant: Variant, text: String)
 }
 
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
   Config(
-    emphasis: default_emphasis,
+    emphasized: default_emphasized,
     size: default_size,
     variant: default_variant,
     text: "",
@@ -70,15 +76,20 @@ pub fn new(text: String) -> Heading {
 /// from_config creates a Heading from a Config record
 /// 
 pub fn from_config(c: Config) -> Heading {
-  Heading(emphasis: c.emphasis, size: c.size, variant: c.variant, text: c.text)
+  Heading(
+    emphasized: c.emphasized,
+    size: c.size,
+    variant: c.variant,
+    text: c.text,
+  )
 }
 
 // --- SETTERS ---
 
-/// emphasized sets the `emphasis` field of a Heading
+/// emphasized sets the `emphasized` field of a Heading
 /// 
-pub fn emphasized(h: Heading, emphasis: Emphasis) -> Heading {
-  Heading(..h, emphasis: emphasis)
+pub fn emphasized(h: Heading, emphasized: Emphasis) -> Heading {
+  Heading(..h, emphasized: emphasized)
 }
 
 /// size sets the `size` field of a Heading
@@ -101,7 +112,7 @@ pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-heading",
     [
-      helpers.boolean_attribute("emphasized", h.emphasis == Emphasized),
+      helpers.boolean_attribute("emphasized", h.emphasized == Emphasized),
       attribute.attribute(
         "size",
         config.size_to_string(config.clamp_to_restricted_size(

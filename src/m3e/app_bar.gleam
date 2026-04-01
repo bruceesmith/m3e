@@ -18,7 +18,7 @@ import m3e/helpers
 /// ## Fields:
 /// - alignment: Whether the title and subtitle are centered
 /// - for: The identifier of the interactive control to which this element is attached
-/// - size: Size of the bar
+/// - size: The size of the bar
 /// 
 pub opaque type AppBar {
   AppBar(alignment: TitleAlignment, for: Option(String), size: Size)
@@ -118,7 +118,12 @@ pub fn render(
             default_size,
           )),
         ),
-        helpers.option_attribute(a.for, fn(_) { "for" }, function.identity, None),
+        helpers.option_attribute(
+          a.for,
+          fn(_) { "for" },
+          function.identity,
+          None,
+        ),
       ],
       attributes,
     ])

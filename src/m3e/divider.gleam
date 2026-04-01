@@ -12,6 +12,10 @@ import m3e/layout.{type Orientation}
 
 /// Divider holds all the values necessary to construct am M3E Divider
 ///
+/// ## Fields:
+/// - inset: Whether the divider is indented with equal padding on both sides
+/// - vertical: Whether the divider is vertically aligned with adjacent content
+///
 pub opaque type Divider {
   Divider(inset: Option(Inset), vertical: Orientation)
 }
@@ -62,8 +66,16 @@ pub fn render(
     "m3e-divider",
     list.append(
       [
-        helpers.option_attribute(divider.inset, inset_to_string, fn(_) { "" }, None),
-        helpers.boolean_attribute("vertical", divider.vertical == layout.Vertical),
+        helpers.option_attribute(
+          divider.inset,
+          inset_to_string,
+          fn(_) { "" },
+          None,
+        ),
+        helpers.boolean_attribute(
+          "vertical",
+          divider.vertical == layout.Vertical,
+        ),
       ]
         |> list.filter(fn(a) { a != attribute.none() }),
       attributes,

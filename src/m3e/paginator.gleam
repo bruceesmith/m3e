@@ -59,7 +59,7 @@ pub const default_page_size_visibility = Visible
 /// - page_index: The zero-based page index of the displayed list of items
 /// - page_size: The number of items to display in a page
 /// - page_sizes: A comma separated list of available page sizes
-/// - page_size_variant: The appearance variant of the page size
+/// - page_size_variant: The appearance variant of the page size field
 /// - previous_page_label: The accessible label given to the button used to move to the previous page
 /// - first_last_buttons_visibility: Whether to show first/last buttons
 ///

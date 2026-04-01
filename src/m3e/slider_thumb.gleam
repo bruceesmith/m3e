@@ -17,8 +17,8 @@ import m3e/state.{type Interaction, Disabled}
 /// 
 /// ## Fields:
 /// - interaction: Whether the element is enabled or disabled
-/// - name - The name that identifies the element when submitting the associated form
-/// - value - The value of the thumb
+/// - name: The name that identifies the element when submitting the associated form
+/// - value: The value of the thumb
 /// 
 pub opaque type SliderThumb {
   SliderThumb(

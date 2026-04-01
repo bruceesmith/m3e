@@ -20,12 +20,12 @@ pub const default_divider: Divider = HideDivider
 /// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
 /// 
 /// ## Fields:
-/// - end: The state of the end drawer (Open or Closed)
+/// - end: Whether the end drawer is open
 /// - end_mode: The behavior mode of the end drawer
-/// - end_divider: Whether to show a divider between the end drawer and content
-/// - start: The state of the start drawer (Open or Closed)
+/// - end_divider: Whether to show a divider between the end drawer and content for `side` mode
+/// - start: Whether the start drawer is open
 /// - start_mode: The behavior mode of the start drawer
-/// - start_divider: Whether to show a divider between the start drawer and content
+/// - start_divider: Whether to show a divider between the start drawer and content for `side` mode
 ///
 pub opaque type DrawerContainer(msg) {
   DrawerContainer(
@@ -273,7 +273,10 @@ pub fn render(
         Some(_) -> {
           [
             helpers.boolean_attribute("end", c.end == Open),
-            helpers.boolean_attribute("end-divider", c.end_divider == ShowDivider),
+            helpers.boolean_attribute(
+              "end-divider",
+              c.end_divider == ShowDivider,
+            ),
             attribute.attribute("end-mode", mode_to_string(c.end_mode)),
           ]
         }
@@ -283,7 +286,10 @@ pub fn render(
         Some(_) -> {
           [
             helpers.boolean_attribute("start", c.start == Open),
-            helpers.boolean_attribute("start-divider", c.start_divider == ShowDivider),
+            helpers.boolean_attribute(
+              "start-divider",
+              c.start_divider == ShowDivider,
+            ),
             attribute.attribute("start-mode", mode_to_string(c.start_mode)),
           ]
         }

@@ -17,7 +17,7 @@ pub type Mode {
 /// NavBar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
 /// ## Fields:
-/// - mode: the possible modes in which to present items in a navigation bar
+/// - mode: The mode in which items in the bar are presented
 ///
 pub opaque type NavBar {
   NavBar(mode: Mode)

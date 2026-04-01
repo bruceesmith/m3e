@@ -16,7 +16,7 @@ import m3e/helpers
 /// ## Fields:
 /// - for: the identifier of the interactive control to which this element is attached
 /// - label: the text content of the badge
-/// - size: the size of the badge
+/// - size: The size of the badge
 /// - badge_position: the position of the badge, when attached to another element
 /// 
 pub opaque type Badge {

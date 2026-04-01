@@ -33,14 +33,13 @@ pub const default_grade = Medium
 /// Icon is the basis for a m3e-icon element that uses Material Symbols
 ///
 /// ## Fields:
-/// - name: The icon to load,
-///     Refer to [Material Symbols](https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0)
+/// - name: The name of the icon
 /// - fill: is the icon filled or not (the FILL axis of the variable font)
-/// - grade:  the stroke thickness of an icon (the GRAD axis of the variable font)
-/// - optical_size:  the optical size of the icon. Between 20 and 48
+/// - grade: The grade of the icon
+/// - optical_size: A value from 20 to 48 indicating the optical size of the icon
 /// - purpose: the role of the icon
-/// - variant:  the visual style of the icon
-/// - weight: the thickness and boldness of the icon's strokes. Between 100 and 700
+/// - variant:  The appearance variant of the icon
+/// - weight: A value from 100 to 700 indicating the weight of the icon
 ///
 pub opaque type Icon(msg) {
   Icon(

@@ -58,7 +58,7 @@ pub type Slot {
 /// Stepper provides Lustre support for the [M3E Stepper component
 /// 
 /// ## Fields:
-/// - header-position: The position of the step header, when oriented horizontally.
+/// - header_position: The position of the step header, when oriented horizontally
 /// - label_position: The position of the step labels, when oriented horizontally.
 /// - linear: Whether the validity of previous steps should be checked or not.
 /// - orientation: The orientation of the stepper.
@@ -169,7 +169,10 @@ pub fn render(
           label_position_to_string(stepper.label_position),
         ),
         helpers.boolean_attribute("linear", stepper.linear == Check),
-        attribute.attribute("orientation", orientation_to_string(stepper.orientation)),
+        attribute.attribute(
+          "orientation",
+          orientation_to_string(stepper.orientation),
+        ),
       ],
       attributes,
     ])

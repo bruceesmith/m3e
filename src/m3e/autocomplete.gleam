@@ -28,6 +28,7 @@ pub const default_activation: Activation = ManualActivate
 /// ## Fields:
 /// - auto_activate: Whether the first option should be automatically activated
 /// - for: The identifier of the interactive control to which this element is attached
+/// - panel_class: Class or list of classes to be applied to the autocomplete's overlay panel
 /// - selection_indicator: Whether to hide the selection indicator
 /// - requirement: Whether the user is required to make a selection
 ///
@@ -125,7 +126,10 @@ pub fn render(a: Autocomplete, children: List(Option)) -> Element(msg) {
   element.element(
     "m3e-autocomplete",
     [
-      helpers.boolean_attribute("auto-activate", a.auto_activate == AutoActivate),
+      helpers.boolean_attribute(
+        "auto-activate",
+        a.auto_activate == AutoActivate,
+      ),
       attribute.attribute("for", a.for),
       helpers.boolean_attribute(
         "hide-selection-indicator",

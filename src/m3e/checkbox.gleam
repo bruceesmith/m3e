@@ -17,7 +17,7 @@ import m3e/state.{
 
 /// Checkbox holds all the values necessary to construct am M3E Checkbox
 ///
-/// - checked: whether the checkbox is checked
+/// - checked: Whether the element is checked
 /// - interaction: whether the checkbox is enabled or disabled
 /// - form_submission: handles this element's role in form submission
 /// - requirement: Whether a value is required for the element

@@ -32,7 +32,7 @@ pub const default_behaviour: Behaviour = Normal
 /// - removability: whether the chip can be removed
 /// - selection: whether the chip is selected or not
 /// - type_: the type of Chip
-/// - variant: variant of the chip
+/// - variant: The appearance variant of the chip
 ///
 pub opaque type Chip(msg) {
   Chip(

@@ -56,10 +56,10 @@ pub const maximum_show_delay = 500
 /// ## Fields:
 /// - tip: text of the tool tip
 /// - for_id: the ID of the element to which the tip is associated
-/// - position: tip position relative to its paired element
-/// - hide_delay: amount of time, in milliseconds, before hiding the tooltip
-/// - show_delay: amount of time, in milliseconds, before showing the tooltip
-/// - disabled: the tooltip is disabled (or not)
+/// - position: The position of the tooltip
+/// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
+/// - show_delay: The amount of time, in milliseconds, before showing the tooltip
+/// - disabled: Whether the element is disabled
 /// - gestures: behaviour on touch devices
 ///
 pub opaque type Tooltip {

@@ -6,7 +6,7 @@ import lustre/element.{type Element}
 /// DialogAction holds the return value for a dialog action
 /// 
 /// ## Fields:
-/// - return_value: The return value of the dialog action
+/// - return_value: The value to return from the dialog
 /// 
 pub opaque type DialogAction {
   DialogAction(return_value: String)

@@ -18,7 +18,7 @@ import m3e/helpers
 /// - detents: Detents (discrete height states) the sheet can snap to.
 /// - handle: Whether to display a drag handle and enable the top region of the sheet as a gesture surface for dragging between detents.
 /// - handle_label: The accessible label given to the drag handle.
-/// - hideable: Whether the bottom sheet can hide when it is swiped down.
+/// - hideable: Whether the bottom sheet can hide when its swiped down
 /// - hide_friction: The friction coefficient to hide the sheet, or set it to the next closest expanded detent.
 /// - id: The identifier of the bottom sheet.
 /// - modal: Whether the bottom sheet behaves as modal.
@@ -220,7 +220,10 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
       case b.detents {
         [] -> attribute.none()
         _ ->
-          attribute.attribute("detents", string.join(list.map(b.detents, detent_to_string), " "))
+          attribute.attribute(
+            "detents",
+            string.join(list.map(b.detents, detent_to_string), " "),
+          )
       },
       helpers.boolean_attribute("handle", case b.handle {
         ShowHandle -> True

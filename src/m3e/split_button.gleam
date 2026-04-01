@@ -22,9 +22,9 @@ pub type Slot {
 /// 
 /// ## Fields:
 /// - leading: the leading part of the split button
-/// - size: the size of the split button
+/// - size: The size of the button
 /// - trailing: the trailing part of the split button
-/// - variant: the appearance variant of the split button
+/// - variant: The appearance variant of the button
 ///
 pub opaque type SplitButton(msg) {
   SplitButton(

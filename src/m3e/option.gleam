@@ -17,7 +17,7 @@ import m3e/state.{
 /// Option holds all information to create an Option
 ///
 /// ## Fields:
-/// - disabled: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - highlighting: Whether text highlighting is enabled
 /// - highlight_mode: The mode in which to highlight a term
 /// - selection: Whether the element is selected

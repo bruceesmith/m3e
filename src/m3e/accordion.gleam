@@ -10,7 +10,7 @@ import m3e/helpers
 /// Accordion is a container for Expansion Panels
 ///
 /// ## Fields:
-/// - multi: Whether multiple panels can be expanded at the same time
+/// - multi: Whether multiple expansion panels can be open at the same time
 ///
 pub opaque type Accordion {
   Accordion(multi: Bool)
