@@ -16,12 +16,12 @@ import m3e/helpers
 /// navigation, and contextual information at the top of an application screen
 /// 
 /// ## Fields:
-/// - alignment: Whether the title and subtitle are centered
+/// - centered: Whether the title and subtitle are centered
 /// - for: The identifier of the interactive control to which this element is attached
 /// - size: The size of the bar
 /// 
 pub opaque type AppBar {
-  AppBar(alignment: TitleAlignment, for: Option(String), size: Size)
+  AppBar(centered: TitleAlignment, for: Option(String), size: Size)
 }
 
 /// Default size
@@ -54,13 +54,13 @@ pub const default_title_alignment: TitleAlignment = Standard
 /// Config holds the configuration for an AppBar
 /// 
 pub type Config {
-  Config(alignment: TitleAlignment, for: Option(String), size: Size)
+  Config(centered: TitleAlignment, for: Option(String), size: Size)
 }
 
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(alignment: default_title_alignment, for: None, size: default_size)
+  Config(centered: default_title_alignment, for: None, size: default_size)
 }
 
 // --- CONSTRUCTORS ---
@@ -74,15 +74,15 @@ pub fn new() -> AppBar {
 /// from_config creates a new AppBar from a Config record
 /// 
 pub fn from_config(c: Config) -> AppBar {
-  AppBar(alignment: c.alignment, for: c.for, size: c.size)
+  AppBar(centered: c.centered, for: c.for, size: c.size)
 }
 
 // --- SETTERS ---
 
-/// alignment sets the title alignment
+/// centered sets the title centered
 /// 
-pub fn alignment(a: AppBar, alignment: TitleAlignment) -> AppBar {
-  AppBar(..a, alignment: alignment)
+pub fn centered(a: AppBar, centered: TitleAlignment) -> AppBar {
+  AppBar(..a, centered: centered)
 }
 
 /// for sets the for attribute
@@ -110,7 +110,7 @@ pub fn render(
     "m3e-app-bar",
     list.flatten([
       [
-        helpers.boolean_attribute("centered", a.alignment == Centered),
+        helpers.boolean_attribute("centered", a.centered == Centered),
         attribute.attribute(
           "size",
           config.size_to_string(config.clamp_to_restricted_size(

@@ -9,23 +9,23 @@ import m3e/config
 
 pub fn new_test() {
   app_bar.new()
-  |> app_bar.alignment(app_bar.Centered)
+  |> app_bar.centered(app_bar.Centered)
   |> app_bar.for(Some("nav-id"))
   |> app_bar.size(config.Large)
   |> should.equal(
     app_bar.from_config(app_bar.Config(
-      alignment: app_bar.Centered,
+      centered: app_bar.Centered,
       for: Some("nav-id"),
       size: config.Large,
     )),
   )
 }
 
-pub fn alignment_test() {
+pub fn centered_test() {
   app_bar.new()
-  |> app_bar.alignment(app_bar.Centered)
+  |> app_bar.centered(app_bar.Centered)
   |> should.equal(app_bar.from_config(
-    app_bar.Config(..app_bar.default_config(), alignment: app_bar.Centered),
+    app_bar.Config(..app_bar.default_config(), centered: app_bar.Centered),
   ))
 }
 
@@ -48,7 +48,7 @@ pub fn size_test() {
 pub fn render_test() {
   let bar =
     app_bar.new()
-    |> app_bar.alignment(app_bar.Centered)
+    |> app_bar.centered(app_bar.Centered)
     |> app_bar.for(Some("nav-id"))
     |> app_bar.size(config.Large)
 
