@@ -41,7 +41,7 @@ pub type Slot {
 /// - dismissibility: Whether a button is presented that can be used to close the snackbar
 /// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar
 ///
-pub type Snackbar {
+pub opaque type Snackbar {
   Snackbar(
     message: String,
     action_label: Option(String),

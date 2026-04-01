@@ -6,11 +6,13 @@ import m3e/snackbar
 
 pub fn snackbar_new_test() {
   let s = snackbar.new("Hello")
-  s.message |> should.equal("Hello")
-  s.action_label |> should.equal(None)
-  s.close_label |> should.equal(None)
-  s.dismissibility |> should.equal(NotDismissible)
-  s.duration |> should.equal(None)
+  let action = snackbar.to_action(s, None)
+
+  action.message |> should.equal("Hello")
+  action.action_label |> should.equal(snackbar.default_action_label)
+  action.close_label |> should.equal(snackbar.default_close_label)
+  action.dismissable |> should.equal(False)
+  action.duration |> should.equal(snackbar.default_duration)
 }
 
 pub fn snackbar_setters_test() {
@@ -20,12 +22,14 @@ pub fn snackbar_setters_test() {
   |> snackbar.close_label(Some("Close"))
   |> snackbar.dismissible(Dismissible)
   |> snackbar.duration(Some(5000))
-  |> should.equal(snackbar.Snackbar(
+  |> snackbar.to_action(None)
+  |> should.equal(snackbar.Open(
     message: "New",
-    action_label: Some("Action"),
-    close_label: Some("Close"),
-    dismissibility: Dismissible,
-    duration: Some(5000),
+    action_label: "Action",
+    dismissable: True,
+    close_label: "Close",
+    duration: 5000,
+    callback: None,
   ))
 }
 
