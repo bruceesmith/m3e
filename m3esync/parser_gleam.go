@@ -12,7 +12,7 @@ import (
 // Regex patterns for parsing Gleam files
 var (
 	// Matches typical Gleam record fields "field_name: Type"
-	fieldRegex = regexp.MustCompile(`([a-z_][a-z0-9_]*):\s*([A-Z][A-Za-z0-9_]*)`)
+	fieldRegex = regexp.MustCompile(`([a-z_][a-z0-9_]*):\s*([A-Za-z][A-Za-z0-9_\.\(\)]*)`)
 	// Matches documentation lines for fields: "/// - field_name: description"
 	docRegex = regexp.MustCompile(`^\s*///\s*-\s*([a-z_][a-z0-9_]*):\s*(.*)`)
 )
