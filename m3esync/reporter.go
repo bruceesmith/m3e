@@ -95,7 +95,7 @@ func hasAlternative(attrName string, gFields GFields) bool {
 	case "download", "href", "rel", "target":
 		_, exists := gFields["link"]
 		return exists
-	case "name", "value":
+	case "name", "type", "value":
 		_, exists := gFields["form_submission"]
 		return exists
 	default:
