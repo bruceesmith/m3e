@@ -198,7 +198,7 @@ pub fn modal_test() {
 pub fn open_test() {
   let sheet =
     bottom_sheet.new()
-    |> bottom_sheet.state(bottom_sheet.Open)
+    |> bottom_sheet.open(bottom_sheet.Open)
   let expected =
     element.element(
       "m3e-bottom-sheet",
@@ -248,7 +248,7 @@ pub fn config_test() {
       hide_friction: 0.5,
       id: "my-sheet",
       modal: bottom_sheet.Modal,
-      state: bottom_sheet.Open,
+      open: bottom_sheet.Open,
     )
   let expected =
     element.element(

@@ -22,7 +22,7 @@ import m3e/helpers
 /// - hide_friction: The friction coefficient to hide the sheet, or set it to the next closest expanded detent.
 /// - id: The identifier of the bottom sheet.
 /// - modal: Whether the bottom sheet behaves as modal.
-/// - state: Whether the bottom sheet is open
+/// - open: Whether the bottom sheet is open
 /// 
 pub opaque type BottomSheet {
   BottomSheet(
@@ -34,7 +34,7 @@ pub opaque type BottomSheet {
     hide_friction: Float,
     id: String,
     modal: Modal,
-    state: State,
+    open: State,
   )
 }
 
@@ -108,7 +108,7 @@ pub type Config {
     hide_friction: Float,
     id: String,
     modal: Modal,
-    state: State,
+    open: State,
   )
 }
 
@@ -124,7 +124,7 @@ pub fn default_config() -> Config {
     hide_friction: default_hide_friction,
     id: "",
     modal: default_modal,
-    state: default_state,
+    open: default_state,
   )
 }
 
@@ -142,7 +142,7 @@ pub fn from_config(c: Config) -> BottomSheet {
     hide_friction: c.hide_friction,
     id: c.id,
     modal: c.modal,
-    state: c.state,
+    open: c.open,
   )
 }
 
@@ -202,10 +202,10 @@ pub fn modal(b: BottomSheet, modal: Modal) -> BottomSheet {
   BottomSheet(..b, modal: modal)
 }
 
-/// state sets the state field of a BottomSheet
+/// open sets the open field of a BottomSheet
 /// 
-pub fn state(b: BottomSheet, state: State) -> BottomSheet {
-  BottomSheet(..b, state: state)
+pub fn open(b: BottomSheet, open: State) -> BottomSheet {
+  BottomSheet(..b, open: open)
 }
 
 // --- RENDERING ---
@@ -240,7 +240,7 @@ pub fn render(b: BottomSheet, children: List(Element(msg))) -> Element(msg) {
         Modal -> True
         Standard -> False
       }),
-      helpers.boolean_attribute("open", case b.state {
+      helpers.boolean_attribute("open", case b.open {
         Open -> True
         Closed -> False
       }),
