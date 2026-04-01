@@ -33,7 +33,7 @@ pub const default_min = 0.0
 /// ## Fields:
 /// - discrete: Whether to show tick marks
 /// - disabled: Whether the element is disabled
-/// - labels: Whether to show value labels when activated
+/// - labelled: Whether to show value labels when activated
 /// - max: The maximum allowable value
 /// - min: The minimum allowable value
 /// - size: The size of the slider
@@ -43,7 +43,7 @@ pub opaque type Slider {
   Slider(
     discrete: Discrete,
     disabled: Interaction,
-    labels: ValueLabels,
+    labelled: ValueLabels,
     max: Float,
     min: Float,
     size: Size,
@@ -67,7 +67,7 @@ pub type Config {
   Config(
     discrete: Discrete,
     disabled: Interaction,
-    labels: ValueLabels,
+    labelled: ValueLabels,
     max: Float,
     min: Float,
     size: Size,
@@ -81,7 +81,7 @@ pub fn default_config() -> Config {
   Config(
     discrete: default_discrete,
     disabled: state.default_interaction,
-    labels: default_value_labels,
+    labelled: default_value_labels,
     max: default_max,
     min: default_min,
     size: default_size,
@@ -103,7 +103,7 @@ pub fn from_config(c: Config) -> Slider {
   Slider(
     discrete: c.discrete,
     disabled: c.disabled,
-    labels: c.labels,
+    labelled: c.labelled,
     max: c.max,
     min: c.min,
     size: c.size,
@@ -125,10 +125,10 @@ pub fn disabled(s: Slider, i: Interaction) -> Slider {
   Slider(..s, disabled: i)
 }
 
-/// labelled sets the labels field
+/// labelled sets the labelled field
 ///
 pub fn labelled(s: Slider, l: ValueLabels) -> Slider {
-  Slider(..s, labels: l)
+  Slider(..s, labelled: l)
 }
 
 /// max sets the max field
@@ -175,7 +175,7 @@ pub fn render(
       [
         helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.boolean_attribute("discrete", s.discrete == Discrete),
-        helpers.boolean_attribute("labelled", s.labels == ShowLabels),
+        helpers.boolean_attribute("labelled", s.labelled == ShowLabels),
         attribute.attribute("max", float.to_string(s.max)),
         attribute.attribute("min", float.to_string(s.min)),
         attribute.attribute("size", config.size_to_string(s.size)),

@@ -214,7 +214,7 @@ pub fn config_test() {
   |> should.equal(slider.Config(
     discrete: slider.Continuous,
     disabled: Enabled,
-    labels: slider.HideLabels,
+    labelled: slider.HideLabels,
     max: 100.0,
     min: 0.0,
     size: config.ExtraSmall,

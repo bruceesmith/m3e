@@ -21,7 +21,7 @@ import m3e/state.{type Interaction, Disabled}
 /// - selection_indicator: hide selection indicators
 /// - selection_mode: Whether multiple chips can be selected
 /// - type_: the chipset type
-/// - orientation: Whether the element is oriented vertically
+/// - vertical: Whether the element is oriented vertically
 ///
 pub opaque type ChipSet {
   ChipSet(
@@ -29,7 +29,7 @@ pub opaque type ChipSet {
     selection_indicator: SelectionIndicator,
     selection_mode: SelectionMode,
     type_: Type,
-    orientation: Orientation,
+    vertical: Orientation,
   )
 }
 
@@ -53,7 +53,7 @@ pub type Config {
     selection_indicator: SelectionIndicator,
     selection_mode: SelectionMode,
     type_: Type,
-    orientation: Orientation,
+    vertical: Orientation,
   )
 }
 
@@ -65,7 +65,7 @@ pub fn default_config() -> Config {
     selection_indicator: ShowSelectionIndicator,
     selection_mode: config.default_selection_mode,
     type_: default_type,
-    orientation: layout.default_orientation,
+    vertical: layout.default_orientation,
   )
 }
 
@@ -85,7 +85,7 @@ pub fn from_config(c: Config) -> ChipSet {
     selection_indicator: c.selection_indicator,
     selection_mode: c.selection_mode,
     type_: c.type_,
-    orientation: c.orientation,
+    vertical: c.vertical,
   )
 }
 
@@ -127,10 +127,10 @@ pub fn type_(c: ChipSet, t: Type) -> ChipSet {
   ChipSet(..c, type_: t)
 }
 
-/// vertical sets the `orientation` field
+/// vertical sets the `vertical` field
 ///
-pub fn vertical(s: ChipSet, orientation: Orientation) -> ChipSet {
-  ChipSet(..s, orientation: orientation)
+pub fn vertical(s: ChipSet, vertical: Orientation) -> ChipSet {
+  ChipSet(..s, vertical: vertical)
 }
 
 // --- RENDERING ---
@@ -149,7 +149,7 @@ pub fn render(
         disabled_attr(s.type_, s.disabled),
         hide_selection_indicator_attr(s.type_, s.selection_indicator),
         multi_attr(s.type_, s.selection_mode),
-        helpers.boolean_attribute("vertical", s.orientation == Vertical),
+        helpers.boolean_attribute("vertical", s.vertical == Vertical),
       ],
       attributes,
     )

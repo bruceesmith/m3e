@@ -64,7 +64,7 @@ pub fn config_test() {
       disabled: Disabled,
       id: Some("config-id"),
       name: Some("config-name"),
-      requirement: Required,
+      required: Required,
     )
 
   let rg = radio_group.from_config(c)
@@ -90,7 +90,7 @@ pub fn default_config_test() {
   c.disabled |> should.equal(Enabled)
   c.id |> should.equal(None)
   c.name |> should.equal(None)
-  c.requirement |> should.equal(Optional)
+  c.required |> should.equal(Optional)
 }
 
 pub fn from_config_test() {

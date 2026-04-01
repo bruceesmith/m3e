@@ -55,7 +55,7 @@ pub const maximum_show_delay = 500
 ///
 /// ## Fields:
 /// - tip: text of the tool tip
-/// - for_id: the ID of the element to which the tip is associated
+/// - for: The identifier of the interactive control to which this element is attached
 /// - position: The position of the tooltip
 /// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
 /// - show_delay: The amount of time, in milliseconds, before showing the tooltip
@@ -65,7 +65,7 @@ pub const maximum_show_delay = 500
 pub opaque type Tooltip {
   Tooltip(
     tip: String,
-    for_id: String,
+    for: String,
     position: Position,
     hide_delay: HideDelay,
     show_delay: ShowDelay,
@@ -106,23 +106,23 @@ pub fn default_config() -> Config {
 ///
 /// ## Parameters:
 /// - tip: text of the tool tip
-/// - for_id: the ID of the element to which the tip is associated
+/// - for: the ID of the element to which the tip is associated
 /// - position: tip position relative to its paired element
 /// - hide_delay: amount of time, in milliseconds, before hiding the tooltip
 /// - show_delay: amount of time, in milliseconds, before showing the tooltip
 /// - disabled: the tooltip is disabled (or not)
 /// - gestures: behaviour on touch devices
 ///
-pub fn new(tip: String, for_id: String) -> Tooltip {
-  from_config(default_config(), tip, for_id)
+pub fn new(tip: String, for: String) -> Tooltip {
+  from_config(default_config(), tip, for)
 }
 
 /// from_config creates a Tooltip from a Config
 ///
-pub fn from_config(config: Config, tip: String, for_id: String) -> Tooltip {
+pub fn from_config(config: Config, tip: String, for: String) -> Tooltip {
   Tooltip(
     tip: tip,
-    for_id: for_id,
+    for: for,
     position: config.position,
     hide_delay: config.hide_delay,
     show_delay: config.show_delay,
@@ -176,7 +176,7 @@ pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
     "m3e-tooltip",
     list.append(
       [
-        attribute.for(t.for_id),
+        attribute.for(t.for),
         helpers.boolean_attribute("disabled", t.disabled == Disabled),
         attribute.attribute("touch-gestures", gestures_to_string(t.gestures)),
         attribute.attribute("hide-delay", int.to_string(t.hide_delay)),
@@ -195,10 +195,10 @@ pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
 pub fn render_config(
   config: Config,
   tip: String,
-  for_id: String,
+  for: String,
   attributes: List(Attribute(msg)),
 ) -> Element(msg) {
-  render(from_config(config, tip, for_id), attributes)
+  render(from_config(config, tip, for), attributes)
 }
 
 // --- PRIVATE INTERNAL HELPERS ---

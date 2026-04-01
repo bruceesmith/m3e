@@ -132,7 +132,7 @@ pub fn form_field_render_config_test() {
     Config(
       ..form_field.default_config(),
       float_label: Always,
-      required_marker: HideRequiredMarker,
+      hide_required_marker: HideRequiredMarker,
       variant: Filled,
     )
   let expected =

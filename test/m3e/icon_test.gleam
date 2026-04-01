@@ -546,7 +546,7 @@ pub fn render_config_test() {
     Config(
       ..icon.default_config(),
       name: "settings",
-      fill: Filled,
+      filled: Filled,
       grade: High,
       optical_size: 40,
       variant: Sharp,

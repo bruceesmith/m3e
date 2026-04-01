@@ -34,7 +34,7 @@ pub const default_grade = Medium
 ///
 /// ## Fields:
 /// - name: The name of the icon
-/// - fill: is the icon filled or not (the FILL axis of the variable font)
+/// - filled: Whether the icon is filled
 /// - grade: The grade of the icon
 /// - optical_size: A value from 20 to 48 indicating the optical size of the icon
 /// - purpose: the role of the icon
@@ -44,7 +44,7 @@ pub const default_grade = Medium
 pub opaque type Icon(msg) {
   Icon(
     name: String,
-    fill: Fill,
+    filled: Fill,
     grade: Grade,
     optical_size: OpticalSize,
     purpose: Attribute(msg),
@@ -101,7 +101,7 @@ pub const default_weight = 400
 pub type Config(msg) {
   Config(
     name: String,
-    fill: Fill,
+    filled: Fill,
     grade: Grade,
     optical_size: OpticalSize,
     purpose: Attribute(msg),
@@ -115,7 +115,7 @@ pub type Config(msg) {
 pub fn default_config() -> Config(msg) {
   Config(
     name: "",
-    fill: default_fill,
+    filled: default_fill,
     grade: default_grade,
     optical_size: default_optical_size,
     purpose: attribute.none(),
@@ -140,7 +140,7 @@ pub fn new(name: String) -> Icon(msg) {
 pub fn from_config(c: Config(msg)) -> Icon(msg) {
   Icon(
     name: c.name,
-    fill: c.fill,
+    filled: c.filled,
     grade: c.grade,
     optical_size: optical_size_validate(c.optical_size),
     purpose: c.purpose,
@@ -168,7 +168,7 @@ pub fn render(
     list.append(
       [
         attribute.name(i.name),
-        filled_attr(i.fill),
+        filled_attr(i.filled),
         attribute.attribute("grade", grade_to_string(i.grade)),
         attribute.attribute("optical-size", int.to_string(i.optical_size)),
         i.purpose,
@@ -194,10 +194,10 @@ pub fn render_config(
 
 // --- Setters ---
 
-/// filled sets the `fill` field
+/// filled sets the `filled` field
 ///
-pub fn filled(i: Icon(msg), fill: Fill) -> Icon(msg) {
-  Icon(..i, fill: fill)
+pub fn filled(i: Icon(msg), filled: Fill) -> Icon(msg) {
+  Icon(..i, filled: filled)
 }
 
 /// grade sets the `grade` field

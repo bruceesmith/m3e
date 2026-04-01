@@ -21,14 +21,14 @@ import m3e/state.{
 /// - checked: Whether the element is checked
 /// - disabled: Whether the element is disabled
 /// - form_submission: handles this button's role in form submission
-/// - requirement: Whether the element is required
+/// - required: Whether the element is required
 ///
 pub opaque type Radio {
   Radio(
     checked: CheckedState,
     disabled: Interaction,
     form_submission: Option(FormSubmission),
-    requirement: Requirement,
+    required: Requirement,
   )
 }
 
@@ -41,7 +41,7 @@ pub type Config {
     checked: CheckedState,
     disabled: Interaction,
     form_submission: Option(FormSubmission),
-    requirement: Requirement,
+    required: Requirement,
   )
 }
 
@@ -52,7 +52,7 @@ pub fn default_config() -> Config {
     checked: state.default_checked_state,
     disabled: state.default_interaction,
     form_submission: None,
-    requirement: state.default_requirement,
+    required: state.default_requirement,
   )
 }
 
@@ -71,7 +71,7 @@ pub fn from_config(c: Config) -> Radio {
     checked: c.checked,
     disabled: c.disabled,
     form_submission: c.form_submission,
-    requirement: c.requirement,
+    required: c.required,
   )
 }
 
@@ -95,10 +95,10 @@ pub fn form(r: Radio, fs: Option(FormSubmission)) -> Radio {
   Radio(..r, form_submission: fs)
 }
 
-/// required sets the requirement field
+/// required sets the required field
 /// 
-pub fn required(r: Radio, requirement: Requirement) -> Radio {
-  Radio(..r, requirement: requirement)
+pub fn required(r: Radio, required: Requirement) -> Radio {
+  Radio(..r, required: required)
 }
 
 // --- RENDERING ---
@@ -121,7 +121,7 @@ pub fn render(
       [
         helpers.boolean_attribute("checked", r.checked == Checked),
         helpers.boolean_attribute("disabled", r.disabled == Disabled),
-        helpers.boolean_attribute("required", r.requirement == Required),
+        helpers.boolean_attribute("required", r.required == Required),
       ],
       form_submission.attributes(r.form_submission),
       attributes,

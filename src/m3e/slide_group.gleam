@@ -19,7 +19,7 @@ import m3e/state.{type Interaction, Disabled}
 /// - next_page_label: The accessible label given to the button used to move to the previous page
 /// - previous_page_label: The accessible label given to the button used to move to the next page
 /// - threshold: A value, in pixels, indicating the scroll threshold at which to begin showing pagination controls
-/// - orientation: Whether content is oriented vertically or horizontally
+/// - vertical: Whether content is oriented vertically
 ///
 pub opaque type SlideGroup {
   SlideGroup(
@@ -27,7 +27,7 @@ pub opaque type SlideGroup {
     next_page_label: String,
     previous_page_label: String,
     threshold: Int,
-    orientation: Orientation,
+    vertical: Orientation,
   )
 }
 
@@ -50,7 +50,7 @@ pub type Config {
     next_page_label: String,
     previous_page_label: String,
     threshold: Int,
-    orientation: Orientation,
+    vertical: Orientation,
   )
 }
 
@@ -66,7 +66,7 @@ pub fn default_config() -> Config {
     next_page_label: default_next_page_label,
     previous_page_label: default_previous_page_label,
     threshold: 0,
-    orientation: layout.default_orientation,
+    vertical: layout.default_orientation,
   )
 }
 
@@ -86,7 +86,7 @@ pub fn from_config(c: Config) -> SlideGroup {
     next_page_label: c.next_page_label,
     previous_page_label: c.previous_page_label,
     threshold: c.threshold,
-    orientation: c.orientation,
+    vertical: c.vertical,
   )
 }
 
@@ -119,10 +119,10 @@ pub fn threshold(s: SlideGroup, threshold: Int) -> SlideGroup {
   SlideGroup(..s, threshold: threshold)
 }
 
-/// vertical sets the orientation field
+/// vertical sets the vertical field
 /// 
-pub fn vertical(s: SlideGroup, orientation: Orientation) -> SlideGroup {
-  SlideGroup(..s, orientation: orientation)
+pub fn vertical(s: SlideGroup, vertical: Orientation) -> SlideGroup {
+  SlideGroup(..s, vertical: vertical)
 }
 
 // --- RENDERING ---
@@ -147,7 +147,7 @@ pub fn render(
         attribute.attribute("next-page-label", s.next_page_label),
         attribute.attribute("previous-page-label", s.previous_page_label),
         attribute.attribute("threshold", int.to_string(s.threshold)),
-        helpers.boolean_attribute("vertical", s.orientation == Vertical),
+        helpers.boolean_attribute("vertical", s.vertical == Vertical),
       ],
       attributes,
     ])

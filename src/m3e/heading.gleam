@@ -1,5 +1,6 @@
 //// heading provides Lustre support for the [M3E Heading component](https://matraic.github.io/m3e/#/components/heading.html)
 
+import gleam/int
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
@@ -22,12 +23,19 @@ pub const default_emphasized = Standard
 /// 
 /// ## Fields:
 /// - emphasized: Whether the heading uses an emphasized typescale
+/// - level: The accessibility level of the heading
 /// - size: The size of the heading
 /// - variant: The appearance variant of the heading
 /// - text: The heading text
 /// 
 pub opaque type Heading {
-  Heading(emphasized: Emphasis, size: Size, variant: Variant, text: String)
+  Heading(
+    emphasized: Emphasis,
+    level: Int,
+    size: Size,
+    variant: Variant,
+    text: String,
+  )
 }
 
 pub const default_size: Size = config.Medium
@@ -48,7 +56,13 @@ pub const default_variant = Display
 /// Config holds the configuration for a Heading
 /// 
 pub type Config {
-  Config(emphasized: Emphasis, size: Size, variant: Variant, text: String)
+  Config(
+    emphasized: Emphasis,
+    level: Int,
+    size: Size,
+    variant: Variant,
+    text: String,
+  )
 }
 
 /// default_config creates a new Config with default values
@@ -56,6 +70,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     emphasized: default_emphasized,
+    level: 1,
     size: default_size,
     variant: default_variant,
     text: "",
@@ -78,6 +93,7 @@ pub fn new(text: String) -> Heading {
 pub fn from_config(c: Config) -> Heading {
   Heading(
     emphasized: c.emphasized,
+    level: helpers.clamp_with_default(c.level, 1, 6, 1),
     size: c.size,
     variant: c.variant,
     text: c.text,
@@ -90,6 +106,12 @@ pub fn from_config(c: Config) -> Heading {
 /// 
 pub fn emphasized(h: Heading, emphasized: Emphasis) -> Heading {
   Heading(..h, emphasized: emphasized)
+}
+
+/// level sets the `level` field of a Heading
+///
+pub fn level(h: Heading, level: Int) -> Heading {
+  Heading(..h, level: helpers.clamp_with_default(level, 1, 6, 1))
 }
 
 /// size sets the `size` field of a Heading
@@ -113,6 +135,7 @@ pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
     "m3e-heading",
     [
       helpers.boolean_attribute("emphasized", h.emphasized == Emphasized),
+      attribute.attribute("level", int.to_string(h.level)),
       attribute.attribute(
         "size",
         config.size_to_string(config.clamp_to_restricted_size(

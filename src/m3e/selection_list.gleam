@@ -24,15 +24,15 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 /// 
 /// ## Fields:
 /// - disabled: Whether the element is enabled or disabled
-/// - indicator_visibility: Whether to hide the selection indicator
-/// - selection_mode: Whether multiple items can be selected
+/// - hide_selection_indicator: Whether to hide the selection indicator
+/// - multi: Whether multiple items can be selected
 /// - variant: The appearance variant of the list
 ///
 pub opaque type SelectionList {
   SelectionList(
     disabled: Interaction,
-    indicator_visibility: IndicatorVisibility,
-    selection_mode: SelectionMode,
+    hide_selection_indicator: IndicatorVisibility,
+    multi: SelectionMode,
     variant: Variant,
   )
 }
@@ -43,15 +43,15 @@ pub opaque type SelectionList {
 ///
 /// ## Fields:
 /// - disabled: Whether the element is enabled or disabled
-/// - indicator_visibility: Whether to hide the selection indicator
-/// - selection_mode: Whether multiple items can be selected
+/// - hide_selection_indicator: Whether to hide the selection indicator
+/// - multi: Whether multiple items can be selected
 /// - variant: The appearance variant of the list
 ///
 pub type Config {
   Config(
     disabled: Interaction,
-    indicator_visibility: IndicatorVisibility,
-    selection_mode: SelectionMode,
+    hide_selection_indicator: IndicatorVisibility,
+    multi: SelectionMode,
     variant: Variant,
   )
 }
@@ -63,8 +63,8 @@ pub const default_variant: Variant = Standard
 pub fn default_config() -> Config {
   Config(
     disabled: state.default_interaction,
-    indicator_visibility: default_indicator_visibility,
-    selection_mode: config.default_selection_mode,
+    hide_selection_indicator: default_indicator_visibility,
+    multi: config.default_selection_mode,
     variant: default_variant,
   )
 }
@@ -79,8 +79,8 @@ pub fn default_config() -> Config {
 pub fn from_config(config: Config) -> SelectionList {
   SelectionList(
     disabled: config.disabled,
-    indicator_visibility: config.indicator_visibility,
-    selection_mode: config.selection_mode,
+    hide_selection_indicator: config.hide_selection_indicator,
+    multi: config.multi,
     variant: config.variant,
   )
 }
@@ -99,19 +99,19 @@ pub fn disabled(sl: SelectionList, disabled: Interaction) -> SelectionList {
   SelectionList(..sl, disabled: disabled)
 }
 
-/// hide_selection_indicator sets the `indicator_visibility` field
+/// hide_selection_indicator sets the `hide_selection_indicator` field
 ///
 pub fn hide_selection_indicator(
   sl: SelectionList,
-  indicator_visibility: IndicatorVisibility,
+  hide_selection_indicator: IndicatorVisibility,
 ) -> SelectionList {
-  SelectionList(..sl, indicator_visibility: indicator_visibility)
+  SelectionList(..sl, hide_selection_indicator: hide_selection_indicator)
 }
 
-/// multi sets the `selection_mode` field
+/// multi sets the `multi` field
 ///
-pub fn multi(sl: SelectionList, selection_mode: SelectionMode) -> SelectionList {
-  SelectionList(..sl, selection_mode: selection_mode)
+pub fn multi(sl: SelectionList, multi: SelectionMode) -> SelectionList {
+  SelectionList(..sl, multi: multi)
 }
 
 /// variant sets the `variant` field
@@ -141,10 +141,10 @@ pub fn render(
         helpers.boolean_attribute("disabled", sl.disabled == Disabled),
         helpers.boolean_attribute(
           "hide-selection-indicator",
-          sl.indicator_visibility == Hidden,
+          sl.hide_selection_indicator == Hidden,
         ),
       ],
-      [helpers.boolean_attribute("multi", sl.selection_mode == Multi)],
+      [helpers.boolean_attribute("multi", sl.multi == Multi)],
       [
         attribute.attribute(
           "variant",

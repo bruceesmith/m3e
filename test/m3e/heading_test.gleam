@@ -13,6 +13,7 @@ pub fn heading_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "large"),
         attribute.attribute("variant", "display"),
       ],
@@ -27,6 +28,7 @@ pub fn basic_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "medium"),
         attribute.attribute("variant", "display"),
       ],
@@ -49,6 +51,7 @@ pub fn element_test() {
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "small"),
         attribute.attribute("variant", "title"),
       ],
@@ -66,6 +69,7 @@ pub fn element_basic_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "medium"),
         attribute.attribute("variant", "display"),
       ],
@@ -81,6 +85,7 @@ pub fn emphasized_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "medium"),
         attribute.attribute("variant", "display"),
       ],
@@ -94,6 +99,7 @@ pub fn emphasized_test() {
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "medium"),
         attribute.attribute("variant", "display"),
       ],
@@ -109,6 +115,7 @@ pub fn size_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "large"),
         attribute.attribute("variant", "display"),
       ],
@@ -121,6 +128,7 @@ pub fn size_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "small"),
         attribute.attribute("variant", "display"),
       ],
@@ -136,6 +144,7 @@ pub fn variant_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "medium"),
         attribute.attribute("variant", "headline"),
       ],
@@ -156,6 +165,7 @@ pub fn element_with_attributes_test() {
     element.element(
       "m3e-heading",
       [
+        attribute.attribute("level", "1"),
         attribute.attribute("size", "medium"),
         attribute.attribute("variant", "display"),
         attribute.attribute("id", "my-heading"),
@@ -167,6 +177,55 @@ pub fn element_with_attributes_test() {
   result |> should.equal(expected)
 }
 
+pub fn level_test() {
+  let h = heading.new("Level Test")
+
+  // Test valid levels
+  heading.level(h, 2)
+  |> heading.render([])
+  |> should.equal(
+    element.element(
+      "m3e-heading",
+      [
+        attribute.attribute("level", "2"),
+        attribute.attribute("size", "medium"),
+        attribute.attribute("variant", "display"),
+      ],
+      [html.text("Level Test")],
+    ),
+  )
+
+  // Test clamping: Below range (0) should default to 1
+  heading.level(h, 0)
+  |> heading.render([])
+  |> should.equal(
+    element.element(
+      "m3e-heading",
+      [
+        attribute.attribute("level", "1"),
+        attribute.attribute("size", "medium"),
+        attribute.attribute("variant", "display"),
+      ],
+      [html.text("Level Test")],
+    ),
+  )
+
+  // Test clamping: Above range (7) should default to 1
+  heading.level(h, 7)
+  |> heading.render([])
+  |> should.equal(
+    element.element(
+      "m3e-heading",
+      [
+        attribute.attribute("level", "1"),
+        attribute.attribute("size", "medium"),
+        attribute.attribute("variant", "display"),
+      ],
+      [html.text("Level Test")],
+    ),
+  )
+}
+
 pub fn render_config_test() {
   let config =
     Config(
@@ -174,12 +233,14 @@ pub fn render_config_test() {
       text: "Config Text",
       emphasized: Emphasized,
       size: config.Small,
+      level: 3,
     )
   let expected =
     element.element(
       "m3e-heading",
       [
         attribute.attribute("emphasized", ""),
+        attribute.attribute("level", "3"),
         attribute.attribute("size", "small"),
         attribute.attribute("variant", "display"),
       ],

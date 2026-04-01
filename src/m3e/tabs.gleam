@@ -54,7 +54,7 @@ pub const default_stretch: Stretch = NoStretch
 /// Tabs provides a structured navigation surface for organizing content into distinct views, where only one view is visible at a time
 /// 
 /// ## Fields:
-/// - disabled_pagination: Whether scroll buttons are disabled
+/// - disable_pagination: Whether scroll buttons are disabled
 /// - header_position: The position of the tab headers
 /// - next_page_label: The accessible label given to the button used to move to the previous page
 /// - previous_page_label: The accessible label given to the button used to move to the next page
@@ -63,7 +63,7 @@ pub const default_stretch: Stretch = NoStretch
 ///
 pub opaque type Tabs {
   Tabs(
-    disabled_pagination: ScrollButtons,
+    disable_pagination: ScrollButtons,
     header_position: HeaderPosition,
     next_page_label: String,
     previous_page_label: String,
@@ -87,7 +87,7 @@ pub const default_variant: Variant = Secondary
 /// 
 pub type Config {
   Config(
-    disabled_pagination: ScrollButtons,
+    disable_pagination: ScrollButtons,
     header_position: HeaderPosition,
     next_page_label: String,
     previous_page_label: String,
@@ -100,7 +100,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    disabled_pagination: default_scroll_buttons,
+    disable_pagination: default_scroll_buttons,
     header_position: default_header_position,
     next_page_label: default_next_page_label,
     previous_page_label: default_previous_page_label,
@@ -121,7 +121,7 @@ pub fn new() -> Tabs {
 ///
 pub fn from_config(config: Config) -> Tabs {
   Tabs(
-    disabled_pagination: config.disabled_pagination,
+    disable_pagination: config.disable_pagination,
     header_position: config.header_position,
     next_page_label: config.next_page_label,
     previous_page_label: config.previous_page_label,
@@ -132,10 +132,10 @@ pub fn from_config(config: Config) -> Tabs {
 
 // --- SETTERS ---
 
-/// disabled_pagination sets the disabled_pagination field
+/// disable_pagination sets the disable_pagination field
 /// 
-pub fn disabled_pagination(t: Tabs, disabled_pagination: ScrollButtons) -> Tabs {
-  Tabs(..t, disabled_pagination: disabled_pagination)
+pub fn disable_pagination(t: Tabs, disable_pagination: ScrollButtons) -> Tabs {
+  Tabs(..t, disable_pagination: disable_pagination)
 }
 
 /// header_position sets the header_position field
@@ -188,7 +188,7 @@ pub fn render(
       [
         helpers.boolean_attribute(
           "disabled-pagination",
-          t.disabled_pagination == NoScroll,
+          t.disable_pagination == NoScroll,
         ),
         attribute.attribute(
           "header-position",

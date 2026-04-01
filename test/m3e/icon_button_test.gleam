@@ -220,7 +220,7 @@ pub fn icon_button_render_config_test() {
     Config(
       ..icon_button.default_config(),
       disabled: state.Disabled,
-      selection: Selected,
+      selected: Selected,
       toggle: Toggle,
       size: config.ExtraSmall,
     )

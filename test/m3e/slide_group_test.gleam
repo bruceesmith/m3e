@@ -52,7 +52,7 @@ pub fn config_test() {
       next_page_label: "Forward",
       previous_page_label: "Back",
       threshold: 50,
-      orientation: Vertical,
+      vertical: Vertical,
     )
 
   let s = slide_group.from_config(c)
@@ -80,7 +80,7 @@ pub fn default_config_test() {
   c.next_page_label |> should.equal("Next page")
   c.previous_page_label |> should.equal("Previous page")
   c.threshold |> should.equal(0)
-  c.orientation |> should.equal(Horizontal)
+  c.vertical |> should.equal(Horizontal)
 }
 
 pub fn from_config_test() {

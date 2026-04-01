@@ -21,7 +21,7 @@ import m3e/state.{Selected}
 /// - form_submission: Whether the element is involved in a form submission
 /// - link: Whether the element is a link
 /// - purpose: A slot value defined by a parent element
-/// - selection: Whether the toggle button is selected
+/// - selected: Whether the toggle button is selected
 /// - shape: The shape of the button
 /// - size: The size of the button
 /// - toggle: Whether the button will toggle between selected and unselected states
@@ -35,7 +35,7 @@ pub opaque type IconButton(msg) {
     form_submission: Option(FormSubmission),
     link: Option(Link),
     purpose: Option(Attribute(msg)),
-    selection: state.SelectionState,
+    selected: state.SelectionState,
     shape: Shape,
     size: Size,
     toggle: ToggleMode,
@@ -101,7 +101,7 @@ pub type Config(msg) {
     form_submission: Option(FormSubmission),
     link: Option(Link),
     purpose: Option(Attribute(msg)),
-    selection: state.SelectionState,
+    selected: state.SelectionState,
     shape: Shape,
     size: Size,
     toggle: ToggleMode,
@@ -119,7 +119,7 @@ pub fn default_config() -> Config(msg) {
     form_submission: None,
     link: None,
     purpose: None,
-    selection: state.default_selection_state,
+    selected: state.default_selection_state,
     shape: default_shape,
     size: config.default_size,
     toggle: default_toggle,
@@ -145,7 +145,7 @@ pub fn from_config(c: Config(msg)) -> IconButton(msg) {
     form_submission: c.form_submission,
     link: c.link,
     purpose: c.purpose,
-    selection: c.selection,
+    selected: c.selected,
     shape: c.shape,
     size: c.size,
     toggle: c.toggle,
@@ -195,13 +195,13 @@ pub fn purpose(
   IconButton(..i, purpose: purpose)
 }
 
-/// selected sets the `selection` field
+/// selected sets the `selected` field
 /// 
 pub fn selected(
   i: IconButton(msg),
-  selection: state.SelectionState,
+  selected: state.SelectionState,
 ) -> IconButton(msg) {
-  IconButton(..i, selection: selection)
+  IconButton(..i, selected: selected)
 }
 
 /// shape sets the shape field
@@ -261,7 +261,7 @@ pub fn render(
           Some(p) -> p
           None -> attribute.none()
         },
-        attribute.selected(i.selection == Selected),
+        attribute.selected(i.selected == Selected),
         attribute.attribute("shape", shape_to_string(i.shape)),
         attribute.attribute("size", config.size_to_string(i.size)),
         helpers.boolean_attribute("toggle", i.toggle == Toggle),

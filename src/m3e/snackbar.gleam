@@ -36,17 +36,17 @@ pub type Slot {
 ///
 /// ## Fields:
 /// - message: The text to display in the snackbar
-/// - action_label: The label of the snackbar's action
+/// - action: The label of the snackbar's action
 /// - close_label: The accessible label given to the button used to dismiss the snackbar
-/// - dismissibility: Whether a button is presented that can be used to close the snackbar
+/// - dismissible: Whether a button is presented that can be used to close the snackbar
 /// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar
 ///
 pub opaque type Snackbar {
   Snackbar(
     message: String,
-    action_label: Option(String),
+    action: Option(String),
     close_label: Option(String),
-    dismissibility: Dismissibility,
+    dismissible: Dismissibility,
     duration: Option(Int),
   )
 }
@@ -57,7 +57,7 @@ pub opaque type Snackbar {
 pub type SnackbarAction(msg) {
   Open(
     message: String,
-    action_label: String,
+    action: String,
     dismissable: Bool,
     close_label: String,
     duration: Int,
@@ -72,9 +72,9 @@ pub type SnackbarAction(msg) {
 pub type Config {
   Config(
     message: String,
-    action_label: Option(String),
+    action: Option(String),
     close_label: Option(String),
-    dismissibility: Dismissibility,
+    dismissible: Dismissibility,
     duration: Option(Int),
   )
 }
@@ -84,9 +84,9 @@ pub type Config {
 pub fn default_config(message: String) -> Config {
   Config(
     message: message,
-    action_label: None,
+    action: None,
     close_label: None,
-    dismissibility: config.default_dismissibility,
+    dismissible: config.default_dismissibility,
     duration: None,
   )
 }
@@ -104,9 +104,9 @@ pub fn new(message: String) -> Snackbar {
 pub fn from_config(c: Config) -> Snackbar {
   Snackbar(
     message: c.message,
-    action_label: c.action_label,
+    action: c.action,
     close_label: c.close_label,
-    dismissibility: c.dismissibility,
+    dismissible: c.dismissible,
     duration: c.duration,
   )
 }
@@ -119,10 +119,10 @@ pub fn message(s: Snackbar, message: String) -> Snackbar {
   Snackbar(..s, message: message)
 }
 
-/// action_label sets the action_label field
+/// action sets the action field
 /// 
-pub fn action_label(s: Snackbar, action_label: Option(String)) -> Snackbar {
-  Snackbar(..s, action_label: action_label)
+pub fn action(s: Snackbar, action: Option(String)) -> Snackbar {
+  Snackbar(..s, action: action)
 }
 
 /// close_label sets the close_label field
@@ -131,10 +131,10 @@ pub fn close_label(s: Snackbar, close_label: Option(String)) -> Snackbar {
   Snackbar(..s, close_label: close_label)
 }
 
-/// dismissible sets the dismissibility field
+/// dismissible sets the dismissible field
 /// 
 pub fn dismissible(s: Snackbar, d: Dismissibility) -> Snackbar {
-  Snackbar(..s, dismissibility: d)
+  Snackbar(..s, dismissible: d)
 }
 
 /// duration sets the duration field
@@ -174,14 +174,14 @@ pub fn open_config(config: Config, callback: Option(msg)) -> Effect(msg) {
 /// 
 @internal
 pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
-  let action_label = option.unwrap(s.action_label, default_action_label)
+  let action = option.unwrap(s.action, default_action_label)
   let close_label = option.unwrap(s.close_label, default_close_label)
   let duration = option.unwrap(s.duration, default_duration)
 
   Open(
     message: s.message,
-    action_label: action_label,
-    dismissable: s.dismissibility == Dismissible,
+    action: action,
+    dismissable: s.dismissible == Dismissible,
     close_label: close_label,
     duration: duration,
     callback: callback,
@@ -193,9 +193,9 @@ pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
 @internal
 pub fn to_effect(action: SnackbarAction(msg)) -> Effect(msg) {
   case action {
-    Open(message, action_label, dismissable, close_label, duration, callback) ->
+    Open(message, action, dismissable, close_label, duration, callback) ->
       effect.from(fn(dispatch) {
-        open_snackbar(message, action_label, dismissable, case callback {
+        open_snackbar(message, action, dismissable, case callback {
           Some(cb) -> FullOptions(close_label, duration, fn() { dispatch(cb) })
           None -> ShortOptions(close_label, duration)
         })

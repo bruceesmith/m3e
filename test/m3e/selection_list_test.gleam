@@ -13,8 +13,8 @@ pub fn default_config_test() {
   selection_list.default_config()
   |> should.equal(selection_list.Config(
     disabled: Enabled,
-    indicator_visibility: selection_list.Visible,
-    selection_mode: Single,
+    hide_selection_indicator: selection_list.Visible,
+    multi: Single,
     variant: list_variant.Standard,
   ))
 }
@@ -145,8 +145,8 @@ pub fn config_full_test() {
   let config =
     selection_list.Config(
       disabled: Disabled,
-      indicator_visibility: selection_list.Hidden,
-      selection_mode: Multi,
+      hide_selection_indicator: selection_list.Hidden,
+      multi: Multi,
       variant: list_variant.Segmented,
     )
 

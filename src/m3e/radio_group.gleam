@@ -18,14 +18,14 @@ import m3e/state.{type Interaction, type Requirement, Disabled, Required}
 /// - disabled: Whether the element is disabled
 /// - id: The id of the element
 /// - name: The name that identifies the element when submitting the associated form
-/// - requirement: Whether the element is required
+/// - required: Whether the element is required
 /// 
 pub opaque type RadioGroup {
   RadioGroup(
     disabled: Interaction,
     id: Option(String),
     name: Option(String),
-    requirement: Requirement,
+    required: Requirement,
   )
 }
 
@@ -38,7 +38,7 @@ pub type Config {
     disabled: Interaction,
     id: Option(String),
     name: Option(String),
-    requirement: Requirement,
+    required: Requirement,
   )
 }
 
@@ -49,7 +49,7 @@ pub fn default_config() -> Config {
     disabled: state.default_interaction,
     id: None,
     name: None,
-    requirement: state.default_requirement,
+    required: state.default_requirement,
   )
 }
 
@@ -64,12 +64,7 @@ pub fn new() -> RadioGroup {
 /// from_config creates a RadioGroup from a Config record
 /// 
 pub fn from_config(c: Config) -> RadioGroup {
-  RadioGroup(
-    disabled: c.disabled,
-    id: c.id,
-    name: c.name,
-    requirement: c.requirement,
-  )
+  RadioGroup(disabled: c.disabled, id: c.id, name: c.name, required: c.required)
 }
 
 // --- SETTERS ---
@@ -92,10 +87,10 @@ pub fn name(group: RadioGroup, name: Option(String)) -> RadioGroup {
   RadioGroup(..group, name: name)
 }
 
-/// required sets the requirement field
+/// required sets the required field
 ///
-pub fn required(group: RadioGroup, requirement: Requirement) -> RadioGroup {
-  RadioGroup(..group, requirement: requirement)
+pub fn required(group: RadioGroup, required: Requirement) -> RadioGroup {
+  RadioGroup(..group, required: required)
 }
 
 // --- RENDERING ---
@@ -129,7 +124,7 @@ pub fn render(
           function.identity,
           None,
         ),
-        helpers.boolean_attribute("required", group.requirement == Required),
+        helpers.boolean_attribute("required", group.required == Required),
       ],
       attributes,
     ])

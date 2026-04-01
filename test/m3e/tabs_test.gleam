@@ -22,7 +22,7 @@ pub fn tabs_new_test() {
 
 pub fn tabs_full_test() {
   tabs.new()
-  |> tabs.disabled_pagination(NoScroll)
+  |> tabs.disable_pagination(NoScroll)
   |> tabs.header_position(After)
   |> tabs.next_page_label("Following")
   |> tabs.previous_page_label("Preceding")

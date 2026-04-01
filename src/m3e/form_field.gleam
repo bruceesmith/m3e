@@ -23,14 +23,14 @@ pub const default_float_label = Auto
 /// 
 /// ## Fields:
 /// - float_label: Specifies whether the label should float always or only when necessary
-/// - required_marker: Whether the required marker should be hidden
+/// - hide_required_marker: Whether the required marker should be hidden
 /// - hide_subscript: Whether subscript content is hidden
 /// - variant: The appearance variant of the field
 /// 
 pub opaque type FormField {
   FormField(
     float_label: FloatLabel,
-    required_marker: RequiredMarkerVisibility,
+    hide_required_marker: RequiredMarkerVisibility,
     hide_subscript: HideSubscript,
     variant: Variant,
   )
@@ -86,7 +86,7 @@ pub const default_variant = Outlined
 pub type Config {
   Config(
     float_label: FloatLabel,
-    required_marker: RequiredMarkerVisibility,
+    hide_required_marker: RequiredMarkerVisibility,
     hide_subscript: HideSubscript,
     variant: Variant,
   )
@@ -97,7 +97,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     float_label: default_float_label,
-    required_marker: ShowRequiredMarker,
+    hide_required_marker: ShowRequiredMarker,
     hide_subscript: default_hide_subscript,
     variant: default_variant,
   )
@@ -116,7 +116,7 @@ pub fn new() -> FormField {
 pub fn from_config(c: Config) -> FormField {
   FormField(
     float_label: c.float_label,
-    required_marker: c.required_marker,
+    hide_required_marker: c.hide_required_marker,
     hide_subscript: c.hide_subscript,
     variant: c.variant,
   )
@@ -130,13 +130,13 @@ pub fn float_label(f: FormField, float_label: FloatLabel) -> FormField {
   FormField(..f, float_label: float_label)
 }
 
-/// hide_required_marker sets the `required_marker` field
+/// hide_hide_required_marker sets the `hide_required_marker` field
 /// 
 pub fn hide_required_marker(
   f: FormField,
   visibility: RequiredMarkerVisibility,
 ) -> FormField {
-  FormField(..f, required_marker: visibility)
+  FormField(..f, hide_required_marker: visibility)
 }
 
 /// hide_subscript sets the `hide_subscript` field
@@ -171,9 +171,12 @@ pub fn render(
       attribute.attribute("float-label", float_label_to_string(f.float_label)),
       helpers.boolean_attribute(
         "hide-required-marker",
-        f.required_marker == HideRequiredMarker,
+        f.hide_required_marker == HideRequiredMarker,
       ),
-      attribute.attribute("hide-subscript", hide_subscript_to_string(f.hide_subscript)),
+      attribute.attribute(
+        "hide-subscript",
+        hide_subscript_to_string(f.hide_subscript),
+      ),
       attribute.attribute("variant", variant_to_string(f.variant)),
       ..attributes
     ]

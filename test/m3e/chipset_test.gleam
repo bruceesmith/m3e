@@ -119,7 +119,7 @@ pub fn chipset_render_config_test() {
       ..chipset.default_config(),
       type_: Filter,
       selection_mode: Multi,
-      orientation: Vertical,
+      vertical: Vertical,
     )
   let expected =
     element.element(

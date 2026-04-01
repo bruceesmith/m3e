@@ -9,7 +9,7 @@ pub fn snackbar_new_test() {
   let action = snackbar.to_action(s, None)
 
   action.message |> should.equal("Hello")
-  action.action_label |> should.equal(snackbar.default_action_label)
+  action.action |> should.equal(snackbar.default_action_label)
   action.close_label |> should.equal(snackbar.default_close_label)
   action.dismissable |> should.equal(False)
   action.duration |> should.equal(snackbar.default_duration)
@@ -18,14 +18,14 @@ pub fn snackbar_new_test() {
 pub fn snackbar_setters_test() {
   snackbar.new("Original")
   |> snackbar.message("New")
-  |> snackbar.action_label(Some("Action"))
+  |> snackbar.action(Some("Action"))
   |> snackbar.close_label(Some("Close"))
   |> snackbar.dismissible(Dismissible)
   |> snackbar.duration(Some(5000))
   |> snackbar.to_action(None)
   |> should.equal(snackbar.Open(
     message: "New",
-    action_label: "Action",
+    action: "Action",
     dismissable: True,
     close_label: "Close",
     duration: 5000,
@@ -36,7 +36,7 @@ pub fn snackbar_setters_test() {
 pub fn snackbar_to_action_pure_test() {
   let s =
     snackbar.new("Hello")
-    |> snackbar.action_label(Some("Action"))
+    |> snackbar.action(Some("Action"))
     |> snackbar.close_label(Some("Close"))
     |> snackbar.dismissible(Dismissible)
     |> snackbar.duration(Some(5000))
@@ -45,7 +45,7 @@ pub fn snackbar_to_action_pure_test() {
   snackbar.to_action(s, Some("msg"))
   |> should.equal(snackbar.Open(
     message: "Hello",
-    action_label: "Action",
+    action: "Action",
     dismissable: True,
     close_label: "Close",
     duration: 5000,
@@ -59,7 +59,7 @@ pub fn snackbar_to_action_defaults_test() {
   snackbar.to_action(s, None)
   |> should.equal(snackbar.Open(
     message: "Message",
-    action_label: snackbar.default_action_label,
+    action: snackbar.default_action_label,
     dismissable: False,
     close_label: snackbar.default_close_label,
     duration: snackbar.default_duration,
@@ -86,9 +86,9 @@ pub fn config_test() {
   snackbar.default_config("Hello")
   |> should.equal(snackbar.Config(
     message: "Hello",
-    action_label: None,
+    action: None,
     close_label: None,
-    dismissibility: NotDismissible,
+    dismissible: NotDismissible,
     duration: None,
   ))
 }
