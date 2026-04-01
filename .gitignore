@@ -6,3 +6,4 @@
 /examples/dist/node_modules
 /examples/dist/*.json
 erl_crash.dump
+/m3esync/m3esync
