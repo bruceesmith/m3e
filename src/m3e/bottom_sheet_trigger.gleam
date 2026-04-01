@@ -17,13 +17,13 @@ import m3e/helpers
 /// - detent: The zero‑based index of the detent the sheet should open to.
 /// - for: the ID of the associated BottomSheet.
 /// - label: the label of the trigger
-/// - role: Marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership
+/// - secondary: Marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership
 pub opaque type BottomSheetTrigger {
   BottomSheetTrigger(
     detent: Option(Int),
     for: String,
     label: String,
-    role: TriggerRole,
+    secondary: TriggerRole,
   )
 }
 
@@ -40,13 +40,18 @@ pub const default_trigger_role: TriggerRole = Primary
 /// Config holds the configuration for a BottomSheetTrigger
 /// 
 pub type Config {
-  Config(detent: Option(Int), for: String, label: String, role: TriggerRole)
+  Config(
+    detent: Option(Int),
+    for: String,
+    label: String,
+    secondary: TriggerRole,
+  )
 }
 
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(detent: None, for: "", label: "", role: default_trigger_role)
+  Config(detent: None, for: "", label: "", secondary: default_trigger_role)
 }
 
 // --- CONSTRUCTORS ---
@@ -60,7 +65,12 @@ pub fn new() -> BottomSheetTrigger {
 /// from_config creates a BottomSheetTrigger from a Config record
 /// 
 pub fn from_config(c: Config) -> BottomSheetTrigger {
-  BottomSheetTrigger(detent: c.detent, for: c.for, label: c.label, role: c.role)
+  BottomSheetTrigger(
+    detent: c.detent,
+    for: c.for,
+    label: c.label,
+    secondary: c.secondary,
+  )
 }
 
 // --- SETTERS ---
@@ -83,10 +93,13 @@ pub fn label(b: BottomSheetTrigger, label: String) -> BottomSheetTrigger {
   BottomSheetTrigger(..b, label: label)
 }
 
-/// role sets the role field of a BottomSheetTrigger
+/// secondary sets the secondary field of a BottomSheetTrigger
 /// 
-pub fn role(b: BottomSheetTrigger, role: TriggerRole) -> BottomSheetTrigger {
-  BottomSheetTrigger(..b, role: role)
+pub fn secondary(
+  b: BottomSheetTrigger,
+  secondary: TriggerRole,
+) -> BottomSheetTrigger {
+  BottomSheetTrigger(..b, secondary: secondary)
 }
 
 // --- RENDERING ---
@@ -102,7 +115,7 @@ pub fn render(b: BottomSheetTrigger) -> Element(msg) {
         None -> attribute.none()
       },
       attribute.attribute("for", b.for),
-      helpers.boolean_attribute("secondary", b.role == Secondary),
+      helpers.boolean_attribute("secondary", b.secondary == Secondary),
     ]
       |> list.filter(fn(a) { a != attribute.none() }),
     [element.text(b.label)],
