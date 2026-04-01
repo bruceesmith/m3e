@@ -32,7 +32,7 @@ pub const default_min = 0.0
 /// 
 /// ## Fields:
 /// - discrete: Whether to show tick marks
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - labels: Whether to show value labels when activated
 /// - max: The maximum allowable value
 /// - min: The minimum allowable value
@@ -42,7 +42,7 @@ pub const default_min = 0.0
 pub opaque type Slider {
   Slider(
     discrete: Discrete,
-    interaction: Interaction,
+    disabled: Interaction,
     labels: ValueLabels,
     max: Float,
     min: Float,
@@ -66,7 +66,7 @@ pub const default_value_labels: ValueLabels = HideLabels
 pub type Config {
   Config(
     discrete: Discrete,
-    interaction: Interaction,
+    disabled: Interaction,
     labels: ValueLabels,
     max: Float,
     min: Float,
@@ -80,7 +80,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     discrete: default_discrete,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     labels: default_value_labels,
     max: default_max,
     min: default_min,
@@ -102,7 +102,7 @@ pub fn new() -> Slider {
 pub fn from_config(c: Config) -> Slider {
   Slider(
     discrete: c.discrete,
-    interaction: c.interaction,
+    disabled: c.disabled,
     labels: c.labels,
     max: c.max,
     min: c.min,
@@ -119,10 +119,10 @@ pub fn discrete(s: Slider, d: Discrete) -> Slider {
   Slider(..s, discrete: d)
 }
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
 pub fn disabled(s: Slider, i: Interaction) -> Slider {
-  Slider(..s, interaction: i)
+  Slider(..s, disabled: i)
 }
 
 /// labelled sets the labels field
@@ -173,7 +173,7 @@ pub fn render(
     "m3e-slider",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.boolean_attribute("discrete", s.discrete == Discrete),
         helpers.boolean_attribute("labelled", s.labels == ShowLabels),
         attribute.attribute("max", float.to_string(s.max)),

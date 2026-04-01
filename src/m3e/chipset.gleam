@@ -17,7 +17,7 @@ import m3e/state.{type Interaction, Disabled}
 /// Chipset contains all the information for a ChipSet
 /// 
 /// ## Fields:
-/// - interaction: disable the chip set in its entirety
+/// - disabled: disable the chip set in its entirety
 /// - selection_indicator: hide selection indicators
 /// - selection_mode: Whether multiple chips can be selected
 /// - type_: the chipset type
@@ -25,7 +25,7 @@ import m3e/state.{type Interaction, Disabled}
 ///
 pub opaque type ChipSet {
   ChipSet(
-    interaction: Interaction,
+    disabled: Interaction,
     selection_indicator: SelectionIndicator,
     selection_mode: SelectionMode,
     type_: Type,
@@ -49,7 +49,7 @@ pub const default_type: Type = Information
 ///  
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     selection_indicator: SelectionIndicator,
     selection_mode: SelectionMode,
     type_: Type,
@@ -61,7 +61,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     selection_indicator: ShowSelectionIndicator,
     selection_mode: config.default_selection_mode,
     type_: default_type,
@@ -81,7 +81,7 @@ pub fn new() -> ChipSet {
 /// 
 pub fn from_config(c: Config) -> ChipSet {
   ChipSet(
-    interaction: c.interaction,
+    disabled: c.disabled,
     selection_indicator: c.selection_indicator,
     selection_mode: c.selection_mode,
     type_: c.type_,
@@ -91,11 +91,11 @@ pub fn from_config(c: Config) -> ChipSet {
 
 // --- SETTERS ---
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 ///
-pub fn disabled(c: ChipSet, interaction: Interaction) -> ChipSet {
+pub fn disabled(c: ChipSet, disabled: Interaction) -> ChipSet {
   case c.type_ {
-    Input -> ChipSet(..c, interaction: interaction)
+    Input -> ChipSet(..c, disabled: disabled)
     _ -> c
   }
 }
@@ -146,7 +146,7 @@ pub fn render(
     type_to_string(s.type_),
     list.append(
       [
-        disabled_attr(s.type_, s.interaction),
+        disabled_attr(s.type_, s.disabled),
         hide_selection_indicator_attr(s.type_, s.selection_indicator),
         multi_attr(s.type_, s.selection_mode),
         helpers.boolean_attribute("vertical", s.orientation == Vertical),
@@ -170,8 +170,8 @@ pub fn render_config(
 
 // --- PRIVATE INTERNAL HELPERS ---
 
-fn disabled_attr(t: Type, interaction: Interaction) -> Attribute(msg) {
-  case t, interaction {
+fn disabled_attr(t: Type, disabled: Interaction) -> Attribute(msg) {
+  case t, disabled {
     Input, Disabled -> attribute.attribute("disabled", "")
     _, _ -> attribute.none()
   }
@@ -182,7 +182,8 @@ fn hide_selection_indicator_attr(
   hsi: SelectionIndicator,
 ) -> Attribute(msg) {
   case t, hsi {
-    Filter, HideSelectionIndicator -> attribute.attribute("hide-selection-indicator", "")
+    Filter, HideSelectionIndicator ->
+      attribute.attribute("hide-selection-indicator", "")
     _, _ -> attribute.none()
   }
 }

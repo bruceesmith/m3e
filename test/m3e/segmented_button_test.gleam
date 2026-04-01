@@ -54,7 +54,7 @@ pub fn segmented_button_setters_test() {
 pub fn config_test() {
   let c =
     segmented_button.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       indicator_visibility: segmented_button.Hidden,
       selection_mode: Multi,
       name: Some("config-group"),
@@ -80,7 +80,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = segmented_button.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.indicator_visibility |> should.equal(segmented_button.Visible)
   c.selection_mode |> should.equal(Single)
   c.name |> should.equal(None)

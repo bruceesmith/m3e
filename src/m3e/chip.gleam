@@ -26,7 +26,7 @@ pub const default_behaviour: Behaviour = Normal
 ///
 /// - label: text on the chip
 /// - behaviour: behaviour of an Assist or Suggestion chip
-/// - interaction: whether the Chip is enabled or disabled
+/// - disabled: whether the Chip is enabled or disabled
 /// - form_submission: handles this element's role in form submission
 /// - icon: associated Icon
 /// - removability: whether the chip can be removed
@@ -38,7 +38,7 @@ pub opaque type Chip(msg) {
   Chip(
     label: String,
     behaviour: Behaviour,
-    interaction: Interaction,
+    disabled: Interaction,
     form_submission: Option(FormSubmission),
     icon: Option(Icon(msg)),
     removability: Removability,
@@ -112,7 +112,7 @@ pub type Config(msg) {
   Config(
     label: String,
     behaviour: Behaviour,
-    interaction: Interaction,
+    disabled: Interaction,
     form_submission: Option(FormSubmission),
     icon: Option(Icon(msg)),
     removability: Removability,
@@ -128,7 +128,7 @@ pub fn default_config() -> Config(msg) {
   Config(
     label: "",
     behaviour: default_behaviour,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     form_submission: None,
     icon: None,
     removability: default_removability,
@@ -176,7 +176,7 @@ pub fn from_config(c: Config(msg)) -> Chip(msg) {
   Chip(
     label: c.label,
     behaviour: c.behaviour,
-    interaction: c.interaction,
+    disabled: c.disabled,
     form_submission: c.form_submission,
     icon: c.icon,
     removability: c.removability,
@@ -197,11 +197,11 @@ pub fn behaviour(c: Chip(msg), behaviour: Behaviour) -> Chip(msg) {
   }
 }
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 ///
-pub fn disabled(c: Chip(msg), interaction: Interaction) -> Chip(msg) {
+pub fn disabled(c: Chip(msg), disabled: Interaction) -> Chip(msg) {
   case c.type_ {
-    Assist | Filter | Suggestion -> Chip(..c, interaction: interaction)
+    Assist | Filter | Suggestion -> Chip(..c, disabled: disabled)
     _ -> c
   }
 }
@@ -267,7 +267,7 @@ pub fn render(
     list.flatten([
       [
         behaviour_attr(c.type_, c.behaviour),
-        disabled_attr(c.type_, c.interaction),
+        disabled_attr(c.type_, c.disabled),
         removable_attr(c.type_, c.removability),
         selected_attr(c.type_, c.selection),
         attribute.attribute("variant", variant_to_string(c.variant)),
@@ -320,8 +320,8 @@ fn behaviour_attr(t: Type, b: Behaviour) -> Attribute(msg) {
   }
 }
 
-fn disabled_attr(t: Type, interaction: Interaction) -> Attribute(msg) {
-  case t, interaction {
+fn disabled_attr(t: Type, disabled: Interaction) -> Attribute(msg) {
+  case t, disabled {
     Assist, Disabled | Filter, Disabled | Suggestion, Disabled ->
       attribute.attribute("disabled", "")
     _, _ -> attribute.none()

@@ -24,7 +24,7 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 /// Select provides a form control for selecting a value from a set of predefined options)
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - indicator_visibility: Whether to hide the selection indicator for single select options
 /// - id: The id of the element
 /// - selection_mode: Whether multiple options can be selected
@@ -33,7 +33,7 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 ///
 pub opaque type Select {
   Select(
-    interaction: Interaction,
+    disabled: Interaction,
     indicator_visibility: IndicatorVisibility,
     id: Option(String),
     selection_mode: SelectionMode,
@@ -57,7 +57,7 @@ pub type Slot {
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     indicator_visibility: IndicatorVisibility,
     id: Option(String),
     selection_mode: SelectionMode,
@@ -70,7 +70,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     indicator_visibility: default_indicator_visibility,
     id: None,
     selection_mode: config.default_selection_mode,
@@ -91,7 +91,7 @@ pub fn new() -> Select {
 /// 
 pub fn from_config(c: Config) -> Select {
   Select(
-    interaction: c.interaction,
+    disabled: c.disabled,
     indicator_visibility: c.indicator_visibility,
     id: c.id,
     selection_mode: c.selection_mode,
@@ -102,10 +102,10 @@ pub fn from_config(c: Config) -> Select {
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(s: Select, interaction: Interaction) -> Select {
-  Select(..s, interaction: interaction)
+pub fn disabled(s: Select, disabled: Interaction) -> Select {
+  Select(..s, disabled: disabled)
 }
 
 /// hide_selection_indicator sets the indicator_visibility field
@@ -159,14 +159,19 @@ pub fn render(
     "m3e-select",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.boolean_attribute(
           "hide-selection-indicator",
           s.indicator_visibility == Hidden,
         ),
         helpers.option_attribute(s.id, fn(_) { "id" }, function.identity, None),
         helpers.boolean_attribute("multi", s.selection_mode == Multi),
-        helpers.option_attribute(s.name, fn(_) { "name" }, function.identity, None),
+        helpers.option_attribute(
+          s.name,
+          fn(_) { "name" },
+          function.identity,
+          None,
+        ),
         helpers.boolean_attribute("required", s.requirement == Required),
       ],
       attributes,

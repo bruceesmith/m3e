@@ -23,7 +23,7 @@ pub const default_animation_state: AnimationState = Animated
 /// 
 /// ## Fields:
 /// - anchor: The id of the element to which the menu is anchored
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is enabled or disabled
 /// - position_x: The position of the menu, on the x-axis
 /// - position_y: The position of the menu, on the y-axis
 /// - quick: Whether to skip opening and closing animations
@@ -33,7 +33,7 @@ pub const default_animation_state: AnimationState = Animated
 pub opaque type Menu {
   Menu(
     anchor: Option(String),
-    interaction: Interaction,
+    disabled: Interaction,
     position_x: PositionX,
     position_y: PositionY,
     quick: AnimationState,
@@ -84,7 +84,7 @@ pub const default_variant = Standard
 pub type Config {
   Config(
     anchor: Option(String),
-    interaction: Interaction,
+    disabled: Interaction,
     position_x: PositionX,
     position_y: PositionY,
     quick: AnimationState,
@@ -98,7 +98,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     anchor: None,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     position_x: default_position_x,
     position_y: default_position_y,
     quick: default_animation_state,
@@ -120,7 +120,7 @@ pub fn new() -> Menu {
 pub fn from_config(c: Config) -> Menu {
   Menu(
     anchor: c.anchor,
-    interaction: c.interaction,
+    disabled: c.disabled,
     position_x: c.position_x,
     position_y: c.position_y,
     quick: c.quick,
@@ -137,10 +137,10 @@ pub fn anchor(m: Menu, id: String) -> Menu {
   Menu(..m, anchor: Some(id))
 }
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
 pub fn disabled(m: Menu, i: Interaction) -> Menu {
-  Menu(..m, interaction: i)
+  Menu(..m, disabled: i)
 }
 
 /// open sets the state field
@@ -186,8 +186,13 @@ pub fn render(
     "m3e-menu",
     list.flatten([
       [
-        helpers.option_attribute(m.anchor, fn(_) { "anchor" }, fn(s) { s }, None),
-        helpers.boolean_attribute("disabled", m.interaction == Disabled),
+        helpers.option_attribute(
+          m.anchor,
+          fn(_) { "anchor" },
+          fn(s) { s },
+          None,
+        ),
+        helpers.boolean_attribute("disabled", m.disabled == Disabled),
         helpers.boolean_attribute("open", m.state == Open),
         attribute.attribute("position-x", position_x_to_string(m.position_x)),
         attribute.attribute("position-y", position_y_to_string(m.position_y)),

@@ -2,12 +2,11 @@ import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/fab.{
-  Config, Disabled, DisabledInteractive, Extended, Lowered, Tertiary,
-}
+import m3e/fab.{Config, Extended, Lowered, Tertiary}
 
 import m3e/config
 import m3e/form_submission.{Submit}
+import m3e/state
 
 pub fn default_test() {
   fab.new()
@@ -49,7 +48,7 @@ pub fn extended_test() {
 
 pub fn attributes_test() {
   fab.new()
-  |> fab.disabled(Disabled)
+  |> fab.disabled(state.Disabled)
   |> fab.form(Some(
     form_submission.new()
     |> form_submission.type_(Submit)
@@ -79,7 +78,7 @@ pub fn attributes_test() {
 
 pub fn disabled_interactive_test() {
   fab.new()
-  |> fab.disabled(DisabledInteractive)
+  |> fab.disabled_interactive(state.Disabled)
   |> fab.render([], [])
   |> should.equal(
     element.element(
@@ -98,7 +97,7 @@ pub fn render_config_test() {
   let config =
     Config(
       ..fab.default_config(),
-      interaction: Disabled,
+      disabled: state.Disabled,
       extension: Extended,
       extended_label: Some("Config"),
       elevation: Lowered,

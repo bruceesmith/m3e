@@ -49,7 +49,7 @@ pub const default_page_size_visibility = Visible
 /// Paginator provides Lustre support for the [M3E Paginator component](https://matraic.github.io/m3e/#/components/paginator.html)
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - first_page_label: The accessible label given to the button used to move to the first page
 /// - page_size_visibility: Whether to hide page size selection
 /// - items_per_page_label: The label for the page size selector
@@ -65,7 +65,7 @@ pub const default_page_size_visibility = Visible
 ///
 pub opaque type Paginator {
   Paginator(
-    interaction: Interaction,
+    disabled: Interaction,
     first_page_label: String,
     page_size_visibility: PageSizeVisibility,
     items_per_page_label: String,
@@ -100,7 +100,7 @@ pub type Slot {
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     first_page_label: String,
     page_size_visibility: PageSizeVisibility,
     items_per_page_label: String,
@@ -130,7 +130,7 @@ pub const default_previous_page_label = "Previous page"
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     first_page_label: "First page",
     page_size_visibility: default_page_size_visibility,
     items_per_page_label: "Items per page",
@@ -158,7 +158,7 @@ pub fn new() -> Paginator {
 /// 
 pub fn from_config(c: Config) -> Paginator {
   Paginator(
-    interaction: c.interaction,
+    disabled: c.disabled,
     first_page_label: c.first_page_label,
     page_size_visibility: c.page_size_visibility,
     items_per_page_label: c.items_per_page_label,
@@ -176,10 +176,10 @@ pub fn from_config(c: Config) -> Paginator {
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(p: Paginator, interaction: Interaction) -> Paginator {
-  Paginator(..p, interaction: interaction)
+pub fn disabled(p: Paginator, disabled: Interaction) -> Paginator {
+  Paginator(..p, disabled: disabled)
 }
 
 /// first_page_label sets the first_page_label field
@@ -284,7 +284,7 @@ pub fn render(
     "m3e-paginator",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", p.interaction == Disabled),
+        helpers.boolean_attribute("disabled", p.disabled == Disabled),
         attribute.attribute("first-page-label", p.first_page_label),
         helpers.boolean_attribute(
           "hide-page-size",

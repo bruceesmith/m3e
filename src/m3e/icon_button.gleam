@@ -9,14 +9,15 @@ import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers
 import m3e/link.{type Link}
-import m3e/state.{type SelectionState, Selected}
+import m3e/state.{Selected}
 
 // --- Types ---
 
 /// IconButton(msg) is an icon button users interact with to perform a supplementary action
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
+/// - disabled_interactive: Whether the element is disabled and interactive
 /// - form_submission: Whether the element is involved in a form submission
 /// - link: Whether the element is a link
 /// - purpose: A slot value defined by a parent element
@@ -29,11 +30,12 @@ import m3e/state.{type SelectionState, Selected}
 /// 
 pub opaque type IconButton(msg) {
   IconButton(
-    interaction: Interaction,
+    disabled: state.Interaction,
+    disabled_interactive: state.Interaction,
     form_submission: Option(FormSubmission),
     link: Option(Link),
     purpose: Option(Attribute(msg)),
-    selection: SelectionState,
+    selection: state.SelectionState,
     shape: Shape,
     size: Size,
     toggle: ToggleMode,
@@ -41,16 +43,6 @@ pub opaque type IconButton(msg) {
     width: Width,
   )
 }
-
-/// Interaction specifies if the element is enabled or disabled
-/// 
-pub type Interaction {
-  Enabled
-  Disabled
-  DisabledInteractive
-}
-
-pub const default_interaction: Interaction = Enabled
 
 /// Shape
 ///
@@ -104,11 +96,12 @@ pub const default_width = Default
 /// 
 pub type Config(msg) {
   Config(
-    interaction: Interaction,
+    disabled: state.Interaction,
+    disabled_interactive: state.Interaction,
     form_submission: Option(FormSubmission),
     link: Option(Link),
     purpose: Option(Attribute(msg)),
-    selection: SelectionState,
+    selection: state.SelectionState,
     shape: Shape,
     size: Size,
     toggle: ToggleMode,
@@ -121,7 +114,8 @@ pub type Config(msg) {
 /// 
 pub fn default_config() -> Config(msg) {
   Config(
-    interaction: default_interaction,
+    disabled: state.default_interaction,
+    disabled_interactive: state.default_interaction,
     form_submission: None,
     link: None,
     purpose: None,
@@ -146,7 +140,8 @@ pub fn new() -> IconButton(msg) {
 /// 
 pub fn from_config(c: Config(msg)) -> IconButton(msg) {
   IconButton(
-    interaction: c.interaction,
+    disabled: c.disabled,
+    disabled_interactive: c.disabled_interactive,
     form_submission: c.form_submission,
     link: c.link,
     purpose: c.purpose,
@@ -161,10 +156,22 @@ pub fn from_config(c: Config(msg)) -> IconButton(msg) {
 
 // --- SETTERS ---
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 /// 
-pub fn disabled(i: IconButton(msg), interaction: Interaction) -> IconButton(msg) {
-  IconButton(..i, interaction: interaction)
+pub fn disabled(
+  i: IconButton(msg),
+  disabled: state.Interaction,
+) -> IconButton(msg) {
+  IconButton(..i, disabled: disabled)
+}
+
+/// disabled sets the `disabled` field
+/// 
+pub fn disabled_interactive(
+  i: IconButton(msg),
+  disabled_interactive: state.Interaction,
+) -> IconButton(msg) {
+  IconButton(..i, disabled_interactive: disabled_interactive)
 }
 
 /// form sets the form_submission field
@@ -192,7 +199,7 @@ pub fn purpose(
 /// 
 pub fn selected(
   i: IconButton(msg),
-  selection: SelectionState,
+  selection: state.SelectionState,
 ) -> IconButton(msg) {
   IconButton(..i, selection: selection)
 }
@@ -245,10 +252,10 @@ pub fn render(
     "m3e-icon-button",
     list.flatten([
       [
-        attribute.disabled(i.interaction == Disabled),
+        attribute.disabled(i.disabled == state.Disabled),
         helpers.boolean_attribute(
           "disabled-interactive",
-          i.interaction == DisabledInteractive,
+          i.disabled_interactive == state.Disabled,
         ),
         case i.purpose {
           Some(p) -> p

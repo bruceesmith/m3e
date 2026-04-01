@@ -79,7 +79,7 @@ pub fn combined_test() {
 pub fn config_test() {
   let c =
     slider_thumb.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       name: Some("config-name"),
       value: Some(10.5),
     )
@@ -103,7 +103,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = slider_thumb.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.name |> should.equal(None)
   c.value |> should.equal(None)
 }

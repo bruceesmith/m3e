@@ -9,7 +9,7 @@ import lustre/element.{type Element}
 import m3e/helpers
 import m3e/layout.{type Orientation, Vertical}
 import m3e/link.{type Link}
-import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
+import m3e/state.{type SelectionState, Disabled, Selected}
 
 // --- Types ---
 
@@ -24,7 +24,7 @@ pub const default_focusability: Focusability = Static
 /// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled.
+/// - disabled: A value indicating whether the element is disabled
 /// - focusability: Whether the element is disabled and interactive.
 /// - link: all the attributes of an HTML link
 /// - orientation: The layout orientation of the item.
@@ -33,7 +33,7 @@ pub const default_focusability: Focusability = Static
 pub opaque type NavItem {
   NavItem(
     focusability: Focusability,
-    interaction: Interaction,
+    disabled: state.Interaction,
     link: Option(Link),
     orientation: Orientation,
     selection: SelectionState,
@@ -58,7 +58,7 @@ pub type Slot {
 pub type Config {
   Config(
     focusability: Focusability,
-    interaction: Interaction,
+    disabled: state.Interaction,
     link: Option(Link),
     orientation: Orientation,
     selection: SelectionState,
@@ -70,7 +70,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     focusability: default_focusability,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     link: None,
     orientation: default_orientation,
     selection: state.default_selection_state,
@@ -90,7 +90,7 @@ pub fn new() -> NavItem {
 pub fn from_config(c: Config) -> NavItem {
   NavItem(
     focusability: c.focusability,
-    interaction: c.interaction,
+    disabled: c.disabled,
     link: c.link,
     orientation: c.orientation,
     selection: c.selection,
@@ -99,10 +99,10 @@ pub fn from_config(c: Config) -> NavItem {
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(item: NavItem, interaction: Interaction) -> NavItem {
-  NavItem(..item, interaction: interaction)
+pub fn disabled(item: NavItem, disabled: state.Interaction) -> NavItem {
+  NavItem(..item, disabled: disabled)
 }
 
 /// disabled_interactive sets the focusability field
@@ -149,13 +149,16 @@ pub fn render(
     "m3e-nav-item",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", item.interaction == Disabled),
+        helpers.boolean_attribute("disabled", item.disabled == Disabled),
         helpers.boolean_attribute(
           "disabled-interactive",
           item.focusability == Interactive,
         ),
         helpers.boolean_attribute("selected", item.selection == Selected),
-        attribute.attribute("orientation", layout.orientation_to_string(item.orientation)),
+        attribute.attribute(
+          "orientation",
+          layout.orientation_to_string(item.orientation),
+        ),
       ],
       link.attributes(item.link),
       attributes,

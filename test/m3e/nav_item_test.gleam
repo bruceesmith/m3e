@@ -68,7 +68,7 @@ pub fn config_test() {
     |> fn(c) {
       nav_item.Config(
         ..c,
-        interaction: Disabled,
+        disabled: Disabled,
         focusability: nav_item.Interactive,
         selection: Selected,
         orientation: Horizontal,
@@ -95,7 +95,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = nav_item.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.focusability |> should.equal(nav_item.Static)
   c.selection |> should.equal(Unselected)
   c.orientation |> should.equal(Vertical)

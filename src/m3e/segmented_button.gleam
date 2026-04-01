@@ -24,14 +24,14 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 /// SegmentedButton provides Lustre support for the [M3E Segmented Button component](https://matraic.github.io/m3e/#/components/segmented-button.html)
 ///
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - indicator_visibility: Whether to hide the selection indicator
 /// - selection_mode: Whether multiple options can be selected
 /// - name: The name that identifies the element when submitting the associated form
 ///
 pub opaque type SegmentedButton {
   SegmentedButton(
-    interaction: Interaction,
+    disabled: Interaction,
     indicator_visibility: IndicatorVisibility,
     selection_mode: SelectionMode,
     name: Option(String),
@@ -44,7 +44,7 @@ pub opaque type SegmentedButton {
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     indicator_visibility: IndicatorVisibility,
     selection_mode: SelectionMode,
     name: Option(String),
@@ -55,7 +55,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     indicator_visibility: default_indicator_visibility,
     selection_mode: config.default_selection_mode,
     name: None,
@@ -74,7 +74,7 @@ pub fn new() -> SegmentedButton {
 /// 
 pub fn from_config(c: Config) -> SegmentedButton {
   SegmentedButton(
-    interaction: c.interaction,
+    disabled: c.disabled,
     indicator_visibility: c.indicator_visibility,
     selection_mode: c.selection_mode,
     name: c.name,
@@ -83,10 +83,10 @@ pub fn from_config(c: Config) -> SegmentedButton {
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 ///
-pub fn disabled(s: SegmentedButton, interaction: Interaction) -> SegmentedButton {
-  SegmentedButton(..s, interaction: interaction)
+pub fn disabled(s: SegmentedButton, disabled: Interaction) -> SegmentedButton {
+  SegmentedButton(..s, disabled: disabled)
 }
 
 /// hide_selection_indicator sets the indicator_visibility field
@@ -131,13 +131,18 @@ pub fn render(
     "m3e-segmented-button",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.boolean_attribute(
           "hide-selection-indicator",
           s.indicator_visibility == Hidden,
         ),
         helpers.boolean_attribute("multi", s.selection_mode == Multi),
-        helpers.option_attribute(s.name, fn(_) { "name" }, function.identity, None),
+        helpers.option_attribute(
+          s.name,
+          fn(_) { "name" },
+          function.identity,
+          None,
+        ),
       ],
       attributes,
     ])

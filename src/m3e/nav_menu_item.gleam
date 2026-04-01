@@ -23,7 +23,7 @@ pub const default_expansion: Expansion = Closed
 /// 
 /// ## Fields:
 /// - badge: Renders the badge of the item
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - leading_icon_name: Renders the icon of the item
 /// - label: Renders the label of the item
 /// - expansion: Whether the item is expanded
@@ -34,7 +34,7 @@ pub const default_expansion: Expansion = Closed
 pub opaque type NavMenuItem {
   NavMenuItem(
     badge: Option(String),
-    interaction: Interaction,
+    disabled: Interaction,
     leading_icon_name: Option(String),
     label: String,
     expansion: Expansion,
@@ -66,7 +66,7 @@ pub type Slot {
 pub type Config {
   Config(
     badge: Option(String),
-    interaction: Interaction,
+    disabled: Interaction,
     leading_icon_name: Option(String),
     label: String,
     expansion: Expansion,
@@ -81,7 +81,7 @@ pub type Config {
 pub fn default_config(label: String) -> Config {
   Config(
     badge: None,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     leading_icon_name: None,
     label: label,
     expansion: default_expansion,
@@ -107,7 +107,7 @@ pub fn new(label: String) -> NavMenuItem {
 pub fn from_config(c: Config) -> NavMenuItem {
   NavMenuItem(
     badge: c.badge,
-    interaction: c.interaction,
+    disabled: c.disabled,
     leading_icon_name: c.leading_icon_name,
     label: c.label,
     expansion: c.expansion,
@@ -125,10 +125,10 @@ pub fn badge(item: NavMenuItem, badge: Option(String)) -> NavMenuItem {
   NavMenuItem(..item, badge: badge)
 }
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(item: NavMenuItem, interaction: Interaction) -> NavMenuItem {
-  NavMenuItem(..item, interaction: interaction)
+pub fn disabled(item: NavMenuItem, disabled: Interaction) -> NavMenuItem {
+  NavMenuItem(..item, disabled: disabled)
 }
 
 /// leading_icon_name sets the leading_icon_name field
@@ -191,7 +191,7 @@ pub fn render(
   element.element(
     "m3e-nav-menu-item",
     [
-      helpers.boolean_attribute("disabled", item.interaction == Disabled),
+      helpers.boolean_attribute("disabled", item.disabled == Disabled),
       helpers.boolean_attribute("open", item.expansion == Open),
       helpers.boolean_attribute("selected", item.selection == Selected),
       ..attributes

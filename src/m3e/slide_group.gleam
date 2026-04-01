@@ -15,7 +15,7 @@ import m3e/state.{type Interaction, Disabled}
 /// SlideGroup provides Lustre support for the [M3E Slide Group component](https://matraic.github.io/m3e/#/components/slide_group.html)
 /// 
 /// ## Fields:
-/// - interaction: Whether scroll buttons are enabled or disabled
+/// - disabled: Whether scroll buttons are disabled
 /// - next_page_label: The accessible label given to the button used to move to the previous page
 /// - previous_page_label: The accessible label given to the button used to move to the next page
 /// - threshold: A value, in pixels, indicating the scroll threshold at which to begin showing pagination controls
@@ -23,7 +23,7 @@ import m3e/state.{type Interaction, Disabled}
 ///
 pub opaque type SlideGroup {
   SlideGroup(
-    interaction: Interaction,
+    disabled: Interaction,
     next_page_label: String,
     previous_page_label: String,
     threshold: Int,
@@ -46,7 +46,7 @@ pub type Slot {
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     next_page_label: String,
     previous_page_label: String,
     threshold: Int,
@@ -62,7 +62,7 @@ pub const default_previous_page_label: String = "Previous page"
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     next_page_label: default_next_page_label,
     previous_page_label: default_previous_page_label,
     threshold: 0,
@@ -82,7 +82,7 @@ pub fn new() -> SlideGroup {
 /// 
 pub fn from_config(c: Config) -> SlideGroup {
   SlideGroup(
-    interaction: c.interaction,
+    disabled: c.disabled,
     next_page_label: c.next_page_label,
     previous_page_label: c.previous_page_label,
     threshold: c.threshold,
@@ -92,10 +92,10 @@ pub fn from_config(c: Config) -> SlideGroup {
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(s: SlideGroup, interaction: Interaction) -> SlideGroup {
-  SlideGroup(..s, interaction: interaction)
+pub fn disabled(s: SlideGroup, disabled: Interaction) -> SlideGroup {
+  SlideGroup(..s, disabled: disabled)
 }
 
 /// next_page_label sets the next_page_label field
@@ -143,7 +143,7 @@ pub fn render(
     "m3e-slide-group",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("disabled", s.disabled == Disabled),
         attribute.attribute("next-page-label", s.next_page_label),
         attribute.attribute("previous-page-label", s.previous_page_label),
         attribute.attribute("threshold", int.to_string(s.threshold)),

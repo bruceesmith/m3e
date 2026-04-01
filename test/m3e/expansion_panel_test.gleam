@@ -112,7 +112,7 @@ pub fn render_config_test() {
     Config(
       ..expansion_panel.default_config(),
       header: header_text,
-      interaction: Disabled,
+      disabled: Disabled,
       state: Open,
     )
   let expected =

@@ -12,7 +12,7 @@ import m3e/state.{Disabled, Enabled}
 pub fn default_config_test() {
   selection_list.default_config()
   |> should.equal(selection_list.Config(
-    interaction: Enabled,
+    disabled: Enabled,
     indicator_visibility: selection_list.Visible,
     selection_mode: Single,
     variant: list_variant.Standard,
@@ -144,7 +144,7 @@ pub fn render_test() {
 pub fn config_full_test() {
   let config =
     selection_list.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       indicator_visibility: selection_list.Hidden,
       selection_mode: Multi,
       variant: list_variant.Segmented,

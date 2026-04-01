@@ -67,7 +67,7 @@ pub fn config_test() {
     |> fn(c) {
       nav_menu_item.Config(
         ..c,
-        interaction: Disabled,
+        disabled: Disabled,
         expansion: nav_menu_item.Open,
         selection: Selected,
       )
@@ -100,7 +100,7 @@ pub fn default_config_test() {
   let c = nav_menu_item.default_config(label)
 
   c.label |> should.equal(label)
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.expansion |> should.equal(nav_menu_item.Closed)
   c.selection |> should.equal(Unselected)
   c.badge |> should.equal(None)

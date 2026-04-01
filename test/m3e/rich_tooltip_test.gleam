@@ -9,7 +9,7 @@ import m3e/state.{Disabled, Enabled}
 pub fn default_config_test() {
   rich_tooltip.default_config()
   |> should.equal(rich_tooltip.Config(
-    interaction: Enabled,
+    disabled: Enabled,
     for: "",
     hide_delay: 1500,
     position: rich_tooltip.Below,
@@ -157,7 +157,7 @@ pub fn render_test() {
 pub fn render_config_test() {
   let config =
     rich_tooltip.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       for: "config-id",
       hide_delay: 100,
       position: rich_tooltip.Before,

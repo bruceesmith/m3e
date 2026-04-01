@@ -41,7 +41,7 @@ pub fn config_test() {
   let c =
     radio.Config(
       checked: Checked,
-      interaction: Disabled,
+      disabled: Disabled,
       form_submission: None,
       requirement: Required,
     )
@@ -66,7 +66,7 @@ pub fn default_config_test() {
   let c = radio.default_config()
 
   c.checked |> should.equal(Unchecked)
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.form_submission |> should.equal(None)
   c.requirement |> should.equal(Optional)
 }

@@ -141,7 +141,7 @@ pub fn config_test() {
       menu.Config(
         ..c,
         anchor: Some("my-anchor"),
-        interaction: Disabled,
+        disabled: Disabled,
         state: menu.Open,
         quick: menu.Instant,
       )
@@ -172,7 +172,7 @@ pub fn default_config_test() {
   let c = menu.default_config()
 
   c.anchor |> should.equal(None)
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.position_x |> should.equal(menu.After)
   c.position_y |> should.equal(menu.Below)
   c.quick |> should.equal(menu.Animated)

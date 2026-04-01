@@ -18,14 +18,14 @@ import m3e/state.{
 /// Checkbox holds all the values necessary to construct am M3E Checkbox
 ///
 /// - checked: Whether the element is checked
-/// - interaction: whether the checkbox is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - form_submission: handles this element's role in form submission
 /// - requirement: Whether a value is required for the element
 ///
 pub opaque type Checkbox {
   Checkbox(
     checked: CheckedState,
-    interaction: Interaction,
+    disabled: Interaction,
     form_submission: Option(FormSubmission),
     requirement: Requirement,
   )
@@ -40,7 +40,7 @@ pub const default_value = "on"
 pub type Config {
   Config(
     checked: CheckedState,
-    interaction: Interaction,
+    disabled: Interaction,
     form_submission: Option(FormSubmission),
     requirement: Requirement,
   )
@@ -51,7 +51,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     checked: state.default_checked_state,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     form_submission: None,
     requirement: Optional,
   )
@@ -70,7 +70,7 @@ pub fn new() -> Checkbox {
 pub fn from_config(c: Config) -> Checkbox {
   Checkbox(
     checked: c.checked,
-    interaction: c.interaction,
+    disabled: c.disabled,
     form_submission: c.form_submission,
     requirement: c.requirement,
   )
@@ -84,10 +84,10 @@ pub fn checked(checkbox: Checkbox, state: CheckedState) -> Checkbox {
   Checkbox(..checkbox, checked: state)
 }
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 ///
-pub fn disabled(checkbox: Checkbox, interaction: Interaction) -> Checkbox {
-  Checkbox(..checkbox, interaction: interaction)
+pub fn disabled(checkbox: Checkbox, disabled: Interaction) -> Checkbox {
+  Checkbox(..checkbox, disabled: disabled)
 }
 
 /// form sets up a Checkbox to participate in an HTML form
@@ -121,7 +121,7 @@ pub fn render(checkbox: Checkbox) -> Element(msg) {
     list.flatten([
       [
         helpers.boolean_attribute("checked", checkbox.checked == Checked),
-        helpers.boolean_attribute("disabled", checkbox.interaction == Disabled),
+        helpers.boolean_attribute("disabled", checkbox.disabled == Disabled),
         helpers.boolean_attribute("required", checkbox.requirement == Required),
       ],
       form_submission.attributes(checkbox.form_submission),

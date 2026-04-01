@@ -48,7 +48,7 @@ pub fn slide_group_setters_test() {
 pub fn config_test() {
   let c =
     slide_group.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       next_page_label: "Forward",
       previous_page_label: "Back",
       threshold: 50,
@@ -76,7 +76,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = slide_group.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.next_page_label |> should.equal("Next page")
   c.previous_page_label |> should.equal("Previous page")
   c.threshold |> should.equal(0)

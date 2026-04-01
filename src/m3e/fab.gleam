@@ -11,6 +11,7 @@ import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers
 import m3e/link.{type Link}
+import m3e/state
 
 // --- Types ---
 
@@ -37,7 +38,8 @@ pub const default_extension: Extension = NotExtended
 /// FAB is a floating action button (FAB) used to present important actions
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
+/// - disabled_interactive: Whether the element is disabled and interactive
 /// - extension: Whether the element is extended
 /// - extended_label: Renders the label of an extended button
 /// - form_submission: handles this element's role in form submission
@@ -48,7 +50,8 @@ pub const default_extension: Extension = NotExtended
 /// 
 pub opaque type FAB {
   FAB(
-    interaction: Interaction,
+    disabled: state.Interaction,
+    disabled_interactive: state.Interaction,
     extension: Extension,
     extended_label: Option(String),
     form_submission: Option(FormSubmission),
@@ -58,16 +61,6 @@ pub opaque type FAB {
     variant: Variant,
   )
 }
-
-/// Interaction specifies if the element is enabled or disabled
-/// 
-pub type Interaction {
-  Enabled
-  Disabled
-  DisabledInteractive
-}
-
-pub const default_interaction: Interaction = Enabled
 
 /// Default size
 /// 
@@ -104,7 +97,8 @@ pub const default_variant = PrimaryContainer
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: state.Interaction,
+    disabled_interactive: state.Interaction,
     extension: Extension,
     extended_label: Option(String),
     form_submission: Option(FormSubmission),
@@ -119,7 +113,8 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: default_interaction,
+    disabled: state.default_interaction,
+    disabled_interactive: state.default_interaction,
     extension: default_extension,
     extended_label: None,
     form_submission: None,
@@ -142,7 +137,8 @@ pub fn new() -> FAB {
 /// 
 pub fn from_config(c: Config) -> FAB {
   FAB(
-    interaction: c.interaction,
+    disabled: c.disabled,
+    disabled_interactive: c.disabled_interactive,
     extension: c.extension,
     extended_label: c.extended_label,
     form_submission: c.form_submission,
@@ -155,10 +151,19 @@ pub fn from_config(c: Config) -> FAB {
 
 // --- SETTERS ---
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 /// 
-pub fn disabled(f: FAB, interaction: Interaction) -> FAB {
-  FAB(..f, interaction: interaction)
+pub fn disabled(f: FAB, disabled: state.Interaction) -> FAB {
+  FAB(..f, disabled: disabled)
+}
+
+/// disabled_interactive sets the `disabled` field
+/// 
+pub fn disabled_interactive(
+  f: FAB,
+  disabled_interactive: state.Interaction,
+) -> FAB {
+  FAB(..f, disabled_interactive: disabled_interactive)
 }
 
 /// extended sets the `extension` field
@@ -221,10 +226,10 @@ pub fn render(
     "m3e-fab",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", f.interaction == Disabled),
+        helpers.boolean_attribute("disabled", f.disabled == state.Disabled),
         helpers.boolean_attribute(
           "disabled-interactive",
-          f.interaction == DisabledInteractive,
+          f.disabled_interactive == state.Disabled,
         ),
         helpers.boolean_attribute("extended", f.extension == Extended),
         helpers.boolean_attribute("lowered", f.elevation == Lowered),

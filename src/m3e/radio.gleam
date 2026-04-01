@@ -19,14 +19,14 @@ import m3e/state.{
 /// 
 /// ## Fields:
 /// - checked: Whether the element is checked
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - form_submission: handles this button's role in form submission
 /// - requirement: Whether the element is required
 ///
 pub opaque type Radio {
   Radio(
     checked: CheckedState,
-    interaction: Interaction,
+    disabled: Interaction,
     form_submission: Option(FormSubmission),
     requirement: Requirement,
   )
@@ -39,7 +39,7 @@ pub opaque type Radio {
 pub type Config {
   Config(
     checked: CheckedState,
-    interaction: Interaction,
+    disabled: Interaction,
     form_submission: Option(FormSubmission),
     requirement: Requirement,
   )
@@ -50,7 +50,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     checked: state.default_checked_state,
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     form_submission: None,
     requirement: state.default_requirement,
   )
@@ -69,7 +69,7 @@ pub fn new() -> Radio {
 pub fn from_config(c: Config) -> Radio {
   Radio(
     checked: c.checked,
-    interaction: c.interaction,
+    disabled: c.disabled,
     form_submission: c.form_submission,
     requirement: c.requirement,
   )
@@ -83,10 +83,10 @@ pub fn checked(r: Radio, state: CheckedState) -> Radio {
   Radio(..r, checked: state)
 }
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(r: Radio, interaction: Interaction) -> Radio {
-  Radio(..r, interaction: interaction)
+pub fn disabled(r: Radio, disabled: Interaction) -> Radio {
+  Radio(..r, disabled: disabled)
 }
 
 /// form_submission sets up a Radio to participate in an HTML form
@@ -120,7 +120,7 @@ pub fn render(
     list.flatten([
       [
         helpers.boolean_attribute("checked", r.checked == Checked),
-        helpers.boolean_attribute("disabled", r.interaction == Disabled),
+        helpers.boolean_attribute("disabled", r.disabled == Disabled),
         helpers.boolean_attribute("required", r.requirement == Required),
       ],
       form_submission.attributes(r.form_submission),

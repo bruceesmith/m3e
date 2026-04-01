@@ -160,7 +160,7 @@ pub fn paginator_setters_test() {
 pub fn config_test() {
   let c =
     paginator.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       first_page_label: "First",
       page_size_visibility: paginator.Hidden,
       items_per_page_label: "Items",
@@ -204,7 +204,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = paginator.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.page_size_visibility |> should.equal(paginator.Visible)
   c.first_last_buttons_visibility |> should.equal(paginator.Omitted)
   c.length |> should.equal(0)

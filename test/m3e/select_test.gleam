@@ -54,7 +54,7 @@ pub fn select_setters_test() {
 pub fn config_test() {
   let c =
     select.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       indicator_visibility: select.Hidden,
       id: Some("config-id"),
       selection_mode: Multi,
@@ -84,7 +84,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = select.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.indicator_visibility |> should.equal(select.Visible)
   c.id |> should.equal(None)
   c.selection_mode |> should.equal(Single)

@@ -61,7 +61,7 @@ pub fn radio_group_element_test() {
 pub fn config_test() {
   let c =
     radio_group.Config(
-      interaction: Disabled,
+      disabled: Disabled,
       id: Some("config-id"),
       name: Some("config-name"),
       requirement: Required,
@@ -87,7 +87,7 @@ pub fn config_test() {
 pub fn default_config_test() {
   let c = radio_group.default_config()
 
-  c.interaction |> should.equal(Enabled)
+  c.disabled |> should.equal(Enabled)
   c.id |> should.equal(None)
   c.name |> should.equal(None)
   c.requirement |> should.equal(Optional)

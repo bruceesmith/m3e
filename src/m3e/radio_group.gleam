@@ -15,14 +15,14 @@ import m3e/state.{type Interaction, type Requirement, Disabled, Required}
 /// RadioGroup provides Lustre support for the [M3E Radio Group component](https://matraic.github.io/m3e/#/components/radio-group.html)
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled.
+/// - disabled: Whether the element is disabled
 /// - id: The id of the element
 /// - name: The name that identifies the element when submitting the associated form
 /// - requirement: Whether the element is required
 /// 
 pub opaque type RadioGroup {
   RadioGroup(
-    interaction: Interaction,
+    disabled: Interaction,
     id: Option(String),
     name: Option(String),
     requirement: Requirement,
@@ -35,7 +35,7 @@ pub opaque type RadioGroup {
 /// 
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     id: Option(String),
     name: Option(String),
     requirement: Requirement,
@@ -46,7 +46,7 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     id: None,
     name: None,
     requirement: state.default_requirement,
@@ -65,7 +65,7 @@ pub fn new() -> RadioGroup {
 /// 
 pub fn from_config(c: Config) -> RadioGroup {
   RadioGroup(
-    interaction: c.interaction,
+    disabled: c.disabled,
     id: c.id,
     name: c.name,
     requirement: c.requirement,
@@ -74,10 +74,10 @@ pub fn from_config(c: Config) -> RadioGroup {
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 ///
-pub fn disabled(group: RadioGroup, interaction: Interaction) -> RadioGroup {
-  RadioGroup(..group, interaction: interaction)
+pub fn disabled(group: RadioGroup, disabled: Interaction) -> RadioGroup {
+  RadioGroup(..group, disabled: disabled)
 }
 
 /// id sets the id field
@@ -116,9 +116,19 @@ pub fn render(
     "m3e-radio-group",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", group.interaction == Disabled),
-        helpers.option_attribute(group.id, fn(_) { "id" }, function.identity, None),
-        helpers.option_attribute(group.name, fn(_) { "name" }, function.identity, None),
+        helpers.boolean_attribute("disabled", group.disabled == Disabled),
+        helpers.option_attribute(
+          group.id,
+          fn(_) { "id" },
+          function.identity,
+          None,
+        ),
+        helpers.option_attribute(
+          group.name,
+          fn(_) { "name" },
+          function.identity,
+          None,
+        ),
         helpers.boolean_attribute("required", group.requirement == Required),
       ],
       attributes,

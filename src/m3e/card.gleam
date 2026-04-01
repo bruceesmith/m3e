@@ -24,18 +24,18 @@ pub const default_actionability: Actionability = Static
 /// Card is a flexible, expressive container for presenting a unified subject
 /// 
 /// ## Fields:
-/// - actionability: Whether the card is "actionable" and will respond to user interaction
-/// - interaction: Whether the element is enabled or disabled
-/// - layout: Whether to present the card inline with surrounding content
+/// - actionable: Whether the card is "actionable" and will respond to use interaction
+/// - disabled: Whether the element is enabled or disabled
+/// - inline: Whether to present the card inline with surrounding content
 /// - link: Whether the card is a link
 /// - orientation: The orientation of the card
 /// - variant: The appearance variant of the card
 /// 
 pub opaque type Card {
   Card(
-    actionability: Actionability,
-    interaction: Interaction,
-    layout: Layout,
+    actionable: Actionability,
+    disabled: Interaction,
+    inline: Layout,
     link: Option(Link),
     orientation: Orientation,
     variant: Variant,
@@ -48,7 +48,7 @@ pub type Layout {
   Block
 }
 
-pub const default_layout: Layout = Block
+pub const default_inline: Layout = Block
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
@@ -81,9 +81,9 @@ pub const default_variant = Filled
 /// 
 pub type Config {
   Config(
-    actionability: Actionability,
-    interaction: Interaction,
-    layout: Layout,
+    actionable: Actionability,
+    disabled: Interaction,
+    inline: Layout,
     link: Option(Link),
     orientation: Orientation,
     variant: Variant,
@@ -94,9 +94,9 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    actionability: default_actionability,
-    interaction: state.default_interaction,
-    layout: default_layout,
+    actionable: default_actionability,
+    disabled: state.default_interaction,
+    inline: default_inline,
     link: None,
     orientation: layout.default_orientation,
     variant: default_variant,
@@ -115,9 +115,9 @@ pub fn new() -> Card {
 /// 
 pub fn from_config(c: Config) -> Card {
   Card(
-    actionability: c.actionability,
-    interaction: c.interaction,
-    layout: c.layout,
+    actionable: c.actionable,
+    disabled: c.disabled,
+    inline: c.inline,
     link: c.link,
     orientation: c.orientation,
     variant: c.variant,
@@ -126,22 +126,22 @@ pub fn from_config(c: Config) -> Card {
 
 // --- SETTERS ---
 
-/// actionable sets the `actionability` field of a Card
+/// actionable sets the `actionable` field of a Card
 /// 
 pub fn actionable(c: Card, a: Actionability) -> Card {
-  Card(..c, actionability: a)
+  Card(..c, actionable: a)
 }
 
-/// disabled sets the `interaction` field of a Card
+/// disabled sets the `disabled` field of a Card
 /// 
 pub fn disabled(c: Card, i: Interaction) -> Card {
-  Card(..c, interaction: i)
+  Card(..c, disabled: i)
 }
 
-/// inline sets the `layout` field of a Card
+/// inline sets the `inline` field of a Card
 /// 
 pub fn inline(c: Card, l: Layout) -> Card {
-  Card(..c, layout: l)
+  Card(..c, inline: l)
 }
 
 /// link sets the `link` field of a Card
@@ -180,10 +180,13 @@ pub fn render(
     "m3e-card",
     list.flatten([
       [
-        helpers.boolean_attribute("actionable", c.actionability == Actionable),
-        helpers.boolean_attribute("disabled", c.interaction == Disabled),
-        helpers.boolean_attribute("inline", c.layout == Inline),
-        attribute.attribute("orientation", layout.orientation_to_string(c.orientation)),
+        helpers.boolean_attribute("actionable", c.actionable == Actionable),
+        helpers.boolean_attribute("disabled", c.disabled == Disabled),
+        helpers.boolean_attribute("inline", c.inline == Inline),
+        attribute.attribute(
+          "orientation",
+          layout.orientation_to_string(c.orientation),
+        ),
         attribute.attribute("variant", variant_to_string(c.variant)),
       ],
       link.attributes(c.link),

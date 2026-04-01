@@ -30,7 +30,7 @@ pub const default_position: Position = Below
 /// RichTooltip is an element, nested within a clickable element, used to dismiss a parenting rich tooltip
 ///
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled.
+/// - disabled: Whether the element is disabled
 /// - for: The identifier of the interactive control to which this element is attached
 /// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
 /// - position: The position of the tooltip
@@ -38,7 +38,7 @@ pub const default_position: Position = Below
 ///
 pub opaque type RichTooltip {
   RichTooltip(
-    interaction: Interaction,
+    disabled: Interaction,
     for: String,
     hide_delay: Int,
     position: Position,
@@ -60,7 +60,7 @@ pub type Slot {
 /// Config is the configuration of a RichTooltip
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled.
+/// - disabled: Whether the element is disabled
 /// - for: The identifier of the interactive control to which this element is attached
 /// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
 /// - position: The position of the tooltip
@@ -68,7 +68,7 @@ pub type Slot {
 ///
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     for: String,
     hide_delay: Int,
     position: Position,
@@ -80,7 +80,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     for: "",
     hide_delay: 1500,
     position: default_position,
@@ -94,7 +94,7 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> RichTooltip {
   RichTooltip(
-    interaction: config.interaction,
+    disabled: config.disabled,
     for: config.for,
     hide_delay: config.hide_delay,
     position: config.position,
@@ -110,10 +110,10 @@ pub fn new() -> RichTooltip {
 
 // --- Setters ---
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 ///
-pub fn disabled(r: RichTooltip, interaction: Interaction) -> RichTooltip {
-  RichTooltip(..r, interaction: interaction)
+pub fn disabled(r: RichTooltip, disabled: Interaction) -> RichTooltip {
+  RichTooltip(..r, disabled: disabled)
 }
 
 /// for sets the `for` field
@@ -153,7 +153,7 @@ pub fn render(
     "m3e-rich-tooltip",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", r.interaction == Disabled),
+        helpers.boolean_attribute("disabled", r.disabled == Disabled),
         attribute.attribute("for", r.for),
         attribute.attribute("hide-delay", int.to_string(r.hide_delay)),
         attribute.attribute("position", position_to_string(r.position)),

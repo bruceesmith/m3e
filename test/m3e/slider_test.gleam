@@ -213,7 +213,7 @@ pub fn config_test() {
   slider.default_config()
   |> should.equal(slider.Config(
     discrete: slider.Continuous,
-    interaction: Enabled,
+    disabled: Enabled,
     labels: slider.HideLabels,
     max: 100.0,
     min: 0.0,

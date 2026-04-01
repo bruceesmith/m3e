@@ -24,7 +24,7 @@ pub const default_direction: Direction = End
 /// ExpansionPanel(msg) is a component that provides an expandable details-summary view
 ///
 /// ## Fields:
-/// - interaction: Whether the panel is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - toggle_visibility: Whether to hide the expansion toggle
 /// - state: Whether the panel is expanded
 /// - toggle_direction: The direction of the expansion toggle
@@ -35,7 +35,7 @@ pub const default_direction: Direction = End
 ///
 pub opaque type ExpansionPanel(msg) {
   ExpansionPanel(
-    interaction: Interaction,
+    disabled: Interaction,
     toggle_visibility: ToggleVisibility,
     state: PanelState,
     toggle_direction: Direction,
@@ -89,7 +89,7 @@ pub const default_toggle_visibility: ToggleVisibility = ShowToggle
 /// 
 pub type Config(msg) {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     toggle_visibility: ToggleVisibility,
     state: PanelState,
     toggle_direction: Direction,
@@ -104,7 +104,7 @@ pub type Config(msg) {
 /// 
 pub fn default_config() -> Config(msg) {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     toggle_visibility: default_toggle_visibility,
     state: default_panel_state,
     toggle_direction: default_direction,
@@ -130,7 +130,7 @@ pub fn new(header: String) -> ExpansionPanel(msg) {
 /// 
 pub fn from_config(c: Config(msg)) -> ExpansionPanel(msg) {
   ExpansionPanel(
-    interaction: c.interaction,
+    disabled: c.disabled,
     toggle_visibility: c.toggle_visibility,
     state: c.state,
     toggle_direction: c.toggle_direction,
@@ -152,13 +152,13 @@ pub fn actions(
   ExpansionPanel(..p, actions: actions)
 }
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 ///
 pub fn disabled(
   p: ExpansionPanel(msg),
-  interaction: Interaction,
+  disabled: Interaction,
 ) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, interaction: interaction)
+  ExpansionPanel(..p, disabled: disabled)
 }
 
 /// header sets the `header` field
@@ -221,11 +221,20 @@ pub fn render(
   element.element(
     "m3e-expansion-panel",
     [
-      helpers.boolean_attribute("disabled", p.interaction == Disabled),
-      helpers.boolean_attribute("hide-toggle", p.toggle_visibility == HideToggle),
+      helpers.boolean_attribute("disabled", p.disabled == Disabled),
+      helpers.boolean_attribute(
+        "hide-toggle",
+        p.toggle_visibility == HideToggle,
+      ),
       helpers.boolean_attribute("open", p.state == Open),
-      attribute.attribute("toggle-direction", direction_to_string(p.toggle_direction)),
-      attribute.attribute("toggle-position", position_to_string(p.toggle_position)),
+      attribute.attribute(
+        "toggle-direction",
+        direction_to_string(p.toggle_direction),
+      ),
+      attribute.attribute(
+        "toggle-position",
+        position_to_string(p.toggle_position),
+      ),
       ..attributes
     ]
       |> list.filter(fn(a) { a != attribute.none() }),

@@ -16,16 +16,12 @@ import m3e/state.{type Interaction, Disabled}
 /// SliderThumb provides Lustre support for the [M3E Slider Thumb component](https://matraic.github.io/m3e/#/components/slider.html)
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is disabled
 /// - name: The name that identifies the element when submitting the associated form
 /// - value: The value of the thumb
 /// 
 pub opaque type SliderThumb {
-  SliderThumb(
-    interaction: Interaction,
-    name: Option(String),
-    value: Option(Float),
-  )
+  SliderThumb(disabled: Interaction, name: Option(String), value: Option(Float))
 }
 
 // --- CONFIGURATION ---
@@ -33,13 +29,13 @@ pub opaque type SliderThumb {
 /// Config holds the configuration for a SliderThumb
 /// 
 pub type Config {
-  Config(interaction: Interaction, name: Option(String), value: Option(Float))
+  Config(disabled: Interaction, name: Option(String), value: Option(Float))
 }
 
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config {
-  Config(interaction: state.default_interaction, name: None, value: None)
+  Config(disabled: state.default_interaction, name: None, value: None)
 }
 
 // --- CONSTRUCTORS ---
@@ -53,15 +49,15 @@ pub fn new() -> SliderThumb {
 /// from_config creates a SliderThumb from a Config record
 /// 
 pub fn from_config(c: Config) -> SliderThumb {
-  SliderThumb(interaction: c.interaction, name: c.name, value: c.value)
+  SliderThumb(disabled: c.disabled, name: c.name, value: c.value)
 }
 
 // --- SETTERS ---
 
-/// disabled sets the interaction field
+/// disabled sets the disabled field
 /// 
-pub fn disabled(s: SliderThumb, interaction: Interaction) -> SliderThumb {
-  SliderThumb(..s, interaction: interaction)
+pub fn disabled(s: SliderThumb, disabled: Interaction) -> SliderThumb {
+  SliderThumb(..s, disabled: disabled)
 }
 
 /// name sets the name field
@@ -89,7 +85,7 @@ pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) 
     "m3e-slider-thumb",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.interaction == Disabled),
+        helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.option_attribute(
           s.name,
           fn(_) { "name" },

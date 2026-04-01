@@ -23,14 +23,14 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 /// SelectionList provides a container for managing selectable list items with single or multi-select capabilities
 /// 
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is enabled or disabled
 /// - indicator_visibility: Whether to hide the selection indicator
 /// - selection_mode: Whether multiple items can be selected
 /// - variant: The appearance variant of the list
 ///
 pub opaque type SelectionList {
   SelectionList(
-    interaction: Interaction,
+    disabled: Interaction,
     indicator_visibility: IndicatorVisibility,
     selection_mode: SelectionMode,
     variant: Variant,
@@ -42,14 +42,14 @@ pub opaque type SelectionList {
 /// Config is the configuration of a SelectionList
 ///
 /// ## Fields:
-/// - interaction: Whether the element is enabled or disabled
+/// - disabled: Whether the element is enabled or disabled
 /// - indicator_visibility: Whether to hide the selection indicator
 /// - selection_mode: Whether multiple items can be selected
 /// - variant: The appearance variant of the list
 ///
 pub type Config {
   Config(
-    interaction: Interaction,
+    disabled: Interaction,
     indicator_visibility: IndicatorVisibility,
     selection_mode: SelectionMode,
     variant: Variant,
@@ -62,7 +62,7 @@ pub const default_variant: Variant = Standard
 ///
 pub fn default_config() -> Config {
   Config(
-    interaction: state.default_interaction,
+    disabled: state.default_interaction,
     indicator_visibility: default_indicator_visibility,
     selection_mode: config.default_selection_mode,
     variant: default_variant,
@@ -78,7 +78,7 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> SelectionList {
   SelectionList(
-    interaction: config.interaction,
+    disabled: config.disabled,
     indicator_visibility: config.indicator_visibility,
     selection_mode: config.selection_mode,
     variant: config.variant,
@@ -93,10 +93,10 @@ pub fn new() -> SelectionList {
 
 // --- SETTERS ---
 
-/// disabled sets the `interaction` field
+/// disabled sets the `disabled` field
 ///
-pub fn disabled(sl: SelectionList, interaction: Interaction) -> SelectionList {
-  SelectionList(..sl, interaction: interaction)
+pub fn disabled(sl: SelectionList, disabled: Interaction) -> SelectionList {
+  SelectionList(..sl, disabled: disabled)
 }
 
 /// hide_selection_indicator sets the `indicator_visibility` field
@@ -138,7 +138,7 @@ pub fn render(
     "m3e-selection-list",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", sl.interaction == Disabled),
+        helpers.boolean_attribute("disabled", sl.disabled == Disabled),
         helpers.boolean_attribute(
           "hide-selection-indicator",
           sl.indicator_visibility == Hidden,
