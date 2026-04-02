@@ -12,6 +12,7 @@ import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 // --- Types ---
 
 /// Expansion specifies if an item is open or closed
+/// 
 pub type Expansion {
   Open
   Closed
@@ -19,15 +20,25 @@ pub type Expansion {
 
 pub const default_expansion: Expansion = Closed
 
+/// Mode is whether the element's selected / checked state is indeterminate
+/// 
+pub type Mode {
+  Determinate
+  Indeterminate
+}
+
+pub const default_mode = Determinate
+
 /// NavMenuItem represents a navigation menu item
 /// 
 /// ## Fields:
 /// - badge: Renders the badge of the item
 /// - disabled: Whether the element is disabled
+/// - indeterminate: Whether the element's selected / checked state is indeterminate
 /// - leading_icon_name: Renders the icon of the item
 /// - label: Renders the label of the item
-/// - expansion: Whether the item is expanded
-/// - selection: Whether the element is selected
+/// - open: Whether the item is expanded
+/// - selected: Whether the element is selected
 /// - selected_icon_name: Renders the icon of the item when selected
 /// - toggle_icon_name: Renders the toggle icon
 ///
@@ -35,10 +46,11 @@ pub opaque type NavMenuItem {
   NavMenuItem(
     badge: Option(String),
     disabled: Interaction,
+    indeterminate: Mode,
     leading_icon_name: Option(String),
     label: String,
-    expansion: Expansion,
-    selection: SelectionState,
+    open: Expansion,
+    selected: SelectionState,
     selected_icon_name: Option(String),
     toggle_icon_name: Option(String),
   )
@@ -67,10 +79,11 @@ pub type Config {
   Config(
     badge: Option(String),
     disabled: Interaction,
+    indeterminate: Mode,
     leading_icon_name: Option(String),
     label: String,
-    expansion: Expansion,
-    selection: SelectionState,
+    open: Expansion,
+    selected: SelectionState,
     selected_icon_name: Option(String),
     toggle_icon_name: Option(String),
   )
@@ -82,10 +95,11 @@ pub fn default_config(label: String) -> Config {
   Config(
     badge: None,
     disabled: state.default_interaction,
+    indeterminate: default_mode,
     leading_icon_name: None,
     label: label,
-    expansion: default_expansion,
-    selection: state.default_selection_state,
+    open: default_expansion,
+    selected: state.default_selection_state,
     selected_icon_name: None,
     toggle_icon_name: None,
   )
@@ -108,10 +122,11 @@ pub fn from_config(c: Config) -> NavMenuItem {
   NavMenuItem(
     badge: c.badge,
     disabled: c.disabled,
+    indeterminate: c.indeterminate,
     leading_icon_name: c.leading_icon_name,
     label: c.label,
-    expansion: c.expansion,
-    selection: c.selection,
+    open: c.open,
+    selected: c.selected,
     selected_icon_name: c.selected_icon_name,
     toggle_icon_name: c.toggle_icon_name,
   )
@@ -131,6 +146,12 @@ pub fn disabled(item: NavMenuItem, disabled: Interaction) -> NavMenuItem {
   NavMenuItem(..item, disabled: disabled)
 }
 
+/// indeterminate sets the indeterminate field
+/// 
+pub fn indeterminate(item: NavMenuItem, indeterminate: Mode) -> NavMenuItem {
+  NavMenuItem(..item, indeterminate: indeterminate)
+}
+
 /// leading_icon_name sets the leading_icon_name field
 /// 
 pub fn leading_icon_name(
@@ -146,16 +167,16 @@ pub fn label(item: NavMenuItem, label: String) -> NavMenuItem {
   NavMenuItem(..item, label: label)
 }
 
-///  open sets the expansion field
+///  open sets the open field
 /// 
-pub fn open(item: NavMenuItem, expansion: Expansion) -> NavMenuItem {
-  NavMenuItem(..item, expansion: expansion)
+pub fn open(item: NavMenuItem, open: Expansion) -> NavMenuItem {
+  NavMenuItem(..item, open: open)
 }
 
-/// selected sets the selection field
+/// selected sets the selected field
 /// 
-pub fn selected(item: NavMenuItem, selection: SelectionState) -> NavMenuItem {
-  NavMenuItem(..item, selection: selection)
+pub fn selected(item: NavMenuItem, selected: SelectionState) -> NavMenuItem {
+  NavMenuItem(..item, selected: selected)
 }
 
 /// selected_icon_name sets the selected_icon_name field
@@ -192,8 +213,12 @@ pub fn render(
     "m3e-nav-menu-item",
     [
       helpers.boolean_attribute("disabled", item.disabled == Disabled),
-      helpers.boolean_attribute("open", item.expansion == Open),
-      helpers.boolean_attribute("selected", item.selection == Selected),
+      helpers.boolean_attribute(
+        "indeterminate",
+        item.indeterminate == Indeterminate,
+      ),
+      helpers.boolean_attribute("open", item.open == Open),
+      helpers.boolean_attribute("selected", item.selected == Selected),
       ..attributes
     ],
     [

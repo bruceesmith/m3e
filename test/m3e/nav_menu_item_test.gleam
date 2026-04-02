@@ -15,7 +15,7 @@ pub fn basic_render_test() {
   |> should.equal(
     element.element(
       "m3e-nav-menu-item",
-      [attribute.none(), attribute.none(), attribute.none()],
+      [attribute.none(), attribute.none(), attribute.none(), attribute.none()],
       [
         element.none(),
         element.none(),
@@ -35,6 +35,7 @@ pub fn properties_test() {
     nav_menu_item.new(label)
     |> nav_menu_item.badge(Some(badge_text))
     |> nav_menu_item.disabled(Disabled)
+    |> nav_menu_item.indeterminate(nav_menu_item.Indeterminate)
     |> nav_menu_item.open(nav_menu_item.Open)
     |> nav_menu_item.selected(Selected)
 
@@ -44,6 +45,7 @@ pub fn properties_test() {
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
+        attribute.attribute("indeterminate", ""),
         attribute.attribute("open", ""),
         attribute.attribute("selected", ""),
       ],
@@ -68,8 +70,9 @@ pub fn config_test() {
       nav_menu_item.Config(
         ..c,
         disabled: Disabled,
-        expansion: nav_menu_item.Open,
-        selection: Selected,
+        indeterminate: nav_menu_item.Indeterminate,
+        open: nav_menu_item.Open,
+        selected: Selected,
       )
     }
 
@@ -81,6 +84,7 @@ pub fn config_test() {
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
+        attribute.attribute("indeterminate", ""),
         attribute.attribute("open", ""),
         attribute.attribute("selected", ""),
       ],
@@ -101,8 +105,9 @@ pub fn default_config_test() {
 
   c.label |> should.equal(label)
   c.disabled |> should.equal(Enabled)
-  c.expansion |> should.equal(nav_menu_item.Closed)
-  c.selection |> should.equal(Unselected)
+  c.open |> should.equal(nav_menu_item.Closed)
+  c.indeterminate |> should.equal(nav_menu_item.Determinate)
+  c.selected |> should.equal(Unselected)
   c.badge |> should.equal(None)
 }
 
