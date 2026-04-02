@@ -37,24 +37,26 @@ pub const default_close_behavior: CloseBehavior = CloseEnabled
 /// - id: The unique identifier for the dialog
 /// - alert: Whether the dialog is an alert
 /// - close_label: The accessible label given to the button used to dismiss the dialog
-/// - focus_trap: Whether to disable focus trapping, which keeps keyboard Tab navigation within the dialog
-/// - close_behavior: Whether users cannot click the backdrop or press ESC to dismiss the dialog
-/// - dismissibility: Whether a button is presented that can be used to close the dialog
+/// - no_focus_trap: Whether to disable focus trapping, which keeps keyboard Tab navigation within the dialog
+/// - disable_close: Whether users cannot click the backdrop or press escape to dismiss the dialog
+/// - dismissible: Whether a button is presented that can be used to close the dialog
 /// - header: The headline of the dialog
 /// - close_icon_name: The "close" icon of the dialog
 /// - actions: The actions of the dialog
+/// - open: Whether the dialog is open
 /// 
 pub opaque type Dialog(msg) {
   Dialog(
     id: String,
     alert: AlertStatus,
     close_label: Option(String),
-    focus_trap: FocusTrap,
-    close_behavior: CloseBehavior,
-    dismissibility: Dismissibility,
+    no_focus_trap: FocusTrap,
+    disable_close: CloseBehavior,
+    dismissible: Dismissibility,
     header: String,
     close_icon_name: Option(String),
     actions: List(Element(msg)),
+    open: State,
   )
 }
 
@@ -78,6 +80,15 @@ pub type Slot {
   // Renders the header of the dialog 
 }
 
+/// State determines if the dialog is open or closed
+/// 
+pub type State {
+  Open
+  Closed
+}
+
+pub const default_state: State = Closed
+
 // --- CONFIGURATION ---
 
 /// Config holds the configuration for a Dialog
@@ -87,12 +98,13 @@ pub type Config(msg) {
     id: String,
     alert: AlertStatus,
     close_label: Option(String),
-    focus_trap: FocusTrap,
-    close_behavior: CloseBehavior,
-    dismissibility: Dismissibility,
+    no_focus_trap: FocusTrap,
+    disable_close: CloseBehavior,
+    dismissible: Dismissibility,
     header: String,
     close_icon_name: Option(String),
     actions: List(Element(msg)),
+    open: State,
   )
 }
 
@@ -103,12 +115,13 @@ pub fn default_config() -> Config(msg) {
     id: "",
     alert: default_alert_status,
     close_label: None,
-    focus_trap: default_focus_trap,
-    close_behavior: default_close_behavior,
-    dismissibility: config.default_dismissibility,
+    no_focus_trap: default_focus_trap,
+    disable_close: default_close_behavior,
+    dismissible: config.default_dismissibility,
     header: "",
     close_icon_name: None,
     actions: [],
+    open: default_state,
   )
 }
 
@@ -131,12 +144,13 @@ pub fn from_config(c: Config(msg)) -> Dialog(msg) {
     id: c.id,
     alert: c.alert,
     close_label: c.close_label,
-    focus_trap: c.focus_trap,
-    close_behavior: c.close_behavior,
-    dismissibility: c.dismissibility,
+    no_focus_trap: c.no_focus_trap,
+    disable_close: c.disable_close,
+    dismissible: c.dismissible,
     header: c.header,
     close_icon_name: c.close_icon_name,
     actions: c.actions,
+    open: c.open,
   )
 }
 
@@ -169,19 +183,16 @@ pub fn close_label(d: Dialog(msg), close_label: Option(String)) -> Dialog(msg) {
   Dialog(..d, close_label: close_label)
 }
 
-/// close_behavior sets the `close_behavior` field
+/// disable_close sets the `disable_close` field
 /// 
-pub fn close_behavior(d: Dialog(msg), behavior: CloseBehavior) -> Dialog(msg) {
-  Dialog(..d, close_behavior: behavior)
+pub fn disable_close(d: Dialog(msg), behavior: CloseBehavior) -> Dialog(msg) {
+  Dialog(..d, disable_close: behavior)
 }
 
-/// dismissibility sets the `dismissibility` field
+/// dismissible sets the `dismissible` field
 /// 
-pub fn dismissibility(
-  d: Dialog(msg),
-  dismissibility: Dismissibility,
-) -> Dialog(msg) {
-  Dialog(..d, dismissibility: dismissibility)
+pub fn dismissible(d: Dialog(msg), dismissible: Dismissibility) -> Dialog(msg) {
+  Dialog(..d, dismissible: dismissible)
 }
 
 /// header sets the `header` field
@@ -196,10 +207,16 @@ pub fn id(d: Dialog(msg), id: String) -> Dialog(msg) {
   Dialog(..d, id: id)
 }
 
-/// focus_trap sets the `focus_trap` field
+/// no_focus_trap sets the `no_focus_trap` field
 /// 
-pub fn focus_trap(d: Dialog(msg), trap: FocusTrap) -> Dialog(msg) {
-  Dialog(..d, focus_trap: trap)
+pub fn no_focus_trap(d: Dialog(msg), trap: FocusTrap) -> Dialog(msg) {
+  Dialog(..d, no_focus_trap: trap)
+}
+
+/// open sets the `open` field
+/// 
+pub fn open(d: Dialog(msg), open: State) -> Dialog(msg) {
+  Dialog(..d, open: open)
 }
 
 // --- RENDERING ---
@@ -222,9 +239,13 @@ pub fn render(
         function.identity,
         None,
       ),
-      helpers.boolean_attribute("no-focus-trap", d.focus_trap == NoFocusTrap),
-      helpers.boolean_attribute("disable-close", d.close_behavior == CloseDisabled),
-      helpers.boolean_attribute("dismissible", d.dismissibility == Dismissible),
+      helpers.boolean_attribute("no-focus-trap", d.no_focus_trap == NoFocusTrap),
+      helpers.boolean_attribute(
+        "disable-close",
+        d.disable_close == CloseDisabled,
+      ),
+      helpers.boolean_attribute("dismissible", d.dismissible == Dismissible),
+      helpers.boolean_attribute("open", d.open == Open),
       ..attributes
     ]
       |> list.filter(fn(a) { a != attribute.none() }),

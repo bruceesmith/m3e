@@ -5,7 +5,7 @@ import lustre/element
 import lustre/element/html
 
 import m3e/config.{Dismissible}
-import m3e/dialog.{Alert, CloseDisabled, NoFocusTrap}
+import m3e/dialog.{Alert, CloseDisabled, NoFocusTrap, Open}
 
 pub fn basic_render_test() {
   let content = [html.text("This is the dialog content.")]
@@ -55,10 +55,11 @@ pub fn full_attributes_test() {
   dialog.new(id, "Headline")
   |> dialog.alert(Alert)
   |> dialog.close_label(option.Some("Close"))
-  |> dialog.focus_trap(NoFocusTrap)
-  |> dialog.close_behavior(CloseDisabled)
-  |> dialog.dismissibility(Dismissible)
+  |> dialog.no_focus_trap(NoFocusTrap)
+  |> dialog.disable_close(CloseDisabled)
+  |> dialog.dismissible(Dismissible)
   |> dialog.actions([action])
+  |> dialog.open(Open)
   |> dialog.render([], content)
   |> should.equal(
     element.element(
@@ -70,6 +71,7 @@ pub fn full_attributes_test() {
         attribute.attribute("no-focus-trap", ""),
         attribute.attribute("disable-close", ""),
         attribute.attribute("dismissible", ""),
+        attribute.attribute("open", ""),
       ],
       [
         html.span([attribute.attribute("slot", "header")], [
@@ -93,7 +95,7 @@ pub fn render_config_test() {
       id: id,
       header: header,
       alert: Alert,
-      dismissibility: Dismissible,
+      dismissible: Dismissible,
     )
 
   dialog.render_config(config, [], content)
