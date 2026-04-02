@@ -11,12 +11,23 @@ import m3e/state.{Required}
 pub fn new_test() {
   autocomplete.new("test-id")
   |> autocomplete.auto_activate(autocomplete.AutoActivate)
-  |> autocomplete.requirement(Required)
-  |> autocomplete.selection_indicator(ShowSelectionIndicator)
+  |> autocomplete.required(Required)
+  |> autocomplete.hide_selection_indicator(ShowSelectionIndicator)
   |> autocomplete.render([])
-  |> element.to_string
   |> should.equal(
-    "<m3e-autocomplete auto-activate for=\"test-id\" required></m3e-autocomplete>",
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("auto-activate", ""),
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "test-id"),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("required", ""),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
   )
 }
 
@@ -24,8 +35,8 @@ pub fn render_test() {
   let ac =
     autocomplete.new("test-id")
     |> autocomplete.auto_activate(autocomplete.AutoActivate)
-    |> autocomplete.requirement(Required)
-    |> autocomplete.selection_indicator(HideSelectionIndicator)
+    |> autocomplete.required(Required)
+    |> autocomplete.hide_selection_indicator(HideSelectionIndicator)
   let opt = m3e_opt.new() |> m3e_opt.value(Some("val"))
 
   autocomplete.render(ac, [opt])
@@ -34,9 +45,13 @@ pub fn render_test() {
       "m3e-autocomplete",
       [
         attribute.attribute("auto-activate", ""),
+        attribute.attribute("filter", "contains"),
         attribute.attribute("for", "test-id"),
-        attribute.attribute("required", ""),
         attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("required", ""),
+        attribute.attribute("results-label", ""),
       ],
       [
         element.element(
@@ -59,7 +74,13 @@ pub fn render_defaults_test() {
   |> should.equal(
     element.element(
       "m3e-autocomplete",
-      [attribute.attribute("for", "test-id")],
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "test-id"),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
       [],
     ),
   )
@@ -69,34 +90,157 @@ pub fn auto_activate_test() {
   autocomplete.new("id")
   |> autocomplete.auto_activate(autocomplete.AutoActivate)
   |> autocomplete.render([])
-  |> element.to_string
   |> should.equal(
-    "<m3e-autocomplete auto-activate for=\"id\"></m3e-autocomplete>",
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("auto-activate", ""),
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
   )
 }
 
 pub fn for_test() {
   autocomplete.new("id")
-  |> autocomplete.for("new-id")
+  |> autocomplete.for_("new-id")
   |> autocomplete.render([])
-  |> element.to_string
-  |> should.equal("<m3e-autocomplete for=\"new-id\"></m3e-autocomplete>")
+  |> should.equal(
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "new-id"),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
+  )
 }
 
 pub fn required_test() {
   autocomplete.new("id")
-  |> autocomplete.requirement(Required)
+  |> autocomplete.required(Required)
   |> autocomplete.render([])
-  |> element.to_string
-  |> should.equal("<m3e-autocomplete for=\"id\" required></m3e-autocomplete>")
+  |> should.equal(
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("required", ""),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
+  )
 }
 
-pub fn hide_selection_indicator_test() {
+pub fn hide_hide_selection_indicator_test() {
   autocomplete.new("id")
-  |> autocomplete.selection_indicator(HideSelectionIndicator)
+  |> autocomplete.hide_selection_indicator(HideSelectionIndicator)
   |> autocomplete.render([])
-  |> element.to_string
   |> should.equal(
-    "<m3e-autocomplete for=\"id\" hide-selection-indicator></m3e-autocomplete>",
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("hide-selection-indicator", ""),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn hide_no_data_test() {
+  autocomplete.new("id")
+  |> autocomplete.hide_no_data(autocomplete.HideEmptyMenu)
+  |> autocomplete.render([])
+  |> should.equal(
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("hide-no-data", ""),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn case_sensitive_test() {
+  autocomplete.new("id")
+  |> autocomplete.case_sensitive(autocomplete.CaseSensitive)
+  |> autocomplete.render([])
+  |> should.equal(
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("case-sensitive", ""),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn hide_loading_test() {
+  autocomplete.new("id")
+  |> autocomplete.hide_loading(autocomplete.HideLoadingIndicator)
+  |> autocomplete.render([])
+  |> should.equal(
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("hide-loading", ""),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
+  )
+}
+
+pub fn loading_test() {
+  autocomplete.new("id")
+  |> autocomplete.loading(autocomplete.Loading)
+  |> autocomplete.render([])
+  |> should.equal(
+    element.element(
+      "m3e-autocomplete",
+      [
+        attribute.attribute("filter", "contains"),
+        attribute.attribute("for", "id"),
+        attribute.attribute("loading", ""),
+        attribute.attribute("loading-label", "Loading..."),
+        attribute.attribute("no-data-label", "No options"),
+        attribute.attribute("results-label", ""),
+      ],
+      [],
+    ),
   )
 }
