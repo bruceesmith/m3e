@@ -25,20 +25,22 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 /// 
 /// ## Fields:
 /// - disabled: Whether the element is disabled
-/// - indicator_visibility: Whether to hide the selection indicator for single select options
+/// - hide_selection_indicator: Whether to hide the selection indicator for single select options
 /// - id: The id of the element
-/// - selection_mode: Whether multiple options can be selected
+/// - multi: Whether multiple options can be selected
 /// - name: The name that identifies the element when submitting the associated form
-/// - requirement: Whether the element is required
+/// - panel_class: Class or list of classes to be applied to the select's overlay panel
+/// - required: Whether the element is required
 ///
 pub opaque type Select {
   Select(
     disabled: Interaction,
-    indicator_visibility: IndicatorVisibility,
+    hide_selection_indicator: IndicatorVisibility,
     id: Option(String),
-    selection_mode: SelectionMode,
+    multi: SelectionMode,
     name: Option(String),
-    requirement: Requirement,
+    panel_class: Option(String),
+    required: Requirement,
   )
 }
 
@@ -58,11 +60,12 @@ pub type Slot {
 pub type Config {
   Config(
     disabled: Interaction,
-    indicator_visibility: IndicatorVisibility,
+    hide_selection_indicator: IndicatorVisibility,
     id: Option(String),
-    selection_mode: SelectionMode,
+    multi: SelectionMode,
     name: Option(String),
-    requirement: Requirement,
+    panel_class: Option(String),
+    required: Requirement,
   )
 }
 
@@ -71,11 +74,12 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     disabled: state.default_interaction,
-    indicator_visibility: default_indicator_visibility,
+    hide_selection_indicator: default_indicator_visibility,
     id: None,
-    selection_mode: config.default_selection_mode,
+    multi: config.default_selection_mode,
     name: None,
-    requirement: state.default_requirement,
+    panel_class: None,
+    required: state.default_requirement,
   )
 }
 
@@ -92,11 +96,12 @@ pub fn new() -> Select {
 pub fn from_config(c: Config) -> Select {
   Select(
     disabled: c.disabled,
-    indicator_visibility: c.indicator_visibility,
+    hide_selection_indicator: c.hide_selection_indicator,
     id: c.id,
-    selection_mode: c.selection_mode,
+    multi: c.multi,
     name: c.name,
-    requirement: c.requirement,
+    panel_class: c.panel_class,
+    required: c.required,
   )
 }
 
@@ -108,13 +113,13 @@ pub fn disabled(s: Select, disabled: Interaction) -> Select {
   Select(..s, disabled: disabled)
 }
 
-/// hide_selection_indicator sets the indicator_visibility field
+/// hide_selection_indicator sets the hide_selection_indicator field
 /// 
 pub fn hide_selection_indicator(
   s: Select,
-  indicator_visibility: IndicatorVisibility,
+  hide_selection_indicator: IndicatorVisibility,
 ) -> Select {
-  Select(..s, indicator_visibility: indicator_visibility)
+  Select(..s, hide_selection_indicator: hide_selection_indicator)
 }
 
 /// id sets the id field
@@ -123,10 +128,10 @@ pub fn id(s: Select, id: Option(String)) -> Select {
   Select(..s, id: id)
 }
 
-/// multi sets the selection_mode field
+/// multi sets the multi field
 /// 
-pub fn multi(s: Select, selection_mode: SelectionMode) -> Select {
-  Select(..s, selection_mode: selection_mode)
+pub fn multi(s: Select, multi: SelectionMode) -> Select {
+  Select(..s, multi: multi)
 }
 
 /// name sets the name field
@@ -135,10 +140,16 @@ pub fn name(s: Select, name: Option(String)) -> Select {
   Select(..s, name: name)
 }
 
-/// required sets the requirement field
+/// panel_class sets the panel_class field
 /// 
-pub fn required(s: Select, requirement: Requirement) -> Select {
-  Select(..s, requirement: requirement)
+pub fn panel_class(s: Select, panel_class: Option(String)) -> Select {
+  Select(..s, panel_class: panel_class)
+}
+
+/// required sets the required field
+/// 
+pub fn required(s: Select, required: Requirement) -> Select {
+  Select(..s, required: required)
 }
 
 // --- RENDERING ---
@@ -162,17 +173,23 @@ pub fn render(
         helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.boolean_attribute(
           "hide-selection-indicator",
-          s.indicator_visibility == Hidden,
+          s.hide_selection_indicator == Hidden,
         ),
         helpers.option_attribute(s.id, fn(_) { "id" }, function.identity, None),
-        helpers.boolean_attribute("multi", s.selection_mode == Multi),
+        helpers.boolean_attribute("multi", s.multi == Multi),
         helpers.option_attribute(
           s.name,
           fn(_) { "name" },
           function.identity,
           None,
         ),
-        helpers.boolean_attribute("required", s.requirement == Required),
+        helpers.option_attribute(
+          s.panel_class,
+          fn(_) { "panel-class" },
+          function.identity,
+          None,
+        ),
+        helpers.boolean_attribute("required", s.required == Required),
       ],
       attributes,
     ])

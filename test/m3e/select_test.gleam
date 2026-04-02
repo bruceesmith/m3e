@@ -55,11 +55,12 @@ pub fn config_test() {
   let c =
     select.Config(
       disabled: Disabled,
-      indicator_visibility: select.Hidden,
+      hide_selection_indicator: select.Hidden,
       id: Some("config-id"),
-      selection_mode: Multi,
+      multi: Multi,
       name: Some("config-name"),
-      requirement: Required,
+      panel_class: Some("config-panel-class"),
+      required: Required,
     )
 
   let s = select.from_config(c)
@@ -74,6 +75,7 @@ pub fn config_test() {
         attribute.attribute("id", "config-id"),
         attribute.attribute("multi", ""),
         attribute.attribute("name", "config-name"),
+        attribute.attribute("panel-class", "config-panel-class"),
         attribute.attribute("required", ""),
       ],
       [],
@@ -85,11 +87,11 @@ pub fn default_config_test() {
   let c = select.default_config()
 
   c.disabled |> should.equal(Enabled)
-  c.indicator_visibility |> should.equal(select.Visible)
+  c.hide_selection_indicator |> should.equal(select.Visible)
   c.id |> should.equal(None)
-  c.selection_mode |> should.equal(Single)
+  c.multi |> should.equal(Single)
   c.name |> should.equal(None)
-  c.requirement |> should.equal(Optional)
+  c.required |> should.equal(Optional)
 }
 
 pub fn from_config_test() {
