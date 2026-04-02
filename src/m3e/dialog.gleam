@@ -37,7 +37,7 @@ pub const default_close_behavior: CloseBehavior = CloseEnabled
 /// - id: The unique identifier for the dialog
 /// - alert: Whether the dialog is an alert
 /// - close_label: The accessible label given to the button used to dismiss the dialog
-/// - no_focus_trap: Whether to disable focus trapping, which keeps keyboard Tab navigation within the dialog
+/// - no_focus_trap: Whether to disable focus trapping, which keeps keyboard `Tab` navigation within the dialog
 /// - disable_close: Whether users cannot click the backdrop or press escape to dismiss the dialog
 /// - dismissible: Whether a button is presented that can be used to close the dialog
 /// - header: The headline of the dialog

@@ -38,7 +38,7 @@ pub const default_mode = Determinate
 /// - leading_icon_name: Renders the icon of the item
 /// - label: Renders the label of the item
 /// - open: Whether the item is expanded
-/// - selected: Whether the element is selected
+/// - selected: Whether the item is selected
 /// - selected_icon_name: Renders the icon of the item when selected
 /// - toggle_icon_name: Renders the toggle icon
 ///
