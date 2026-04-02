@@ -35,7 +35,6 @@ pub fn properties_test() {
     nav_menu_item.new(label)
     |> nav_menu_item.badge(Some(badge_text))
     |> nav_menu_item.disabled(Disabled)
-    |> nav_menu_item.indeterminate(nav_menu_item.Indeterminate)
     |> nav_menu_item.open(nav_menu_item.Open)
     |> nav_menu_item.selected(Selected)
 
@@ -45,7 +44,6 @@ pub fn properties_test() {
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
-        attribute.attribute("indeterminate", ""),
         attribute.attribute("open", ""),
         attribute.attribute("selected", ""),
       ],
@@ -134,6 +132,7 @@ pub fn setters_test() {
   let item =
     nav_menu_item.new(label)
     |> nav_menu_item.disabled(Disabled)
+    |> nav_menu_item.indeterminate(nav_menu_item.Indeterminate)
     |> nav_menu_item.open(nav_menu_item.Open)
     |> nav_menu_item.selected(Selected)
 
@@ -143,6 +142,7 @@ pub fn setters_test() {
       "m3e-nav-menu-item",
       [
         attribute.attribute("disabled", ""),
+        attribute.attribute("indeterminate", ""),
         attribute.attribute("open", ""),
         attribute.attribute("selected", ""),
       ],
