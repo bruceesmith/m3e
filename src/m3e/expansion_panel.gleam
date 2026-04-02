@@ -25,8 +25,8 @@ pub const default_direction: Direction = End
 ///
 /// ## Fields:
 /// - disabled: Whether the element is disabled
-/// - toggle_visibility: Whether to hide the expansion toggle
-/// - state: Whether the panel is expanded
+/// - hide_toggle: Whether to hide the expansion toggle
+/// - open: Whether the panel is expanded
 /// - toggle_direction: The direction of the expansion toggle
 /// - toggle_position: The position of the expansion toggle
 /// - header: The text displayed in the header
@@ -36,8 +36,8 @@ pub const default_direction: Direction = End
 pub opaque type ExpansionPanel(msg) {
   ExpansionPanel(
     disabled: Interaction,
-    toggle_visibility: ToggleVisibility,
-    state: PanelState,
+    hide_toggle: ToggleVisibility,
+    open: PanelState,
     toggle_direction: Direction,
     toggle_position: Position,
     header: String,
@@ -90,8 +90,8 @@ pub const default_toggle_visibility: ToggleVisibility = ShowToggle
 pub type Config(msg) {
   Config(
     disabled: Interaction,
-    toggle_visibility: ToggleVisibility,
-    state: PanelState,
+    hide_toggle: ToggleVisibility,
+    open: PanelState,
     toggle_direction: Direction,
     toggle_position: Position,
     header: String,
@@ -105,8 +105,8 @@ pub type Config(msg) {
 pub fn default_config() -> Config(msg) {
   Config(
     disabled: state.default_interaction,
-    toggle_visibility: default_toggle_visibility,
-    state: default_panel_state,
+    hide_toggle: default_toggle_visibility,
+    open: default_panel_state,
     toggle_direction: default_direction,
     toggle_position: default_position,
     header: "",
@@ -131,8 +131,8 @@ pub fn new(header: String) -> ExpansionPanel(msg) {
 pub fn from_config(c: Config(msg)) -> ExpansionPanel(msg) {
   ExpansionPanel(
     disabled: c.disabled,
-    toggle_visibility: c.toggle_visibility,
-    state: c.state,
+    hide_toggle: c.hide_toggle,
+    open: c.open,
     toggle_direction: c.toggle_direction,
     toggle_position: c.toggle_position,
     header: c.header,
@@ -167,19 +167,19 @@ pub fn header(p: ExpansionPanel(msg), header: String) -> ExpansionPanel(msg) {
   ExpansionPanel(..p, header: header)
 }
 
-/// hide_toggle sets the `toggle_visibility` field
+/// hide_toggle sets the `hide_toggle` field
 ///
 pub fn hide_toggle(
   p: ExpansionPanel(msg),
   visibility: ToggleVisibility,
 ) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, toggle_visibility: visibility)
+  ExpansionPanel(..p, hide_toggle: visibility)
 }
 
-/// open sets the `state` field
+/// open sets the `open` field
 ///
-pub fn open(p: ExpansionPanel(msg), state: PanelState) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, state: state)
+pub fn open(p: ExpansionPanel(msg), open: PanelState) -> ExpansionPanel(msg) {
+  ExpansionPanel(..p, open: open)
 }
 
 /// toggle_direction sets the `toggle_direction` field
@@ -222,11 +222,8 @@ pub fn render(
     "m3e-expansion-panel",
     [
       helpers.boolean_attribute("disabled", p.disabled == Disabled),
-      helpers.boolean_attribute(
-        "hide-toggle",
-        p.toggle_visibility == HideToggle,
-      ),
-      helpers.boolean_attribute("open", p.state == Open),
+      helpers.boolean_attribute("hide-toggle", p.hide_toggle == HideToggle),
+      helpers.boolean_attribute("open", p.open == Open),
       attribute.attribute(
         "toggle-direction",
         direction_to_string(p.toggle_direction),

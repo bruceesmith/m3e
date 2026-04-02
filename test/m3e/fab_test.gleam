@@ -98,9 +98,9 @@ pub fn render_config_test() {
     Config(
       ..fab.default_config(),
       disabled: state.Disabled,
-      extension: Extended,
+      extended: Extended,
       extended_label: Some("Config"),
-      elevation: Lowered,
+      lowered: Lowered,
       variant: Tertiary,
     )
   let expected =

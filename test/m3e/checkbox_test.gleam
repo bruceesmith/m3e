@@ -2,7 +2,7 @@ import gleam/option.{Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/checkbox.{Config}
+import m3e/checkbox.{Config, Determinate, Indeterminate}
 import m3e/form_submission
 import m3e/state.{Checked, Disabled, Required}
 
@@ -42,6 +42,23 @@ pub fn checkbox_disabled_test() {
   |> should.equal(expected)
 }
 
+pub fn checkbox_indeterminate_test() {
+  // Test setting to indeterminate
+  let c = checkbox.new() |> checkbox.indeterminate(Indeterminate)
+  let expected =
+    element.element(
+      "m3e-checkbox",
+      [attribute.attribute("indeterminate", "")],
+      [],
+    )
+  c |> checkbox.render() |> should.equal(expected)
+
+  // Test resetting to determinate (edge case)
+  let c = c |> checkbox.indeterminate(Determinate)
+  let expected = element.element("m3e-checkbox", [], [])
+  c |> checkbox.render() |> should.equal(expected)
+}
+
 pub fn checkbox_form_test() {
   let c =
     checkbox.new()
@@ -77,11 +94,20 @@ pub fn checkbox_required_test() {
 
 pub fn checkbox_render_config_test() {
   let config =
-    Config(..checkbox.default_config(), checked: Checked, requirement: Required)
+    Config(
+      ..checkbox.default_config(),
+      checked: Checked,
+      required: Required,
+      indeterminate: Indeterminate,
+    )
   let expected =
     element.element(
       "m3e-checkbox",
-      [attribute.attribute("checked", ""), attribute.attribute("required", "")],
+      [
+        attribute.attribute("checked", ""),
+        attribute.attribute("indeterminate", ""),
+        attribute.attribute("required", ""),
+      ],
       [],
     )
 

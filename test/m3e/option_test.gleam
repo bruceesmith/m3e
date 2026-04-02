@@ -44,9 +44,9 @@ pub fn config_test() {
   let c =
     opt.Config(
       disabled: Disabled,
-      highlighting: opt.HighlightEnabled,
+      disable_highlight: opt.HighlightEnabled,
       highlight_mode: opt.Contains,
-      selection: Selected,
+      selected: Selected,
       term: "test-term",
       value: Some("test-value"),
     )
@@ -73,10 +73,10 @@ pub fn default_config_test() {
   let c = opt.default_config()
 
   c.disabled |> should.equal(Enabled)
-  c.highlighting |> should.equal(opt.HighlightEnabled)
+  c.disable_highlight |> should.equal(opt.HighlightEnabled)
   c.highlight_mode |> should.equal(opt.Contains)
   c.term |> should.equal("")
-  c.selection |> should.equal(Unselected)
+  c.selected |> should.equal(Unselected)
   c.value |> should.equal(None)
 }
 

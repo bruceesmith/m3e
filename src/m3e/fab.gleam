@@ -40,11 +40,11 @@ pub const default_extension: Extension = NotExtended
 /// ## Fields:
 /// - disabled: Whether the element is disabled
 /// - disabled_interactive: Whether the element is disabled and interactive
-/// - extension: Whether the element is extended
+/// - extended: Whether the button is extended to show the label
 /// - extended_label: Renders the label of an extended button
 /// - form_submission: handles this element's role in form submission
 /// - link: Whether the element is a link
-/// - elevation: Whether to present a lowered elevation
+/// - lowered: Whether to present a lowered elevation
 /// - size: The size of the button
 /// - variant: The appearance variant of the button
 /// 
@@ -52,11 +52,11 @@ pub opaque type FAB {
   FAB(
     disabled: state.Interaction,
     disabled_interactive: state.Interaction,
-    extension: Extension,
+    extended: Extension,
     extended_label: Option(String),
     form_submission: Option(FormSubmission),
     link: Option(Link),
-    elevation: Elevation,
+    lowered: Elevation,
     size: Size,
     variant: Variant,
   )
@@ -99,11 +99,11 @@ pub type Config {
   Config(
     disabled: state.Interaction,
     disabled_interactive: state.Interaction,
-    extension: Extension,
+    extended: Extension,
     extended_label: Option(String),
     form_submission: Option(FormSubmission),
     link: Option(Link),
-    elevation: Elevation,
+    lowered: Elevation,
     size: Size,
     variant: Variant,
   )
@@ -115,11 +115,11 @@ pub fn default_config() -> Config {
   Config(
     disabled: state.default_interaction,
     disabled_interactive: state.default_interaction,
-    extension: default_extension,
+    extended: default_extension,
     extended_label: None,
     form_submission: None,
     link: None,
-    elevation: default_elevation,
+    lowered: default_elevation,
     size: default_size,
     variant: default_variant,
   )
@@ -139,11 +139,11 @@ pub fn from_config(c: Config) -> FAB {
   FAB(
     disabled: c.disabled,
     disabled_interactive: c.disabled_interactive,
-    extension: c.extension,
+    extended: c.extended,
     extended_label: c.extended_label,
     form_submission: c.form_submission,
     link: c.link,
-    elevation: c.elevation,
+    lowered: c.lowered,
     size: c.size,
     variant: c.variant,
   )
@@ -166,10 +166,10 @@ pub fn disabled_interactive(
   FAB(..f, disabled_interactive: disabled_interactive)
 }
 
-/// extended sets the `extension` field
+/// extended sets the `extended` field
 /// 
-pub fn extended(f: FAB, extension: Extension) -> FAB {
-  FAB(..f, extension: extension)
+pub fn extended(f: FAB, extended: Extension) -> FAB {
+  FAB(..f, extended: extended)
 }
 
 /// extended_label sets the extended_label field
@@ -190,10 +190,10 @@ pub fn link(f: FAB, link: Option(Link)) -> FAB {
   FAB(..f, link: link)
 }
 
-/// lowered sets the `elevation` field
+/// lowered sets the `lowered` field
 /// 
-pub fn lowered(f: FAB, elevation: Elevation) -> FAB {
-  FAB(..f, elevation: elevation)
+pub fn lowered(f: FAB, lowered: Elevation) -> FAB {
+  FAB(..f, lowered: lowered)
 }
 
 /// size sets the size field
@@ -231,8 +231,8 @@ pub fn render(
           "disabled-interactive",
           f.disabled_interactive == state.Disabled,
         ),
-        helpers.boolean_attribute("extended", f.extension == Extended),
-        helpers.boolean_attribute("lowered", f.elevation == Lowered),
+        helpers.boolean_attribute("extended", f.extended == Extended),
+        helpers.boolean_attribute("lowered", f.lowered == Lowered),
         attribute.attribute(
           "size",
           config.size_to_string(config.clamp_to_restricted_size(

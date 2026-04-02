@@ -20,18 +20,27 @@ import m3e/state.{
 /// - checked: Whether the element is checked
 /// - disabled: Whether the element is disabled
 /// - form_submission: handles this element's role in form submission
-/// - requirement: Whether a value is required for the element
+/// - indeterminate: Whether the element's checked state is indeterminate
+/// - required: Whether the element is required
 ///
 pub opaque type Checkbox {
   Checkbox(
     checked: CheckedState,
     disabled: Interaction,
     form_submission: Option(FormSubmission),
-    requirement: Requirement,
+    indeterminate: Mode,
+    required: Requirement,
   )
 }
 
 pub const default_value = "on"
+
+pub type Mode {
+  Determinate
+  Indeterminate
+}
+
+pub const default_mode = Determinate
 
 // --- CONFIGURATION ---
 
@@ -42,7 +51,8 @@ pub type Config {
     checked: CheckedState,
     disabled: Interaction,
     form_submission: Option(FormSubmission),
-    requirement: Requirement,
+    indeterminate: Mode,
+    required: Requirement,
   )
 }
 
@@ -53,7 +63,8 @@ pub fn default_config() -> Config {
     checked: state.default_checked_state,
     disabled: state.default_interaction,
     form_submission: None,
-    requirement: Optional,
+    indeterminate: default_mode,
+    required: Optional,
   )
 }
 
@@ -72,7 +83,8 @@ pub fn from_config(c: Config) -> Checkbox {
     checked: c.checked,
     disabled: c.disabled,
     form_submission: c.form_submission,
-    requirement: c.requirement,
+    indeterminate: c.indeterminate,
+    required: c.required,
   )
 }
 
@@ -105,10 +117,16 @@ pub fn form(
   Checkbox(..checkbox, form_submission: form_submission)
 }
 
-/// requirement sets the `requirement` field
+/// indeterminate sets the `indeterminate` field
 ///
-pub fn required(checkbox: Checkbox, requirement: Requirement) -> Checkbox {
-  Checkbox(..checkbox, requirement: requirement)
+pub fn indeterminate(checkbox: Checkbox, mode: Mode) -> Checkbox {
+  Checkbox(..checkbox, indeterminate: mode)
+}
+
+/// required sets the `required` field
+///
+pub fn required(checkbox: Checkbox, required: Requirement) -> Checkbox {
+  Checkbox(..checkbox, required: required)
 }
 
 // --- RENDERING ---
@@ -122,7 +140,11 @@ pub fn render(checkbox: Checkbox) -> Element(msg) {
       [
         helpers.boolean_attribute("checked", checkbox.checked == Checked),
         helpers.boolean_attribute("disabled", checkbox.disabled == Disabled),
-        helpers.boolean_attribute("required", checkbox.requirement == Required),
+        helpers.boolean_attribute(
+          "indeterminate",
+          checkbox.indeterminate == Indeterminate,
+        ),
+        helpers.boolean_attribute("required", checkbox.required == Required),
       ],
       form_submission.attributes(checkbox.form_submission),
     ])

@@ -13,30 +13,22 @@ import m3e/state.{type SelectionState, Disabled, Selected}
 
 // --- Types ---
 
-/// Focusability specifies if a disabled item is interactive (focusable)
-pub type Focusability {
-  Interactive
-  Static
-}
-
-pub const default_focusability: Focusability = Static
-
 /// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
 /// 
 /// ## Fields:
 /// - disabled: A value indicating whether the element is disabled
-/// - focusability: Whether the element is disabled and interactive.
+/// - disabled_interactive: A value indicating whether the element is disabled and interactive
 /// - link: all the attributes of an HTML link
 /// - orientation: The layout orientation of the item.
-/// - selection: Whether the element is selected.
+/// - selected: A value indicating whether the element is selected
 /// 
 pub opaque type NavItem {
   NavItem(
-    focusability: Focusability,
     disabled: state.Interaction,
+    disabled_interactive: state.Interaction,
     link: Option(Link),
     orientation: Orientation,
-    selection: SelectionState,
+    selected: SelectionState,
   )
 }
 
@@ -57,11 +49,11 @@ pub type Slot {
 /// 
 pub type Config {
   Config(
-    focusability: Focusability,
     disabled: state.Interaction,
+    disabled_interactive: state.Interaction,
     link: Option(Link),
     orientation: Orientation,
-    selection: SelectionState,
+    selected: SelectionState,
   )
 }
 
@@ -69,11 +61,11 @@ pub type Config {
 /// 
 pub fn default_config() -> Config {
   Config(
-    focusability: default_focusability,
     disabled: state.default_interaction,
+    disabled_interactive: state.default_interaction,
     link: None,
     orientation: default_orientation,
-    selection: state.default_selection_state,
+    selected: state.default_selection_state,
   )
 }
 
@@ -89,11 +81,11 @@ pub fn new() -> NavItem {
 /// 
 pub fn from_config(c: Config) -> NavItem {
   NavItem(
-    focusability: c.focusability,
     disabled: c.disabled,
+    disabled_interactive: c.disabled_interactive,
     link: c.link,
     orientation: c.orientation,
-    selection: c.selection,
+    selected: c.selected,
   )
 }
 
@@ -109,9 +101,9 @@ pub fn disabled(item: NavItem, disabled: state.Interaction) -> NavItem {
 /// 
 pub fn disabled_interactive(
   item: NavItem,
-  focusability: Focusability,
+  disabled_interactive: state.Interaction,
 ) -> NavItem {
-  NavItem(..item, focusability: focusability)
+  NavItem(..item, disabled_interactive: disabled_interactive)
 }
 
 /// link sets the link field
@@ -126,10 +118,10 @@ pub fn orientation(item: NavItem, orientation: Orientation) -> NavItem {
   NavItem(..item, orientation: orientation)
 }
 
-/// selected sets the selection field
+/// selected sets the selected field
 /// 
-pub fn selected(item: NavItem, selection: SelectionState) -> NavItem {
-  NavItem(..item, selection: selection)
+pub fn selected(item: NavItem, selected: SelectionState) -> NavItem {
+  NavItem(..item, selected: selected)
 }
 
 // --- RENDERING ---
@@ -152,9 +144,9 @@ pub fn render(
         helpers.boolean_attribute("disabled", item.disabled == Disabled),
         helpers.boolean_attribute(
           "disabled-interactive",
-          item.focusability == Interactive,
+          item.disabled_interactive == Disabled,
         ),
-        helpers.boolean_attribute("selected", item.selection == Selected),
+        helpers.boolean_attribute("selected", item.selected == Selected),
         attribute.attribute(
           "orientation",
           layout.orientation_to_string(item.orientation),

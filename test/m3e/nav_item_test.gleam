@@ -44,7 +44,7 @@ pub fn link_property_test() {
 pub fn properties_test() {
   nav_item.new()
   |> nav_item.disabled(Disabled)
-  |> nav_item.disabled_interactive(nav_item.Interactive)
+  |> nav_item.disabled_interactive(Disabled)
   |> nav_item.selected(Selected)
   |> nav_item.orientation(Horizontal)
   |> nav_item.render([], [])
@@ -69,8 +69,8 @@ pub fn config_test() {
       nav_item.Config(
         ..c,
         disabled: Disabled,
-        focusability: nav_item.Interactive,
-        selection: Selected,
+        disabled_interactive: Disabled,
+        selected: Selected,
         orientation: Horizontal,
       )
     }
@@ -96,8 +96,8 @@ pub fn default_config_test() {
   let c = nav_item.default_config()
 
   c.disabled |> should.equal(Enabled)
-  c.focusability |> should.equal(nav_item.Static)
-  c.selection |> should.equal(Unselected)
+  c.disabled_interactive |> should.equal(Enabled)
+  c.selected |> should.equal(Unselected)
   c.orientation |> should.equal(Vertical)
   c.link |> should.equal(None)
 }
@@ -122,7 +122,7 @@ pub fn setters_test() {
   let item =
     nav_item.new()
     |> nav_item.disabled(Disabled)
-    |> nav_item.disabled_interactive(nav_item.Interactive)
+    |> nav_item.disabled_interactive(Disabled)
     |> nav_item.selected(Selected)
     |> nav_item.orientation(Horizontal)
 

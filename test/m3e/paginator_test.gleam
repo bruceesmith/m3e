@@ -162,7 +162,7 @@ pub fn config_test() {
     paginator.Config(
       disabled: Disabled,
       first_page_label: "First",
-      page_size_visibility: paginator.Hidden,
+      hide_page_size: paginator.Hidden,
       items_per_page_label: "Items",
       last_page_label: "Last",
       length: 100,
@@ -172,7 +172,7 @@ pub fn config_test() {
       page_sizes: [PageSize(10), PageSizeAll],
       page_size_variant: Filled,
       previous_page_label: "Prev",
-      first_last_buttons_visibility: paginator.Shown,
+      show_first_last_buttons: paginator.Shown,
     )
 
   let p = paginator.from_config(c)
@@ -205,8 +205,8 @@ pub fn default_config_test() {
   let c = paginator.default_config()
 
   c.disabled |> should.equal(Enabled)
-  c.page_size_visibility |> should.equal(paginator.Visible)
-  c.first_last_buttons_visibility |> should.equal(paginator.Omitted)
+  c.hide_page_size |> should.equal(paginator.Visible)
+  c.show_first_last_buttons |> should.equal(paginator.Omitted)
   c.length |> should.equal(0)
   c.page_index |> should.equal(0)
   c.page_size |> should.equal(PageSize(50))

@@ -51,7 +51,7 @@ pub const default_page_size_visibility = Visible
 /// ## Fields:
 /// - disabled: Whether the element is disabled
 /// - first_page_label: The accessible label given to the button used to move to the first page
-/// - page_size_visibility: Whether to hide page size selection
+/// - hide_page_size: Whether to hide page size selection
 /// - items_per_page_label: The label for the page size selector
 /// - last_page_label: The accessible label given to the button used to move to the last page
 /// - length: The length of the total number of items which are being paginated
@@ -61,13 +61,13 @@ pub const default_page_size_visibility = Visible
 /// - page_sizes: A comma separated list of available page sizes
 /// - page_size_variant: The appearance variant of the page size field
 /// - previous_page_label: The accessible label given to the button used to move to the previous page
-/// - first_last_buttons_visibility: Whether to show first/last buttons
+/// - show_first_last_buttons: Whether to show first/last buttons
 ///
 pub opaque type Paginator {
   Paginator(
     disabled: Interaction,
     first_page_label: String,
-    page_size_visibility: PageSizeVisibility,
+    hide_page_size: PageSizeVisibility,
     items_per_page_label: String,
     last_page_label: String,
     length: Int,
@@ -77,7 +77,7 @@ pub opaque type Paginator {
     page_sizes: List(PageSize),
     page_size_variant: Variant,
     previous_page_label: String,
-    first_last_buttons_visibility: FirstLastButtonsVisibility,
+    show_first_last_buttons: FirstLastButtonsVisibility,
   )
 }
 
@@ -102,7 +102,7 @@ pub type Config {
   Config(
     disabled: Interaction,
     first_page_label: String,
-    page_size_visibility: PageSizeVisibility,
+    hide_page_size: PageSizeVisibility,
     items_per_page_label: String,
     last_page_label: String,
     length: Int,
@@ -112,7 +112,7 @@ pub type Config {
     page_sizes: List(PageSize),
     page_size_variant: Variant,
     previous_page_label: String,
-    first_last_buttons_visibility: FirstLastButtonsVisibility,
+    show_first_last_buttons: FirstLastButtonsVisibility,
   )
 }
 
@@ -132,7 +132,7 @@ pub fn default_config() -> Config {
   Config(
     disabled: state.default_interaction,
     first_page_label: "First page",
-    page_size_visibility: default_page_size_visibility,
+    hide_page_size: default_page_size_visibility,
     items_per_page_label: "Items per page",
     last_page_label: "Last page",
     length: 0,
@@ -142,7 +142,7 @@ pub fn default_config() -> Config {
     page_sizes: default_page_sizes,
     page_size_variant: form_field.default_variant,
     previous_page_label: "Previous page",
-    first_last_buttons_visibility: Omitted,
+    show_first_last_buttons: Omitted,
   )
 }
 
@@ -160,7 +160,7 @@ pub fn from_config(c: Config) -> Paginator {
   Paginator(
     disabled: c.disabled,
     first_page_label: c.first_page_label,
-    page_size_visibility: c.page_size_visibility,
+    hide_page_size: c.hide_page_size,
     items_per_page_label: c.items_per_page_label,
     last_page_label: c.last_page_label,
     length: c.length,
@@ -170,7 +170,7 @@ pub fn from_config(c: Config) -> Paginator {
     page_sizes: c.page_sizes,
     page_size_variant: c.page_size_variant,
     previous_page_label: c.previous_page_label,
-    first_last_buttons_visibility: c.first_last_buttons_visibility,
+    show_first_last_buttons: c.show_first_last_buttons,
   )
 }
 
@@ -188,13 +188,13 @@ pub fn first_page_label(p: Paginator, first_page_label: String) -> Paginator {
   Paginator(..p, first_page_label: first_page_label)
 }
 
-/// hide_page_size sets the page_size_visibility field
+/// hide_page_size sets the hide_page_size field
 /// 
 pub fn hide_page_size(
   p: Paginator,
-  page_size_visibility: PageSizeVisibility,
+  hide_page_size: PageSizeVisibility,
 ) -> Paginator {
-  Paginator(..p, page_size_visibility: page_size_visibility)
+  Paginator(..p, hide_page_size: hide_page_size)
 }
 
 /// items_per_page_label sets the items_per_page_label field
@@ -257,13 +257,13 @@ pub fn previous_page_label(
   Paginator(..p, previous_page_label: previous_page_label)
 }
 
-/// show_first_last_buttons sets the first_last_buttons_visibility field
+/// show_first_last_buttons sets the show_first_last_buttons field
 /// 
 pub fn show_first_last_buttons(
   p: Paginator,
-  first_last_buttons_visibility: FirstLastButtonsVisibility,
+  show_first_last_buttons: FirstLastButtonsVisibility,
 ) -> Paginator {
-  Paginator(..p, first_last_buttons_visibility: first_last_buttons_visibility)
+  Paginator(..p, show_first_last_buttons: show_first_last_buttons)
 }
 
 // --- RENDERING ---
@@ -286,10 +286,7 @@ pub fn render(
       [
         helpers.boolean_attribute("disabled", p.disabled == Disabled),
         attribute.attribute("first-page-label", p.first_page_label),
-        helpers.boolean_attribute(
-          "hide-page-size",
-          p.page_size_visibility == Hidden,
-        ),
+        helpers.boolean_attribute("hide-page-size", p.hide_page_size == Hidden),
         attribute.attribute("items-per-page-label", p.items_per_page_label),
         attribute.attribute("last-page-label", p.last_page_label),
         attribute.attribute("length", int.to_string(p.length)),
@@ -307,7 +304,7 @@ pub fn render(
         attribute.attribute("previous-page-label", p.previous_page_label),
         helpers.boolean_attribute(
           "show-first-last-buttons",
-          p.first_last_buttons_visibility == Shown,
+          p.show_first_last_buttons == Shown,
         ),
       ],
       attributes,

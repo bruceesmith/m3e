@@ -18,18 +18,18 @@ import m3e/state.{
 ///
 /// ## Fields:
 /// - disabled: Whether the element is disabled
-/// - highlighting: Whether text highlighting is enabled
+/// - disable_highlight: Whether text highlighting is disabled
 /// - highlight_mode: The mode in which to highlight a term
-/// - selection: Whether the element is selected
+/// - selected: Whether the element is selected
 /// - term: The search term to highlight
 /// - value: A string representing the value of the option
 /// 
 pub opaque type Option {
   Option(
     disabled: Interaction,
-    highlighting: Highlighting,
+    disable_highlight: Highlighting,
     highlight_mode: TextHighlightMode,
-    selection: SelectionState,
+    selected: SelectionState,
     term: String,
     value: GleamOption(String),
   )
@@ -56,9 +56,9 @@ pub type TextHighlightMode {
 pub type Config {
   Config(
     disabled: Interaction,
-    highlighting: Highlighting,
+    disable_highlight: Highlighting,
     highlight_mode: TextHighlightMode,
-    selection: SelectionState,
+    selected: SelectionState,
     term: String,
     value: GleamOption(String),
   )
@@ -69,9 +69,9 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     disabled: state.default_interaction,
-    highlighting: HighlightEnabled,
+    disable_highlight: HighlightEnabled,
     highlight_mode: Contains,
-    selection: Unselected,
+    selected: Unselected,
     value: None,
     term: "",
   )
@@ -90,9 +90,9 @@ pub fn new() -> Option {
 pub fn from_config(c: Config) -> Option {
   Option(
     disabled: c.disabled,
-    highlighting: c.highlighting,
+    disable_highlight: c.disable_highlight,
     highlight_mode: c.highlight_mode,
-    selection: c.selection,
+    selected: c.selected,
     term: c.term,
     value: c.value,
   )
@@ -106,10 +106,10 @@ pub fn disabled(o: Option, disabled: Interaction) -> Option {
   Option(..o, disabled: disabled)
 }
 
-/// highlighting sets the highlighting field
+/// disable_highlight sets the disable_highlight field
 /// 
-pub fn highlighting(o: Option, highlighting: Highlighting) -> Option {
-  Option(..o, highlighting: highlighting)
+pub fn disable_highlight(o: Option, disable_highlight: Highlighting) -> Option {
+  Option(..o, disable_highlight: disable_highlight)
 }
 
 /// highlight_mode sets the highlight_mode field
@@ -122,10 +122,10 @@ pub fn term(o: Option, term: String) -> Option {
   Option(..o, term: term)
 }
 
-/// selected sets the selection field
+/// selected sets the selected field
 /// 
-pub fn selected(o: Option, selection: SelectionState) -> Option {
-  Option(..o, selection: selection)
+pub fn selected(o: Option, selected: SelectionState) -> Option {
+  Option(..o, selected: selected)
 }
 
 /// value sets the value field
@@ -148,10 +148,10 @@ pub fn render(
     list.flatten([
       [
         helpers.boolean_attribute("disabled", o.disabled == Disabled),
-        helpers.boolean_attribute("selected", o.selection == Selected),
+        helpers.boolean_attribute("selected", o.selected == Selected),
         helpers.boolean_attribute(
           "disable-highlight",
-          o.highlighting == HighlightDisabled,
+          o.disable_highlight == HighlightDisabled,
         ),
         case o.term {
           "" -> attribute.none()

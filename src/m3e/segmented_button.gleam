@@ -25,15 +25,15 @@ pub const default_indicator_visibility: IndicatorVisibility = Visible
 ///
 /// ## Fields:
 /// - disabled: Whether the element is disabled
-/// - indicator_visibility: Whether to hide the selection indicator
-/// - selection_mode: Whether multiple options can be selected
+/// - hide_selection_indicator: Whether to hide the selection indicator
+/// - multi: Whether multiple options can be selected
 /// - name: The name that identifies the element when submitting the associated form
 ///
 pub opaque type SegmentedButton {
   SegmentedButton(
     disabled: Interaction,
-    indicator_visibility: IndicatorVisibility,
-    selection_mode: SelectionMode,
+    hide_selection_indicator: IndicatorVisibility,
+    multi: SelectionMode,
     name: Option(String),
   )
 }
@@ -45,8 +45,8 @@ pub opaque type SegmentedButton {
 pub type Config {
   Config(
     disabled: Interaction,
-    indicator_visibility: IndicatorVisibility,
-    selection_mode: SelectionMode,
+    hide_selection_indicator: IndicatorVisibility,
+    multi: SelectionMode,
     name: Option(String),
   )
 }
@@ -56,8 +56,8 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     disabled: state.default_interaction,
-    indicator_visibility: default_indicator_visibility,
-    selection_mode: config.default_selection_mode,
+    hide_selection_indicator: default_indicator_visibility,
+    multi: config.default_selection_mode,
     name: None,
   )
 }
@@ -75,8 +75,8 @@ pub fn new() -> SegmentedButton {
 pub fn from_config(c: Config) -> SegmentedButton {
   SegmentedButton(
     disabled: c.disabled,
-    indicator_visibility: c.indicator_visibility,
-    selection_mode: c.selection_mode,
+    hide_selection_indicator: c.hide_selection_indicator,
+    multi: c.multi,
     name: c.name,
   )
 }
@@ -89,22 +89,19 @@ pub fn disabled(s: SegmentedButton, disabled: Interaction) -> SegmentedButton {
   SegmentedButton(..s, disabled: disabled)
 }
 
-/// hide_selection_indicator sets the indicator_visibility field
+/// hide_selection_indicator sets the hide_selection_indicator field
 ///
 pub fn hide_selection_indicator(
   s: SegmentedButton,
-  indicator_visibility: IndicatorVisibility,
+  hide_selection_indicator: IndicatorVisibility,
 ) -> SegmentedButton {
-  SegmentedButton(..s, indicator_visibility: indicator_visibility)
+  SegmentedButton(..s, hide_selection_indicator: hide_selection_indicator)
 }
 
-/// multi sets the selection_mode field
+/// multi sets the multi field
 ///
-pub fn multi(
-  s: SegmentedButton,
-  selection_mode: SelectionMode,
-) -> SegmentedButton {
-  SegmentedButton(..s, selection_mode: selection_mode)
+pub fn multi(s: SegmentedButton, multi: SelectionMode) -> SegmentedButton {
+  SegmentedButton(..s, multi: multi)
 }
 
 /// name sets the name field
@@ -134,9 +131,9 @@ pub fn render(
         helpers.boolean_attribute("disabled", s.disabled == Disabled),
         helpers.boolean_attribute(
           "hide-selection-indicator",
-          s.indicator_visibility == Hidden,
+          s.hide_selection_indicator == Hidden,
         ),
-        helpers.boolean_attribute("multi", s.selection_mode == Multi),
+        helpers.boolean_attribute("multi", s.multi == Multi),
         helpers.option_attribute(
           s.name,
           fn(_) { "name" },
