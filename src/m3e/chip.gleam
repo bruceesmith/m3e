@@ -1,97 +1,32 @@
 //// chip provides Lustre support for the [M3E Chip components](https://matraic.github.io/m3e/#/components/chips.html)
 
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{type Option, None}
 
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/form_submission.{type FormSubmission}
-import m3e/icon.{type Icon}
-import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
 
 // --- Types ---
 
-/// Behaviour controls the behavior of an assist or suggestion chip
-///
-pub type Behaviour {
-  Normal
-  Reset
-  Submit
-}
-
-pub const default_behaviour: Behaviour = Normal
-
 /// Chip provides expressive, accessible chip components for actions, input, filtering, and suggestions
 ///
-/// - label: text on the chip
-/// - behaviour: behaviour of an Assist or Suggestion chip
-/// - disabled: whether the Chip is enabled or disabled
 /// - form_submission: handles this element's role in form submission
-/// - icon: associated Icon
-/// - removability: whether the chip can be removed
-/// - selection: whether the chip is selected or not
-/// - type_: the type of Chip
 /// - variant: The appearance variant of the chip
 ///
 pub opaque type Chip(msg) {
-  Chip(
-    label: String,
-    behaviour: Behaviour,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
-    icon: Option(Icon(msg)),
-    removability: Removability,
-    selection: SelectionState,
-    type_: Type,
-    variant: Variant,
-  )
+  Chip(form_submission: Option(FormSubmission), variant: Variant)
 }
-
-/// Removability specifies if a chip can be removed
-pub type Removability {
-  Removable
-  Permanent
-}
-
-pub const default_removability: Removability = Permanent
 
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
 pub type Slot {
-  AssistIcon
-  // Renders an icon before the chip's label 
-  ChipIcon
-  // Renders an icon before the chip's label 
-  ChipTrailingIcon
+  Icon
+  // Renders an icon before the chip's label
+  TrailingIcon
   // Renders an icon after the chip's label 
-  FilterIcon
-  // Renders an icon before the chip's label 
-  FilterTrailingIcon
-  // Renders an icon after the chip's label 
-  InputAvatar
-  // Renders an avatar before the chip's label 
-  InputIcon
-  // Renders an icon before the chip's label 
-  InputRemoveIcon
-  // Renders the icon for the button used to remove the chip 
-  InputSetInput
-  // Renders the input element used to add new chips to the set 
-  SuggestionIcon
-  // Renders an icon before the chip's label 
 }
-
-/// Type of chip
-/// 
-pub type Type {
-  Assist
-  Filter
-  Information
-  Input
-  Suggestion
-}
-
-pub const default_type: Type = Information
 
 /// Variant is the style of chip
 /// 
@@ -109,137 +44,29 @@ pub const default_variant = Outlined
 /// Config holds the configuration for a Chip
 /// 
 pub type Config(msg) {
-  Config(
-    label: String,
-    behaviour: Behaviour,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
-    icon: Option(Icon(msg)),
-    removability: Removability,
-    selection: SelectionState,
-    type_: Type,
-    variant: Variant,
-  )
+  Config(form_submission: Option(FormSubmission), variant: Variant)
 }
 
 /// default_config creates a new Config with default values
 /// 
 pub fn default_config() -> Config(msg) {
-  Config(
-    label: "",
-    behaviour: default_behaviour,
-    disabled: state.default_interaction,
-    form_submission: None,
-    icon: None,
-    removability: default_removability,
-    selection: state.default_selection_state,
-    type_: default_type,
-    variant: default_variant,
-  )
+  Config(form_submission: None, variant: default_variant)
 }
 
 // --- CONSTRUCTORS ---
 
-/// assist creates a basic Assist Chip
-///
-pub fn assist(label: String) -> Chip(msg) {
-  from_config(Config(..default_config(), label: label, type_: Assist))
-}
-
-/// filter creates a basic Filter Chip
-///
-pub fn filter(label: String) -> Chip(msg) {
-  from_config(Config(..default_config(), label: label, type_: Filter))
-}
-
-/// information creates a basic Information Chip
-///
-pub fn information(label: String) -> Chip(msg) {
-  from_config(Config(..default_config(), label: label, type_: Information))
-}
-
-/// input creates a basic Input Chip
-///
-pub fn input(label: String) -> Chip(msg) {
-  from_config(Config(..default_config(), label: label, type_: Input))
-}
-
-/// suggestion creates a basic Suggestion Chip
-///
-pub fn suggestion(label: String) -> Chip(msg) {
-  from_config(Config(..default_config(), label: label, type_: Suggestion))
-}
-
 /// from_config creates a Chip from a Config record
 /// 
 pub fn from_config(c: Config(msg)) -> Chip(msg) {
-  Chip(
-    label: c.label,
-    behaviour: c.behaviour,
-    disabled: c.disabled,
-    form_submission: c.form_submission,
-    icon: c.icon,
-    removability: c.removability,
-    selection: c.selection,
-    type_: c.type_,
-    variant: c.variant,
-  )
+  Chip(form_submission: c.form_submission, variant: c.variant)
 }
 
 // --- SETTERS ---
 
-/// behaviour sets the `behaviour` field
-///
-pub fn behaviour(c: Chip(msg), behaviour: Behaviour) -> Chip(msg) {
-  case c.type_ {
-    Assist | Suggestion -> Chip(..c, behaviour: behaviour)
-    _ -> c
-  }
-}
-
-/// disabled sets the `disabled` field
-///
-pub fn disabled(c: Chip(msg), disabled: Interaction) -> Chip(msg) {
-  case c.type_ {
-    Assist | Filter | Suggestion -> Chip(..c, disabled: disabled)
-    _ -> c
-  }
-}
-
 /// form sets the form_submission field when the chip is used in a form
 ///
 pub fn form(c: Chip(msg), form_submission: Option(FormSubmission)) -> Chip(msg) {
-  case c.type_ {
-    Filter | Input -> Chip(..c, form_submission: form_submission)
-    _ -> c
-  }
-}
-
-/// icon sets the `icon` field
-///
-pub fn icon(c: Chip(msg), i: Icon(msg)) -> Chip(msg) {
-  case c.type_ {
-    Input -> c
-    _ -> Chip(..c, icon: Some(i))
-  }
-}
-
-/// removable sets the `removability` field
-///
-pub fn removable(c: Chip(msg), removability: Removability) -> Chip(msg) {
-  case c.type_ {
-    Input -> Chip(..c, removability: removability)
-    _ -> c
-  }
-}
-
-/// selected sets the `selection` field
-///
-pub fn selected(c: Chip(msg), selection: SelectionState) -> Chip(msg) {
-  case c.type_ {
-    Filter -> Chip(..c, selection: selection)
-    _ -> c
-  }
+  Chip(..c, form_submission: form_submission)
 }
 
 /// variant sets the `variant` field
@@ -263,23 +90,16 @@ pub fn render(
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
-    type_to_string(c.type_),
+    "m3e-chip",
     list.flatten([
       [
-        behaviour_attr(c.type_, c.behaviour),
-        disabled_attr(c.type_, c.disabled),
-        removable_attr(c.type_, c.removability),
-        selected_attr(c.type_, c.selection),
         attribute.attribute("variant", variant_to_string(c.variant)),
       ],
       form_submission.attributes(c.form_submission),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    list.append(
-      [icon_element(c.type_, c.icon), element.text(c.label)],
-      children,
-    ),
+    children,
   )
 }
 
@@ -297,72 +117,17 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    AssistIcon -> attribute.attribute("slot", "icon")
-    ChipIcon -> attribute.attribute("slot", "icon")
-    ChipTrailingIcon -> attribute.attribute("slot", "trailing-icon")
-    FilterIcon -> attribute.attribute("slot", "icon")
-    FilterTrailingIcon -> attribute.attribute("slot", "trailing-icon")
-    InputAvatar -> attribute.attribute("slot", "avatar")
-    InputIcon -> attribute.attribute("slot", "icon")
-    InputRemoveIcon -> attribute.attribute("slot", "remove-icon")
-    InputSetInput -> attribute.attribute("slot", "input")
-    SuggestionIcon -> attribute.attribute("slot", "icon")
+    Icon -> attribute.attribute("slot", "icon")
+    TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
 
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn behaviour_attr(t: Type, b: Behaviour) -> Attribute(msg) {
-  case t, b {
-    Assist, Reset | Suggestion, Reset -> attribute.attribute("type", "reset")
-    Assist, Submit | Suggestion, Submit -> attribute.attribute("type", "submit")
-    _, _ -> attribute.none()
-  }
-}
-
-fn disabled_attr(t: Type, disabled: Interaction) -> Attribute(msg) {
-  case t, disabled {
-    Assist, Disabled | Filter, Disabled | Suggestion, Disabled ->
-      attribute.attribute("disabled", "")
-    _, _ -> attribute.none()
-  }
-}
-
-fn icon_element(t: Type, icon: Option(Icon(msg))) -> Element(msg) {
-  case t, icon {
-    Assist, Some(i) | Suggestion, Some(i) -> icon.render(i, [], [])
-    Filter, Some(i) | Information, Some(i) -> icon.render(i, [], [])
-    _, _ -> element.none()
-  }
-}
-
-fn removable_attr(t: Type, removability: Removability) -> Attribute(msg) {
-  case t, removability {
-    Input, Removable -> attribute.attribute("removable", "")
-    _, _ -> attribute.none()
-  }
-}
-
-fn selected_attr(t: Type, selection: SelectionState) -> Attribute(msg) {
-  case t, selection {
-    Filter, Selected -> attribute.attribute("selected", "")
-    _, _ -> attribute.none()
-  }
-}
-
-fn type_to_string(t: Type) -> String {
-  case t {
-    Information -> "m3e-chip"
-    Assist -> "m3e-assist-chip"
-    Filter -> "m3e-filter-chip"
-    Input -> "m3e-input-chip"
-    Suggestion -> "m3e-suggestion-chip"
-  }
-}
-
-fn variant_to_string(v: Variant) -> String {
+/// variant_to_string converts a Variant to a string
+/// 
+pub fn variant_to_string(v: Variant) -> String {
   case v {
     Elevated -> "elevated"
     Outlined -> "outlined"
   }
 }
+// --- PRIVATE INTERNAL HELPERS ---
