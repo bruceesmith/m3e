@@ -1,271 +1,93 @@
-import gleam/option.{Some}
-import gleeunit/should
-
+import gleam/option.{None, Some}
 import lustre/attribute
 import lustre/element
-
-import m3e/chip.{
-  Config, Removable, assist, behaviour, default_config, disabled, filter, form,
-  icon, information, input, removable, render, render_config, selected,
-}
+import m3e/chip
 import m3e/form_submission
-import m3e/icon
-import m3e/state.{Disabled, Selected}
 
-pub fn chip_creation_test() {
-  let c = assist("Assist")
-  let expected =
-    element.element(
-      "m3e-assist-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Assist"),
-      ],
-    )
-  render(c, [], []) |> should.equal(expected)
+pub fn default_config_test() {
+  let assert chip.Config(form_submission: None, variant: chip.Outlined) =
+    chip.default_config()
+}
 
-  let c = filter("Filter")
-  let expected =
-    element.element(
-      "m3e-filter-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Filter"),
-      ],
-    )
-  render(c, [], []) |> should.equal(expected)
+pub fn render_test() {
+  let actual =
+    chip.default_config()
+    |> chip.from_config
+    |> chip.render([], [element.text("Label")])
 
-  let c = information("Info")
   let expected =
     element.element("m3e-chip", [attribute.attribute("variant", "outlined")], [
-      element.none(),
-      element.text("Info"),
+      element.text("Label"),
     ])
-  render(c, [], []) |> should.equal(expected)
 
-  let c = input("Input")
-  let expected =
-    element.element(
-      "m3e-input-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Input"),
-      ],
-    )
-  render(c, [], []) |> should.equal(expected)
+  let assert True = actual == expected
 }
 
-pub fn chip_element_test() {
-  let c = assist("Assist")
+pub fn variant_setter_test() {
+  let config = chip.Config(form_submission: None, variant: chip.Outlined)
+
+  let actual =
+    chip.from_config(config)
+    |> chip.variant(chip.Elevated)
+    |> chip.render([], [])
+
   let expected =
     element.element(
-      "m3e-assist-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Assist"),
-      ],
+      "m3e-chip",
+      [attribute.attribute("variant", "elevated")],
+      [],
     )
-  c |> render([], []) |> should.equal(expected)
 
-  let c = information("Info")
-  let expected =
-    element.element("m3e-chip", [attribute.attribute("variant", "outlined")], [
-      element.none(),
-      element.text("Info"),
-    ])
-  c |> render([], []) |> should.equal(expected)
+  let assert True = actual == expected
 }
 
-pub fn chip_behaviour_test() {
-  // Test with Assist chip (supports behaviour)
-  let c = assist("Reset") |> behaviour(chip.Reset)
+pub fn form_submission_test() {
+  let submission =
+    form_submission.new()
+    |> form_submission.name("group")
+    |> form_submission.value("1")
+
+  let actual =
+    chip.default_config()
+    |> chip.from_config
+    |> chip.form(Some(submission))
+    |> chip.render([], [])
 
   let expected =
     element.element(
-      "m3e-assist-chip",
+      "m3e-chip",
       [
-        attribute.attribute("type", "reset"),
         attribute.attribute("variant", "outlined"),
+        attribute.attribute("name", "group"),
+        attribute.attribute("value", "1"),
       ],
-      [element.none(), element.text("Reset")],
+      [],
     )
-  c |> render([], []) |> should.equal(expected)
 
-  // Test with Information chip (does not support behaviour)
-  let c_info = information("Info") |> behaviour(chip.Submit)
-  let expected_info =
-    element.element("m3e-chip", [attribute.attribute("variant", "outlined")], [
-      element.none(),
-      element.text("Info"),
-    ])
-  render(c_info, [], []) |> should.equal(expected_info)
+  let assert True = actual == expected
 }
 
-pub fn chip_disabled_test() {
-  // Assist supports disabled
-  let c = assist("Disabled") |> disabled(Disabled)
+pub fn render_config_test() {
+  let config = chip.Config(form_submission: None, variant: chip.Elevated)
+
+  let actual = chip.render_config(config, [attribute.id("chip")], [])
 
   let expected =
     element.element(
-      "m3e-assist-chip",
+      "m3e-chip",
       [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("variant", "outlined"),
+        attribute.attribute("variant", "elevated"),
+        attribute.id("chip"),
       ],
-      [element.none(), element.text("Disabled")],
+      [],
     )
-  c |> render([], []) |> should.equal(expected)
 
-  // Information does not support disabled
-  let c_info = information("Info") |> disabled(Disabled)
-  let expected_info =
-    element.element("m3e-chip", [attribute.attribute("variant", "outlined")], [
-      element.none(),
-      element.text("Info"),
-    ])
-  render(c_info, [], []) |> should.equal(expected_info)
+  let assert True = actual == expected
 }
 
-pub fn chip_form_test() {
-  // Filter supports form attribute.attributes
-  let c =
-    filter("Filter")
-    |> form(Some(
-      form_submission.new()
-      |> form_submission.name("name")
-      |> form_submission.value("value"),
-    ))
+pub fn slot_test() {
+  let icon_slot = chip.slot(chip.Icon)
+  let expected = attribute.attribute("slot", "icon")
 
-  let expected =
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.name("name"),
-        attribute.attribute("value", "value"),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.none(), element.text("Filter")],
-    )
-  c |> render([], []) |> should.equal(expected)
-
-  // Assist does not support form attribute.attributes
-  let c_assist =
-    assist("Assist")
-    |> form(Some(
-      form_submission.new()
-      |> form_submission.name("n")
-      |> form_submission.value("v"),
-    ))
-  let expected_assist =
-    element.element(
-      "m3e-assist-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Assist"),
-      ],
-    )
-  render(c_assist, [], []) |> should.equal(expected_assist)
-}
-
-pub fn chip_icon_test() {
-  let i = icon.new("star")
-
-  // Assist supports icon
-  let c = assist("Icon") |> icon(i)
-
-  let expected =
-    element.element(
-      "m3e-assist-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        icon.render(i, [], []),
-        element.text("Icon"),
-      ],
-    )
-  c |> render([], []) |> should.equal(expected)
-}
-
-pub fn chip_removable_test() {
-  // Input supports removable
-  let c = input("Removable") |> removable(Removable)
-
-  let expected =
-    element.element(
-      "m3e-input-chip",
-      [
-        attribute.attribute("removable", ""),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.none(), element.text("Removable")],
-    )
-  c |> render([], []) |> should.equal(expected)
-
-  // Assist does not support removable
-  let c_assist = assist("Assist") |> removable(Removable)
-  let expected_assist =
-    element.element(
-      "m3e-assist-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Assist"),
-      ],
-    )
-  render(c_assist, [], []) |> should.equal(expected_assist)
-}
-
-pub fn chip_selected_test() {
-  // Filter supports selected
-  let c = filter("Selected") |> selected(Selected)
-
-  let expected =
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.attribute("selected", ""),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.none(), element.text("Selected")],
-    )
-  c |> render([], []) |> should.equal(expected)
-
-  // Assist does not support selected
-  let c_assist = assist("Assist") |> selected(Selected)
-  let expected_assist =
-    element.element(
-      "m3e-assist-chip",
-      [attribute.attribute("variant", "outlined")],
-      [
-        element.none(),
-        element.text("Assist"),
-      ],
-    )
-  render(c_assist, [], []) |> should.equal(expected_assist)
-}
-
-pub fn chip_render_config_test() {
-  let config =
-    Config(
-      ..default_config(),
-      label: "Config",
-      type_: chip.Suggestion,
-      behaviour: chip.Submit,
-    )
-  let expected =
-    element.element(
-      "m3e-suggestion-chip",
-      [
-        attribute.attribute("type", "submit"),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.none(), element.text("Config")],
-    )
-
-  render_config(config, [], [])
-  |> should.equal(expected)
+  let assert True = icon_slot == expected
 }
