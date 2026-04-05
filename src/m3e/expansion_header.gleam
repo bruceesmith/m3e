@@ -1,6 +1,5 @@
 //// expansion_panel provides Lustre support for the M3E Expansion Header component 
 
-import gleam/list
 import m3e/helpers
 
 import lustre/attribute.{type Attribute}
@@ -139,21 +138,18 @@ pub fn render(
 ) -> Element(msg) {
   element.element(
     "m3e-expansion-header",
-    list.append(
-      [
-        helpers.boolean_attribute("hide-toggle", p.hide_toggle == HideToggle),
-        attribute.attribute(
-          "toggle-direction",
-          direction_to_string(p.toggle_direction),
-        ),
-        attribute.attribute(
-          "toggle-position",
-          position_to_string(p.toggle_position),
-        ),
-        ..attributes
-      ],
-      attributes,
-    ),
+    [
+      helpers.boolean_attribute("hide-toggle", p.hide_toggle == HideToggle),
+      attribute.attribute(
+        "toggle-direction",
+        direction_to_string(p.toggle_direction),
+      ),
+      attribute.attribute(
+        "toggle-position",
+        position_to_string(p.toggle_position),
+      ),
+      ..attributes
+    ],
     children,
   )
 }
