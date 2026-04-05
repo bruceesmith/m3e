@@ -1,6 +1,7 @@
 //// filter_chip provides Lustre support for the [M3E Filter Chip components](https://matraic.github.io/m3e/#/components/chips.html)
 
 import gleam/list
+import gleam/string
 
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
@@ -138,7 +139,11 @@ pub fn render(
           c.disabled_interactive == Disabled,
         ),
         helpers.boolean_attribute("selected", c.selected == Selected),
-        attribute.attribute("value", c.value),
+        case string.length(c.value) {
+          0 -> attribute.none()
+          _ -> attribute.attribute("value", c.value)
+        },
+
         attribute.attribute("variant", chip.variant_to_string(c.variant)),
       ],
       attributes,
