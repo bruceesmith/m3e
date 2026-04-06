@@ -8,15 +8,6 @@ import lustre/element.{type Element}
 
 // --- Types ---
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
-pub type Slot {
-  Overline
-  // Renders the overline of the table of contents 
-  Title
-  // Renders the title of the table of contents
-}
-
 /// Toc provides Lustre support for the [M3E Toc component](https://matraic.github.io/m3e/#/components/toc.html)
 /// 
 /// ## Fields:
@@ -25,6 +16,15 @@ pub type Slot {
 ///
 pub opaque type Toc {
   Toc(for: String, max_depth: Int)
+}
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Overline
+  // Renders the overline of the table of contents 
+  Title
+  // Renders the title of the table of contents
 }
 
 // --- CONSTRUCTORS ---
