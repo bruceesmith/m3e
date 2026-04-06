@@ -2,8 +2,12 @@ package main
 
 import (
 	"context"
+	"strings"
 
 	"github.com/bruceesmith/echidna"
+	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
 	"github.com/urfave/cli/v3"
 )
 
@@ -12,74 +16,57 @@ const (
 	attributes   = "attributes"
 	components   = "components"
 	descriptions = "descriptions"
+	slots        = "slots"
 	gleamFlag    = "gleam"
 	tsFlag       = "ts"
 )
 
-// TSAttributes represents the HTML attributes associated with an M3E Expressive Component. In the TypeScript code
-// these attributes are each documented in a comment line of the form:
-//
-//	/*
-//	 * @attr disabled - Whether the element is disabled.
-//	*/
-//
-// There is one TSAttributes instance per M3E Expressive Component. The key is the attribute name, the value is its description
-type TSAttributes = map[string]string
+// configuration holds the command line flags and configuration file values
+type configuration struct {
+	Attributes   bool   `desc:"Report missing attributes"`
+	Components   bool   `desc:"Report missing components"`
+	Descriptions bool   `desc:"Report differing descriptions of attributes"`
+	Slots        bool   `desc:"Report missing slot attributes"`
+	Gleam        string `desc:"Path to local Gleam/Lustre project"`
+	TS           string `desc:"Path to local M3E TypeScript library"`
+}
 
-// TSComponents represents the total set of M3E Expressive Components in matraic's library. The key is the standardised name of a
-// component, the value is the set of associated HTML attributes
-type TSComponents = map[string]TSAttributes
+func (c configuration) Validate() error { return nil }
 
-// GFields represents the record fields of a Gleam opaque record which wraps an M3E Expressive Component. The key is the
-// name of a field and the value is it's Gleam type
-//
-// There is one GFields instance per Gleam "pub opaque type", i.e. one per wrapped M3E Expressive Component
-type GFields = map[string]string
-
-// GComponents represents the total set of Gleam opaque records which wrap M3E Expressive Components. The key is the standardised name
-// of a component, the value is the set of associated fields
-type GComponents = map[string]GFields
+var cfg configuration
 
 // main function is where the action starts ans ends
 func main() {
-	var cmd = &cli.Command{
+	cmd := &cli.Command{
 		Name:        "m3esync",
 		Action:      Utility,
 		Description: "Sync tool for M3E Gleam/Lustre wrappers",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:     tsFlag,
-				Usage:    "Path to local M3E TypeScript library",
-				Required: true,
+		Usage:       "M3E Sync Tool",
+		Version:     "1.1",
+	}
+
+	loaders := []echidna.Loader{
+		{
+			Provider: func(s string) koanf.Provider {
+				return file.Provider(s)
 			},
-			&cli.StringFlag{
-				Name:     gleamFlag,
-				Usage:    "Path to local Gleam/Lustre project",
-				Value:    ".",
-				Required: true,
-			},
-			&cli.BoolFlag{
-				Name:  attributes,
-				Usage: "Report missing attributes",
-				Value: false,
-			},
-			&cli.BoolFlag{
-				Name:  components,
-				Usage: "Report missing components",
-				Value: false,
-			},
-			&cli.BoolFlag{
-				Name:  descriptions,
-				Usage: "Report differing descriptions of attributes",
-				Value: false,
+			Parser: yaml.Parser(),
+			Match: func(s string) bool {
+				return strings.HasSuffix(s, ".yml")
 			},
 		},
-		Usage:   "M3E Sync Tool",
-		Version: "1.0",
 	}
 
 	echidna.Run(
 		context.Background(),
 		cmd,
+		echidna.Configuration(
+			&cfg,
+			loaders,
+		),
+		echidna.ConfigFlags(
+			[]echidna.Configurator{&cfg},
+			cmd,
+		),
 	)
 }
