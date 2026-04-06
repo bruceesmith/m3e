@@ -227,7 +227,7 @@ pub fn hide_loading_test() {
 
 pub fn loading_test() {
   autocomplete.new("id")
-  |> autocomplete.loading(autocomplete.Loading)
+  |> autocomplete.loading(autocomplete.IsLoading)
   |> autocomplete.render([])
   |> should.equal(
     element.element(

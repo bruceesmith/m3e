@@ -6,7 +6,7 @@ import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
 
-import lustre/attribute
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 import m3e/config.{
@@ -88,7 +88,7 @@ pub const default_loading_visibility: LoadingVisibility = ShowLoadingIndicator
 
 /// LoadingStatus specifies if the component is currently fetching or processing data
 pub type LoadingStatus {
-  Loading
+  IsLoading
   NotLoading
 }
 
@@ -110,6 +110,15 @@ pub const default_filter_mode: FilterMode = Contains
 pub const default_loading_label = "Loading..."
 
 pub const default_no_data_label = "No options"
+
+/// Slot gives type-safe names to each of the defined HTML named slots
+/// 
+pub type Slot {
+  Loading
+  // Renders content when loading options
+  NoData
+  // Renders content when there are no options to show
+}
 
 // --- CONFIGURATION ---
 
@@ -297,7 +306,7 @@ pub fn render(a: Autocomplete, children: List(m3eoption.Option)) -> Element(msg)
         "hide-loading",
         a.hide_loading == HideLoadingIndicator,
       ),
-      helpers.boolean_attribute("loading", a.loading == Loading),
+      helpers.boolean_attribute("loading", a.loading == IsLoading),
       attribute.attribute("loading-label", a.loading_label),
       attribute.attribute("no-data-label", a.no_data_label),
       helpers.option_attribute(
@@ -321,6 +330,15 @@ pub fn render_config(
   children: List(m3eoption.Option),
 ) -> Element(msg) {
   render(from_config(config), children)
+}
+
+/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// 
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Loading -> attribute.attribute("slot", "loading")
+    NoData -> attribute.attribute("slot", "nodata")
+  }
 }
 
 // --- PRIVATE HELPER FUNCTIONS ---

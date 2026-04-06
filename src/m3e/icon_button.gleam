@@ -9,7 +9,7 @@ import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers
 import m3e/link.{type Link}
-import m3e/state.{Selected}
+import m3e/state
 
 // --- Types ---
 
@@ -56,7 +56,7 @@ pub const default_shape = Rounded
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
 pub type Slot {
-  SelectedIcon
+  Selected
   // Renders an icon, when selected
 }
 
@@ -261,7 +261,7 @@ pub fn render(
           Some(p) -> p
           None -> attribute.none()
         },
-        attribute.selected(i.selected == Selected),
+        attribute.selected(i.selected == state.Selected),
         attribute.attribute("shape", shape_to_string(i.shape)),
         attribute.attribute("size", config.size_to_string(i.size)),
         helpers.boolean_attribute("toggle", i.toggle == Toggle),
@@ -291,7 +291,7 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    SelectedIcon -> attribute.attribute("slot", "selected")
+    Selected -> attribute.attribute("slot", "selected")
   }
 }
 

@@ -10,7 +10,7 @@ import m3e/config.{type Size}
 import m3e/form_submission.{type FormSubmission}
 import m3e/helpers
 import m3e/link.{type Link}
-import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
+import m3e/state.{type Interaction, type SelectionState, Disabled}
 
 // --- Types ---
 
@@ -63,7 +63,7 @@ pub const default_shape = Rounded
 pub type Slot {
   Icon
   // Renders an icon before the button's label 
-  SelectedSlot
+  Selected
   // Renders the label of the button, when selected 
   SelectedIcon
   // Renders an icon before the button's label, when selected 
@@ -264,7 +264,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
           "disabled-interactive",
           b.disabled_interactive == Disabled,
         ),
-        attribute.selected(b.selected == Selected),
+        attribute.selected(b.selected == state.Selected),
         helpers.option_attribute(
           b.shape,
           fn(_) { "shape" },
@@ -303,7 +303,7 @@ pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")
-    SelectedSlot -> attribute.attribute("slot", "selected")
+    Selected -> attribute.attribute("slot", "selected")
     SelectedIcon -> attribute.attribute("slot", "selected-icon")
     TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
@@ -313,7 +313,7 @@ pub fn slot(s: Slot) -> Attribute(msg) {
 
 fn selected_label_elt(sl: Option(String)) -> Element(msg) {
   case sl {
-    Some(lab) -> html.span([slot(SelectedSlot)], [element.text(lab)])
+    Some(lab) -> html.span([slot(Selected)], [element.text(lab)])
     None -> element.none()
   }
 }
