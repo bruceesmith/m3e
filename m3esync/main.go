@@ -32,7 +32,7 @@ func main() {
 		Action:      Utility,
 		Description: "Sync tool for M3E Gleam/Lustre wrappers",
 		Usage:       "M3E Sync Tool",
-		Version:     "1.1.1",
+		Version:     "1.1.2",
 	}
 
 	loaders := []echidna.Loader{

@@ -119,8 +119,7 @@ func parseAttributesAndDocs(lines []string) (map[string]string, map[string]strin
 		if inOpaque {
 			extractAttributes(line, attributes)
 			if strings.Contains(line, "}") || strings.HasPrefix(line, "pub fn") {
-				inOpaque = false
-				declarationParsed = true
+				break
 			}
 		}
 	}
@@ -141,10 +140,10 @@ func parseSlots(lines []string) map[string]string {
 		}
 
 		if inSlot {
+			slotlines = append(slotlines, line)
 			if strings.Contains(line, "}") || strings.HasPrefix(line, "pub fn") {
 				break
 			}
-			slotlines = append(slotlines, line)
 		}
 	}
 
