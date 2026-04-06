@@ -15,7 +15,7 @@ pub opaque type DialogAction {
 /// new creates a DialogAction
 /// 
 /// ## Parameters:
-/// - return_value: The return value of the dialog action
+/// - return_value: The value to return from the dialog
 /// 
 pub fn new(return_value: String) -> DialogAction {
   DialogAction(return_value)
