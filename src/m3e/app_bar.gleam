@@ -31,14 +31,18 @@ pub const default_size: Size = config.Small
 /// Slot gives type-safe names to each of the defined HTML named slots
 /// 
 pub type Slot {
+  Leading
+  // Renders content positioned at the start of the bar
   LeadingIcon
-  // Renders a leading icon 
+  // Deprecated: use the `leading` slot 
   Subtitle
   // Renders the subtitle 
   Title
   // Renders the title 
+  Trailing
+  // Renders one or more action buttons aligned to the end of the bar
   TrailingIcon
-  // Renders a trailing icon
+  // Deprecated: use the `trailing` slot
 }
 
 /// TitleAlignment specifies if the title and subtitle are centered
@@ -146,9 +150,11 @@ pub fn render_config(
 /// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
+    Leading -> attribute.attribute("slot", "leading")
     LeadingIcon -> attribute.attribute("slot", "leading-icon")
     Subtitle -> attribute.attribute("slot", "subtitle")
     Title -> attribute.attribute("slot", "title")
+    Trailing -> attribute.attribute("slot", "trailing")
     TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
