@@ -11,16 +11,6 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-// Names of the command line flags
-const (
-	attributes   = "attributes"
-	components   = "components"
-	descriptions = "descriptions"
-	slots        = "slots"
-	gleamFlag    = "gleam"
-	tsFlag       = "ts"
-)
-
 // configuration holds the command line flags and configuration file values
 type configuration struct {
 	Attributes   bool   `desc:"Report missing attributes"`
@@ -42,7 +32,7 @@ func main() {
 		Action:      Utility,
 		Description: "Sync tool for M3E Gleam/Lustre wrappers",
 		Usage:       "M3E Sync Tool",
-		Version:     "1.1",
+		Version:     "1.1.1",
 	}
 
 	loaders := []echidna.Loader{

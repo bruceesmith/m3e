@@ -63,77 +63,97 @@ func normalizeComponentName(filename string) string {
 
 // parseGleamFile opens a file and extracts fields and their documentation
 func parseGleamFile(path string) (map[string]string, map[string]string, error) {
-	attributes := make(map[string]string)
-	docs := make(map[string]string)
-	slots := make(map[string]string)
-	slotlines := make([]string, 0)
+	lines, err := readAllLines(path)
+	if err != nil {
+		return nil, nil, fmt.Errorf("error reading Gleam file: %w", err)
+	}
 
+	attributes, docs := parseAttributesAndDocs(lines)
+	slots := parseSlots(lines)
+
+	// Merge docs into attributes
+	for k := range attributes {
+		if doc, exists := docs[k]; exists {
+			attributes[k] = doc
+		}
+	}
+
+	return attributes, slots, nil
+}
+
+// readAllLines reads all lines from a file
+func readAllLines(path string) ([]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, nil, fmt.Errorf("error opening Gleam file: %w", err)
+		return nil, err
 	}
 	defer file.Close()
 
+	var lines []string
 	scanner := bufio.NewScanner(file)
-	inOpaqueBlock := false
-	inSlotBlock := false
-	delarationParsed := false
-
 	for scanner.Scan() {
-		line := scanner.Text()
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
+}
 
-		// 1. Extract documentation for fields before parsing the declaration
-		if !delarationParsed {
+// parseAttributesAndDocs extracts attributes and their documentation from lines
+func parseAttributesAndDocs(lines []string) (map[string]string, map[string]string) {
+	attributes := make(map[string]string)
+	docs := make(map[string]string)
+	inOpaque := false
+	declarationParsed := false
+
+	for _, line := range lines {
+		if !declarationParsed {
 			if m := docRegex.FindStringSubmatch(line); len(m) >= 3 {
 				docs[m[1]] = strings.TrimSuffix(strings.TrimSpace(m[2]), ".")
 			}
 		}
 
-		// 2. State transition: Enter opaque type block or slot declaration
 		if strings.Contains(line, "pub opaque type") {
-			inOpaqueBlock = true
-			continue
-		} else if strings.Contains(line, "pub type Slot") {
-			inSlotBlock = true
+			inOpaque = true
 			continue
 		}
 
-		// 3. Parse fields if within the block
-		if inOpaqueBlock {
-			extractFields(line, attributes)
-			// Exit condition: closing brace or start of next function
+		if inOpaque {
+			extractAttributes(line, attributes)
 			if strings.Contains(line, "}") || strings.HasPrefix(line, "pub fn") {
-				inOpaqueBlock = false
-				delarationParsed = true
-				continue
+				inOpaque = false
+				declarationParsed = true
 			}
+		}
+	}
 
-		} else if inSlotBlock {
-			// Exit condition: closing brace or start of next function
+	return attributes, docs
+}
+
+// parseSlots extracts slots from lines
+func parseSlots(lines []string) map[string]string {
+	slots := make(map[string]string)
+	var slotlines []string
+	inSlot := false
+
+	for _, line := range lines {
+		if strings.Contains(line, "pub type Slot") {
+			inSlot = true
+			continue
+		}
+
+		if inSlot {
 			if strings.Contains(line, "}") || strings.HasPrefix(line, "pub fn") {
-				inSlotBlock = false
 				break
 			}
 			slotlines = append(slotlines, line)
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		return nil, nil, fmt.Errorf("error reading Gleam file: %w", err)
-	}
-
-	for k := range attributes {
-		if doc, exists := docs[k]; exists {
-			attributes[k] = doc
-		}
-	}
 	extractSlots(slotlines, slots)
-
-	return attributes, slots, nil
+	return slots
 }
 
-// extractFields finds all field definitions in a line and adds them to the map
-func extractFields(line string, fields map[string]string) {
+// extractAttributes finds all field definitions in a line and adds them to the map
+func extractAttributes(line string, fields map[string]string) {
 	matches := fieldRegex.FindAllStringSubmatch(line, -1)
 	for _, match := range matches {
 		if len(match) >= 3 {
@@ -151,8 +171,8 @@ func extractSlots(lines []string, slots map[string]string) {
 		if len(matches) == 1 {
 			slot = strings.TrimSpace(strings.ToLower(matches[0]))
 
-		} else if index := strings.Index(line, "// "); index != -1 {
-			desc = strings.TrimSpace(line[index+3:])
+		} else if _, after, ok := strings.Cut(line, "// "); ok {
+			desc = strings.TrimSpace(after)
 		}
 		slots[slot] = strings.TrimSpace(desc)
 	}

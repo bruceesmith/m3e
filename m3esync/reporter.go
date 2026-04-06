@@ -176,43 +176,61 @@ func textReport(differences Discrepancies, flags Flags) {
 			fmt.Printf("[!] Component missing in Gleam: %s\n", component)
 		}
 	}
-	if bool(flags.attributes) || bool(flags.descriptions) {
-		heading := false
-		components := slices.Sorted(maps.Keys(differences.Different))
-		for _, component := range components {
-			if flags.attributes {
-				for _, f := range differences.Different[component].Attributes {
-					if !heading {
-						fmt.Printf("[Δ] Attribute mismatch in Gleam: %s\n", component)
-						heading = true
-					}
-					fmt.Printf("    - Missing field: %s (%s)\n", f.Name, f.Description)
-				}
-			}
-			if flags.descriptions {
-				for _, d := range differences.Different[component].Descriptions {
-					if !heading {
-						fmt.Printf("[Δ] Attribute mismatch in Gleam: %s\n", component)
-						heading = true
-					}
-					fmt.Printf("    - Description mismatch for '%s':\n      TS: %s\n      G:  %s\n", d.Name, d.TypeScript, d.Gleam)
-				}
-			}
-			heading = false
-		}
+	if flags.attributes {
+		textAttrReport(differences)
+	}
+	if flags.descriptions {
+		textDescReport(differences)
 	}
 	if flags.slots {
-		heading := false
-		components := slices.Sorted(maps.Keys(differences.Different))
-		for _, component := range components {
-			for _, s := range differences.Different[component].Slots {
-				if !heading {
-					fmt.Printf("[Δ] Slot mismatch in Gleam: %s\n", component)
-					heading = true
-				}
-				fmt.Printf("    - Missing slot: %s (%s)\n", s.Name, s.Description)
+		textSlotReport(differences)
+	}
+}
+
+// textAttrReport outputs missing attribute discrepancies in a human-readable format, grouped by component
+func textAttrReport(differences Discrepancies) {
+	heading := false
+	components := slices.Sorted(maps.Keys(differences.Different))
+	for _, component := range components {
+		for _, f := range differences.Different[component].Attributes {
+			if !heading {
+				fmt.Printf("[Δ] Attribute mismatch in Gleam: %s\n", component)
+				heading = true
 			}
-			heading = false
+			fmt.Printf("    - Missing field: %s (%s)\n", f.Name, f.Description)
 		}
+		heading = false
+	}
+}
+
+// textDescReport outputs description mismatch discrepancies in a human-readable format, grouped by component and
+func textDescReport(differences Discrepancies) {
+	heading := false
+	components := slices.Sorted(maps.Keys(differences.Different))
+	for _, component := range components {
+		for _, d := range differences.Different[component].Descriptions {
+			if !heading {
+				fmt.Printf("[Δ] Attribute mismatch in Gleam: %s\n", component)
+				heading = true
+			}
+			fmt.Printf("    - Description mismatch for '%s':\n      TS: %s\n      G:  %s\n", d.Name, d.TypeScript, d.Gleam)
+		}
+		heading = false
+	}
+}
+
+// textSlotReport outputs missing slot discrepancies in a human-readable format, grouped by component
+func textSlotReport(differences Discrepancies) {
+	heading := false
+	components := slices.Sorted(maps.Keys(differences.Different))
+	for _, component := range components {
+		for _, s := range differences.Different[component].Slots {
+			if !heading {
+				fmt.Printf("[Δ] Slot mismatch in Gleam: %s\n", component)
+				heading = true
+			}
+			fmt.Printf("    - Missing slot: %s (%s)\n", s.Name, s.Description)
+		}
+		heading = false
 	}
 }
