@@ -4,21 +4,22 @@ go 1.26.1
 
 require (
 	github.com/bruceesmith/echidna v1.1.10
-	github.com/urfave/cli/v3 v3.7.0
+	github.com/knadh/koanf v1.5.0
+	github.com/urfave/cli/v3 v3.8.0
 )
 
 require (
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/boyter/scc v2.12.0+incompatible // indirect
 	github.com/bruceesmith/logger v1.3.8 // indirect
-	github.com/bruceesmith/terminator v1.1.6 // indirect
+	github.com/bruceesmith/terminator v1.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/dbaggerman/cuba v0.3.2 // indirect
 	github.com/deckarep/golang-set/v2 v2.8.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gojp/goreportcard v0.0.0-20260325162246-ff8d9b5ee312 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
-	github.com/knadh/koanf v1.5.0 // indirect
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -40,6 +41,7 @@ require (
 	golang.org/x/tools v0.43.0 // indirect
 	golang.org/x/vuln v1.1.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.7.0 // indirect
 )
 
