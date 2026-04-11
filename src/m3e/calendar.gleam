@@ -1,6 +1,6 @@
 ////// calendar provides Lustre support for the [M3E Calendar component](https:///matraic.github.io/m3e/#/components/calendar.html)
 //// View is the view used to select a date
-//// 
+////
 
 import gleam/function
 import gleam/list
@@ -15,23 +15,22 @@ import m3e/helpers
 // --- Types ---
 
 /// Calendar provides structured navigation and selection across month, year, and multi_year views
-/// 
+///
 /// ##Fields:
-///  * @slot header - Renders the header of the calendar.
-///  *
-///  * @attr date - The selected date.
-///  * @attr max_date - The maximum date that can be selected.
-///  * @attr min_date - The minimum date that can be selected.
-///  * @attr range_end - End of a date range.
-///  * @attr range_start - Start of a date range.
-///  * @attr start_at - A date specifying the period (month or year) to start the calendar in.
-///  * @attr start_view - The initial view used to select a date.
-///  * @attr previous_month_label - The accessible label given to the button used to move to the previous month.
-///  * @attr next_month_label - The accessible label given to the button used to move to the next month.
-///  * @attr previous_year_label - The accessible label given to the button used to move to the previous year.
-///  * @attr next_year_label - The accessible label given to the button used to move to the next year.
-///  * @attr previous_multi_year_label - The accessible label given to the button used to move to the previous 24 years.
-///  * @attr next_multi_year_label - The accessible label given to the button used to move to the next 24 years.
+/// - date: The selected date.
+/// - max_date: The maximum date that can be selected.
+/// - min_date: The minimum date that can be selected.
+/// - range_end: End of a date range.
+/// - range_start: Start of a date range.
+/// - start_at: A date specifying the period (month or year) to start the calendar in.
+/// - start_view: The initial view used to select a date.
+/// - previous_month_label: The accessible label given to the button used to move to the previous month.
+/// - next_month_label: The accessible label given to the button used to move to the next month.
+/// - previous_year_label: The accessible label given to the button used to move to the previous year.
+/// - next_year_label: The accessible label given to the button used to move to the next year.
+/// - previous_multi_year_label: The accessible label given to the button used to move to the previous 24 years.
+/// - next_multi_year_label: The accessible label given to the button used to move to the next 24 years.
+///
 pub opaque type Calendar {
   Calendar(
     date: Option(DateTime),
@@ -65,14 +64,14 @@ pub const default_previous_multi_year_label = "Previous 24 years"
 pub const default_next_multi_year_label = "Next 24 years"
 
 /// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+///
 pub type Slot {
   Header
   // Renders the header of the calendar
 }
 
 /// View is the possible views of a calendar
-/// 
+///
 pub type View {
   Month
   MultiYear
@@ -84,7 +83,7 @@ pub const default_view = Month
 // --- CONFIGURATION ---
 
 /// Config allows for a declarative configuration of the Calendar
-/// 
+///
 pub type Config {
   Config(
     date: Option(DateTime),
@@ -106,7 +105,7 @@ pub type Config {
 }
 
 /// Default config
-/// 
+///
 pub fn default_config() -> Config {
   Config(
     date: None,
@@ -130,7 +129,7 @@ pub fn default_config() -> Config {
 // --- CONSTRUCTORS ---
 
 /// from_config creates a Calendar from a Config
-/// 
+///
 pub fn from_config(c: Config) -> Calendar {
   Calendar(
     date: c.date,
@@ -152,7 +151,7 @@ pub fn from_config(c: Config) -> Calendar {
 }
 
 /// new creates a new Calendar
-/// 
+///
 pub fn new() -> Calendar {
   from_config(default_config())
 }
@@ -160,91 +159,91 @@ pub fn new() -> Calendar {
 // --- SETTERS ---
 
 /// date sets the `date` field
-/// 
+///
 pub fn date(c: Calendar, date: Option(DateTime)) -> Calendar {
   Calendar(..c, date: date)
 }
 
 /// max_date sets the `max_date` field
-/// 
+///
 pub fn max_date(c: Calendar, max_date: Option(DateTime)) -> Calendar {
   Calendar(..c, max_date: max_date)
 }
 
 /// min_date sets the `min_date` field
-/// 
+///
 pub fn min_date(c: Calendar, min_date: Option(DateTime)) -> Calendar {
   Calendar(..c, min_date: min_date)
 }
 
 /// range_end sets the `range_end` field
-/// 
+///
 pub fn range_end(c: Calendar, range_end: Option(DateTime)) -> Calendar {
   Calendar(..c, range_end: range_end)
 }
 
 /// range_start sets the `range_start` field
-/// 
+///
 pub fn range_start(c: Calendar, range_start: Option(DateTime)) -> Calendar {
   Calendar(..c, range_start: range_start)
 }
 
 /// start_at sets the `start_at` field
-/// 
+///
 pub fn start_at(c: Calendar, start_at: Option(DateTime)) -> Calendar {
   Calendar(..c, start_at: start_at)
 }
 
 /// start_view sets the `start_view` field
-/// 
+///
 pub fn start_view(c: Calendar, start_view: View) -> Calendar {
   Calendar(..c, start_view: start_view)
 }
 
 /// previous_month_label sets the `previous_month_label` field
-/// 
+///
 pub fn previous_month_label(c: Calendar, previous_month_label: String) {
   Calendar(..c, previous_month_label: previous_month_label)
 }
 
 /// next_month_label sets the `next_month_label` field
-/// 
+///
 pub fn next_month_label(c: Calendar, next_month_label: String) {
   Calendar(..c, next_month_label: next_month_label)
 }
 
 /// previous_year_label sets the `previous_year_label` field
-/// 
+///
 pub fn previous_year_label(c: Calendar, previous_year_label: String) {
   Calendar(..c, previous_year_label: previous_year_label)
 }
 
 /// next_year_label sets the `next_year_label` field
-/// 
+///
 pub fn next_year_label(c: Calendar, next_year_label: String) {
   Calendar(..c, next_year_label: next_year_label)
 }
 
 /// previous_multi_year_label sets the `previous_multi_year_label` field
-/// 
+///
 pub fn previous_multi_year_label(c: Calendar, previous_multi_year_label: String) {
   Calendar(..c, previous_multi_year_label: previous_multi_year_label)
 }
 
 /// next_multi_year_label sets the `next_multi_year_label` field
-/// 
+///
 pub fn next_multi_year_label(c: Calendar, next_multi_year_label: String) {
   Calendar(..c, next_multi_year_label: next_multi_year_label)
 }
 
 /// special_dates sets the `special_dates` field
-/// 
+///
 pub fn special_dates(c: Calendar, special_dates: Option(String)) -> Calendar {
   Calendar(..c, special_dates: special_dates)
 }
 
 /// blackout_dates sets the `blackout_dates` field
-/// 
+///
 pub fn blackout_dates(c: Calendar, blackout_dates: Option(String)) -> Calendar {
   Calendar(..c, blackout_dates: blackout_dates)
 }
@@ -252,7 +251,7 @@ pub fn blackout_dates(c: Calendar, blackout_dates: Option(String)) -> Calendar {
 // --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a Calendar
-/// 
+///
 pub fn render(c: Calendar, attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-calendar",
@@ -350,7 +349,7 @@ pub fn render(c: Calendar, attributes: List(Attribute(msg))) -> Element(msg) {
 }
 
 /// render_config creates a Lustre Element(msg) from a Config
-/// 
+///
 pub fn render_config(
   c: Config,
   attributes: List(Attribute(msg)),
@@ -359,7 +358,7 @@ pub fn render_config(
 }
 
 /// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Header -> attribute.attribute("slot", "header")
