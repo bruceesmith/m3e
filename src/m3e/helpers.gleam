@@ -1,6 +1,25 @@
+import gleam/int
 import gleam/option.{type Option, None, Some}
 
 import lustre/attribute.{type Attribute}
+
+/// attribute_with_default saves us from needlessly adding an attribute to an
+/// HTML element when the value of the attribute is its default
+/// 
+@internal
+pub fn attribute_with_default(
+  name: String,
+  value: String,
+  default: String,
+) -> Attribute(msg) {
+  case value != default {
+    True -> attribute.attribute(name, value)
+    False -> attribute.none()
+  }
+}
+
+// attribute.attribute("start-view", view_to_string(c.start_view))
+// helpers.attribute_with_default("start-view", view_to_string(c.start_view), "month")
 
 /// boolean_attribute creates an HTML boolean attribute (or nothing)
 ///
@@ -43,6 +62,33 @@ pub fn option_attribute(
     Some(v) ->
       attribute.attribute(attribute_name_func(v), attribute_value_func(v))
     None -> attribute.none()
+  }
+}
+
+/// positive checks that an integer is positive
+///
+@internal
+pub fn positive_(i: Int) -> Result(Int, String) {
+  case i > 0 {
+    True -> Ok(i)
+    False -> Error(int.to_string(i) <> " is not a positive integer")
+  }
+}
+
+/// range checks that an integer is within a given range
+///
+@internal
+pub fn range_(i: Int, min: Int, max: Int) -> Result(Int, String) {
+  case i >= min && i <= max {
+    True -> Ok(i)
+    False ->
+      Error(
+        int.to_string(i)
+        <> " is out of range >="
+        <> int.to_string(min)
+        <> " and <="
+        <> int.to_string(max),
+      )
   }
 }
 

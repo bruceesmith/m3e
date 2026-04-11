@@ -4,6 +4,14 @@ import gleeunit/should
 import lustre/attribute
 import m3e/helpers
 
+pub fn attribute_with_default_test() {
+  helpers.attribute_with_default("test", "value", "default")
+  |> should.equal(attribute.attribute("test", "value"))
+
+  helpers.attribute_with_default("test", "default", "default")
+  |> should.equal(attribute.none())
+}
+
 pub fn boolean_attribute_test() {
   helpers.boolean_attribute("test", True)
   |> should.equal(attribute.attribute("test", ""))
@@ -40,4 +48,32 @@ pub fn option_attribute_test() {
 pub fn slot_test() {
   helpers.slot("my-slot")
   |> should.equal(attribute.attribute("slot", "my-slot"))
+}
+
+pub fn positive_test() {
+  helpers.positive_(10)
+  |> should.equal(Ok(10))
+
+  helpers.positive_(0)
+  |> should.be_error
+
+  helpers.positive_(-5)
+  |> should.be_error
+}
+
+pub fn range_test() {
+  helpers.range_(5, 0, 10)
+  |> should.equal(Ok(5))
+
+  helpers.range_(0, 0, 10)
+  |> should.equal(Ok(0))
+
+  helpers.range_(10, 0, 10)
+  |> should.equal(Ok(10))
+
+  helpers.range_(-1, 0, 10)
+  |> should.be_error
+
+  helpers.range_(11, 0, 10)
+  |> should.be_error
 }
