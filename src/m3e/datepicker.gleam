@@ -16,9 +16,9 @@ import m3e/helpers
 /// - variant: The appearance variant of the picker.
 /// - clearable: Whether the user can clear the selected date and close the picker.
 /// - state: The state of the date picker.
-/// - clear-label: The label given to the button used clear the selected date and close the picker.
-/// - confirm-label: The label given to the button used apply the selected date and close the picker.
-/// - dismiss-label: The label given to the button used discard the selected date and close the picker.
+/// - clear_label: The label given to the button used clear the selected date and close the picker.
+/// - confirm_label: The label given to the button used apply the selected date and close the picker.
+/// - dismiss_label: The label given to the button used discard the selected date and close the picker.
 /// - label: The label given to the the picker.
 ///
 pub opaque type Datepicker {
