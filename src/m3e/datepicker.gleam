@@ -1,11 +1,11 @@
 //// datepicker provides Lustre support for the [M3E Datepicker component](https://matraic.github.io/m3e/#/components/datepicker.html)
 
 import gleam/list
+import m3e/calendar.{type Calendar}
 
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-import m3e/cal_date.{type State}
 import m3e/helpers
 
 // --- Types ---
@@ -15,7 +15,7 @@ import m3e/helpers
 /// ## Fields:
 /// - variant: The appearance variant of the picker.
 /// - clearable: Whether the user can clear the selected date and close the picker.
-/// - state: The state of the date picker.
+/// - calendar: The calendar of the date picker.
 /// - clear_label: The label given to the button used clear the selected date and close the picker.
 /// - confirm_label: The label given to the button used apply the selected date and close the picker.
 /// - dismiss_label: The label given to the button used discard the selected date and close the picker.
@@ -25,7 +25,7 @@ pub opaque type Datepicker {
   Datepicker(
     variant: Variant,
     clearable: Bool,
-    state: State,
+    calendar: Calendar,
     clear_label: String,
     confirm_label: String,
     dismiss_label: String,
@@ -56,7 +56,7 @@ pub type Config {
   Config(
     variant: Variant,
     clearable: Bool,
-    state: State,
+    calendar: Calendar,
     clear_label: String,
     confirm_label: String,
     dismiss_label: String,
@@ -70,7 +70,7 @@ pub fn default_config() -> Config {
   Config(
     variant: Auto,
     clearable: False,
-    state: cal_date.from_config(cal_date.default_config()),
+    calendar: calendar.new(),
     clear_label: default_clear_label,
     confirm_label: default_confirm_label,
     dismiss_label: default_dismiss_label,
@@ -86,7 +86,7 @@ pub fn from_config(config: Config) -> Datepicker {
   Datepicker(
     variant: config.variant,
     clearable: config.clearable,
-    state: config.state,
+    calendar: config.calendar,
     clear_label: config.clear_label,
     confirm_label: config.confirm_label,
     dismiss_label: config.dismiss_label,
@@ -138,11 +138,13 @@ pub fn label(c: Datepicker, label: String) -> Datepicker {
   Datepicker(..c, label: label)
 }
 
-/// state sets the `state` field
+/// calendar sets the `calendar` field
 ///
-pub fn state(c: Datepicker, state: State) -> Datepicker {
-  Datepicker(..c, state: state)
+pub fn calendar(c: Datepicker, calendar: Calendar) -> Datepicker {
+  Datepicker(..c, calendar: calendar)
 }
+
+// --- RENDERING ---
 
 /// render creates a Lustre Element(msg) from a Calendar
 ///
@@ -170,7 +172,7 @@ pub fn render(c: Datepicker, attributes: List(Attribute(msg))) -> Element(msg) {
         ),
         helpers.attribute_with_default("label", c.label, default_label),
       ],
-      cal_date.attributes(c.state),
+      calendar.attributes(c.calendar),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),

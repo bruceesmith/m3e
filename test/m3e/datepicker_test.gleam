@@ -4,7 +4,7 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 
-import m3e/cal_date
+import m3e/calendar
 import m3e/datepicker
 import m3e/datetime
 
@@ -54,7 +54,7 @@ pub fn setters_test() {
   let date =
     datetime.from_string("2023-01-01")
     |> result.lazy_unwrap(fn() { panic as "Invalid date" })
-  let state = cal_date.new() |> cal_date.date(Some(date))
+  let cal = calendar.new() |> calendar.date(Some(date))
 
   let dp =
     datepicker.new()
@@ -64,7 +64,7 @@ pub fn setters_test() {
     |> datepicker.confirm_label("OK")
     |> datepicker.dismiss_label("D")
     |> datepicker.label("L")
-    |> datepicker.state(state)
+    |> datepicker.calendar(cal)
 
   datepicker.render(dp, [])
   |> should.equal(
