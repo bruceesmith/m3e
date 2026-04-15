@@ -25,7 +25,7 @@ import msg.{type Msg}
 import package.{type Package, Package}
 
 /// app_bar displays all facets of the M3E App Bar wrapper component
-/// 
+///
 fn app_bar() -> Element(Msg) {
   html.div(
     [
@@ -103,7 +103,7 @@ fn centered() -> Element(Msg) {
         [
           element.text("Centered"),
           app_bar.new()
-            |> app_bar.alignment(app_bar.Centered)
+            |> app_bar.centered(app_bar.Centered)
             |> app_bar.render(
               [attribute.styles([flex_grow.raw("1")])],
               content(),
@@ -190,7 +190,7 @@ fn content() -> List(Element(Msg)) {
 }
 
 /// package() describes the AppBar showcase in the standard Package record format
-/// 
+///
 pub fn package() -> Package {
   Package(
     state: model.AppBar,

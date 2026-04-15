@@ -14,7 +14,7 @@ import msg.{type Msg}
 import package.{type Package, Package}
 
 /// button displays all facets of the M3E Button wrapper component
-/// 
+///
 fn button() -> Element(Msg) {
   html.div(
     [
@@ -242,12 +242,12 @@ fn variant() -> Element(Msg) {
 }
 
 /// package() describes the button showcase in the standard Package record format
-/// 
+///
 pub fn package() -> Package {
   Package(
     state: model.Button,
     label: "Button",
     view: button,
-    msg: msg.ButtonPageSelected,
+    msg: msg.ButtonSelected,
   )
 }
