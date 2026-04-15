@@ -4,6 +4,7 @@ pub type State {
   Home
   AppBar
   Button
+  Calendar
   Icon
   Switch
 }

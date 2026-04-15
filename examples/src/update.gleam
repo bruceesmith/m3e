@@ -1,18 +1,16 @@
 //// update responds to messages from the user, and updates the model
 
 import lustre/effect.{type Effect}
-import model.{type Model, AppBar, Button, Home, Icon, Model, Switch}
-import msg.{
-  type Msg, AppBarPageSelected, ButtonPageSelected, HomeSelected,
-  IconPageSelected, SwitchPageSelected,
-}
+import model.{type Model, Model}
+import msg.{type Msg}
 
 pub fn update(_model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
-    HomeSelected -> #(Model(state: Home), effect.none())
-    AppBarPageSelected -> #(Model(state: AppBar), effect.none())
-    ButtonPageSelected -> #(Model(state: Button), effect.none())
-    IconPageSelected -> #(Model(state: Icon), effect.none())
-    SwitchPageSelected -> #(Model(state: Switch), effect.none())
+    msg.HomeSelected -> #(Model(state: model.Home), effect.none())
+    msg.AppBarPageSelected -> #(Model(state: model.AppBar), effect.none())
+    msg.ButtonSelected -> #(Model(state: model.Button), effect.none())
+    msg.CalendarSelected -> #(Model(state: model.Calendar), effect.none())
+    msg.IconPageSelected -> #(Model(state: model.Icon), effect.none())
+    msg.SwitchPageSelected -> #(Model(state: model.Switch), effect.none())
   }
 }

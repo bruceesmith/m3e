@@ -22,6 +22,7 @@ import m3e/tooltip
 
 import components/app_bar_
 import components/button_
+import components/calendar_
 import components/home
 import components/icon_
 import components/switch_
@@ -32,7 +33,7 @@ import package.{type Package}
 
 /// view is the display member of the model-view-update triumvirate (The Elm Architecture)
 /// view takes the model, as updated by update(), and renders HTML from it
-/// 
+///
 pub fn view(model: Model) -> Element(Msg) {
   theme.render(
     theme.new("app-theme")
@@ -47,7 +48,7 @@ pub fn view(model: Model) -> Element(Msg) {
 }
 
 /// appbar builds the top application bar
-/// 
+///
 fn appbar() -> Element(Msg) {
   app_bar.new()
   |> app_bar.for(Some("main-content"))
@@ -60,7 +61,7 @@ fn appbar() -> Element(Msg) {
         icon.new("menu") |> icon.filled(icon.Filled) |> icon.render([], []),
         icon.new("menu_open")
           |> icon.filled(icon.Filled)
-          |> icon.purpose(icon_button.slot(icon_button.SelectedIcon))
+          |> icon.purpose(icon_button.slot(icon_button.Selected))
           |> icon.render([], []),
         drawer_toggle.new("nav-drawer") |> drawer_toggle.render([], []),
       ]),
@@ -95,7 +96,7 @@ fn appbar() -> Element(Msg) {
 }
 
 /// body builds the overall page body
-/// 
+///
 fn body(content: Element(Msg)) -> Element(Msg) {
   drawer_container.render_config(
     drawer_container.Config(
@@ -112,7 +113,7 @@ fn body(content: Element(Msg)) -> Element(Msg) {
 /// content builds the variable content, the "start drawer", of the page. content() represents a
 /// compromise between succinctness of code (the use of list.find()) and total type safety (where
 /// a giant case statement exhaustively matches model.state with a component-specific function)
-/// 
+///
 fn content(state: model.State) -> Element(Msg) {
   list.find(packages(), fn(p) { p.state == state })
   |> result.map(fn(p) { p.view() })
@@ -120,7 +121,7 @@ fn content(state: model.State) -> Element(Msg) {
 }
 
 /// github builds the Github link
-/// 
+///
 fn github() -> Element(Msg) {
   html.img([
     attribute.attribute(
@@ -144,7 +145,7 @@ fn menu() -> Element(Msg) {
 }
 
 /// nav_menu_items builds the left-side navigation menu items
-/// 
+///
 fn nav_menu_items() -> List(Element(Msg)) {
   list.map(packages(), fn(package) -> Element(Msg) {
     nav_menu_item.new(package.label)
@@ -155,14 +156,15 @@ fn nav_menu_items() -> List(Element(Msg)) {
 }
 
 /// packages provides the "source of truth" for the components that are displayed in the
-/// showcase. It both simplifies and standardises the addition of new components. It is used 
+/// showcase. It both simplifies and standardises the addition of new components. It is used
 /// by nav_men_items to construct the left-side navigation menu, and by content() to build
 /// the variable section of the page
-/// 
+///
 fn packages() -> List(Package) {
   [
     app_bar_.package(),
     button_.package(),
+    calendar_.package(),
     icon_.package(),
     switch_.package(),
   ]

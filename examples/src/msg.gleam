@@ -3,7 +3,8 @@
 pub type Msg {
   HomeSelected
   AppBarPageSelected
-  ButtonPageSelected
+  ButtonSelected
+  CalendarSelected
   IconPageSelected
   SwitchPageSelected
 }
