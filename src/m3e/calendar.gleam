@@ -23,7 +23,7 @@ import m3e/helpers
 /// - min_date: The minimum date that can be selected.
 /// - range_end: End of a date range.
 /// - range_start: Start of a date range.
-/// - start_at: A date specifying the period (month or year) to start the Calendar in.
+/// - start_at: A date specifying the period (month or year) to start the calendar in
 /// - start_view: The initial view used to select a date.
 /// - previous_month_label: The accessible label given to the button used to move to the previous month.
 /// - next_month_label: The accessible label given to the button used to move to the next month.
