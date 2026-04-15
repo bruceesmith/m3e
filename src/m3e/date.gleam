@@ -7,7 +7,7 @@ import m3e/helpers
 // --- Types ---
 
 /// Date is a date
-/// 
+///
 pub opaque type Date {
   Date(year: Int, month: Int, day: Int)
 }
@@ -31,6 +31,11 @@ pub fn from_string(input: String) -> Result(Date, String) {
     }
     _ -> Error(input <> " is an invalid date string, must be yyyy-mm-dd")
   }
+}
+
+/// zero returns the date 1970-01-01
+pub fn zero() -> Date {
+  Date(year: 1970, month: 1, day: 1)
 }
 
 // --- RENDERING ---
