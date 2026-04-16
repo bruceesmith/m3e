@@ -1,4 +1,4 @@
-//// Module init contains the functions for SPA initialisation 
+//// Module init contains the functions for SPA initialisation
 
 import lustre/effect.{type Effect}
 import model.{type Model, Button, Model}
@@ -8,5 +8,7 @@ import msg.{type Msg}
 /// the initial Model record
 ///
 pub fn init(_args) -> #(Model, Effect(Msg)) {
-  #(Model(state: Button), effect.none())
+  #(Model(date_str: initial_date, state: Button), effect.none())
 }
+
+pub const initial_date = "2026-04-01"

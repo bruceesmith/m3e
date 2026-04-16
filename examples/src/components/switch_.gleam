@@ -14,8 +14,8 @@ import msg.{type Msg}
 import package.{type Package, Package}
 
 /// switch displays all facets of the M3E Switch wrapper component
-/// 
-fn switch_() -> Element(Msg) {
+///
+fn switch_(_: model.Model) -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),
@@ -147,7 +147,7 @@ fn disabled() -> Element(Msg) {
 }
 
 /// package() describes the switch showcase in the standard Package record format
-/// 
+///
 pub fn package() -> Package {
   Package(
     state: model.Switch,

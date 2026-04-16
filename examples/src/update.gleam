@@ -1,16 +1,45 @@
 //// update responds to messages from the user, and updates the model
 
+import gleam/list
+import gleam/result
+import gleam/string
+
 import lustre/effect.{type Effect}
+
+import init
 import model.{type Model, Model}
 import msg.{type Msg}
 
-pub fn update(_model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
+import components/calendar_effects
+
+pub fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
-    msg.HomeSelected -> #(Model(state: model.Home), effect.none())
-    msg.AppBarPageSelected -> #(Model(state: model.AppBar), effect.none())
-    msg.ButtonSelected -> #(Model(state: model.Button), effect.none())
-    msg.CalendarSelected -> #(Model(state: model.Calendar), effect.none())
-    msg.IconPageSelected -> #(Model(state: model.Icon), effect.none())
-    msg.SwitchPageSelected -> #(Model(state: model.Switch), effect.none())
+    msg.HomeSelected -> #(Model(..model, state: model.Home), effect.none())
+    msg.AppBarPageSelected -> #(
+      Model(..model, state: model.AppBar),
+      effect.none(),
+    )
+    msg.ButtonSelected -> #(Model(..model, state: model.Button), effect.none())
+    msg.CalendarSelected(id) -> #(
+      Model(..model, state: model.Calendar),
+      calendar_effects.attach_blackout_function(id),
+    )
+    msg.IconPageSelected -> #(Model(..model, state: model.Icon), effect.none())
+    msg.SwitchPageSelected -> #(
+      Model(..model, state: model.Switch),
+      effect.none(),
+    )
+
+    msg.CalendarDateSelected(id) -> {
+      #(model, calendar_effects.get_date(id))
+    }
+
+    msg.CalendarDateFetched(date) -> {
+      let the_date =
+        list.first(string.split(date, "T")) |> result.unwrap(init.initial_date)
+      #(Model(..model, date_str: the_date), effect.none())
+    }
+
+    msg.CalendarBlackoutAttached -> #(model, effect.none())
   }
 }

@@ -10,5 +10,5 @@ pub type State {
 }
 
 pub type Model {
-  Model(state: State)
+  Model(date_str: String, state: State)
 }

@@ -26,7 +26,7 @@ import package.{type Package, Package}
 
 /// app_bar displays all facets of the M3E App Bar wrapper component
 ///
-fn app_bar() -> Element(Msg) {
+fn app_bar(_: model.Model) -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),
@@ -171,7 +171,7 @@ fn scroll_effects() -> Element(Msg) {
 fn content() -> List(Element(Msg)) {
   [
     icon_button.new()
-      |> icon_button.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
+      |> icon_button.purpose(Some(app_bar.slot(app_bar.Leading)))
       |> icon_button.render([], [
         icon.new("arrow_back") |> icon.render([], []),
       ]),
@@ -182,7 +182,7 @@ fn content() -> List(Element(Msg)) {
       element.text("Discover popular trails"),
     ]),
     icon_button.new()
-      |> icon_button.purpose(Some(app_bar.slot(app_bar.TrailingIcon)))
+      |> icon_button.purpose(Some(app_bar.slot(app_bar.Trailing)))
       |> icon_button.render([], [
         icon.new("bookmark") |> icon.render([], []),
       ]),

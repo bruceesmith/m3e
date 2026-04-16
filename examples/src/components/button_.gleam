@@ -15,7 +15,7 @@ import package.{type Package, Package}
 
 /// button displays all facets of the M3E Button wrapper component
 ///
-fn button() -> Element(Msg) {
+fn button(_: model.Model) -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),

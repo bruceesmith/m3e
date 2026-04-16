@@ -10,8 +10,8 @@ import msg.{type Msg}
 import package.{type Package, Package}
 
 /// icon displays all facets of the M3E Icon wrapper component
-/// 
-fn icon() -> Element(Msg) {
+///
+fn icon(_: model.Model) -> Element(Msg) {
   html.div(
     [
       layout.frame_style(),
@@ -79,7 +79,7 @@ fn appearance() -> Element(Msg) {
 }
 
 /// package() describes the icon showcase in the standard Package record format
-/// 
+///
 pub fn package() -> Package {
   Package(
     state: model.Icon,

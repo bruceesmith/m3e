@@ -42,7 +42,7 @@ pub fn view(model: Model) -> Element(Msg) {
     [],
     [
       appbar(),
-      body(content(model.state)),
+      body(content(model)),
     ],
   )
 }
@@ -54,7 +54,7 @@ fn appbar() -> Element(Msg) {
   |> app_bar.for(Some("main-content"))
   |> app_bar.render([layout.app_bar_style()], [
     icon_button.new()
-      |> icon_button.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
+      |> icon_button.purpose(Some(app_bar.slot(app_bar.Leading)))
       |> icon_button.selected(Selected)
       |> icon_button.toggle(icon_button.Toggle)
       |> icon_button.render([], [
@@ -81,7 +81,7 @@ fn appbar() -> Element(Msg) {
       ],
       [element.text("v0.0.1")],
     ),
-    html.span([app_bar.slot(app_bar.TrailingIcon)], [
+    html.span([app_bar.slot(app_bar.Trailing)], [
       icon_button.new()
         |> icon_button.link(
           Some(link.new("https://github.com/bruceesmith/m3e")),
@@ -114,10 +114,10 @@ fn body(content: Element(Msg)) -> Element(Msg) {
 /// compromise between succinctness of code (the use of list.find()) and total type safety (where
 /// a giant case statement exhaustively matches model.state with a component-specific function)
 ///
-fn content(state: model.State) -> Element(Msg) {
-  list.find(packages(), fn(p) { p.state == state })
-  |> result.map(fn(p) { p.view() })
-  |> result.unwrap(home.home())
+fn content(model: Model) -> Element(Msg) {
+  list.find(packages(), fn(p) { p.state == model.state })
+  |> result.map(fn(p) { p.view(model) })
+  |> result.unwrap(home.home(model))
 }
 
 /// github builds the Github link
