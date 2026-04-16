@@ -8,7 +8,6 @@ import lustre/element/html
 import lustre/event
 
 import m3e/calendar
-import m3e/card
 import m3e/date
 import m3e/datetime
 import m3e/time
@@ -18,54 +17,23 @@ import layout
 import model
 import msg.{type Msg}
 import package.{type Package, Package}
+import view_helpers
 
-/// calendar displays all facets of the M3E Calendar wrapper component
-///
 fn calendar(model: model.Model) -> Element(Msg) {
-  html.div(
-    [
-      layout.frame_style(),
-    ],
-    [
-      card(model, "Date selection", date_selection),
-      card(model, "Start at", start_at),
-      card(model, "Start view", start_view),
-      card(model, "Date ranges", date_ranges),
-      card(model, "Min and max", min_max),
-      card(model, "Blackout dates", blackout),
-    ],
-  )
-}
-
-fn card(
-  model: model.Model,
-  description: String,
-  content: fn(model.Model) -> Element(Msg),
-) -> Element(Msg) {
-  card.render_config(
-    card.Config(..card.default_config(), variant: card.Outlined),
-    [
-      layout.card_style(),
-    ],
-    [
-      html.div(
-        [
-          layout.card_content_style(),
-          card.slot(card.Content),
-        ],
-        [
-          element.text(description),
-          content(model),
-        ],
-      ),
-    ],
-  )
+  view_helpers.page([
+    view_helpers.panel(model, "Date selection", date_selection),
+    view_helpers.panel(model, "Start at", start_at),
+    view_helpers.panel(model, "Start view", start_view),
+    view_helpers.panel(model, "Date ranges", date_ranges),
+    view_helpers.panel(model, "Min and max", min_max),
+    view_helpers.panel(model, "Blackout dates", blackout),
+  ])
 }
 
 fn date_selection(model: model.Model) -> Element(Msg) {
   let id = "calendar1"
   let the_date = date.from_string(model.date_str) |> result.unwrap(date.zero())
-  html.div([layout.calendar_style()], [
+  html.div([layout.flex_column()], [
     calendar.new()
       |> calendar.date(Some(datetime.new(the_date, time.zero(), None)))
       |> calendar.render([
@@ -80,7 +48,7 @@ fn date_selection(model: model.Model) -> Element(Msg) {
 fn start_at(_: model.Model) -> Element(Msg) {
   let id = "calendar2"
   let the_date = date.from_string("2026-01-01") |> result.unwrap(date.zero())
-  html.div([layout.calendar_style()], [
+  html.div([layout.flex_column()], [
     calendar.new()
     |> calendar.start_at(Some(datetime.new(the_date, time.zero(), None)))
     |> calendar.render([
@@ -92,7 +60,7 @@ fn start_at(_: model.Model) -> Element(Msg) {
 
 fn start_view(_: model.Model) -> Element(Msg) {
   let id = "calendar3"
-  html.div([layout.calendar_style()], [
+  html.div([layout.flex_column()], [
     calendar.new()
     |> calendar.start_view(calendar.MultiYear)
     |> calendar.render([
@@ -107,7 +75,7 @@ fn date_ranges(_: model.Model) -> Element(Msg) {
   let range_start = date.from_string("2026-01-05") |> result.unwrap(date.zero())
   let range_end = date.from_string("2026-01-15") |> result.unwrap(date.zero())
   let start_at = date.from_string("2026-01-01") |> result.unwrap(date.zero())
-  html.div([layout.calendar_style()], [
+  html.div([layout.flex_column()], [
     calendar.new()
     |> calendar.range_start(Some(datetime.new(range_start, time.zero(), None)))
     |> calendar.range_end(Some(datetime.new(range_end, time.zero(), None)))
@@ -124,7 +92,7 @@ fn min_max(_: model.Model) -> Element(Msg) {
   let min_date = date.from_string("2026-01-01") |> result.unwrap(date.zero())
   let max_date = date.from_string("2026-04-30") |> result.unwrap(date.zero())
   let start_at = date.from_string("2026-04-01") |> result.unwrap(date.zero())
-  html.div([layout.calendar_style()], [
+  html.div([layout.flex_column()], [
     calendar.new()
     |> calendar.min_date(Some(datetime.new(min_date, time.zero(), None)))
     |> calendar.max_date(Some(datetime.new(max_date, time.zero(), None)))
@@ -139,7 +107,7 @@ fn min_max(_: model.Model) -> Element(Msg) {
 fn blackout(_: model.Model) -> Element(Msg) {
   let id = "calendar6"
   let _ = calendar_effects.is_blackout_date("2026-01-01")
-  html.div([layout.calendar_style()], [
+  html.div([layout.flex_column()], [
     calendar.new()
     |> calendar.render([
       attribute.id(id),

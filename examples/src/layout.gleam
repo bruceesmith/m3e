@@ -47,19 +47,19 @@ pub fn card_content_style() -> Attribute(msg) {
   ])
 }
 
-/// calendar
-///
-pub fn calendar_style() -> Attribute(msg) {
-  attribute.styles([
-    display.flex,
-    flex_direction.column,
-  ])
-}
-
 /// column generates a CSS grid-column: <number>;
 ///
 pub fn column(c: Int) -> #(String, String) {
   grid_column.raw(int.to_string(c))
+}
+
+/// Columnar flex layout
+///
+pub fn flex_column() -> Attribute(msg) {
+  attribute.styles([
+    display.flex,
+    flex_direction.column,
+  ])
 }
 
 /// frame_style is the style for each Frame
@@ -85,8 +85,26 @@ pub fn gap(g: Int) -> #(String, String) {
   gap.raw("calc(var(--spacing) * " <> int.to_string(g) <> ")")
 }
 
+/// icon_style is the style for each Icon
+///
+pub fn icon_style() -> Attribute(msg) {
+  attribute.styles([
+    display.flex,
+    gap(5),
+  ])
+}
+
 /// pad generates a CSS padding: calc(var(--spacing) * <number>);
 ///
 pub fn pad(p: Int) -> #(String, String) {
   padding.raw("calc(var(--spacing) * " <> int.to_string(p) <> ")")
+}
+
+/// switch_style is the style for each Icon
+///
+pub fn switch_style() -> Attribute(msg) {
+  attribute.styles([
+    display.flex,
+    gap(5),
+  ])
 }

@@ -15,157 +15,88 @@ import monks/position
 import monks/top
 
 import m3e/app_bar
-import m3e/card
 import m3e/config
 import m3e/icon
 
-import layout
 import model
 import msg.{type Msg}
 import package.{type Package, Package}
+import view_helpers
 
 /// app_bar displays all facets of the M3E App Bar wrapper component
 ///
-fn app_bar(_: model.Model) -> Element(Msg) {
-  html.div(
-    [
-      layout.frame_style(),
-    ],
-    [
-      anatomy(),
-      sizes(),
-      centered(),
-      scroll_effects(),
-    ],
-  )
+fn app_bar(model: model.Model) -> Element(Msg) {
+  view_helpers.page([
+    view_helpers.panel(model, "Anatomy", anatomy),
+    view_helpers.panel(model, "Sizes", sizes),
+    view_helpers.panel(model, "Centered", centered),
+    view_helpers.panel(model, "Scroll effects", scroll_effects),
+  ])
 }
 
-fn anatomy() -> Element(Msg) {
-  card.render_config(
-    card.Config(..card.default_config(), variant: card.Elevated),
-    [
-      layout.card_style(),
-    ],
-    [
-      html.div(
-        [
-          layout.card_content_style(),
-          card.slot(card.Content),
-        ],
-        [
-          element.text("Anatomy"),
-          app_bar.new()
-            |> app_bar.render([], content()),
-        ],
-      ),
-    ],
-  )
+fn anatomy(_: model.Model) -> Element(Msg) {
+  html.div([attribute.styles([flex_grow.raw("1")])], [
+    app_bar.new()
+    |> app_bar.render([], content()),
+  ])
 }
 
-fn sizes() -> Element(Msg) {
-  card.render_config(
-    card.Config(..card.default_config(), variant: card.Elevated),
-    [
-      layout.card_style(),
-    ],
-    [
-      html.div(
-        [
-          layout.card_content_style(),
-          card.slot(card.Content),
-        ],
-        [
-          element.text("Sizes"),
-          app_bar.new()
-            |> app_bar.size(config.Medium)
-            |> app_bar.render([], content()),
-          app_bar.new()
-            |> app_bar.size(config.Large)
-            |> app_bar.render([], content()),
-        ],
-      ),
-    ],
-  )
+fn sizes(_: model.Model) -> Element(Msg) {
+  html.div([attribute.styles([flex_grow.raw("1")])], [
+    app_bar.new()
+      |> app_bar.size(config.Medium)
+      |> app_bar.render([], content()),
+    app_bar.new()
+      |> app_bar.size(config.Large)
+      |> app_bar.render([], content()),
+  ])
 }
 
-fn centered() -> Element(Msg) {
-  card.render_config(
-    card.Config(..card.default_config(), variant: card.Elevated),
-    [
-      layout.card_style(),
-    ],
-    [
-      html.div(
-        [
-          layout.card_content_style(),
-          card.slot(card.Content),
-        ],
-        [
-          element.text("Centered"),
-          app_bar.new()
-            |> app_bar.centered(app_bar.Centered)
-            |> app_bar.render(
-              [attribute.styles([flex_grow.raw("1")])],
-              content(),
-            ),
-        ],
-      ),
-    ],
-  )
+fn centered(_: model.Model) -> Element(Msg) {
+  html.div([attribute.styles([flex_grow.raw("1")])], [
+    app_bar.new()
+    |> app_bar.centered(app_bar.Centered)
+    |> app_bar.render([], content()),
+  ])
 }
 
-fn scroll_effects() -> Element(Msg) {
-  card.render_config(
-    card.Config(..card.default_config(), variant: card.Elevated),
-    [
-      layout.card_style(),
-    ],
-    [
-      html.div(
-        [
-          layout.card_content_style(),
-          card.slot(card.Content),
-        ],
-        [
-          element.text("Scroll"),
-          html.div(
+fn scroll_effects(_: model.Model) -> Element(Msg) {
+  html.div([attribute.styles([flex_grow.raw("1")])], [
+    html.div(
+      [
+        attribute.id("scrollContainer"),
+        attribute.styles([
+          flex_grow.raw("1"),
+          overflow_y.raw("auto"),
+          height.raw("300px"),
+        ]),
+      ],
+      [
+        app_bar.new()
+          |> app_bar.for(Some("scrollContainer"))
+          |> app_bar.render(
             [
-              attribute.id("scrollContainer"),
               attribute.styles([
-                flex_grow.raw("1"),
-                overflow_y.raw("auto"),
-                height.raw("300px"),
+                position.sticky,
+                top.raw("0"),
               ]),
             ],
-            [
-              app_bar.new()
-                |> app_bar.for(Some("scrollContainer"))
-                |> app_bar.render(
-                  [
-                    attribute.styles([
-                      position.sticky,
-                      top.raw("0"),
-                    ]),
-                  ],
-                  content(),
-                ),
-              html.div(
-                [
-                  attribute.styles([
-                    height.raw("400px"),
-                    display.flex,
-                    align_items.center,
-                    justify_content.center,
-                  ]),
-                ],
-                [element.text("Scroll down to see the elevation effect")],
-              ),
-            ],
+            content(),
           ),
-        ],
-      ),
-    ],
-  )
+        html.div(
+          [
+            attribute.styles([
+              height.raw("400px"),
+              display.flex,
+              align_items.center,
+              justify_content.center,
+            ]),
+          ],
+          [element.text("Scroll down to see the elevation effect")],
+        ),
+      ],
+    ),
+  ])
 }
 
 fn content() -> List(Element(Msg)) {
