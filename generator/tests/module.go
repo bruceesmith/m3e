@@ -11,10 +11,6 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-var (
-	enumerations = make([]string, 0)
-)
-
 type GleamModule struct {
 	header        *strings.Builder
 	imports       *strings.Builder

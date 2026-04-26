@@ -58,7 +58,7 @@ func writeEnumFile(directory string, identifier string, enums []parser.Enumerati
 
 	err = enumTmpl.Execute(file, enum)
 	if err != nil {
-		err = fmt.Errorf("enum failed to create file for %s: %w", identifier, err)
+		return fmt.Errorf("enum failed to create file for %s: %w", identifier, err)
 	}
 	return nil
 }
