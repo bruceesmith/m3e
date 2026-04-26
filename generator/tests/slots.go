@@ -11,14 +11,12 @@ import (
 
 const slotsTemplate = `
 pub fn {{.ModName}}_slot_test() {
-  // 1. Define the test cases in a list of tuples: #(input, expected)
   let cases = [
 {{ range .Slots }}
     #({{$.ModName}}.{{ .Name }}, attribute.attribute("slot", "{{ .Attribute }}")),
 {{- end }}
   ]
 
-  // 2. Iterate over the list and run assertions for each
   list.each(cases, fn(c) {
     let #(s, expected) = c
 

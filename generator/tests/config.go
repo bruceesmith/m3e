@@ -11,7 +11,6 @@ import (
 
 const configTemplate = `
 pub fn {{.ModName}}_default_config_test() {
-  // 1. Define the test cases
   let cases = [
     Config(
 {{- range $key, $value := .Values }}
@@ -20,7 +19,6 @@ pub fn {{.ModName}}_default_config_test() {
     ),
   ]
 
-  // 2. Iterate over the list and run assertions for each
   list.each(cases, fn(c) {
     let expected = c
 
