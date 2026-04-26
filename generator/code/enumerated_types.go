@@ -17,33 +17,15 @@ func GenerateEnums(destination string, enumerations map[string][]parser.Enumerat
 	return
 }
 
-const enumTemplate = `//// {{.Type}}
-////
-//// This file was generated:
-////    By: m3e/generator version {{.Version}}
-////    On: {{.Date}}
-////
-////          DO NOT EDIT
-////
+var enumTmpl *template.Template
 
-pub type {{.Type}} {
-   {{- range .Names}}
-   {{.TypeName}}
-   {{- end}}
+func init() {
+	var err error
+	enumTmpl, err = template.ParseFiles("code/enumerated_types.tmpl")
+	if err != nil {
+		panic(err)
+	}
 }
-
-pub fn to_string(level: {{.Type}}) -> String {
-   case level {
-       {{- range .Names}}
-       {{.TypeName}} -> "{{.Value}}"
-       {{- end}}
-   }
-}
-`
-
-var (
-	enumTmpl *template.Template = template.Must(template.New("enum").Parse(enumTemplate))
-)
 
 func writeEnumFile(directory string, identifier string, enums []parser.Enumeration, version string, date string) error {
 	type Value struct {

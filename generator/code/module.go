@@ -86,12 +86,36 @@ func GenerateModule(directory string, modName string, module parser.Module, vers
 
 func write(file *os.File, gleam GleamModule) {
 	fmt.Fprint(file, gleam.header.String())
+	if len(gleam.header.String()) < 10 {
+		fmt.Println("empty header for", file.Name())
+	}
 	fmt.Fprint(file, gleam.imports.String())
+	if len(gleam.imports.String()) < 10 {
+		fmt.Println("empty imports for", file.Name())
+	}
 	fmt.Fprint(file, gleam.viewDeclaration.String())
+	if len(gleam.viewDeclaration.String()) < 10 {
+		fmt.Println("empty view for", file.Name())
+	}
 	fmt.Fprint(file, gleam.slotDefs.String())
+	if len(gleam.slotDefs.String()) < 10 {
+		fmt.Println("empty slots for", file.Name())
+	}
 	fmt.Fprint(file, gleam.configuration.String())
+	if len(gleam.configuration.String()) < 10 {
+		fmt.Println("empty config for", file.Name())
+	}
 	fmt.Fprint(file, gleam.constructor.String())
+	if len(gleam.constructor.String()) < 10 {
+		fmt.Println("empty constructor for", file.Name())
+	}
 	fmt.Fprint(file, gleam.setters.String())
+	if len(gleam.setters.String()) < 10 {
+		fmt.Println("empty setters for", file.Name())
+	}
 	fmt.Fprint(file, gleam.renderers.String())
+	if len(gleam.renderers.String()) < 10 {
+		fmt.Println("empty renderer for", file.Name())
+	}
 	fmt.Fprint(file, gleam.slotFn.String())
 }

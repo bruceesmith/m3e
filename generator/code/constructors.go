@@ -7,35 +7,15 @@ import (
 	"text/template"
 )
 
-const constructorTemplate = `{{$count := len .Values}}
-// --- Constructors ---
-{{ if gt $count 0 }}
-/// from_config creates a new {{ .ModName}} from the given configuration.
-///
-pub fn from_config(config: Config) -> {{ .ModName }} {
- {{ .ModName }}(
-{{- range .Values }}
-   {{ . }}: config.{{ . }},
-{{- end }}
- )
-}
-{{- end }}
+var constructorTmpl *template.Template
 
-/// new creates a new {{ .ModName}} with the default configuration.
-///
-pub fn new() -> {{ .ModName}} {
-{{- if gt $count 0 }}
-   from_config(default_config())
+func init() {
+	var err error
+	constructorTmpl, err = template.ParseFiles("code/constructors.tmpl")
+	if err != nil {
+		panic(err)
+	}
 }
-{{- else }}
- {{ .ModName }}
-}
-{{- end }}
-`
-
-var (
-	constructorTmpl *template.Template = template.Must(template.New("constructor").Parse(constructorTemplate))
-)
 
 func constructors(modName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
 	type Configuration struct {

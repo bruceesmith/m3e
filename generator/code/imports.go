@@ -10,19 +10,15 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-const importTemplate = `
-{{- if .imports }}
+var importTmpl *template.Template
 
-{{- range .imports }}
-import {{ . }}
-{{- end }}
-
-{{- end }}
-`
-
-var (
-	importTmpl *template.Template = template.Must(template.New("imports").Parse(importTemplate))
-)
+func init() {
+	var err error
+	importTmpl, err = template.ParseFiles("code/imports.tmpl")
+	if err != nil {
+		panic(err)
+	}
+}
 
 func imports(attrs []parser.RefinedAttribute) (builder *strings.Builder, names []string, err error) {
 	builder = &strings.Builder{}

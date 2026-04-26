@@ -39,8 +39,18 @@ func Utility() (err error) {
 		Name:        "generator",
 		Action:      run,
 		Description: "Generate Gleam/Lustre wrappers for M3E Expressive components",
-		Usage:       "Generator Tool",
-		Version:     "0.0.1",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:  "no-code",
+				Usage: "Do not generate the Gleam wrappers",
+			},
+			&cli.BoolFlag{
+				Name:  "no-tests",
+				Usage: "Do not generate the unit tests",
+			},
+		},
+		Usage:   "Generator Tool",
+		Version: "0.0.1",
 	}
 
 	loaders := []echidna.Loader{
@@ -89,13 +99,18 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 
 	// Generate Gleam/Lustre wrappers for the modules
 	date := time.Now().Format(time.RFC3339)
-	if err := code.Generate(&modules, filepath.Join(cfg.Destination, "src/m3e/"), cmd.Version, date); err != nil {
-		return fmt.Errorf("failed to generate wrappers: %w", err)
+	if !cmd.Bool("no-code") {
+		if err := code.Generate(&modules, filepath.Join(cfg.Destination, "src/m3e/"), cmd.Version, date); err != nil {
+			return fmt.Errorf("failed to generate wrappers: %w", err)
+		}
 	}
 
 	// Generate unit tests for the wrappers
-	if err := tests.Generate(&modules, filepath.Join(cfg.Destination, "test/m3e/"), cmd.Version, date); err != nil {
-		return fmt.Errorf("failed to generate tests: %w", err)
+	//
+	if !cmd.Bool("no-tests") {
+		if err := tests.Generate(&modules, filepath.Join(cfg.Destination, "test/m3e/"), cmd.Version, date); err != nil {
+			return fmt.Errorf("failed to generate tests: %w", err)
+		}
 	}
 
 	return

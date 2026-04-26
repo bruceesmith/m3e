@@ -7,55 +7,15 @@ import (
 	"text/template"
 )
 
-const declarationTemplate = `{{$count := len .Attributes}}
-// --- Types ---
+var declarationTmpl *template.Template
 
-/// {{ .ModName }} is a View Model for this component
-///
-{{- if .Attributes }}
-/// ## Fields:
-///
-{{- end }}
-{{- range .Attributes }}
-/// - {{ .Name }}: {{ .Description }}
-{{- end }}
-{{- if .Attributes }}
-///
-{{- end }}
-pub opaque type {{ .ModName }} {
-{{- if gt $count 0 }}
- {{ .ModName }}(
-{{- range .Attributes }}
-   {{ .Name }}: {{ .Type }},
-{{- end }}
- )
+func init() {
+	var err error
+	declarationTmpl, err = template.ParseFiles("code/declaration.tmpl")
+	if err != nil {
+		panic(err)
+	}
 }
-{{- else }}
- {{ .ModName }}()
-}
-{{- end -}}
-{{- range .Enumerations }}
-
-/// {{ .Name }} is {{ .Description }}
-///
-pub type {{ .Name }} {
- Is{{ .Name }}
- IsNot{{ .Name }}
-}
-{{- end }}
-{{- if .Defaults }}
-
-// --- Defaults ---
-
-{{- range $key, $value := .Defaults }}
-
-pub const default_{{ $key }}: {{ $value.Type }} = {{ printf "%s" $value.Value }}
-{{- end }}
-{{- end }}`
-
-var (
-	declarationTmpl *template.Template = template.Must(template.New("view").Parse(declarationTemplate))
-)
 
 func declaration(modName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
 	type Enum struct {

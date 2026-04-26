@@ -10,55 +10,15 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-const renderTemplate = `{{$count := len .Values}}
-// --- Renderers ---
+var renderTmpl *template.Template
 
-/// render creates a Lustre Element for a {{.ModName}}
-///
-pub fn render(
-{{- if gt $count 0 }}
- model: {{.ModName}},
-{{- else -}}
- _: {{.ModName}},
-{{- end -}}
- attributes: List(Attribute(msg)),
- children: List(Element(msg)),
-) -> Element(msg) {
- element.element(
-   "{{.TagName}}",
-{{- if gt $count 0 }}
-   list.flatten([
-     [
-{{- range .Values}}
-       {{.}},
-{{- end}}
-     ],
-     attributes,
-   ])
-     |> list.filter(fn(a) { a != attribute.none() }),
-{{- else -}}
-   attributes,
-{{- end -}}
-   children,
- )
+func init() {
+	var err error
+	renderTmpl, err = template.ParseFiles("code/renderers.tmpl")
+	if err != nil {
+		panic(err)
+	}
 }
-
-{{- if gt $count 0 }}
-/// render_config creates a Lustre Element from a {{.ModName}} Config
-///
-pub fn render_config(
- c: Config,
- attributes: List(Attribute(msg)),
- children: List(Element(msg)),
-) -> Element(msg) {
- render(from_config(c), attributes, children)
-}
-{{- end }}
-`
-
-var (
-	renderTmpl *template.Template = template.Must(template.New("render").Parse(renderTemplate))
-)
 
 func render(modName string, tagName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
 	type Render struct {

@@ -7,43 +7,15 @@ import (
 	"text/template"
 )
 
-const configTemplate = `{{$count := len .Attributes}}
-// --- Configuration ---
+var configTmpl *template.Template
 
-/// Config is a public record for configuring this component.
-///
-pub type Config {
-{{- if gt $count 0 }}
- Config(
-{{- range .Attributes }}
-   {{ .Name }}: {{ .Type }},
-{{- end }}
- )
+func init() {
+	var err error
+	configTmpl, err = template.ParseFiles("code/config.tmpl")
+	if err != nil {
+		panic(err)
+	}
 }
-{{- else }}
- Config()
-}
-{{- end }}
-
-/// default_config is the default configuration for this component.
-///
-pub fn default_config() -> Config {
-{{- if gt $count 0 }}
- Config(
-{{- range $key, $value := .Values }}
-   {{ $key }}: {{ $value }},
-{{- end }}
- )
-}
-{{- else }}
- Config()
-}
-{{- end }}
-`
-
-var (
-	configTmpl *template.Template = template.Must(template.New("config").Parse(configTemplate))
-)
 
 func config(attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
 	type Declaration struct {

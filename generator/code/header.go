@@ -6,19 +6,15 @@ import (
 	"text/template"
 )
 
-const headerTemplate = `//// {{.Name}} {{.Desc}}
-////
-//// This file was generated:
-////    By: m3e/generator version {{.Version}}
-////    At: {{.Date}}
-////
-////          DO NOT EDIT
-////
-`
+var headerTmpl *template.Template
 
-var (
-	headerTmpl *template.Template = template.Must(template.New("header").Parse(headerTemplate))
-)
+func init() {
+	var err error
+	headerTmpl, err = template.ParseFiles("code/header.tmpl")
+	if err != nil {
+		panic(err)
+	}
+}
 
 func header(name, desc, version string, date string) (builder *strings.Builder, err error) {
 	type headerData struct {

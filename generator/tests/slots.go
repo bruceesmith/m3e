@@ -9,26 +9,15 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-const slotsTemplate = `
-pub fn {{.ModName}}_slot_test() {
-  let cases = [
-{{ range .Slots }}
-    #({{$.ModName}}.{{ .Name }}, attribute.attribute("slot", "{{ .Attribute }}")),
-{{- end }}
-  ]
+var slotsTmpl *template.Template
 
-  list.each(cases, fn(c) {
-    let #(s, expected) = c
-
-    {{.ModName}}.slot(s)
-    |> should.equal(expected)
-  })
-}`
-
-// #(app_bar.Leading, attribute.attribute("slot", "leading")),
-var (
-	slotsFnTmpl *template.Template = template.Must(template.New("slots").Parse(slotsTemplate))
-)
+func init() {
+	var err error
+	slotsTmpl, err = template.ParseFiles("tests/slots.tmpl")
+	if err != nil {
+		panic(err)
+	}
+}
 
 func slots(theSlots []parser.Slot, modName string) (builder *strings.Builder, err error) {
 	type Slot struct {
@@ -56,9 +45,9 @@ func slots(theSlots []parser.Slot, modName string) (builder *strings.Builder, er
 		ModName: strcase.ToSnake(modName),
 	}
 
-	err = slotsFnTmpl.Execute(builder, data)
+	err = slotsTmpl.Execute(builder, data)
 	if err != nil {
 		return nil, fmt.Errorf("slots failed to save result: %w", err)
 	}
-	return
+	return builder, nil
 }

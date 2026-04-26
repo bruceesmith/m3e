@@ -7,41 +7,22 @@ import (
 	"text/template"
 )
 
-const slotsDefTemplate = `
-{{ if .slots }}
-/// Slots are used in child elements to insert content into this component
-///
-pub type Slot {
-{{- end }}
-{{- range .slots }}
- {{ .Name }}
-{{- if .Description }}
- // {{ .Description }}
-{{- end }}
-{{- end }}
-{{- if .slots }}
-}
-{{- end }}
-`
-
-const slotsFnTemplate = `
-{{- if .slots }}
-/// slot returns a Lustre Attribute(msg) for the given slot name
-///
-pub fn slot(s: Slot) -> Attribute(msg) {
- case s {
-{{- range .slots }}
-   {{ .Name }} -> attribute.attribute("slot", "{{ .Attribute }}")
-{{- end }}
- }
-}
-{{- end }}
-`
-
 var (
-	slotsDefTmpl *template.Template = template.Must(template.New("slots").Parse(slotsDefTemplate))
-	slotsFnTmpl  *template.Template = template.Must(template.New("slots").Parse(slotsFnTemplate))
+	slotsDefTmpl *template.Template
+	slotsFnTmpl  *template.Template
 )
+
+func init() {
+	var err error
+	slotsDefTmpl, err = template.ParseFiles("code/slots_def.tmpl")
+	if err != nil {
+		panic(err)
+	}
+	slotsFnTmpl, err = template.ParseFiles("code/slots_fn.tmpl")
+	if err != nil {
+		panic(err)
+	}
+}
 
 func slots(theSlots []parser.Slot) (defBuilder *strings.Builder, fnBuilder *strings.Builder, err error) {
 	type Slot struct {
