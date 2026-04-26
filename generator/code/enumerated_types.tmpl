@@ -1,0 +1,23 @@
+
+//// {{.Type}}
+////
+//// This file was generated:
+////    By: m3e/generator version {{.Version}}
+////    On: {{.Date}}
+////
+////          DO NOT EDIT
+////
+
+pub type {{.Type}} {
+   {{- range .Names}}
+   {{.TypeName}}
+   {{- end}}
+}
+
+pub fn to_string(level: {{.Type}}) -> String {
+   case level {
+       {{- range .Names}}
+       {{.TypeName}} -> "{{.Value}}"
+       {{- end}}
+   }
+}

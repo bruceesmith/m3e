@@ -1,0 +1,15 @@
+
+{{ if .slots }}
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+{{- end }}
+{{- range .slots }}
+ {{ .Name }}
+{{- if .Description }}
+ // {{ .Description }}
+{{- end }}
+{{- end }}
+{{- if .slots }}
+}
+{{- end }}

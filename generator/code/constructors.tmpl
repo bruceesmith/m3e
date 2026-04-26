@@ -1,0 +1,24 @@
+{{$count := len .Values}}
+// --- Constructors ---
+{{ if gt $count 0 }}
+/// from_config creates a new {{ .ModName}} from the given configuration.
+///
+pub fn from_config(config: Config) -> {{ .ModName }} {
+ {{ .ModName }}(
+{{- range .Values }}
+   {{ . }}: config.{{ . }},
+{{- end }}
+ )
+}
+{{- end }}
+
+/// new creates a new {{ .ModName}} with the default configuration.
+///
+pub fn new() -> {{ .ModName}} {
+{{- if gt $count 0 }}
+   from_config(default_config())
+}
+{{- else }}
+ {{ .ModName }}
+}
+{{- end }}

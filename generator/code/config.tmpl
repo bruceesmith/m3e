@@ -1,0 +1,33 @@
+
+{{$count := len .Attributes}}
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+{{- if gt $count 0 }}
+ Config(
+{{- range .Attributes }}
+   {{ .Name }}: {{ .Type }},
+{{- end }}
+ )
+}
+{{- else }}
+ Config()
+}
+{{- end }}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+{{- if gt $count 0 }}
+ Config(
+{{- range $key, $value := .Values }}
+   {{ $key }}: {{ $value }},
+{{- end }}
+ )
+}
+{{- else }}
+ Config()
+}
+{{- end }}

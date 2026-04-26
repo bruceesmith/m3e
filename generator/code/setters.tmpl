@@ -1,0 +1,15 @@
+{{ $module := .Module }}{{ $count := len .Values }}
+// --- Setters ---
+{{ range $index, $val := .Values }}
+{{- /* Add a blank line between functions */}}
+{{- if $index }}{{ "\n" }}{{ end }}
+/// {{ $val.Field }} sets the value of {{ $val.Field }} for this {{ $module }}.
+///
+{{ getSignature $count $val.Field $module $val.Type }} {
+ {{- if gt $count 1 }}
+ {{ $module }}(..record, {{ $val.Field }}: {{ $val.Field }})
+ {{- else }}
+ {{ $module }}({{ $val.Field }}: {{ $val.Field }})
+ {{- end }}
+}
+{{- end }}

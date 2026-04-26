@@ -1,0 +1,15 @@
+
+pub fn {{.ModName}}_slot_test() {
+  let cases = [
+{{ range .Slots }}
+    #({{$.ModName}}.{{ .Name }}, attribute.attribute("slot", "{{ .Attribute }}")),
+{{- end }}
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    {{.ModName}}.slot(s)
+    |> should.equal(expected)
+  })
+}

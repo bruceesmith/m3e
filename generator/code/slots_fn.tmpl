@@ -1,0 +1,12 @@
+
+{{- if .slots }}
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
+pub fn slot(s: Slot) -> Attribute(msg) {
+ case s {
+{{- range .slots }}
+   {{ .Name }} -> attribute.attribute("slot", "{{ .Attribute }}")
+{{- end }}
+ }
+}
+{{- end }}
