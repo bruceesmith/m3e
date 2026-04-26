@@ -2,11 +2,16 @@
 
 ## Overview
 
+_IMPORTANT UPDATE 26 April 2026:_ this component will no longer be developed. It's purpose and function is replaced by
+the _generator_ program, which ingests a Custom Element Manifest and generates all the Gleam code and unit tests programmatically.
+
 Over time, as features are added and fixes are applied to **matraic's** [M3E Expressive Components](https://github.io/matraic/m3e) 
 project, inevitably the Gleam/Lustre wrappers in this library will drift out of sync.
 
+
 **m3esync** is a program to generate a report on differences between the component attributes in **M3E Expressive Components** and the 
 Gleam functions in this library.
+
 
 ## Building this program
 
