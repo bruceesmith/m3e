@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/bruceesmith/logger"
-	"github.com/iancoleman/strcase"
 )
 
 var (
@@ -27,57 +26,56 @@ type GleamModule struct {
 	renderers       *strings.Builder
 }
 
-func GenerateModule(directory string, modName string, module parser.Module, version string, date string) (err error) {
+func GenerateModule(directory string, module parser.Module, version string, date string) (err error) {
 	gleam := GleamModule{}
-	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", modName, module.Description))
+	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", module.Name, module.Description))
 
-	fileName := strcase.ToSnake(modName)
-	file, err := os.Create(filepath.Join(directory, fileName+".gleam"))
+	file, err := os.Create(filepath.Join(directory, module.SnakeName+".gleam"))
 	if err != nil {
-		return fmt.Errorf("failed to create file %s: %w", fileName+".gleam", err)
+		return fmt.Errorf("failed to create file %s: %w", module.SnakeName+".gleam", err)
 	}
 	defer file.Close()
 
-	gleam.header, err = header(modName, module.Description, version, date)
+	gleam.header, err = header(module.Name, module.Description, version, date)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
 	var definers []string
 	gleam.imports, definers, err = imports(module)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 	enumerations = append(enumerations, definers...)
 
-	gleam.viewDeclaration, err = declaration(modName, module)
+	gleam.viewDeclaration, err = declaration(module)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
 	gleam.slotDefs, gleam.slotFn, err = slots(module.Slots)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
 	gleam.configuration, err = config(module)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
 	gleam.constructor, err = constructors(module)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
-	gleam.setters, err = setters(modName, module)
+	gleam.setters, err = setters(module.Name, module)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
-	gleam.renderers, err = render(modName, module.Tag, module)
+	gleam.renderers, err = render(module.Name, module.Tag, module)
 	if err != nil {
-		return fmt.Errorf("processing of %s failed: %w", modName, err)
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
 	write(file, gleam)

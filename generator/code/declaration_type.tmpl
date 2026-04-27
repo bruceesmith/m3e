@@ -1,0 +1,25 @@
+{{ define "declaration_type.tmpl" }}/// {{ .Name }} is a View Model for this component
+///
+{{- if .Attributes }}
+/// ## Fields:
+///
+{{- end }}
+{{- range .Attributes }}
+/// - {{ .Name }}: {{ .Description }}
+{{- end }}
+{{- if .Attributes }}
+///
+{{- end }}
+pub opaque type {{ .Name }} {
+{{- if .Attributes }}
+ {{ .Name }}(
+{{- range .Attributes }}
+   {{ .Name }}: {{ .Type }},
+{{- end }}
+ )
+}
+{{- else }}
+ {{ .Name }}()
+}
+{{- end -}}
+{{ end }}

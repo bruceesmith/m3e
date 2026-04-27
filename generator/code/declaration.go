@@ -11,58 +11,21 @@ var declarationTmpl *template.Template
 
 func init() {
 	var err error
-	declarationTmpl, err = template.ParseFiles("code/declaration.tmpl")
+	declarationTmpl, err = template.ParseFiles(
+		"code/declaration.tmpl",
+		"code/declaration_type.tmpl",
+		"code/declaration_enums.tmpl",
+		"code/declaration_defaults.tmpl",
+	)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func declaration(modName string, module parser.Module) (builder *strings.Builder, err error) {
-	type Enum struct {
-		Name        string
-		Description string
-	}
-	type Default struct {
-		Type  string
-		Value string
-	}
-	type Declaration struct {
-		Attributes   []parser.RefinedAttribute
-		Defaults     map[string]Default
-		Enumerations []Enum
-		ModName      string
-	}
+func declaration(module parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
-	if modName == "List" {
-		modName = "Mlist"
-	}
 
-	declaration := Declaration{
-		Attributes:   module.Attributes,
-		Defaults:     make(map[string]Default, len(module.Attributes)),
-		Enumerations: make([]Enum, 0, len(module.Attributes)),
-		ModName:      modName,
-	}
-
-	for _, attr := range module.Attributes {
-		if len(attr.Enum) > 0 {
-			first := string(attr.Description[0])
-			desc := strings.ToLower(first) + strings.TrimPrefix(attr.Description, first)
-			decl := Enum{
-				Name:        attr.Enum,
-				Description: desc,
-			}
-			declaration.Enumerations = append(declaration.Enumerations, decl)
-		}
-		if len(attr.Default) > 0 {
-			declaration.Defaults[attr.Name] = Default{
-				Type:  attr.Type,
-				Value: attr.Default,
-			}
-		}
-	}
-
-	err = declarationTmpl.Execute(builder, declaration)
+	err = declarationTmpl.Execute(builder, module)
 	if err != nil {
 		return nil, fmt.Errorf("viewRecordDeclaration failed to save result: %w", err)
 	}

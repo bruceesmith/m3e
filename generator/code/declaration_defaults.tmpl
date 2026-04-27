@@ -1,0 +1,8 @@
+{{ define "declaration_defaults.tmpl" }}
+// --- Defaults ---
+
+{{- range .Attributes }}
+
+pub const {{ .DefaultName }}: {{ .Type }} = {{ printf "%s" .Default }}
+{{- end }}
+{{- end }}
