@@ -44,13 +44,13 @@ func GenerateModule(directory string, modName string, module parser.Module, vers
 	}
 
 	var definers []string
-	gleam.imports, definers, err = imports(module.Attributes)
+	gleam.imports, definers, err = imports(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 	enumerations = append(enumerations, definers...)
 
-	gleam.viewDeclaration, err = declaration(modName, module.Attributes)
+	gleam.viewDeclaration, err = declaration(modName, module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
@@ -60,22 +60,22 @@ func GenerateModule(directory string, modName string, module parser.Module, vers
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 
-	gleam.configuration, err = config(module.Attributes)
+	gleam.configuration, err = config(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 
-	gleam.constructor, err = constructors(modName, module.Attributes)
+	gleam.constructor, err = constructors(modName, module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 
-	gleam.setters, err = setters(modName, module.Attributes)
+	gleam.setters, err = setters(modName, module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 
-	gleam.renderers, err = render(modName, module.TagName, module.Attributes)
+	gleam.renderers, err = render(modName, module.Tag, module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}

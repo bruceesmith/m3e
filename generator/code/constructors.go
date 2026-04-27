@@ -23,7 +23,7 @@ func init() {
 	}
 }
 
-func constructors(modName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
+func constructors(modName string, module parser.Module) (builder *strings.Builder, err error) {
 	type Value struct {
 		Name string
 		Type string
@@ -35,14 +35,14 @@ func constructors(modName string, attributes []parser.RefinedAttribute) (builder
 	}
 	builder = &strings.Builder{}
 	if modName == "List" {
-		modName = "MList"
+		modName = "Mlist"
 	}
 
 	configuration := Configuration{
 		ModName: modName,
 	}
 
-	for _, attr := range attributes {
+	for _, attr := range module.Attributes {
 		configuration.Values = append(
 			configuration.Values,
 			Value{

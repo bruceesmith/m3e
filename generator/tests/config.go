@@ -5,8 +5,6 @@ import (
 	"generator/parser"
 	"strings"
 	"text/template"
-
-	"github.com/iancoleman/strcase"
 )
 
 var configTmpl *template.Template
@@ -19,31 +17,17 @@ func init() {
 	}
 }
 
-func config(attributes []parser.RefinedAttribute, modName string) (builder *strings.Builder, err error) {
+func config(module parser.Module) (builder *strings.Builder, err error) {
 	type Declaration struct {
 		ModName string
 		Values  map[string]string
 	}
 	builder = &strings.Builder{}
-	if len(attributes) < 2 {
+	if len(module.Attributes) < 2 {
 		return builder, nil
 	}
 
-	declaration := Declaration{
-		ModName: strcase.ToSnake(modName),
-		Values:  make(map[string]string, len(attributes)),
-	}
-
-	for _, attr := range attributes {
-		if len(attr.Default) > 0 {
-			if len(attr.QualifiedDefault) > 0 {
-				declaration.Values[attr.Name] = attr.QualifiedDefault
-			} else {
-				declaration.Values[attr.Name] = attr.Default
-			}
-		}
-	}
-	err = configTmpl.Execute(builder, declaration)
+	err = configTmpl.Execute(builder, module)
 	if err != nil {
 		return nil, fmt.Errorf("config failed to save result: %w", err)
 	}

@@ -1,9 +1,9 @@
 
-pub fn {{.ModName}}_default_config_test() {
+pub fn {{.SnakeName}}_default_config_test() {
   let cases = [
     Config(
-{{ range $key, $value := .Values }}
-      {{ $key }}: {{ $value }},
+{{- range .Attributes }}
+      {{ .Name }}: {{ .QualifiedDefault }},
 {{- end }}
     ),
   ]
@@ -11,7 +11,7 @@ pub fn {{.ModName}}_default_config_test() {
   list.each(cases, fn(c) {
     let expected = c
 
-    {{.ModName}}.default_config()
+    {{.SnakeName}}.default_config()
     |> should.equal(expected)
   })
 }

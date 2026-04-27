@@ -49,8 +49,7 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (refined []RefinedAtt
 		attribute.name(attr.Name)
 		attribute.description(attr.Description)
 		attribute.type_()
-		attribute.defawlt(attr.Default)
-
+		attribute.defawlt(attr.Default, modName)
 		refined = append(refined, attribute)
 		enumNames = append(enumNames, enums...)
 	}
@@ -58,55 +57,63 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (refined []RefinedAtt
 }
 
 // defawlt computes the default value for the attribute
-func (attr *RefinedAttribute) defawlt(adef *string) {
+func (attr *RefinedAttribute) defawlt(adef *string, modName string) {
+	attr.DefaultName = "default_" + attr.Name
 	if adef != nil {
 		attr.Default = attr.computeDefault(*adef)
 	} else {
-		attr.nilDefault()
+		attr.Default = attr.nilDefault()
+	}
+
+	attr.QualifiedDefault = attr.Default
+	if attr.Enum != "" {
+		attr.QualifiedDefault = strcase.ToSnake(modName) + "." + attr.Default
 	}
 }
 
 // nilDefault handles the case where the manifest does not define a default value for the attribute
-func (attr *RefinedAttribute) nilDefault() {
+func (attr *RefinedAttribute) nilDefault() string {
 	if attr.Type == "String" {
-		attr.Default = `""`
+		return `""`
 	} else {
 		logger.TraceID("defs", fmt.Sprintf("%s in %s has no def", attr.Name, attr.ModName))
+		// Provoke a Gleam compile error in this case
+		return "invalid-default"
 	}
 }
 
 // TransformFunc is a function that transforms an attribute based on its default value.
-type TransformFunc func(attr *RefinedAttribute, def string) (string, string, bool)
+type TransformFunc func(attr *RefinedAttribute, def string) (string, bool)
 
 // transformationRules is the set of transformation rules for defaults
 var transformationRules = []TransformFunc{
-	func(a *RefinedAttribute, d string) (string, string, bool) {
-		return "IsNot" + a.Enum, strcase.ToSnake(a.ModName), a.Enum != ""
+	func(a *RefinedAttribute, d string) (string, bool) {
+		return "IsNot" + a.Enum, a.Enum != ""
 	},
-	func(a *RefinedAttribute, d string) (string, string, bool) {
+	func(a *RefinedAttribute, d string) (string, bool) {
 		matched, _ := regexp.Match(`^(\d+)$`, []byte(d))
-		return d + ".0", "", a.Type == "Float" && matched
+		return d + ".0", a.Type == "Float" && matched
 	},
-	func(a *RefinedAttribute, d string) (string, string, bool) {
-		return "None", "", strings.HasPrefix(a.Type, "Option(")
+	func(a *RefinedAttribute, d string) (string, bool) {
+		return "None", strings.HasPrefix(a.Type, "Option(")
 	},
-	func(a *RefinedAttribute, d string) (string, string, bool) { return "True", "", d == "true" },
-	func(a *RefinedAttribute, d string) (string, string, bool) {
+	func(a *RefinedAttribute, d string) (string, bool) { return "True", d == "true" },
+	func(a *RefinedAttribute, d string) (string, bool) {
 		if a.Type == "Bool" {
-			return "False", "", d == "false"
+			return "False", d == "false"
 		}
-		return `"false"`, "", d == "false"
+		return `"false"`, d == "false"
 	},
-	func(a *RefinedAttribute, d string) (string, string, bool) {
-		return "date.default", "", d == "new Date()"
+	func(a *RefinedAttribute, d string) (string, bool) {
+		return "date.default", d == "new Date()"
 	},
-	func(a *RefinedAttribute, d string) (string, string, bool) { return `""`, "", strings.HasPrefix(d, "(") },
-	func(a *RefinedAttribute, d string) (string, string, bool) {
+	func(a *RefinedAttribute, d string) (string, bool) { return `""`, strings.HasPrefix(d, "(") },
+	func(a *RefinedAttribute, d string) (string, bool) {
 		if a.Type == "IconWeight" {
 			buf := make([]string, 0, 50)
-			return "icon_weight." + MapDigits(d, buf), "", true
+			return "icon_weight." + MapDigits(d, buf), true
 		}
-		return "", "", false
+		return "", false
 	},
 }
 
@@ -115,10 +122,7 @@ var transformationRules = []TransformFunc{
 // suitable for Gleam
 func (attr *RefinedAttribute) computeDefault(def string) string {
 	for _, rule := range transformationRules {
-		if val, mod, ok := rule(attr, def); ok {
-			if mod != "" {
-				attr.QualifiedDefault = mod + "." + val
-			}
+		if val, ok := rule(attr, def); ok {
 			return val
 		}
 	}
@@ -208,8 +212,8 @@ func (attr *RefinedAttribute) type_() {
 		attr.Type = attr.Enum
 	}
 	if attr.Type == "List" {
-		// "List" is a standard type in Gleam, but we use "MList" to avoid conflicts
-		attr.Type = "MList"
+		// "List" is a standard type in Gleam, but we use "Mlist" to avoid conflicts
+		attr.Type = "Mlist"
 	}
 }
 

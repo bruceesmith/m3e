@@ -11,29 +11,32 @@ import (
 	"strings"
 
 	"github.com/bruceesmith/logger"
+	"github.com/iancoleman/strcase"
 )
 
 type RefinedAttribute struct {
-	Name string
 	// snake_case name of the attribute
-	Enum string
+	Name string
 	// CamelCase name of the enum type, if applicable
-	Description string
+	Enum string
 	// Human-readable description of the attribute
-	Default string
+	Description string
 	// Gleam version of the TS default value
-	QualifiedDefault string
-	// Default value prefix by the modue name, used in test generation
+	Default string
+	// Name of the default value, if applicable
+	DefaultName string
+	// Default value prefixed by the module name, used in test generation
 	// Only used for semantic booleans in the same module
-	Type string
+	QualifiedDefault string
 	// CamelCase type name
-	Imports map[string]string
+	Type string
 	// snake_case import paths of any types used in the attribute ..
 	// key is the snake_case import path, value is the optional CamelCase type name
-	Standard bool
+	Imports map[string]string
 	// Is this a Gleam built-in attribute, e.g. Bool, Float...
-	ModName string
+	Standard bool
 	// CamelCase name of the TS and Gleam module
+	ModName string
 }
 type Slot struct {
 	Name        string
@@ -46,9 +49,11 @@ type Enumeration struct {
 }
 type Module struct {
 	Description string
-	TagName     string
+	Tag         string
 	Attributes  []RefinedAttribute
 	Slots       []Slot
+	Name        string
+	SnakeName   string
 }
 
 type Definition struct {
@@ -94,16 +99,16 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName string, mod Module, enumNames []string) {
 	modName = strings.TrimSuffix(strings.TrimPrefix(declaration.Name, "M3e"), "Element")
 	if modName == "List" {
-		modName = "MList"
+		modName = "Mlist"
 	}
-	var attributes []RefinedAttribute
-	attributes, enumNames = MakeAttributes(modName, declaration.Attributes)
 	mod = Module{
 		Description: *declaration.Description,
-		TagName:     *declaration.TagName,
-		Attributes:  attributes,
+		Tag:         *declaration.TagName,
 		Slots:       MakeSlots(declaration.Slots),
+		Name:        modName,
+		SnakeName:   strcase.ToSnake(modName),
 	}
+	mod.Attributes, enumNames = MakeAttributes(modName, declaration.Attributes)
 	logger.TraceID("module", fmt.Sprintf("Module %s: %s\n", modName, mod.Description))
 	return modName, mod, enumNames
 }

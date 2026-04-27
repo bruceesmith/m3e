@@ -31,7 +31,7 @@ type configuration struct {
 
 func (c configuration) Validate() error { return nil }
 
-var cfg configuration = configuration{}
+var cfg configuration = configuration{Destination: "../", M3ESource: "../"}
 
 // Utility is the function launched to actually perform all the work
 func Utility() (err error) {

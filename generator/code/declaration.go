@@ -17,7 +17,7 @@ func init() {
 	}
 }
 
-func declaration(modName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
+func declaration(modName string, module parser.Module) (builder *strings.Builder, err error) {
 	type Enum struct {
 		Name        string
 		Description string
@@ -34,17 +34,17 @@ func declaration(modName string, attributes []parser.RefinedAttribute) (builder 
 	}
 	builder = &strings.Builder{}
 	if modName == "List" {
-		modName = "MList"
+		modName = "Mlist"
 	}
 
 	declaration := Declaration{
-		Attributes:   attributes,
-		Defaults:     make(map[string]Default, len(attributes)),
-		Enumerations: make([]Enum, 0, len(attributes)),
+		Attributes:   module.Attributes,
+		Defaults:     make(map[string]Default, len(module.Attributes)),
+		Enumerations: make([]Enum, 0, len(module.Attributes)),
 		ModName:      modName,
 	}
 
-	for _, attr := range attributes {
+	for _, attr := range module.Attributes {
 		if len(attr.Enum) > 0 {
 			first := string(attr.Description[0])
 			desc := strings.ToLower(first) + strings.TrimPrefix(attr.Description, first)

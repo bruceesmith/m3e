@@ -19,12 +19,12 @@ func init() {
 	}
 }
 
-func imports(attrs []parser.RefinedAttribute, modName string) (builder *strings.Builder, err error) {
+func imports(module parser.Module, modName string) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 
 	imports := make(map[string]struct{}, 0)
 
-	for _, attr := range attrs {
+	for _, attr := range module.Attributes {
 		for k, v := range attr.Imports {
 			switch {
 			case strings.HasPrefix(k, "gleam/") ||
@@ -38,7 +38,7 @@ func imports(attrs []parser.RefinedAttribute, modName string) (builder *strings.
 			}
 		}
 	}
-	if len(attrs) > 1 {
+	if len(module.Attributes) > 1 {
 		imports["m3e/"+strcase.ToSnake(modName)+".{Config}"] = struct{}{}
 	} else {
 		imports["m3e/"+strcase.ToSnake(modName)] = struct{}{}

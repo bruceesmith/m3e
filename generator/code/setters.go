@@ -25,7 +25,7 @@ func init() {
 	}
 }
 
-func setters(modName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
+func setters(modName string, module parser.Module) (builder *strings.Builder, err error) {
 	type Value struct {
 		Field string
 		Type  string
@@ -36,19 +36,18 @@ func setters(modName string, attributes []parser.RefinedAttribute) (builder *str
 	}
 	builder = &strings.Builder{}
 	if modName == "List" {
-		modName = "MList"
+		modName = "Mlist"
 	}
-
-	if len(attributes) == 0 {
+	if len(module.Attributes) == 0 {
 		return builder, nil
 	}
 
 	setters := Setters{
 		Module: modName,
-		Values: make([]Value, 0, len(attributes)),
+		Values: make([]Value, 0, len(module.Attributes)),
 	}
 
-	for _, attr := range attributes {
+	for _, attr := range module.Attributes {
 		setters.Values = append(setters.Values, Value{Field: attr.Name, Type: attr.Type})
 	}
 

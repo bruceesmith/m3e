@@ -20,18 +20,18 @@ func init() {
 	}
 }
 
-func imports(attrs []parser.RefinedAttribute) (builder *strings.Builder, names []string, err error) {
+func imports(module parser.Module) (builder *strings.Builder, names []string, err error) {
 	builder = &strings.Builder{}
 	names = make([]string, 0)
 
-	imports := make([]string, 0, len(attrs))
+	imports := make([]string, 0, len(module.Attributes))
 	imports = append(imports, "lustre/attribute.{type Attribute}")
 	imports = append(imports, "lustre/element.{type Element}")
-	if len(attrs) > 0 {
+	if len(module.Attributes) > 0 {
 		imports = append(imports, "gleam/list")
 		imports = append(imports, "m3e/attr")
 	}
-	for _, attr := range attrs {
+	for _, attr := range module.Attributes {
 		for impModule, impType := range attr.Imports {
 			switch {
 			case strings.HasPrefix(impModule, "gleam/") || strings.HasPrefix(impModule, "lustre/") || strings.HasPrefix(impModule, "m3e/"):

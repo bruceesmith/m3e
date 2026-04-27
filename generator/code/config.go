@@ -20,28 +20,17 @@ func init() {
 	}
 }
 
-func config(attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
+func config(module parser.Module) (builder *strings.Builder, err error) {
 	type Declaration struct {
 		Attributes []parser.RefinedAttribute
 		Values     map[string]string
 	}
 	builder = &strings.Builder{}
-	if len(attributes) == 0 {
+	if len(module.Attributes) == 0 {
 		return builder, nil
 	}
 
-	// declaration := Declaration{
-	// 	Attributes: attributes,
-	// 	Values:     make(map[string]string, len(attributes)),
-	// }
-
-	// for _, attr := range attributes {
-	// 	if len(attr.Default) > 0 {
-	// 		declaration.Values[attr.Name] = "default_" + attr.Name
-	// 	}
-	// }
-
-	err = configTmpl.Execute(builder, attributes)
+	err = configTmpl.Execute(builder, module)
 	if err != nil {
 		return nil, fmt.Errorf("config failed to save result: %w", err)
 	}

@@ -37,13 +37,13 @@ func GenerateTests(directory string, modName string, module parser.Module, versi
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 
-	gleam.imports, err = imports(module.Attributes, modName)
+	gleam.imports, err = imports(module, modName)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 	// enumerations = append(enumerations, definers...)
 
-	gleam.configuration, err = config(module.Attributes, modName)
+	gleam.configuration, err = config(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
@@ -58,7 +58,7 @@ func GenerateTests(directory string, modName string, module parser.Module, versi
 	// 	return fmt.Errorf("processing of %s failed: %w", modName, err)
 	// }
 
-	// gleam.renderers, err = render(modName, module.TagName, module.Attributes)
+	// gleam.renderers, err = render(modName, module.Tag, module.Attributes)
 	// if err != nil {
 	// 	return fmt.Errorf("processing of %s failed: %w", modName, err)
 	// }

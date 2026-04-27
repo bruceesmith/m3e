@@ -20,7 +20,7 @@ func init() {
 	}
 }
 
-func render(modName string, tagName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
+func render(modName string, tagName string, module parser.Module) (builder *strings.Builder, err error) {
 	type Render struct {
 		Values  []string
 		ModName string
@@ -38,7 +38,7 @@ func render(modName string, tagName string, attributes []parser.RefinedAttribute
 		TagName: tagName,
 	}
 
-	for _, attr := range attributes {
+	for _, attr := range module.Attributes {
 		switch {
 		case len(attr.Enum) > 0:
 			data.Values = append(data.Values, enumAttribute(attr))

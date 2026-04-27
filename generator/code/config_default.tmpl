@@ -3,8 +3,8 @@
 ///
 pub fn default_config() -> Config {
  Config(
-{{- range $key, $value := .Values }}
-   {{ $key }}: {{ $value }},
+{{- range .Attributes }}
+   {{ .Name }}: {{ .Default }},
 {{- end }}
  )
 }
