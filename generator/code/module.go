@@ -65,7 +65,7 @@ func GenerateModule(directory string, modName string, module parser.Module, vers
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}
 
-	gleam.constructor, err = constructors(modName, module)
+	gleam.constructor, err = constructors(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", modName, err)
 	}

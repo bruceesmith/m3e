@@ -23,35 +23,10 @@ func init() {
 	}
 }
 
-func constructors(modName string, module parser.Module) (builder *strings.Builder, err error) {
-	type Value struct {
-		Name string
-		Type string
-	}
-
-	type Configuration struct {
-		Values  []Value
-		ModName string
-	}
+func constructors(module parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
-	if modName == "List" {
-		modName = "Mlist"
-	}
 
-	configuration := Configuration{
-		ModName: modName,
-	}
-
-	for _, attr := range module.Attributes {
-		configuration.Values = append(
-			configuration.Values,
-			Value{
-				Name: attr.Name,
-				Type: attr.Type,
-			})
-	}
-
-	if err = constructorTmpl.Execute(builder, configuration); err != nil {
+	if err = constructorTmpl.Execute(builder, module); err != nil {
 		return nil, fmt.Errorf("constructors failed to save result: %w", err)
 	}
 

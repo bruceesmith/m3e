@@ -1,9 +1,9 @@
 {{ define "constructors_new_one.tmpl" }}
-pub fn new({{- range .Values -}}
+pub fn new({{- range .Attributes -}}
 {{ .Name }}: {{ .Type }}
-{{- end }}) -> {{ .ModName }} {
-  {{ .ModName }}(
-{{- range .Values -}}
+{{- end }}) -> {{ .Name }} {
+  {{ .Name }}(
+{{- range .Attributes -}}
     {{ .Name }}: {{ .Name }}
 {{- end }})
 }

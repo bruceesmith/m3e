@@ -1,8 +1,8 @@
-{{ define "constructors_from_string.tmpl" }}/// from_config creates a new {{ .ModName }} from the given configuration.
+{{ define "constructors_from_config.tmpl" }}/// from_config creates a new {{ .Name }} from the given configuration.
 ///
-pub fn from_config(config: Config) -> {{ .ModName }} {
- {{ .ModName }}(
-{{- range .Values }}
+pub fn from_config(config: Config) -> {{ .Name }} {
+ {{ .Name }}(
+{{- range .Attributes }}
    {{ .Name }}: config.{{ .Name }},
 {{- end }}
  )
