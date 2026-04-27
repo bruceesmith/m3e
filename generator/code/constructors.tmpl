@@ -1,7 +1,7 @@
 {{$count := len .Values}}
 // --- Constructors ---
 {{ if gt $count 1 }}
-{{template "constructors_from_string.tmpl" .}}
+{{template "constructors_from_config.tmpl" .}}
 {{- end }}
 /// new creates a new {{ .ModName}} with the default configuration.
 ///

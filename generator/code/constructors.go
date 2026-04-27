@@ -13,7 +13,7 @@ func init() {
 	var err error
 	constructorTmpl, err = template.ParseFiles(
 		"code/constructors.tmpl",
-		"code/constructors_from_string.tmpl",
+		"code/constructors_from_config.tmpl",
 		"code/constructors_new_zero.tmpl",
 		"code/constructors_new_one.tmpl",
 		"code/constructors_new_multi.tmpl",
