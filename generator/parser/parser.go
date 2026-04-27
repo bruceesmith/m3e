@@ -48,12 +48,16 @@ type Enumeration struct {
 	Attribute string
 }
 type Module struct {
+	// Description of the component that the module wraps
 	Description string
-	Tag         string
-	Attributes  []RefinedAttribute
-	Slots       []Slot
-	Name        string
-	SnakeName   string
+	// HTML tag of the component
+	Tag        string
+	Attributes []RefinedAttribute
+	Slots      []Slot
+	// CamelCase name of the TS and Gleam module
+	Name string
+	// snake_case name of the TS and Gleam module
+	SnakeName string
 }
 
 type Definition struct {
