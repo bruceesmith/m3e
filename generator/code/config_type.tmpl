@@ -1,0 +1,11 @@
+{{ define "config_type.tmpl" }}
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+ Config(
+{{- range .Attributes }}
+   {{ .Name }}: {{ .Type }},
+{{- end }}
+ )
+}
+{{ end -}}

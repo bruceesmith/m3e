@@ -11,15 +11,26 @@ var constructorTmpl *template.Template
 
 func init() {
 	var err error
-	constructorTmpl, err = template.ParseFiles("code/constructors.tmpl")
+	constructorTmpl, err = template.ParseFiles(
+		"code/constructors.tmpl",
+		"code/constructors_from_string.tmpl",
+		"code/constructors_new_zero.tmpl",
+		"code/constructors_new_one.tmpl",
+		"code/constructors_new_multi.tmpl",
+	)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func constructors(modName string, attributes []parser.RefinedAttribute) (builder *strings.Builder, err error) {
+	type Value struct {
+		Name string
+		Type string
+	}
+
 	type Configuration struct {
-		Values  []string
+		Values  []Value
 		ModName string
 	}
 	builder = &strings.Builder{}
@@ -32,7 +43,12 @@ func constructors(modName string, attributes []parser.RefinedAttribute) (builder
 	}
 
 	for _, attr := range attributes {
-		configuration.Values = append(configuration.Values, attr.Name)
+		configuration.Values = append(
+			configuration.Values,
+			Value{
+				Name: attr.Name,
+				Type: attr.Type,
+			})
 	}
 
 	if err = constructorTmpl.Execute(builder, configuration); err != nil {

@@ -1,24 +1,14 @@
 {{$count := len .Values}}
 // --- Constructors ---
-{{ if gt $count 0 }}
-/// from_config creates a new {{ .ModName}} from the given configuration.
-///
-pub fn from_config(config: Config) -> {{ .ModName }} {
- {{ .ModName }}(
-{{- range .Values }}
-   {{ . }}: config.{{ . }},
+{{ if gt $count 1 }}
+{{template "constructors_from_string.tmpl" .}}
 {{- end }}
- )
-}
-{{- end }}
-
 /// new creates a new {{ .ModName}} with the default configuration.
 ///
-pub fn new() -> {{ .ModName}} {
-{{- if gt $count 0 }}
-   from_config(default_config())
-}
-{{- else }}
- {{ .ModName }}
-}
-{{- end }}
+{{- if eq $count 0 -}}
+{{template "constructors_new_zero.tmpl" .}}
+{{- else if eq $count 1 -}}
+{{template "constructors_new_one.tmpl" .}}
+{{- else -}}
+{{template "constructors_new_multi.tmpl" .}}
+{{- end -}}

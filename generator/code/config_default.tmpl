@@ -1,0 +1,11 @@
+{{ define "config_default.tmpl" }}
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+ Config(
+{{- range $key, $value := .Values }}
+   {{ $key }}: {{ $value }},
+{{- end }}
+ )
+}
+{{ end -}}

@@ -1,0 +1,5 @@
+{{ define "constructors_new_multi.tmpl" }}
+pub fn new() -> {{ .ModName }} {
+  from_config(default_config())
+}
+{{ end }}

@@ -11,7 +11,10 @@ var configTmpl *template.Template
 
 func init() {
 	var err error
-	configTmpl, err = template.ParseFiles("code/config.tmpl")
+	configTmpl, err = template.ParseFiles(
+		"code/config.tmpl",
+		"code/config_type.tmpl",
+		"code/config_default.tmpl")
 	if err != nil {
 		panic(err)
 	}
@@ -27,18 +30,18 @@ func config(attributes []parser.RefinedAttribute) (builder *strings.Builder, err
 		return builder, nil
 	}
 
-	declaration := Declaration{
-		Attributes: attributes,
-		Values:     make(map[string]string, len(attributes)),
-	}
+	// declaration := Declaration{
+	// 	Attributes: attributes,
+	// 	Values:     make(map[string]string, len(attributes)),
+	// }
 
-	for _, attr := range attributes {
-		if len(attr.Default) > 0 {
-			declaration.Values[attr.Name] = "default_" + attr.Name
-		}
-	}
+	// for _, attr := range attributes {
+	// 	if len(attr.Default) > 0 {
+	// 		declaration.Values[attr.Name] = "default_" + attr.Name
+	// 	}
+	// }
 
-	err = configTmpl.Execute(builder, declaration)
+	err = configTmpl.Execute(builder, attributes)
 	if err != nil {
 		return nil, fmt.Errorf("config failed to save result: %w", err)
 	}
