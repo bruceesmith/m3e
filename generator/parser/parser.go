@@ -36,8 +36,6 @@ type RefinedAttribute struct {
 	Imports map[string]string
 	// Is this a Gleam built-in attribute, e.g. Bool, Float...
 	Standard bool
-	// CamelCase name of the TS and Gleam module
-	ModName string
 }
 
 // Slot is an internal representation of a cem Slot

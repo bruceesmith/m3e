@@ -32,7 +32,6 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (refined []RefinedAtt
 	for _, attr := range attrs {
 		attribute := RefinedAttribute{
 			Imports: make(map[string]string),
-			ModName: modName,
 		}
 
 		// Extract & standardise the variable tyoe of this Attribute
@@ -62,7 +61,7 @@ func (attr *RefinedAttribute) defawlt(adef *string, modName string) {
 	if adef != nil {
 		attr.Default = attr.computeDefault(*adef)
 	} else {
-		attr.Default = attr.nilDefault()
+		attr.Default = attr.nilDefault(modName)
 	}
 
 	attr.QualifiedDefault = attr.Default
@@ -72,11 +71,11 @@ func (attr *RefinedAttribute) defawlt(adef *string, modName string) {
 }
 
 // nilDefault handles the case where the manifest does not define a default value for the attribute
-func (attr *RefinedAttribute) nilDefault() string {
+func (attr *RefinedAttribute) nilDefault(modName string) string {
 	if attr.Type == "String" {
 		return `""`
 	} else {
-		logger.TraceID("defs", fmt.Sprintf("%s in %s has no def", attr.Name, attr.ModName))
+		logger.TraceID("defs", fmt.Sprintf("%s in %s has no def", attr.Name, modName))
 		// Provoke a Gleam compile error in this case
 		return "invalid-default"
 	}
