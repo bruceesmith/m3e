@@ -27,28 +27,19 @@ func init() {
 	}
 }
 
-func writeEnumFile(directory string, identifier string, enums []parser.Enumeration, version string, date string) error {
-	type Value struct {
-		TypeName string
-		Value    string
-	}
-
-	type EnumValue struct {
+func writeEnumFile(directory string, identifier string, enum []parser.Enumeration, version string, date string) error {
+	type Data struct {
 		Type    string
-		Names   []Value
+		Enums   []parser.Enumeration
 		Version string
 		Date    string
 	}
-	enum := EnumValue{
+	data := Data{
 		Type:    identifier,
-		Names:   make([]Value, 0, len(enums)),
+		Enums:   enum,
 		Version: version,
 		Date:    date,
 	}
-	for _, val := range enums {
-		enum.Names = append(enum.Names, Value{TypeName: val.Name, Value: val.Attribute})
-	}
-
 	fileName := strcase.ToSnake(identifier)
 	file, err := os.Create(filepath.Join(directory, fileName+".gleam"))
 	if err != nil {
@@ -56,7 +47,7 @@ func writeEnumFile(directory string, identifier string, enums []parser.Enumerati
 	}
 	defer file.Close()
 
-	err = enumTmpl.Execute(file, enum)
+	err = enumTmpl.Execute(file, data)
 	if err != nil {
 		return fmt.Errorf("enum failed to create file for %s: %w", identifier, err)
 	}

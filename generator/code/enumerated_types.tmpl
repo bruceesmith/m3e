@@ -1,23 +1,23 @@
 
-//// {{.Type}}
+//// {{ .Type }}
 ////
 //// This file was generated:
-////    By: m3e/generator version {{.Version}}
-////    On: {{.Date}}
+////    By: m3e/generator version {{ .Version }}
+////    On: {{ .Date }}
 ////
 ////          DO NOT EDIT
 ////
 
 pub type {{.Type}} {
-   {{- range .Names}}
-   {{.TypeName}}
-   {{- end}}
+  {{- range .Enums }}
+  {{ .Name }}
+  {{- end }}
 }
 
-pub fn to_string(level: {{.Type}}) -> String {
-   case level {
-       {{- range .Names}}
-       {{.TypeName}} -> "{{.Value}}"
-       {{- end}}
-   }
+pub fn to_string(level: {{ .Type }}) -> String {
+  case level {
+    {{- range .Enums}}
+    {{ .Name }} -> "{{ .Attribute }}"
+    {{- end }}
+  }
 }
