@@ -14,6 +14,7 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+// RefinedAttribute is an internal representation of a cem Attribute
 type RefinedAttribute struct {
 	// snake_case name of the attribute
 	Name string
@@ -38,28 +39,40 @@ type RefinedAttribute struct {
 	// CamelCase name of the TS and Gleam module
 	ModName string
 }
+
+// Slot is an internal representation of a cem Slot
 type Slot struct {
 	Name        string
 	Description string
 	Attribute   string
 }
+
+// Enumeration is an internal representation of a cem Enumeration
 type Enumeration struct {
-	Name      string
+	// Name is the CamelCase name of the enumeration
+	Name string
+	// Attribute is the text of the attribute that uses this enumeration
 	Attribute string
 }
+
+// Module is an internal representation of a cem Module
 type Module struct {
 	// Description of the component that the module wraps
 	Description string
 	// HTML tag of the component
-	Tag        string
+	Tag string
+	// Attributes is a list of refined attributes for the module
 	Attributes []RefinedAttribute
-	Slots      []Slot
+	// Slots is a list of refined slots for the module
+	Slots []Slot
 	// CamelCase name of the TS and Gleam module
 	Name string
 	// snake_case name of the TS and Gleam module
 	SnakeName string
 }
 
+// Definition is the internal representation of the entire CEM manifest for
+// the Material 3 Expression components
 type Definition struct {
 	Modules      map[string]Module
 	Enumerations map[string][]Enumeration
