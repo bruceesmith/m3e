@@ -1,15 +1,15 @@
 
-pub fn {{.ModName}}_slot_test() {
+{{ $name := .SnakeName }}pub fn {{.Name}}_slot_test() {
   let cases = [
-{{ range .Slots }}
-    #({{$.ModName}}.{{ .Name }}, attribute.attribute("slot", "{{ .Attribute }}")),
+{{- range .Slots }}
+    #({{$name}}.{{ .Name }}, attribute.attribute("slot", "{{ .Attribute }}")),
 {{- end }}
   ]
 
   list.each(cases, fn(c) {
     let #(s, expected) = c
 
-    {{.ModName}}.slot(s)
+    {{$name}}.slot(s)
     |> should.equal(expected)
   })
 }

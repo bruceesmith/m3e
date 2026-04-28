@@ -37,7 +37,7 @@ func GenerateTests(directory string, module parser.Module, version string, date 
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
-	gleam.imports, err = imports(module, module.Name)
+	gleam.imports, err = imports(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
@@ -63,7 +63,7 @@ func GenerateTests(directory string, module parser.Module, version string, date 
 	// 	return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	// }
 
-	gleam.slots, err = slots(module.Slots, module.Name)
+	gleam.slots, err = slots(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}

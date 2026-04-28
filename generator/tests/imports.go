@@ -19,7 +19,7 @@ func init() {
 	}
 }
 
-func imports(module parser.Module, modName string) (builder *strings.Builder, err error) {
+func imports(module parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 
 	imports := make(map[string]struct{}, 0)
@@ -39,9 +39,9 @@ func imports(module parser.Module, modName string) (builder *strings.Builder, er
 		}
 	}
 	if len(module.Attributes) > 1 {
-		imports["m3e/"+strcase.ToSnake(modName)+".{Config}"] = struct{}{}
+		imports["m3e/"+strcase.ToSnake(module.Name)+".{Config}"] = struct{}{}
 	} else {
-		imports["m3e/"+strcase.ToSnake(modName)] = struct{}{}
+		imports["m3e/"+strcase.ToSnake(module.Name)] = struct{}{}
 	}
 	imports["gleam/list"] = struct{}{}
 	imports["gleam/option.{None, Some} as opt"] = struct{}{}
