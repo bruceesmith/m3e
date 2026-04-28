@@ -11,7 +11,14 @@ var declarationTmpl *template.Template
 
 func init() {
 	var err error
-	declarationTmpl, err = template.ParseFiles(
+	funcMap := template.FuncMap{
+		"getDescription": func(tipe, description string) string {
+			first := strings.ToLower(description[:1])
+			rest := description[1:]
+			return fmt.Sprintf("%s is %s", tipe, first+rest)
+		},
+	}
+	declarationTmpl, err = template.New("declaration.tmpl").Funcs(funcMap).ParseFiles(
 		"code/declaration.tmpl",
 		"code/declaration_type.tmpl",
 		"code/declaration_enums.tmpl",
@@ -27,7 +34,7 @@ func declaration(module parser.Module) (builder *strings.Builder, err error) {
 
 	err = declarationTmpl.Execute(builder, module)
 	if err != nil {
-		return nil, fmt.Errorf("viewRecordDeclaration failed to save result: %w", err)
+		return nil, fmt.Errorf("declaration failed to save result: %w", err)
 	}
 	return
 }

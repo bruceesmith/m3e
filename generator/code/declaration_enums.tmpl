@@ -1,7 +1,7 @@
 {{ define "declaration_enums.tmpl" }}
 {{- range .Attributes -}}
 {{- if ne .Enum "" }}
-/// {{ .Type }} is {{ .Description }}
+/// {{ getDescription .Type .Description }}
 ///
 pub type {{ .Type }} {
  Is{{ .Type }}
