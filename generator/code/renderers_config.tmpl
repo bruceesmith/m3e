@@ -1,0 +1,13 @@
+{{ define "renderers_config.tmpl" }}{{$count := len .Attributes}}
+{{ if gt $count 1 }}
+/// render_config creates a Lustre Element from a {{.Name}} Config
+///
+pub fn render_config(
+ c: Config,
+ attributes: List(Attribute(msg)),
+ children: List(Element(msg)),
+) -> Element(msg) {
+ render(from_config(c), attributes, children)
+}
+{{- end }}
+{{ end }}

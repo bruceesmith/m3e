@@ -14,40 +14,43 @@ var renderTmpl *template.Template
 
 func init() {
 	var err error
-	renderTmpl, err = template.ParseFiles("code/renderers.tmpl")
+	renderTmpl, err = template.ParseFiles(
+		"code/renderers.tmpl",
+		"code/renderers_config.tmpl",
+	)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func render(modName string, tagName string, module parser.Module) (builder *strings.Builder, err error) {
+func render(module parser.Module) (builder *strings.Builder, err error) {
 	type Render struct {
-		Values  []string
-		ModName string
-		TagName string
+		Attributes []string
+		Name       string
+		Tag        string
 	}
 	builder = &strings.Builder{}
 
-	if len(tagName) == 0 {
-		logger.Error(fmt.Sprintf("tagName for %s is empty, skipping renderers generation", modName))
+	if len(module.Tag) == 0 {
+		logger.Error(fmt.Sprintf("tag for %s is empty, skipping renderers generation", module.Name))
 		return builder, nil
 	}
 
 	data := Render{
-		ModName: modName,
-		TagName: tagName,
+		Name: module.Name,
+		Tag:  module.Tag,
 	}
 
 	for _, attr := range module.Attributes {
 		switch {
 		case len(attr.Enum) > 0:
-			data.Values = append(data.Values, enumAttribute(attr))
+			data.Attributes = append(data.Attributes, enumAttribute(attr))
 		case strings.HasPrefix(attr.Type, "Option("):
-			data.Values = append(data.Values, optionAttribute(attr))
+			data.Attributes = append(data.Attributes, optionAttribute(attr))
 		case strings.HasPrefix(attr.Type, "List("):
-			data.Values = append(data.Values, listAttribute(attr))
+			data.Attributes = append(data.Attributes, listAttribute(attr))
 		default:
-			data.Values = append(data.Values, attributeWithDefault(attr))
+			data.Attributes = append(data.Attributes, attributeWithDefault(attr))
 		}
 	}
 

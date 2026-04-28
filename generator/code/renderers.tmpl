@@ -1,23 +1,23 @@
-{{$count := len .Values}}
+{{$count := len .Attributes}}
 // --- Renderers ---
 
-/// render creates a Lustre Element for a {{.ModName}}
+/// render creates a Lustre Element for a {{.Name}}
 ///
 pub fn render(
 {{- if gt $count 0 }}
- model: {{.ModName}},
+ model: {{.Name}},
 {{- else -}}
- _: {{.ModName}},
+ _: {{.Name}},
 {{- end }}
  attributes: List(Attribute(msg)),
  children: List(Element(msg)),
 ) -> Element(msg) {
  element.element(
-   "{{.TagName}}",
+   "{{.Tag}}",
 {{- if gt $count 0 }}
    list.flatten([
      [
-{{- range .Values}}
+{{- range .Attributes}}
        {{.}},
 {{- end}}
      ],
@@ -31,14 +31,4 @@ pub fn render(
  )
 }
 
-{{ if gt $count 1 }}
-/// render_config creates a Lustre Element from a {{.ModName}} Config
-///
-pub fn render_config(
- c: Config,
- attributes: List(Attribute(msg)),
- children: List(Element(msg)),
-) -> Element(msg) {
- render(from_config(c), attributes, children)
-}
-{{- end }}
+{{ template "renderers_config.tmpl" . -}}
