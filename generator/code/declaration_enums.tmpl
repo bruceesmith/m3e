@@ -1,11 +1,11 @@
 {{ define "declaration_enums.tmpl" }}
 {{- range .Attributes -}}
 {{- if ne .Enum "" }}
-/// {{ .Name }} is {{ .Description }}
+/// {{ .Type }} is {{ .Description }}
 ///
-pub type {{ .Name }} {
- Is{{ .Name }}
- IsNot{{ .Name }}
+pub type {{ .Type }} {
+ Is{{ .Type }}
+ IsNot{{ .Type }}
 }
 {{- end -}}
 {{ end }}
