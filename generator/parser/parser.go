@@ -119,13 +119,18 @@ func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName str
 		modName = "Mlist"
 	}
 	mod = Module{
-		Description: *declaration.Description,
-		Tag:         *declaration.TagName,
-		Slots:       MakeSlots(declaration.Slots),
-		Name:        modName,
-		SnakeName:   strcase.ToSnake(modName),
+		Tag:       *declaration.TagName,
+		Slots:     MakeSlots(declaration.Slots),
+		Name:      modName,
+		SnakeName: strcase.ToSnake(modName),
 	}
+	desc := *declaration.Description
+	first, remainder := desc[0], desc[1:]
+	desc = strings.ToLower(string(first)) + string(remainder)
+	desc = strings.ReplaceAll(desc, "\n", "\n//// ")
+	mod.Description = desc
+
 	mod.Attributes, enumNames = MakeAttributes(modName, declaration.Attributes)
-	logger.TraceID("module", fmt.Sprintf("Module %s: %s\n", modName, mod.Description))
+	logger.TraceID("module", fmt.Sprintf("Module %s", modName))
 	return modName, mod, enumNames
 }
