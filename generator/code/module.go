@@ -10,20 +10,16 @@ import (
 	"github.com/bruceesmith/logger"
 )
 
-var (
-	enumerations = make([]string, 0)
-)
-
 type GleamModule struct {
-	header          *strings.Builder
-	imports         *strings.Builder
-	slotDefs        *strings.Builder
-	slotFn          *strings.Builder
-	viewDeclaration *strings.Builder
-	configuration   *strings.Builder
-	constructor     *strings.Builder
-	setters         *strings.Builder
-	renderers       *strings.Builder
+	header        *strings.Builder
+	imports       *strings.Builder
+	slotDefs      *strings.Builder
+	slotFn        *strings.Builder
+	declaration   *strings.Builder
+	configuration *strings.Builder
+	constructor   *strings.Builder
+	setters       *strings.Builder
+	renderers     *strings.Builder
 }
 
 func GenerateModule(directory string, module parser.Module, version string, date string) (err error) {
@@ -41,14 +37,12 @@ func GenerateModule(directory string, module parser.Module, version string, date
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
-	var definers []string
-	gleam.imports, definers, err = imports(module)
+	gleam.imports, err = imports(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
-	enumerations = append(enumerations, definers...)
 
-	gleam.viewDeclaration, err = declaration(module)
+	gleam.declaration, err = declaration(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
@@ -85,7 +79,7 @@ func GenerateModule(directory string, module parser.Module, version string, date
 func write(file *os.File, gleam GleamModule) {
 	fmt.Fprint(file, gleam.header.String())
 	fmt.Fprint(file, gleam.imports.String())
-	fmt.Fprint(file, gleam.viewDeclaration.String())
+	fmt.Fprint(file, gleam.declaration.String())
 	fmt.Fprint(file, gleam.slotDefs.String())
 	fmt.Fprint(file, gleam.configuration.String())
 	fmt.Fprint(file, gleam.constructor.String())

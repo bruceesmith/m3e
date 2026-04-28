@@ -1,8 +1,4 @@
 
-{{- if .imports }}
-
-{{- range .imports }}
-import {{ . }}
-{{- end }}
-
+{{- range $module, $types := . }}
+import {{ $module }}{{ $types }}
 {{- end }}

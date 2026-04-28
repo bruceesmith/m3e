@@ -2,12 +2,9 @@ package code
 
 import (
 	"fmt"
-	"generator/internal"
 	"generator/parser"
 	"strings"
 	"text/template"
-
-	"github.com/iancoleman/strcase"
 )
 
 var importTmpl *template.Template
@@ -20,39 +17,20 @@ func init() {
 	}
 }
 
-func imports(module parser.Module) (builder *strings.Builder, names []string, err error) {
+func imports(module parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
-	names = make([]string, 0)
+	imports := module.Imports
 
-	imports := make([]string, 0, len(module.Attributes))
-	imports = append(imports, "lustre/attribute.{type Attribute}")
-	imports = append(imports, "lustre/element.{type Element}")
+	imports["lustre/attribute"] = ".{type Attribute}"
+	imports["lustre/element"] = ".{type Element}"
 	if len(module.Attributes) > 0 {
-		imports = append(imports, "gleam/list")
-		imports = append(imports, "m3e/attr")
+		imports["gleam/list"] = ""
+		imports["m3e/attr"] = ""
 	}
-	for _, attr := range module.Attributes {
-		for impModule, impType := range attr.Imports {
-			switch {
-			case strings.HasPrefix(impModule, "gleam/") || strings.HasPrefix(impModule, "lustre/") || strings.HasPrefix(impModule, "m3e/"):
-				imports = append(imports, impModule+impType)
-			default:
-				imports = append(imports, "m3e/"+impModule+".{type "+strcase.ToCamel(impModule)+"}")
-				if attr.Type != "NumberString" {
-					names = append(names, impModule)
-				}
-			}
-		}
-	}
-	imports = internal.Unique(imports)
-	names = internal.Unique(names)
 
-	data := map[string][]string{
-		"imports": imports,
-	}
-	err = importTmpl.Execute(builder, data)
+	err = importTmpl.Execute(builder, imports)
 	if err != nil {
-		return nil, nil, fmt.Errorf("imports failed to save result: %w", err)
+		return nil, fmt.Errorf("imports failed to save result: %w", err)
 	}
 	return
 }

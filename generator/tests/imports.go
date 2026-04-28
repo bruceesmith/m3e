@@ -21,39 +21,21 @@ func init() {
 
 func imports(module parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
+	imports := module.Imports
 
-	imports := make(map[string]struct{}, 0)
-
-	for _, attr := range module.Attributes {
-		for k, v := range attr.Imports {
-			switch {
-			case strings.HasPrefix(k, "gleam/") ||
-				strings.HasPrefix(k, "lustre/") ||
-				strings.HasPrefix(k, "m3e/"):
-				if !strings.HasPrefix(k, "gleam/option") {
-					imports[k+v] = struct{}{}
-				}
-			default:
-				imports["m3e/"+k] = struct{}{}
-			}
-		}
-	}
 	if len(module.Attributes) > 1 {
-		imports["m3e/"+strcase.ToSnake(module.Name)+".{Config}"] = struct{}{}
+		imports["m3e/"+strcase.ToSnake(module.Name)] = ".{Config}"
 	} else {
-		imports["m3e/"+strcase.ToSnake(module.Name)] = struct{}{}
+		imports["m3e/"+strcase.ToSnake(module.Name)] = ""
 	}
-	imports["gleam/list"] = struct{}{}
-	imports["gleam/option.{None, Some} as opt"] = struct{}{}
-	imports["gleeunit/should"] = struct{}{}
-	imports["lustre/attribute"] = struct{}{}
-	imports["lustre/element"] = struct{}{}
-	imports["lustre/element/html"] = struct{}{}
+	imports["gleam/list"] = ""
+	imports["gleam/option"] = ".{None, Some} as opt"
+	imports["gleeunit/should"] = ""
+	imports["lustre/attribute"] = ""
+	imports["lustre/element"] = ""
+	imports["lustre/element/html"] = ""
 
-	data := map[string]map[string]struct{}{
-		"imports": imports,
-	}
-	err = importTmpl.Execute(builder, data)
+	err = importTmpl.Execute(builder, imports)
 	if err != nil {
 		return nil, fmt.Errorf("imports failed to save result: %w", err)
 	}

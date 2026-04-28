@@ -31,9 +31,6 @@ type RefinedAttribute struct {
 	QualifiedDefault string
 	// CamelCase type name
 	Type string
-	// snake_case import paths of any types used in the attribute ..
-	// key is the snake_case import path, value is the optional CamelCase type name
-	Imports map[string]string
 	// Is this a Gleam built-in attribute, e.g. Bool, Float...
 	Standard bool
 }
@@ -67,6 +64,11 @@ type Module struct {
 	Name string
 	// snake_case name of the TS and Gleam module
 	SnakeName string
+	// Set of all import strings for the Module
+	// The key is the module name, e.g. "gleam/int" or "lustre/element"
+	// The value is the remainder of the import line, e.g. for "lustre/element"
+	// it would be ".{type Element}"
+	Imports map[string]string
 }
 
 // Definition is the internal representation of the entire CEM manifest for
@@ -79,6 +81,10 @@ type Definition struct {
 // Parse extracts the module declarations and enumerated types from the manifest and M3e code
 func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err error) {
 	var (
+		// enumerations represents the set of externally defined enumerated types
+		// used across all modules. "Externally defined" means that the type is
+		// defined in a small TypeScript module (but not in a TypeScript module
+		// which defines an M3E component)
 		enumerations = make(map[string]struct{}, 0)
 	)
 	// Extract attributes, slots and the names of enumerated types from the module declaration
@@ -93,10 +99,10 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 				if definition.Modules == nil {
 					definition.Modules = make(map[string]Module)
 				}
-				name, mod, enumNames := handleModule(declaration)
+				name, mod, moduleImports := handleModule(declaration)
 				definition.Modules[name] = mod
-				for _, enumName := range enumNames {
-					enumerations[enumName] = struct{}{}
+				for _, moduleName := range moduleImports {
+					enumerations[moduleName] = struct{}{}
 				}
 			}
 		}
@@ -111,7 +117,7 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 }
 
 // handleModule extracts the module name, attributes and slots from a single module declaration
-func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName string, mod Module, enumNames []string) {
+func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName string, mod Module, moduleImports []string) {
 	modName = strings.TrimSuffix(strings.TrimPrefix(declaration.Name, "M3e"), "Element")
 	if modName == "List" {
 		modName = "Mlist"
@@ -121,6 +127,7 @@ func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName str
 		Slots:     MakeSlots(declaration.Slots),
 		Name:      modName,
 		SnakeName: strcase.ToSnake(modName),
+		Imports:   make(map[string]string),
 	}
 	desc := *declaration.Description
 	first, remainder := desc[0], desc[1:]
@@ -128,7 +135,7 @@ func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName str
 	desc = strings.ReplaceAll(desc, "\n", "\n//// ")
 	mod.Description = desc
 
-	mod.Attributes, enumNames = MakeAttributes(modName, declaration.Attributes)
+	mod.Attributes, mod.Imports, moduleImports = MakeAttributes(modName, declaration.Attributes)
 	logger.TraceID("module", fmt.Sprintf("Module %s", modName))
-	return modName, mod, enumNames
+	return modName, mod, moduleImports
 }

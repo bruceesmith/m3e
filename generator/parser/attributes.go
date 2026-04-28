@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"generator/cem"
+	"generator/internal"
 	"regexp"
 	"strings"
 
@@ -27,12 +28,16 @@ var (
 //
 // In addition to returning the internal representation, it also returns a list of enum
 // type names that are referenced by the attributes.
-func MakeAttributes(modName string, attrs []cem.Attribute) (refined []RefinedAttribute, enumNames []string) {
+func MakeAttributes(modName string, attrs []cem.Attribute) (
+	refined []RefinedAttribute,
+	attributeImports map[string]string,
+	moduleImports []string) {
+
 	refined = make([]RefinedAttribute, 0, len(attrs))
+	attributeImports = make(map[string]string)
+
 	for _, attr := range attrs {
-		attribute := RefinedAttribute{
-			Imports: make(map[string]string),
-		}
+		attribute := RefinedAttribute{}
 
 		// Extract & standardise the variable tyoe of this Attribute
 		var isOption bool
@@ -44,14 +49,19 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (refined []RefinedAtt
 		}
 
 		// Adjust the attribute properties based on its type and options
-		enums := attribute.imports(isOption)
+		var externalModule string
+		attributeImports, externalModule = attribute.imports(isOption)
+		if externalModule != "" {
+			moduleImports = append(moduleImports, externalModule)
+		}
+
 		attribute.name(attr.Name)
 		attribute.description(attr.Description)
 		attribute.type_()
 		attribute.defawlt(attr.Default, modName)
 		refined = append(refined, attribute)
-		enumNames = append(enumNames, enums...)
 	}
+	moduleImports = internal.Unique(moduleImports)
 	return
 }
 
@@ -160,34 +170,30 @@ func (attr *RefinedAttribute) description(desc *string) {
 }
 
 // imports returns the list of imports required by the attribute
-func (attr *RefinedAttribute) imports(isOption bool) (names []string) {
-	names = make([]string, 0, len(attr.Imports))
+func (attr *RefinedAttribute) imports(isOption bool) (importStrings map[string]string, importedModule string) {
+	importStrings = make(map[string]string)
 	if isOption {
-		attr.Imports["gleam/option"] = ".{type Option, None}"
+		importStrings["gleam/option"] = ".{type Option, None}"
 		if attr.Type == "Option(String)" {
-			attr.Imports["gleam/function"] = ""
+			importStrings["gleam/function"] = ""
 		}
 	}
 	if attr.Type == "Float" || attr.Type == "Option(Float)" {
-		attr.Imports["gleam/float"] = ""
+		importStrings["gleam/float"] = ""
 	}
-	if !attr.Standard {
+	if attr.Type == "NumberString" {
+		importStrings["m3e/number_string"] = ""
+	}
+	if !attr.Standard && attr.Type != "NumberString" {
 		matches := optionRe.FindStringSubmatch(attr.Type)
 		if len(matches) == 2 {
-			imp := strcase.ToSnake(matches[1])
-			attr.Imports[imp] = ""
+			// example: Option(BadgePosition) - an optional externally defined type
+			importStrings["m3e/"+strcase.ToSnake(matches[1])] = ".{type " + matches[1] + "}"
+			importedModule = strcase.ToSnake(matches[1])
 		} else {
-			imp := strcase.ToSnake(attr.Type)
-			attr.Imports[imp] = ""
-		}
-	}
-	for k := range attr.Imports {
-		switch {
-		case strings.HasPrefix(k, "gleam/") || strings.HasPrefix(k, "lustre/") || strings.HasPrefix(k, "m3e/"):
-		default:
-			if attr.Type != "NumberString" {
-				names = append(names, k)
-			}
+			// example: AppBarSize - an externally defined type
+			importStrings["m3e/"+strcase.ToSnake(attr.Type)] = ".{type " + attr.Type + "}"
+			importedModule = strcase.ToSnake(attr.Type)
 		}
 	}
 	return
