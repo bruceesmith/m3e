@@ -68,7 +68,7 @@ func GenerateModule(directory string, module parser.Module, version string, date
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
 
-	gleam.setters, err = setters(module.Name, module)
+	gleam.setters, err = setters(module)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}

@@ -1,15 +1,15 @@
-{{ $module := .Module }}{{ $count := len .Values }}
+{{ $module := .Name }}{{ $count := len .Attributes }}
 // --- Setters ---
-{{ range $index, $val := .Values }}
+{{ range $index, $val := .Attributes }}
 {{- /* Add a blank line between functions */}}
 {{- if $index }}{{ "\n" }}{{ end }}
-/// {{ $val.Field }} sets the value of {{ $val.Field }} for this {{ $module }}.
+/// {{ $val.Name }} sets the value of {{ $val.Name }} for this {{ $module }}.
 ///
-{{ getSignature $count $val.Field $module $val.Type }} {
+{{ getSignature $count $val.Name $module $val.Type }} {
  {{- if gt $count 1 }}
- {{ $module }}(..record, {{ $val.Field }}: {{ $val.Field }})
+ {{ $module }}(..record, {{ $val.Name }}: {{ $val.Name }})
  {{- else }}
- {{ $module }}({{ $val.Field }}: {{ $val.Field }})
+ {{ $module }}({{ $val.Name }}: {{ $val.Name }})
  {{- end }}
 }
 {{- end }}
