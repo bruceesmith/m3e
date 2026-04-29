@@ -19,9 +19,10 @@ type tsTypeDef struct {
 	Values []string
 }
 
-func typeDefinitions(fileName string, identifier string) (defs []tsTypeDef, err error) {
+func typeDefinitions(fileName string, identifier string, buf []tsTypeDef) (types []tsTypeDef, err error) {
 	var code []byte
 
+	buf = buf[:0]
 	code, err = os.ReadFile(fileName)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read %s: %w", fileName, err)
@@ -34,14 +35,13 @@ func typeDefinitions(fileName string, identifier string) (defs []tsTypeDef, err 
 	tree := parser.Parse(code, nil)
 	defer tree.Close()
 
-	w := &walker{code: code, cursor: tree.RootNode().Walk(), types: make([]tsTypeDef, 0)}
+	w := &walker{code: code, cursor: tree.RootNode().Walk(), types: buf}
 	defer w.cursor.Close()
 
 	err = w.walk(tree.RootNode(), fileName, identifier, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to walk the syntax tree: %w", err)
 	}
-
 	return w.types, nil
 }
 
@@ -62,9 +62,7 @@ func (w *walker) handleNode(node tree_sitter.Node, fileName string, typeName str
 	switch kind {
 	case "export_statement":
 		if td == nil {
-			td = &tsTypeDef{}
-		} else {
-			td = &tsTypeDef{}
+			td = &tsTypeDef{Values: make([]string, 0, 30)}
 		}
 		err = w.walk(&node, fileName, typeName, td)
 		if err != nil {

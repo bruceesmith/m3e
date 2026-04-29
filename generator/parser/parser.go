@@ -8,32 +8,9 @@ package parser
 import (
 	"fmt"
 	"generator/cem"
+	"generator/metrics"
 	"strings"
-
-	"github.com/bruceesmith/logger"
-	"github.com/iancoleman/strcase"
 )
-
-// RefinedAttribute is an internal representation of a cem Attribute
-type RefinedAttribute struct {
-	// snake_case name of the attribute
-	Name string
-	// CamelCase name of the enum type, if applicable
-	Enum string
-	// Human-readable description of the attribute
-	Description string
-	// Gleam version of the TS default value
-	Default string
-	// Name of the default value, if applicable
-	DefaultName string
-	// Default value prefixed by the module name, used in test generation
-	// Only used for semantic booleans in the same module
-	QualifiedDefault string
-	// CamelCase type name
-	Type string
-	// Is this a Gleam built-in attribute, e.g. Bool, Float...
-	Standard bool
-}
 
 // Slot is an internal representation of a cem Slot
 type Slot struct {
@@ -57,7 +34,7 @@ type Module struct {
 	// HTML tag of the component
 	Tag string
 	// Attributes is a list of refined attributes for the module
-	Attributes []RefinedAttribute
+	Attributes []Attribute
 	// Slots is a list of refined slots for the module
 	Slots []Slot
 	// CamelCase name of the TS and Gleam module
@@ -71,22 +48,18 @@ type Module struct {
 	Imports map[string]string
 }
 
-// Definition is the internal representation of the entire CEM manifest for
-// the Material 3 Expression components
-type Definition struct {
-	Modules      map[string]Module
-	Enumerations map[string][]Enumeration
-}
-
 // Parse extracts the module declarations and enumerated types from the manifest and M3e code
 func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err error) {
-	var (
-		// enumerations represents the set of externally defined enumerated types
-		// used across all modules. "Externally defined" means that the type is
-		// defined in a small TypeScript module (but not in a TypeScript module
-		// which defines an M3E component)
-		enumerations = make(map[string]struct{}, 0)
-	)
+
+	// enumerations represents the set of externally defined enumerated types
+	// used across all modules. "Externally defined" means that the type is
+	// defined in a small TypeScript module (but not in a TypeScript module
+	// which defines an M3E component)
+	enumerations := make(map[string]struct{}, metrics.EstimatedEnumerations)
+	definition = Definition{
+		Modules: make(map[string]Module, len(manifest.Modules)),
+	}
+
 	// Extract attributes, slots and the names of enumerated types from the module declaration
 	for _, module := range manifest.Modules {
 		if len(module.Declarations) > 0 {
@@ -96,12 +69,8 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 				strings.Contains(declaration.Name, "M3e") &&
 				strings.Contains(declaration.Name, "Element") {
 
-				if definition.Modules == nil {
-					definition.Modules = make(map[string]Module)
-				}
-				name, mod, moduleImports := handleModule(declaration)
-				definition.Modules[name] = mod
-				for _, moduleName := range moduleImports {
+				externalModules := definition.module(declaration)
+				for _, moduleName := range externalModules {
 					enumerations[moduleName] = struct{}{}
 				}
 			}
@@ -109,33 +78,9 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 	}
 
 	// Extract the definitions of enumerated types from the M3e code
-	definition.Enumerations, err = enumeratedTypes(m3eCode, enumerations)
+	err = definition.enumerations(m3eCode, enumerations)
 	if err != nil {
 		return definition, fmt.Errorf("failed to gather all enumerated types: %w", err)
 	}
 	return
-}
-
-// handleModule extracts the module name, attributes and slots from a single module declaration
-func handleModule(declaration cem.JavaScriptModuleDeclarationsElem) (modName string, mod Module, moduleImports []string) {
-	modName = strings.TrimSuffix(strings.TrimPrefix(declaration.Name, "M3e"), "Element")
-	if modName == "List" {
-		modName = "Mlist"
-	}
-	mod = Module{
-		Tag:       *declaration.TagName,
-		Slots:     MakeSlots(declaration.Slots),
-		Name:      modName,
-		SnakeName: strcase.ToSnake(modName),
-		Imports:   make(map[string]string),
-	}
-	desc := *declaration.Description
-	first, remainder := desc[0], desc[1:]
-	desc = strings.ToLower(string(first)) + string(remainder)
-	desc = strings.ReplaceAll(desc, "\n", "\n//// ")
-	mod.Description = desc
-
-	mod.Attributes, mod.Imports, moduleImports = MakeAttributes(modName, declaration.Attributes)
-	logger.TraceID("module", fmt.Sprintf("Module %s", modName))
-	return modName, mod, moduleImports
 }
