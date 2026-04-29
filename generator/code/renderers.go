@@ -68,6 +68,12 @@ func attributeWithDefault(attr parser.RefinedAttribute) string {
           default_%s,
         )`
 	const format2 = `attr.with_default(
+                 "%s",
+                 number_string.to_string(model.%s),
+                 number_string.to_string(default_%s),
+               )`
+
+	const format3 = `attr.with_default(
           "%s",
           %s.to_string(model.%s),
           %s.to_string(default_%s),
@@ -75,7 +81,10 @@ func attributeWithDefault(attr parser.RefinedAttribute) string {
 	if attr.Type == "String" {
 		return fmt.Sprintf(format1, attr.Name, attr.Name, attr.Name)
 	}
-	return fmt.Sprintf(format2, attr.Name, strcase.ToSnake(attr.Type), attr.Name, strcase.ToSnake(attr.Type), attr.Name)
+	if attr.Type == "number_string.NumberString" {
+		return fmt.Sprintf(format2, attr.Name, attr.Name, attr.Name)
+	}
+	return fmt.Sprintf(format3, attr.Name, strcase.ToSnake(attr.Type), attr.Name, strcase.ToSnake(attr.Type), attr.Name)
 }
 
 func enumAttribute(attr parser.RefinedAttribute) string {
