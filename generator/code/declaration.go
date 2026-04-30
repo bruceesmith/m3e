@@ -27,7 +27,7 @@ func init() {
 	}
 }
 
-func declaration(module parser.Module) (builder *strings.Builder, err error) {
+func declaration(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 
 	err = declarationTmpl.Execute(builder, module)

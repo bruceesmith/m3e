@@ -5,6 +5,7 @@ go 1.26
 require (
 	github.com/bruceesmith/echidna v1.1.10
 	github.com/bruceesmith/logger v1.3.8
+	github.com/bruceesmith/set v1.0.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/knadh/koanf v1.5.0
 	github.com/tree-sitter/go-tree-sitter v0.25.0

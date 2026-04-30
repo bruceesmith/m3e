@@ -22,7 +22,7 @@ type GleamModule struct {
 	renderers     *strings.Builder
 }
 
-func GenerateModule(directory string, module parser.Module, version string, date string) (err error) {
+func GenerateModule(directory string, module *parser.Module, version string, date string) (err error) {
 	gleam := GleamModule{}
 	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", module.Name, module.Description))
 

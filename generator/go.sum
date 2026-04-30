@@ -37,6 +37,8 @@ github.com/bruceesmith/echidna v1.1.10 h1:kkwAYcsnVpJs+gvi5F2VoElwdSIXcs6jhVlLFU
 github.com/bruceesmith/echidna v1.1.10/go.mod h1:4zZpyqOVyjv8EemDbicltZhB5zla5ozdEWBK2G6TrxQ=
 github.com/bruceesmith/logger v1.3.8 h1:T+5Me9eBvR+rBQ5+RM6zEgg6IcZoURK2f4D/YcD2Zik=
 github.com/bruceesmith/logger v1.3.8/go.mod h1:kepglmsCKZYATp9ECH8T4pOJTSlHf3FZDI1fypblI64=
+github.com/bruceesmith/set v1.0.0 h1:/I8X0RBDPZPeSBCjqRf4ab3dXF1wT3iRB2v1+aIer74=
+github.com/bruceesmith/set v1.0.0/go.mod h1:Qk1FhQekpL1HkqRYShpn8fLqA0xe9l/SpRGpzTDsRZM=
 github.com/bruceesmith/terminator v1.1.6 h1:tdcW4hFHY7XjeW/Wsp70/zCuLo3wJBISdL3j3PhxCGk=
 github.com/bruceesmith/terminator v1.1.6/go.mod h1:RksG1MYsW9y4RsT8BXW/4J5yAQ8bRb0pdq3rsCOJUoE=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

@@ -20,7 +20,7 @@ func init() {
 	}
 }
 
-func config(module parser.Module) (builder *strings.Builder, err error) {
+func config(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 	if len(module.Attributes) == 0 {
 		return builder, nil

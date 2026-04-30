@@ -1,0 +1,6 @@
+{{- define "render_multiple.tmpl" }}
+  let mod = {{ .Snake }}.new()
+{{ $snake := .Snake }}{{- range .Attributes }}
+  let mod_{{ .Name }} = {{ $snake }}.new() |> {{ $snake }}.{{ .Name }}({{ printf "%s" .Test.Value }})
+{{- end -}}
+{{ end -}}

@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/bruceesmith/echidna"
+	"github.com/bruceesmith/logger"
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/file"
@@ -81,7 +82,7 @@ func Utility() (err error) {
 }
 
 func run(ctx context.Context, cmd *cli.Command) (err error) {
-	fmt.Println("Starting generation...see", cfg.Destination)
+	logger.Info("Starting generation...")
 
 	// Parse the Custom Element Manifest into a SchemaJson struct
 	var manifest cem.SchemaJson

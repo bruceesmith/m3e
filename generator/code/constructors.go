@@ -20,7 +20,7 @@ func init() {
 	}
 }
 
-func constructors(module parser.Module) (builder *strings.Builder, err error) {
+func constructors(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 
 	if err = constructorTmpl.Execute(builder, module); err != nil {

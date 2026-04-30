@@ -82,5 +82,12 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 	if err != nil {
 		return definition, fmt.Errorf("failed to gather all enumerated types: %w", err)
 	}
+
+	// During module creation it is not possible to discover test values for external
+	// enumeration types. So now set that up
+	definition.EnumerationTestValues = make(map[string]string, len(definition.Enumerations))
+	for externalType, enumeration := range definition.Enumerations {
+		definition.EnumerationTestValues[externalType] = enumeration[1].Name
+	}
 	return
 }

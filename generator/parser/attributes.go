@@ -9,7 +9,28 @@ import (
 	"strings"
 
 	"github.com/bruceesmith/logger"
+	"github.com/bruceesmith/set"
 	"github.com/iancoleman/strcase"
+)
+
+// Test represents each of the pieces of data required to generate unit tests
+type Test struct {
+	// Attribute string value for use in setter tests.
+	AttributeValue string
+	// Value used in setter unit tests. This must be different than
+	// the default value. It needs to be qualified if the value comes
+	// from an external module.
+	Value string
+}
+
+type Property = uint8
+
+const (
+	External Property = iota
+	List
+	Optional
+	SemanticBoolean
+	Standard
 )
 
 // Attribute is an internal representation of a cem Attribute
@@ -27,12 +48,12 @@ type Attribute struct {
 	// Default value prefixed by the module name, used in test generation
 	// Only used for semantic booleans in the same module
 	QualifiedDefault string
+	// Unit test data
+	Test Test
 	// CamelCase type name
 	Type string
-	// Is this a Gleam built-in attribute, e.g. Bool, Float...
-	Standard bool
-	// Is this a Gleam Option(*) attribute?
-	Option bool
+	// Properties of an Attribute
+	Properties *set.Set[Property]
 }
 
 var (
@@ -61,12 +82,12 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 	moduleImports = make(map[string]string)
 
 	for _, attr := range attrs {
-		attribute := Attribute{Name: attr.Name}
+		attribute := Attribute{Name: attr.Name, Properties: set.New[Property]()}
 
 		// Extract & standardise the variable tyoe of this Attribute
 		if attr.Type == nil {
 			attribute.Type = "String"
-			attribute.Standard = true
+			attribute.Properties.Add(Standard)
 		} else {
 			attribute.varType(attr.Type.Text, attr.Default)
 		}
@@ -84,6 +105,7 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 		attribute.name(attr.Name)
 		attribute.description(attr.Description)
 		attribute.defawlt(attr.Default, modName)
+		attribute.testValues(modName)
 		refined = append(refined, attribute)
 	}
 	externalModules = internal.Unique(externalModules)
@@ -91,7 +113,7 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 }
 
 // -----------------------------------------------------------
-// --- Default, DefaultName, QualifiedDefault handling -------
+// --- Default, DefaultName, QualifiedDefault, TestValue handling -------
 // -----------------------------------------------------------
 
 // defawlt computes the default values for the attribute
@@ -193,6 +215,85 @@ func (attr *Attribute) qualifiedDefault(modName string) {
 	}
 }
 
+// testValues sets the TestValue field
+func (attr *Attribute) testValues(modName string) {
+	switch {
+	case attr.Type == "Date":
+		attr.Test = Test{
+			Value:          `date.new(2026, 04, 30)`,
+			AttributeValue: `"2026-04-30"`,
+		}
+	case attr.Type == "Float":
+		attr.Test = Test{
+			Value:          `42.0`,
+			AttributeValue: `"42.0"`,
+		}
+	case attr.Type == "List(String)":
+		attr.Test = Test{
+			Value:          `["test1", "test2"]`,
+			AttributeValue: `"test1, test2"`,
+		}
+	case attr.Type == "number_string.NumberString":
+		attr.Test = Test{
+			Value:          `number_string.StringVal("10")`,
+			AttributeValue: `"10"`,
+		}
+	case attr.Type == "Option(Date)":
+		attr.Test = Test{
+			Value:          `Some(date.from_string("2026-04-30"))`,
+			AttributeValue: `"2026-04-30"`,
+		}
+	case attr.Type == "Option(ElevationLevel)":
+		attr.Test = Test{
+			Value:          `Some(elevation_level.Two)`,
+			AttributeValue: `"2"`,
+		}
+	case attr.Type == "Option(Float)":
+		attr.Test = Test{
+			Value:          `Some(42.0)`,
+			AttributeValue: `"42.0"`,
+		}
+	case attr.Type == "Option(HeadingLevel)":
+		attr.Test = Test{
+			Value:          `Some(heading_level.Three)`,
+			AttributeValue: `"3"`,
+		}
+	case attr.Type == "Option(LinkTarget)":
+		attr.Test = Test{
+			Value:          `Some(link_target.Self)`,
+			AttributeValue: `"_self"`,
+		}
+	case attr.Type == "Option(ShapeName)":
+		attr.Test = Test{
+			Value:          `Some(shape_name.FourLeafClover)`,
+			AttributeValue: `"4-leaf-clover"`,
+		}
+	case attr.Type == "Option(String)":
+		attr.Test = Test{
+			Value:          `Some("test")`,
+			AttributeValue: `"test"`,
+		}
+	case attr.IsOptional():
+		logger.TraceID("testvalue", "missing test value setting for "+attr.Type)
+		attr.Test = Test{
+			Value:          `"None"`,
+			AttributeValue: `"nothing"`,
+		}
+	case attr.Type == "String":
+		attr.Test = Test{
+			Value:          `"test"`,
+			AttributeValue: `"test"`,
+		}
+	case attr.Enum != "":
+		attr.Test = Test{
+			Value:          strcase.ToSnake(modName) + "." + "Is" + attr.Enum,
+			AttributeValue: `""`,
+		}
+	default:
+		logger.TraceID("testvalue", "no way to set a test value for type "+attr.Type)
+	}
+}
+
 // -----------------------------------------------------------
 // --- Description, Imports, Name handling ---
 // -----------------------------------------------------------
@@ -209,7 +310,7 @@ func (attr *Attribute) description(desc *string) {
 // imports returns the list of imports required by the attribute
 func (attr *Attribute) imports() (importStrings map[string]string, importedModule string) {
 	importStrings = make(map[string]string)
-	if attr.Option {
+	if attr.IsOptional() {
 		importStrings["gleam/option"] = ".{type Option, None}"
 		if attr.Type == "Option(String)" {
 			importStrings["gleam/function"] = ""
@@ -221,7 +322,7 @@ func (attr *Attribute) imports() (importStrings map[string]string, importedModul
 	if attr.Type == "number_string.NumberString" {
 		importStrings["m3e/number_string"] = ""
 	}
-	if !attr.Standard && attr.Type != "number_string.NumberString" && attr.Enum == "" {
+	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && attr.Enum == "" {
 		matches := optionRe.FindStringSubmatch(attr.Type)
 		if len(matches) == 2 {
 			// example: Option(BadgePosition) - an optional externally defined type
@@ -234,6 +335,14 @@ func (attr *Attribute) imports() (importStrings map[string]string, importedModul
 		}
 	}
 	return
+}
+
+func (attr *Attribute) IsOptional() bool {
+	return attr.Properties.Contains(Optional)
+}
+
+func (attr *Attribute) IsStandard() bool {
+	return attr.Properties.Contains(Standard)
 }
 
 // name adjusts the name of the attribute to be suitable for Gleam
@@ -249,12 +358,13 @@ func (attr *Attribute) name(n string) {
 // --- Type, Standard, Option handling ---
 // -----------------------------------------------------------
 
-// boolean handle boolean attributes (replacing a simple Bool by a Gleam
+// boolean handles boolean attributes (replacing a simple Bool by a Gleam
 // semantic enumeration to avoid "boolean blindness")
 func (attr *Attribute) boolean(text string) (matched bool) {
 	if text == "boolean" {
 		attr.Enum = strcase.ToCamel(attr.Name)
 		attr.Type = attr.Enum
+		attr.Properties.Add(SemanticBoolean)
 		return true
 	}
 	return false
@@ -263,8 +373,8 @@ func (attr *Attribute) boolean(text string) (matched bool) {
 func (attr *Attribute) function(text string) (matched bool) {
 	if strings.HasPrefix(text, "(") {
 		attr.Type = "String"
-		attr.Standard = true
-		attr.Option = false
+		attr.Properties.Add(Standard)
+		attr.Properties.Delete(Optional)
 		return true
 	}
 	return false
@@ -273,8 +383,8 @@ func (attr *Attribute) function(text string) (matched bool) {
 func (attr *Attribute) linkTarget(text string, adef *string) (matched bool) {
 	if text == "LinkTarget" && adef != nil && *adef == `""` {
 		attr.Type = "Option(" + text + ")"
-		attr.Standard = false
-		attr.Option = true
+		attr.Properties.Delete(Standard)
+		attr.Properties.Add(Optional)
 		return true
 	}
 	return false
@@ -296,26 +406,27 @@ func (attr *Attribute) listOf(text string) (matched bool) {
 	if !ok {
 		return false
 	}
-	var type_ string
-	type_, attr.Standard = attr.toGleamStandardType(tx)
-	if attr.Standard {
-		attr.Type = "List(" + type_ + ")"
+	attr.toGleamStandardType(tx)
+	if attr.IsStandard() {
+		attr.Type = "List(" + attr.Type + ")"
 	} else {
 		attr.Type = "List(" + strcase.ToSnake(tx) + "." + tx + ")"
 	}
+	attr.Properties.Add(List)
 	return true
 }
 
 // nullOrUndefined checks if the type in the manifest matches `something | null | undefined'
 func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool) {
 	if matches := typeRe.FindStringSubmatch(text); len(matches) == 3 {
-		attr.Option = matches[2] != ""
-		attr.Type, attr.Standard = attr.toGleamStandardType(matches[1])
-
-		if !attr.Standard && attr.Option && adef != nil && *adef != `""` && *adef != "null" && *adef != "undefined" {
-			attr.Option = false
+		if matches[2] != "" {
+			attr.Properties.Add(Optional)
 		}
-		if attr.Option {
+		attr.toGleamStandardType(matches[1])
+		if !attr.IsStandard() && attr.IsOptional() && adef != nil && *adef != `""` && *adef != "null" && *adef != "undefined" {
+			attr.Properties.Delete(Optional)
+		}
+		if attr.IsOptional() {
 			attr.Type = "Option(" + attr.Type + ")"
 		}
 		return true
@@ -326,8 +437,8 @@ func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool)
 func (attr *Attribute) number(text string) (matched bool) {
 	if text == `number | "all"` {
 		attr.Type = "number_string.NumberString"
-		attr.Standard = false
-		attr.Option = false
+		attr.Properties.Delete(Standard)
+		attr.Properties.Delete(Optional)
 		return true
 	}
 	return false
@@ -359,8 +470,8 @@ func (attr *Attribute) varType(text string, adef *string) {
 	// No rule matched, so assume the type in the manifest can be translated
 	// directly to a Gleam Type
 	attr.Type = text
-	attr.Standard = false
-	attr.Option = false
+	attr.Properties.Delete(Standard)
+	attr.Properties.Delete(Optional)
 }
 
 // handleRegexTypes handles more complex manifest types
@@ -368,7 +479,7 @@ func (attr *Attribute) handleRegexTypes(text string, adef *string) (matched bool
 
 	// Does the type in the manifest match 'something | somethingelse'
 	if matches1 := typeRe1.FindStringSubmatch(text); len(matches1) == 3 {
-		attr.Type, attr.Standard = attr.toGleamStandardType(matches1[1])
+		attr.toGleamStandardType(matches1[1])
 		return true
 	}
 
@@ -376,9 +487,12 @@ func (attr *Attribute) handleRegexTypes(text string, adef *string) (matched bool
 }
 
 // toGleamStandardType maps manifest types to Gleam's standard types
-func (attr *Attribute) toGleamStandardType(text string) (tipe string, isStd bool) {
+func (attr *Attribute) toGleamStandardType(text string) {
 	if s, ok := gleamStandardTypes[text]; ok {
-		return s, true
+		attr.Properties.Add(Standard)
+		attr.Type = s
+	} else {
+		attr.Properties.Delete(Standard)
+		attr.Type = text
 	}
-	return text, false
 }

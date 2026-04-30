@@ -20,7 +20,7 @@ func init() {
 	}
 }
 
-func slots(module parser.Module) (builder *strings.Builder, err error) {
+func slots(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 	if len(module.Slots) == 0 {
 		return builder, nil

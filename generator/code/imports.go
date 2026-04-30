@@ -20,7 +20,7 @@ func init() {
 	}
 }
 
-func imports(module parser.Module) (builder *strings.Builder, err error) {
+func imports(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 	imports := module.Imports
 

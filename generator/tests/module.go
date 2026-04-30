@@ -17,11 +17,25 @@ type GleamModule struct {
 	configuration *strings.Builder
 	// constructor     *strings.Builder
 	// setters         *strings.Builder
-	// renderers       *strings.Builder
-	slots *strings.Builder
+	renderers *strings.Builder
+	slots     *strings.Builder
 }
 
-func GenerateTests(directory string, module parser.Module, version string, date string) (err error) {
+func GenerateTests(directory string, module *parser.Module, enumerations map[string]string, version string, date string) (err error) {
+
+	// Enrich each Attribute with Test values
+	renderAttributes := make([]parser.Attribute, 0, len(module.Attributes))
+	for _, v := range module.Attributes {
+		attr := v
+		if !v.IsStandard() && !v.IsOptional() && v.Enum == "" {
+			attr.Test.Value = strcase.ToSnake(v.Type) + "." + enumerations[v.Type]
+			attr.Test.AttributeValue = strcase.ToSnake(v.Type) + ".to_string(" + attr.Test.Value + ")"
+		}
+		renderAttributes = append(renderAttributes, attr)
+	}
+	renderModule := module
+	renderModule.Attributes = renderAttributes
+
 	gleam := GleamModule{}
 	logger.TraceID("tests", fmt.Sprintf("Module %s", module.Name))
 
@@ -58,10 +72,10 @@ func GenerateTests(directory string, module parser.Module, version string, date 
 	// 	return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	// }
 
-	// gleam.renderers, err = render(modName, module.Tag, module.Attributes)
-	// if err != nil {
-	// 	return fmt.Errorf("processing of %s failed: %w", module.Name, err)
-	// }
+	gleam.renderers, err = render(module)
+	if err != nil {
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
+	}
 
 	gleam.slots, err = slots(module)
 	if err != nil {
@@ -78,6 +92,6 @@ func write(file *os.File, gleam GleamModule) {
 	fmt.Fprint(file, gleam.configuration.String())
 	// fmt.Fprint(file, gleam.constructor.String())
 	// fmt.Fprint(file, gleam.setters.String())
-	// fmt.Fprint(file, gleam.renderers.String())
+	fmt.Fprint(file, gleam.renderers.String())
 	fmt.Fprint(file, gleam.slots.String())
 }

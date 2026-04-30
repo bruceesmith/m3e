@@ -28,7 +28,7 @@ func init() {
 	}
 }
 
-func setters(module parser.Module) (builder *strings.Builder, err error) {
+func setters(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 
 	if err = settersTmpl.Execute(builder, module); err != nil {

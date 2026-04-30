@@ -1,0 +1,115 @@
+package code
+
+import (
+	"testing"
+)
+
+func Test_header(t *testing.T) {
+	tests := []struct {
+		name          string // description of this test case
+		componentName string
+		desc          string
+		version       string
+		date          string
+		want          string
+		wantErr       bool
+	}{
+		{
+			name:          "Basic header",
+			componentName: "Button",
+			desc:          "A simple button component",
+			version:       "1.0.0",
+			date:          "2023-10-27",
+			want: `
+//// Button is a simple button component
+////
+//// This file was generated:
+////    By: m3e/generator version 1.0.0
+////    At: 2023-10-27
+////
+////          DO NOT EDIT
+////
+`,
+			wantErr: false,
+		},
+		{
+			name:          "Multiline description",
+			componentName: "Card",
+			desc:          "A card component\nwith multiple lines",
+			version:       "1.1.0",
+			date:          "2023-10-28",
+			want: `
+//// Card is a card component
+//// with multiple lines
+////
+//// This file was generated:
+////    By: m3e/generator version 1.1.0
+////    At: 2023-10-28
+////
+////          DO NOT EDIT
+////
+`,
+			wantErr: false,
+		},
+		{
+			name:          "Special characters",
+			componentName: "Icon",
+			desc:          "Icon component with $pecial character#!",
+			version:       "2.0.0",
+			date:          "2023-12-25",
+			want: `
+//// Icon is icon component with $pecial character#!
+////
+//// This file was generated:
+////    By: m3e/generator version 2.0.0
+////    At: 2023-12-25
+////
+////          DO NOT EDIT
+////
+`,
+			wantErr: false,
+		},
+		{
+			name:          "Empty version and date",
+			componentName: "Badge",
+			desc:          "Badge component",
+			version:       "",
+			date:          "",
+			want: `
+//// Badge is badge component
+////
+//// This file was generated:
+////    By: m3e/generator version
+////    At:
+////
+////          DO NOT EDIT
+////
+`,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, gotErr := header(tt.componentName, tt.desc, tt.version, tt.date)
+			if gotErr != nil {
+				if !tt.wantErr {
+					t.Errorf("header() failed: %v", gotErr)
+				}
+				return
+			}
+			if tt.wantErr {
+				t.Fatal("header() succeeded unexpectedly")
+			}
+			if got.String() != tt.want {
+				t.Errorf("header() = %v, want %v", got.String(), tt.want)
+			}
+		})
+	}
+}
+
+func Test_init(t *testing.T) {
+	// init() is called automatically, so we just check if headerTmpl is initialized.
+	if headerTmpl == nil {
+		t.Error("headerTmpl was not initialized")
+	}
+}

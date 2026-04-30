@@ -9,7 +9,7 @@ func Generate(definition *parser.Definition, destination string, version string,
 	// Write out the code for each Gleam wrapper module - one Gleam file for
 	// each TypeScript Element defined in the manifest
 	for modName, module := range definition.Modules {
-		err = GenerateModule(destination, module, version, date)
+		err = GenerateModule(destination, &module, version, date)
 		if err != nil {
 			return fmt.Errorf("generation of code for module %s failed: %w", modName, err)
 		}

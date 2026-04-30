@@ -1,0 +1,4 @@
+{{ define "render_single.tmpl" }}
+  let mod = {{ .Snake }}.new({{ .QualifiedDefault }})
+  let mod_{{ .Name }} = {{ .Snake }}.new({{ .Value }})
+{{ end }}
