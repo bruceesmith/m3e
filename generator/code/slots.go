@@ -1,6 +1,7 @@
 package code
 
 import (
+	_ "embed"
 	"fmt"
 	"generator/parser"
 	"strings"
@@ -8,17 +9,21 @@ import (
 )
 
 var (
-	slotsDefTmpl *template.Template
-	slotsFnTmpl  *template.Template
+	//go:embed slots_def.tmpl
+	slotsDefTmplStr string
+	slotsDefTmpl    *template.Template
+	//go:embed slots_fn.tmpl
+	slotsFnTmplStr string
+	slotsFnTmpl    *template.Template
 )
 
 func init() {
 	var err error
-	slotsDefTmpl, err = template.ParseFiles("code/slots_def.tmpl")
+	slotsDefTmpl, err = template.New("slots_def").Parse(slotsDefTmplStr)
 	if err != nil {
 		panic(err)
 	}
-	slotsFnTmpl, err = template.ParseFiles("code/slots_fn.tmpl")
+	slotsFnTmpl, err = template.New("slots_fn").Parse(slotsFnTmplStr)
 	if err != nil {
 		panic(err)
 	}

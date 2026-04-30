@@ -1,6 +1,7 @@
 package code
 
 import (
+	_ "embed"
 	"fmt"
 	"generator/parser"
 	"os"
@@ -17,11 +18,13 @@ func GenerateEnums(destination string, enumerations map[string][]parser.Enumerat
 	return
 }
 
+//go:embed enumerated_types.tmpl
+var enumTmplStr string
 var enumTmpl *template.Template
 
 func init() {
 	var err error
-	enumTmpl, err = template.ParseFiles("code/enumerated_types.tmpl")
+	enumTmpl, err = template.New("enumerated_types").Parse(enumTmplStr)
 	if err != nil {
 		panic(err)
 	}

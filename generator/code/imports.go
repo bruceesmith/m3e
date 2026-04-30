@@ -1,17 +1,20 @@
 package code
 
 import (
+	_ "embed"
 	"fmt"
 	"generator/parser"
 	"strings"
 	"text/template"
 )
 
+//go:embed imports.tmpl
+var importTmplStr string
 var importTmpl *template.Template
 
 func init() {
 	var err error
-	importTmpl, err = template.ParseFiles("code/imports.tmpl")
+	importTmpl, err = template.New("imports").Parse(importTmplStr)
 	if err != nil {
 		panic(err)
 	}

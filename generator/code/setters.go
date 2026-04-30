@@ -1,12 +1,15 @@
 package code
 
 import (
+	_ "embed"
 	"fmt"
 	"generator/parser"
 	"strings"
 	"text/template"
 )
 
+//go:embed setters.tmpl
+var settersTmplStr string
 var settersTmpl *template.Template
 
 func init() {
@@ -19,7 +22,7 @@ func init() {
 			return fmt.Sprintf("pub fn %s(record: %s, %s: %s) -> %s", field, comp, field, t, comp)
 		},
 	}
-	settersTmpl, err = template.New("setters.tmpl").Funcs(funcMap).ParseFiles("code/setters.tmpl")
+	settersTmpl, err = template.New("setters").Funcs(funcMap).Parse(settersTmplStr)
 	if err != nil {
 		panic(err)
 	}

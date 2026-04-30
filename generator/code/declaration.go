@@ -1,12 +1,15 @@
 package code
 
 import (
+	"embed"
 	"fmt"
 	"generator/parser"
 	"strings"
 	"text/template"
 )
 
+//go:embed declaration*.tmpl
+var declarationFS embed.FS
 var declarationTmpl *template.Template
 
 func init() {
@@ -18,12 +21,7 @@ func init() {
 			return fmt.Sprintf("%s is %s", tipe, first+rest)
 		},
 	}
-	declarationTmpl, err = template.New("declaration.tmpl").Funcs(funcMap).ParseFiles(
-		"code/declaration.tmpl",
-		"code/declaration_type.tmpl",
-		"code/declaration_enums.tmpl",
-		"code/declaration_defaults.tmpl",
-	)
+	declarationTmpl, err = template.New("declaration.tmpl").Funcs(funcMap).ParseFS(declarationFS, "declaration*.tmpl")
 	if err != nil {
 		panic(err)
 	}

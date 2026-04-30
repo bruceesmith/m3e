@@ -1,20 +1,20 @@
 package code
 
 import (
+	"embed"
 	"fmt"
 	"generator/parser"
 	"strings"
 	"text/template"
 )
 
+//go:embed config*.tmpl
+var configFS embed.FS
 var configTmpl *template.Template
 
 func init() {
 	var err error
-	configTmpl, err = template.ParseFiles(
-		"code/config.tmpl",
-		"code/config_type.tmpl",
-		"code/config_default.tmpl")
+	configTmpl, err = template.ParseFS(configFS, "config*.tmpl")
 	if err != nil {
 		panic(err)
 	}

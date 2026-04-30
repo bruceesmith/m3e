@@ -1,23 +1,20 @@
 package code
 
 import (
+	"embed"
 	"fmt"
 	"generator/parser"
 	"strings"
 	"text/template"
 )
 
+//go:embed constructors*.tmpl
+var constructorFS embed.FS
 var constructorTmpl *template.Template
 
 func init() {
 	var err error
-	constructorTmpl, err = template.ParseFiles(
-		"code/constructors.tmpl",
-		"code/constructors_from_config.tmpl",
-		"code/constructors_new_zero.tmpl",
-		"code/constructors_new_one.tmpl",
-		"code/constructors_new_multi.tmpl",
-	)
+	constructorTmpl, err = template.ParseFS(constructorFS, "constructors*.tmpl")
 	if err != nil {
 		panic(err)
 	}

@@ -1,17 +1,20 @@
 package tests
 
 import (
+	_ "embed"
 	"fmt"
 	"generator/parser"
 	"strings"
 	"text/template"
 )
 
+//go:embed slots.tmpl
+var slotsTmplStr string
 var slotsTmpl *template.Template
 
 func init() {
 	var err error
-	slotsTmpl, err = template.ParseFiles("tests/slots.tmpl")
+	slotsTmpl, err = template.New("slots").Parse(slotsTmplStr)
 	if err != nil {
 		panic(err)
 	}

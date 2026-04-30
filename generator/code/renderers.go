@@ -1,6 +1,7 @@
 package code
 
 import (
+	"embed"
 	"fmt"
 	"generator/parser"
 	"strings"
@@ -10,14 +11,13 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+//go:embed renderers*.tmpl
+var renderersFS embed.FS
 var renderTmpl *template.Template
 
 func init() {
 	var err error
-	renderTmpl, err = template.ParseFiles(
-		"code/renderers.tmpl",
-		"code/renderers_config.tmpl",
-	)
+	renderTmpl, err = template.ParseFS(renderersFS, "renderers*.tmpl")
 	if err != nil {
 		panic(err)
 	}

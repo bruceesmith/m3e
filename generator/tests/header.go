@@ -1,16 +1,19 @@
 package tests
 
 import (
+	_ "embed"
 	"fmt"
 	"strings"
 	"text/template"
 )
 
+//go:embed header.tmpl
+var headerTmplStr string
 var headerTmpl *template.Template
 
 func init() {
 	var err error
-	headerTmpl, err = template.ParseFiles("tests/header.tmpl")
+	headerTmpl, err = template.New("header").Parse(headerTmplStr)
 	if err != nil {
 		panic(fmt.Errorf("header failed to parse its template: %w", err))
 	}
