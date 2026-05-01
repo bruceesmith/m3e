@@ -1,0 +1,10 @@
+{{ define "setters_case.tmpl" }}
+    #(
+      {{ .A.Test.Value }},
+      {{ .Mod }}.from_config(
+        {{ .Mod }}.Config(..{{ .Mod }}.default_config(),
+          {{ .A.Name }}: {{ .A.Test.Value }},
+        ),
+      ),
+    ),
+{{- end }}

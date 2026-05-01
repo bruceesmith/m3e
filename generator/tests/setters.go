@@ -9,9 +9,9 @@ import (
 	"text/template"
 )
 
-//go:embed render*.tmpl
-var renderTmplFS embed.FS
-var renderTmpl *template.Template
+//go:embed setters*.tmpl
+var settersTmplFS embed.FS
+var settersTmpl *template.Template
 
 func init() {
 	var err error
@@ -27,18 +27,21 @@ func init() {
 			return dict, nil
 		},
 	}
-	renderTmpl, err = template.New("render.tmpl").Funcs(funcMap).ParseFS(renderTmplFS, "render*.tmpl")
+	settersTmpl, err = template.New("setters.tmpl").Funcs(funcMap).ParseFS(settersTmplFS, "setters*.tmpl")
 	if err != nil {
-		panic(fmt.Errorf("render failed to parse its template: %w", err))
+		panic(err)
 	}
 }
 
-func render(module *parser.Module) (builder *strings.Builder, err error) {
+func setters(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
-
-	err = renderTmpl.Execute(builder, module)
-	if err != nil {
-		return nil, fmt.Errorf("render failed to save result: %w", err)
+	if len(module.Attributes) < 2 {
+		return
 	}
-	return
+
+	if err = settersTmpl.Execute(builder, module); err != nil {
+		return nil, fmt.Errorf("setters failed to save result: %w", err)
+	}
+
+	return builder, nil
 }

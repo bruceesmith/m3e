@@ -1,0 +1,17 @@
+{{ $module := .SnakeName }}{{ $count := len .Attributes }}
+{{- range $index, $val := .Attributes }}
+
+pub fn {{ $module }}_{{ $val.Name }}_test() {
+  let mod = {{ $module }}.new()
+  let cases = [
+{{- template "setters_case.tmpl" (dict "Mod" $module "A" . ) }}
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    {{ $module }}.{{ $val.Name }}(mod, field)
+    |> should.equal(expected)
+  })
+}
+{{- end }}
