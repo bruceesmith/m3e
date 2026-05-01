@@ -24,13 +24,14 @@ type Test struct {
 	Value string
 }
 
+// Property is a feature of an Attribute, used instead of hard-coded "field = va;ue" tests
 type Property = uint8
 
 const (
-	List Property = iota
-	Optional
-	SemanticBoolean
-	Standard
+	List            Property = iota // Attribute.Type = List(something)
+	Optional                        // Attribute.Type = Option(something)
+	SemanticBoolean                 // attribute is a semantic boolean
+	Standard                        // attribute is one of the intrinsic Gleam types
 )
 
 // Attribute is an internal representation of a cem Attribute
@@ -41,13 +42,17 @@ type Attribute struct {
 	SemBool string
 	// Human-readable description of the attribute
 	Description string
-	// Gleam version of the TS default value
+	// Gleam version of the TS default value. When the attribute is externally
+	// declared, Default is a qualified value where the qualifier is the
+	// snake_case name of the defining external module, e.g. app_bar_size.Small
 	Default string
-	// Name of the default value, if applicable
+	// Name of the default value, if applicable, e.g. default_size
 	DefaultName string
 	// Default value prefixed by the module name for semantic booleans, used
 	// in test generation. When the attribute is not a semantic boolean, this
-	// field is populated with the (unqualified) Default value
+	// field is populated with the (unqualified) Default value. Examples:
+	// app_bar.IsNotCentered for a semantic boolean defined in the app_bar.gleam
+	// module, and the literal "First page" defined in the paginator.gleam module
 	QualifiedDefault string
 	// Unit test data
 	Test Test
@@ -272,7 +277,7 @@ func (attr *Attribute) testValues(modName string) {
 	case attr.Type == "List(String)":
 		attr.Test = Test{
 			Value:          `["test1", "test2"]`,
-			AttributeValue: `"test1, test2"`,
+			AttributeValue: `"test1 test2"`,
 		}
 	case attr.Type == "number_string.NumberString":
 		attr.Test = Test{

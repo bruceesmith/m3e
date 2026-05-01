@@ -18,9 +18,6 @@ type Definition struct {
 	Modules map[string]Module
 	// Key is the Camelcase name of the external enumeration type
 	Enumerations map[string][]Enumeration
-	// Key is the CamelCase name of the external enumeration type
-	// Value is the second of its Enumeration constants
-	EnumerationTestValues map[string]string
 }
 
 func (d *Definition) enumerations(m3eSource string, enumerations map[string]struct{}) (err error) {

@@ -88,10 +88,7 @@ func attributeWithDefault(attr parser.Attribute) string {
 }
 
 func listAttribute(attr parser.Attribute) string {
-	const format = `attribute.attribute(
-          "%s",
-          list.fold(model.%s, "", fn(acc, s) { acc <> " " <> s }),
-        )`
+	const format = `attr.list_of_string("%s",model.%s)`
 	return fmt.Sprintf(format, attr.Name, attr.Name)
 }
 
