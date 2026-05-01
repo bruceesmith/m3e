@@ -20,7 +20,11 @@ pub opaque type TimeZone {
   Offset(sign: Direction, amount: Time)
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
+
+pub const default = Zulu
+
+// --- Constructors ---
 
 /// from_string parses a timezone string into a TimeZone value.
 ///
@@ -29,19 +33,20 @@ pub fn from_string(input: String) -> Result(TimeZone, String) {
     "Z" -> Ok(Zulu)
     _ -> {
       let sign = string.slice(input, 0, 1)
+      use s <- result.try(offset_sign_(sign))
       let time_part = string.drop_start(input, 1)
       use tim <- result.try(time.from_string(time_part))
-      offset_(sign, tim)
+      offset_(s, tim)
     }
   }
 }
 
 /// new creates a TimeZone value from a direction string and a Time value.
 ///
-pub fn new(direction: String, time: Time) -> Result(TimeZone, String) {
-  use os <- result.try(offset_sign_(direction))
+pub fn new(direction: Direction, time: Time) -> Result(TimeZone, String) {
+  use os <- result.try(offset_(direction, time))
 
-  Ok(Offset(os, time))
+  Ok(os)
 }
 
 /// zulu returns the Zulu timezone (UTC).
@@ -50,7 +55,7 @@ pub fn zulu() -> TimeZone {
   Zulu
 }
 
-// --- RENDERING ---
+// --- Rendering ---
 
 /// to_string converts a TimeZone value to a string representation.
 ///
@@ -63,11 +68,10 @@ pub fn to_string(tz: TimeZone) -> String {
   }
 }
 
-// -- PRIVATE HELPER FUNCTIONS ---
+// --- Private Helper Functions
 
-fn offset_(sign: String, time: Time) -> Result(TimeZone, String) {
-  use os <- result.try(offset_sign_(sign))
-  case os {
+fn offset_(sign: Direction, time: Time) -> Result(TimeZone, String) {
+  case sign {
     Plus ->
       validate_limit(
         time,
