@@ -79,7 +79,7 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 	desc = strings.ReplaceAll(desc, "\n", "\n//// ")
 	mod.Description = desc
 
-	mod.Attributes, mod.Imports, externalModules = MakeAttributes(name, declaration.Attributes)
+	mod.Attributes, mod.Imports, mod.TestImports, externalModules = MakeAttributes(name, declaration.Attributes)
 	logger.TraceID("module", fmt.Sprintf("Module %s", name))
 	d.Modules[name] = mod
 	return externalModules

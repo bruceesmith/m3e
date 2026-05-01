@@ -41,11 +41,16 @@ type Module struct {
 	Name string
 	// snake_case name of the TS and Gleam module
 	SnakeName string
-	// Set of all import strings for the Module
+	// Set of all import strings for the Gleam code module
 	// The key is the module name, e.g. "gleam/int" or "lustre/element"
 	// The value is the remainder of the import line, e.g. for "lustre/element"
 	// it would be ".{type Element}"
 	Imports map[string]string
+	// Set of all import strings for the Gleam unit test module
+	// The key is the module name, e.g. "gleam/int" or "lustre/element"
+	// The value is the remainder of the import line, e.g. for "lustre/element"
+	// it would be ".{type Element}"
+	TestImports map[string]string
 }
 
 // Parse extracts the module declarations and enumerated types from the manifest and M3e code

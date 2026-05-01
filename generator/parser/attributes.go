@@ -59,6 +59,17 @@ type Attribute struct {
 }
 
 var (
+	commonImports = map[string]string{
+		"lustre/attribute": ".{type Attribute}",
+		"lustre/element":   ".{type Element}",
+	}
+	commonTestImports = map[string]string{
+		"gleam/list":          "",
+		"gleeunit/should":     "",
+		"lustre/attribute":    "",
+		"lustre/element":      "",
+		"lustre/element/html": "",
+	}
 	gleamStandardTypes = map[string]string{
 		"boolean": "Bool",
 		"number":  "Float",
@@ -78,10 +89,14 @@ var (
 func MakeAttributes(modName string, attrs []cem.Attribute) (
 	refined []Attribute,
 	moduleImports map[string]string,
+	testModuleImports map[string]string,
 	externalModules []string) {
 
 	refined = make([]Attribute, 0, len(attrs))
-	moduleImports = make(map[string]string)
+	moduleImports = make(map[string]string, len(commonImports)+10)
+	maps.Copy(moduleImports, commonImports)
+	testModuleImports = make(map[string]string, len(commonTestImports)+10)
+	maps.Copy(testModuleImports, commonTestImports)
 
 	for _, attr := range attrs {
 		attribute := Attribute{Name: attr.Name, Properties: set.New[Property]()}
@@ -96,11 +111,13 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 
 		// Adjust the attribute properties based on its type and options
 		var (
-			attrImports    = make(map[string]string)
-			externalModule string
+			attrImports     = make(map[string]string)
+			externalModule  string
+			testAttrImports = make(map[string]string)
 		)
-		attrImports, externalModule = attribute.imports()
+		attrImports, testAttrImports, externalModule = attribute.imports()
 		maps.Copy(moduleImports, attrImports)
+		maps.Copy(testModuleImports, testAttrImports)
 		if externalModule != "" {
 			externalModules = append(externalModules, externalModule)
 		}
@@ -110,6 +127,20 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 		attribute.testValues(modName)
 		refined = append(refined, attribute)
 	}
+
+	switch {
+	case len(refined) == 0:
+		testModuleImports["m3e/"+strcase.ToSnake(modName)] = ""
+	case len(refined) == 1:
+		moduleImports["gleam/list"] = ""
+		moduleImports["m3e/attr"] = ""
+		testModuleImports["m3e/"+strcase.ToSnake(modName)] = ""
+	default:
+		moduleImports["gleam/list"] = ""
+		moduleImports["m3e/attr"] = ""
+		testModuleImports["m3e/"+strcase.ToSnake(modName)] = ".{Config}"
+	}
+
 	externalModules = internal.Unique(externalModules)
 	return
 }
@@ -317,19 +348,22 @@ func (attr *Attribute) description(desc *string) {
 }
 
 // imports returns the list of imports required by the attribute
-func (attr *Attribute) imports() (importStrings map[string]string, importedModule string) {
+func (attr *Attribute) imports() (importStrings map[string]string, testImportStrings map[string]string, importedModule string) {
 	importStrings = make(map[string]string)
+	testImportStrings = make(map[string]string)
 	if attr.IsOptional() {
 		importStrings["gleam/option"] = ".{type Option, None}"
 		if attr.Type == "Option(String)" {
 			importStrings["gleam/function"] = ""
 		}
+		testImportStrings["gleam/option"] = ".{None, Some}"
 	}
 	if attr.Type == "Float" || attr.Type == "Option(Float)" {
 		importStrings["gleam/float"] = ""
 	}
 	if attr.Type == "number_string.NumberString" {
 		importStrings["m3e/number_string"] = ""
+		testImportStrings["m3e/number_string"] = ""
 	}
 	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && !attr.IsSemBool() {
 		matches := optionRe.FindStringSubmatch(attr.Type)
@@ -337,10 +371,12 @@ func (attr *Attribute) imports() (importStrings map[string]string, importedModul
 			// example: Option(BadgePosition) - an optional externally defined type
 			importStrings["m3e/"+strcase.ToSnake(matches[1])] = ".{type " + matches[1] + "}"
 			importedModule = strcase.ToSnake(matches[1])
+			testImportStrings["m3e/"+strcase.ToSnake(matches[1])] = ""
 		} else {
 			// example: AppBarSize - an externally defined type
 			importStrings["m3e/"+strcase.ToSnake(attr.Type)] = ".{type " + attr.Type + "}"
 			importedModule = strcase.ToSnake(attr.Type)
+			testImportStrings["m3e/"+strcase.ToSnake(attr.Type)] = ""
 		}
 	}
 	return
