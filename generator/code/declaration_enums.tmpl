@@ -1,6 +1,6 @@
 {{ define "declaration_enums.tmpl" }}
 {{- range .Attributes -}}
-{{- if ne .Enum "" }}
+{{- if ne .SemBool "" }}
 /// {{ getDescription .Type .Description }}
 ///
 pub type {{ .Type }} {

@@ -84,7 +84,8 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 	}
 
 	// During module creation it is not possible to discover test values for external
-	// enumeration types. So now set that up
+	// enumeration types. So now set that up so that these can be added into
+	// Attributes during test generation
 	definition.EnumerationTestValues = make(map[string]string, len(definition.Enumerations))
 	for externalType, enumeration := range definition.Enumerations {
 		definition.EnumerationTestValues[externalType] = enumeration[1].Name

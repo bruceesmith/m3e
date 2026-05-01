@@ -21,14 +21,14 @@ type GleamModule struct {
 	slots     *strings.Builder
 }
 
-func GenerateTests(directory string, module *parser.Module, enumerations map[string]string, version string, date string) (err error) {
+func GenerateTests(directory string, module *parser.Module, enumerationTestValues map[string]string, version string, date string) (err error) {
 
-	// Enrich each Attribute with Test values
+	// Enrich each Attribute with Test values for the render tests
 	renderAttributes := make([]parser.Attribute, 0, len(module.Attributes))
 	for _, v := range module.Attributes {
 		attr := v
-		if !v.IsStandard() && !v.IsOptional() && v.Enum == "" {
-			attr.Test.Value = strcase.ToSnake(v.Type) + "." + enumerations[v.Type]
+		if !v.IsStandard() && !v.IsOptional() && !v.IsSemBool() && v.Type != "Date" && v.Type != "Option(Date)" && v.Type != "number_string.NumberString" {
+			attr.Test.Value = strcase.ToSnake(v.Type) + "." + enumerationTestValues[v.Type]
 			attr.Test.AttributeValue = strcase.ToSnake(v.Type) + ".to_string(" + attr.Test.Value + ")"
 		}
 		renderAttributes = append(renderAttributes, attr)
@@ -72,7 +72,7 @@ func GenerateTests(directory string, module *parser.Module, enumerations map[str
 	// 	return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	// }
 
-	gleam.renderers, err = render(module)
+	gleam.renderers, err = render(renderModule)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}

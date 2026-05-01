@@ -43,8 +43,8 @@ func render(module *parser.Module) (builder *strings.Builder, err error) {
 
 	for _, attr := range module.Attributes {
 		switch {
-		case len(attr.Enum) > 0:
-			data.Attributes = append(data.Attributes, enumAttribute(attr))
+		case attr.IsSemBool():
+			data.Attributes = append(data.Attributes, semBoolAttribute(attr))
 		case strings.HasPrefix(attr.Type, "Option("):
 			data.Attributes = append(data.Attributes, optionAttribute(attr))
 		case strings.HasPrefix(attr.Type, "List("):
@@ -87,10 +87,6 @@ func attributeWithDefault(attr parser.Attribute) string {
 	return fmt.Sprintf(format3, attr.Name, strcase.ToSnake(attr.Type), attr.Name, strcase.ToSnake(attr.Type), attr.Name)
 }
 
-func enumAttribute(attr parser.Attribute) string {
-	return fmt.Sprintf("attr.boolean(\"%s\", model.%s == Is%s)", attr.Name, attr.Name, attr.Enum)
-}
-
 func listAttribute(attr parser.Attribute) string {
 	const format = `attribute.attribute(
           "%s",
@@ -117,4 +113,8 @@ func optionAttribute(attr parser.Attribute) string {
 	}
 	module := strcase.ToSnake(strings.TrimSuffix(strings.TrimPrefix(attr.Type, "Option("), ")"))
 	return fmt.Sprintf(format2, attr.Name, attr.Name, module, attr.Name)
+}
+
+func semBoolAttribute(attr parser.Attribute) string {
+	return fmt.Sprintf("attr.boolean(\"%s\", model.%s == Is%s)", attr.Name, attr.Name, attr.SemBool)
 }

@@ -37,8 +37,8 @@ const (
 type Attribute struct {
 	// snake_case name of the attribute
 	Name string
-	// CamelCase name of the enum type, if applicable
-	Enum string
+	// CamelCase name of the semantic boolean type, if applicable
+	SemBool string
 	// Human-readable description of the attribute
 	Description string
 	// Gleam version of the TS default value
@@ -133,7 +133,7 @@ type defaultTransformFunc func(attr *Attribute, def string) (string, bool)
 // defaultTransformRules is the set of transformation rules for defaults
 var defaultTransformRules = []defaultTransformFunc{
 	func(a *Attribute, d string) (string, bool) {
-		return "IsNot" + a.Enum, a.Enum != ""
+		return "IsNot" + a.SemBool, a.IsSemBool()
 	},
 	func(a *Attribute, d string) (string, bool) {
 		matched, _ := regexp.Match(`^(\d+)$`, []byte(d))
@@ -210,7 +210,7 @@ func (attr *Attribute) nilDefault(modName string) {
 // qualifiedDefault creates the possibly qualified default for use in tests
 func (attr *Attribute) qualifiedDefault(modName string) {
 	attr.QualifiedDefault = attr.Default
-	if attr.Enum != "" {
+	if attr.IsSemBool() {
 		attr.QualifiedDefault = strcase.ToSnake(modName) + "." + attr.Default
 	}
 }
@@ -220,8 +220,8 @@ func (attr *Attribute) testValues(modName string) {
 	switch {
 	case attr.Type == "Date":
 		attr.Test = Test{
-			Value:          `date.new(2026, 04, 30)`,
-			AttributeValue: `"2026-04-30"`,
+			Value:          `date.today_utc()`,
+			AttributeValue: `date.to_string(date.today_utc())`,
 		}
 	case attr.Type == "Float":
 		attr.Test = Test{
@@ -240,8 +240,8 @@ func (attr *Attribute) testValues(modName string) {
 		}
 	case attr.Type == "Option(Date)":
 		attr.Test = Test{
-			Value:          `Some(date.from_string("2026-04-30"))`,
-			AttributeValue: `"2026-04-30"`,
+			Value:          `Some(date.today_utc())`,
+			AttributeValue: `date.to_string(date.today_utc())`,
 		}
 	case attr.Type == "Option(ElevationLevel)":
 		attr.Test = Test{
@@ -284,9 +284,9 @@ func (attr *Attribute) testValues(modName string) {
 			Value:          `"test"`,
 			AttributeValue: `"test"`,
 		}
-	case attr.Enum != "":
+	case attr.IsSemBool():
 		attr.Test = Test{
-			Value:          strcase.ToSnake(modName) + "." + "Is" + attr.Enum,
+			Value:          strcase.ToSnake(modName) + "." + "Is" + attr.SemBool,
 			AttributeValue: `""`,
 		}
 	default:
@@ -322,7 +322,7 @@ func (attr *Attribute) imports() (importStrings map[string]string, importedModul
 	if attr.Type == "number_string.NumberString" {
 		importStrings["m3e/number_string"] = ""
 	}
-	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && attr.Enum == "" {
+	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && !attr.IsSemBool() {
 		matches := optionRe.FindStringSubmatch(attr.Type)
 		if len(matches) == 2 {
 			// example: Option(BadgePosition) - an optional externally defined type
@@ -335,14 +335,6 @@ func (attr *Attribute) imports() (importStrings map[string]string, importedModul
 		}
 	}
 	return
-}
-
-func (attr *Attribute) IsOptional() bool {
-	return attr.Properties.Contains(Optional)
-}
-
-func (attr *Attribute) IsStandard() bool {
-	return attr.Properties.Contains(Standard)
 }
 
 // name adjusts the name of the attribute to be suitable for Gleam
@@ -359,11 +351,11 @@ func (attr *Attribute) name(n string) {
 // -----------------------------------------------------------
 
 // boolean handles boolean attributes (replacing a simple Bool by a Gleam
-// semantic enumeration to avoid "boolean blindness")
+// semantic boolean to avoid "boolean blindness")
 func (attr *Attribute) boolean(text string) (matched bool) {
 	if text == "boolean" {
-		attr.Enum = strcase.ToCamel(attr.Name)
-		attr.Type = attr.Enum
+		attr.SemBool = strcase.ToCamel(attr.Name)
+		attr.Type = attr.SemBool
 		attr.Properties.Add(SemanticBoolean)
 		return true
 	}
@@ -495,4 +487,23 @@ func (attr *Attribute) toGleamStandardType(text string) {
 		attr.Properties.Delete(Standard)
 		attr.Type = text
 	}
+}
+
+// -----------------------------------------------------------
+// --- Predicates to examine an Attribute -------
+// -----------------------------------------------------------
+
+// IsOptional returns true if the Attribute's type is Option(something)
+func (attr *Attribute) IsOptional() bool {
+	return attr.Properties.Contains(Optional)
+}
+
+// IsSemBool returns true if the Attribute is a semantic boolean
+func (attr *Attribute) IsSemBool() bool {
+	return attr.Properties.Contains(SemanticBoolean)
+}
+
+// IsStandard returns true if the Attribute's type is one of the Gleam intrinsic types
+func (attr *Attribute) IsStandard() bool {
+	return attr.Properties.Contains(Standard)
 }
