@@ -7,6 +7,7 @@ import (
 	"maps"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/bruceesmith/logger"
 	"github.com/bruceesmith/set"
@@ -45,8 +46,9 @@ type Attribute struct {
 	Default string
 	// Name of the default value, if applicable
 	DefaultName string
-	// Default value prefixed by the module name, used in test generation
-	// Only used for semantic booleans in the same module
+	// Default value prefixed by the module name for semantic booleans, used
+	// in test generation. When the attribute is not a semantic boolean, this
+	// field is populated with the (unqualified) Default value
 	QualifiedDefault string
 	// Unit test data
 	Test Test
@@ -154,11 +156,20 @@ var defaultTransformRules = []defaultTransformFunc{
 	},
 	func(a *Attribute, d string) (string, bool) { return `""`, strings.HasPrefix(d, "(") },
 	func(a *Attribute, d string) (string, bool) {
-		if a.Type == "IconWeight" {
-			buf := make([]string, 0, 50)
-			return "icon_weight." + MapDigits(d, buf), true
+		if a.Type == "number_string.NumberString" {
+			if strings.Contains(d, ".") {
+				return "number_string.NumberVal(" + d + ")", true
+			}
+			return "number_string.NumberVal(" + d + ".0)", true
 		}
-		return "", false
+		return d, false
+	},
+	func(a *Attribute, d string) (string, bool) {
+		if a.Type != "Float" && unicode.IsDigit(rune(d[0])) {
+			buf := make([]string, 0, 50)
+			return strcase.ToSnake(a.Type) + "." + MapDigits(d, buf), true
+		}
+		return d, false
 	},
 }
 
@@ -173,15 +184,6 @@ func (attr *Attribute) computeDefault(def string) string {
 	}
 
 	if def == "" || def == "[]" {
-		return def
-	}
-	if numericRe.MatchString(def) {
-		if attr.Type == "number_string.NumberString" {
-			if strings.Contains(def, ".") {
-				return "number_string.NumberVal(" + def + ")"
-			}
-			return "number_string.NumberVal(" + def + ".0)"
-		}
 		return def
 	}
 
