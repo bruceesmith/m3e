@@ -138,8 +138,13 @@ var defaultTransformRules = []defaultTransformFunc{
 		return "IsNot" + a.SemBool, a.IsSemBool()
 	},
 	func(a *Attribute, d string) (string, bool) {
-		matched, _ := regexp.Match(`^(\d+)$`, []byte(d))
-		return d + ".0", a.Type == "Float" && matched
+		if a.Type == "Float" {
+			if strings.Contains(d, ".") {
+				return d, true
+			}
+			return d + ".0", true
+		}
+		return d, false
 	},
 	func(a *Attribute, d string) (string, bool) {
 		return "None", strings.HasPrefix(a.Type, "Option(")
@@ -171,6 +176,18 @@ var defaultTransformRules = []defaultTransformFunc{
 		}
 		return d, false
 	},
+	func(a *Attribute, d string) (string, bool) {
+		return d, d == "" || d == "[]"
+	},
+	func(a *Attribute, d string) (string, bool) {
+		if strings.HasPrefix(d, `"`) && strings.HasSuffix(d, `"`) {
+			if a.Type == "String" {
+				return d, true
+			}
+			return strcase.ToSnake(a.Type) + "." + strcase.ToCamel(strings.Trim(d, `"`)), true
+		}
+		return d, false
+	},
 }
 
 // computeDefault computes the default value for the attribute when the manifest
@@ -183,18 +200,7 @@ func (attr *Attribute) computeDefault(def string) string {
 		}
 	}
 
-	if def == "" || def == "[]" {
-		return def
-	}
-
-	if strings.HasPrefix(def, `"`) && strings.HasSuffix(def, `"`) {
-		if attr.Type == "String" {
-			return def
-		}
-		return strcase.ToSnake(attr.Type) + "." + strcase.ToCamel(strings.Trim(def, `"`))
-	}
-
-	logger.TraceID("defs", fmt.Sprintf("unhandled: %s", def))
+	logger.Warn(fmt.Sprintf("unhandled default %s for %s of type %s", def, attr.Name, attr.Type))
 	return def
 }
 
