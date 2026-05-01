@@ -126,6 +126,7 @@ func (attr *Attribute) defawlt(adef *string, modName string) {
 	} else {
 		attr.nilDefault(modName)
 	}
+	// Always must set a sensible default for test case generation of semantic booleans
 	attr.qualifiedDefault(modName)
 }
 
