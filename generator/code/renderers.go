@@ -45,9 +45,9 @@ func render(module *parser.Module) (builder *strings.Builder, err error) {
 		switch {
 		case attr.IsSemBool():
 			data.Attributes = append(data.Attributes, semBoolAttribute(attr))
-		case strings.HasPrefix(attr.Type, "Option("):
+		case attr.IsOptional():
 			data.Attributes = append(data.Attributes, optionAttribute(attr))
-		case strings.HasPrefix(attr.Type, "List("):
+		case attr.IsList():
 			data.Attributes = append(data.Attributes, listAttribute(attr))
 		default:
 			data.Attributes = append(data.Attributes, attributeWithDefault(attr))

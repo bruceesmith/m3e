@@ -27,8 +27,7 @@ type Test struct {
 type Property = uint8
 
 const (
-	External Property = iota
-	List
+	List Property = iota
 	Optional
 	SemanticBoolean
 	Standard
@@ -92,6 +91,7 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 	testModuleImports map[string]string,
 	externalModules []string) {
 
+	snakeName := strcase.ToSnake(modName)
 	refined = make([]Attribute, 0, len(attrs))
 	moduleImports = make(map[string]string, len(commonImports)+10)
 	maps.Copy(moduleImports, commonImports)
@@ -101,7 +101,7 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 	for _, attr := range attrs {
 		attribute := Attribute{Name: attr.Name, Properties: set.New[Property]()}
 
-		// Extract & standardise the variable tyoe of this Attribute
+		// Extract & standardise the type of this Attribute
 		if attr.Type == nil {
 			attribute.Type = "String"
 			attribute.Properties.Add(Standard)
@@ -128,17 +128,18 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 		refined = append(refined, attribute)
 	}
 
+	// Add imports which depend on the number of attributes
 	switch {
 	case len(refined) == 0:
-		testModuleImports["m3e/"+strcase.ToSnake(modName)] = ""
+		testModuleImports["m3e/"+snakeName] = ""
 	case len(refined) == 1:
 		moduleImports["gleam/list"] = ""
 		moduleImports["m3e/attr"] = ""
-		testModuleImports["m3e/"+strcase.ToSnake(modName)] = ""
+		testModuleImports["m3e/"+snakeName] = ""
 	default:
 		moduleImports["gleam/list"] = ""
 		moduleImports["m3e/attr"] = ""
-		testModuleImports["m3e/"+strcase.ToSnake(modName)] = ".{Config}"
+		testModuleImports["m3e/"+snakeName] = ".{Config}"
 	}
 
 	externalModules = internal.Unique(externalModules)
@@ -179,7 +180,7 @@ var defaultTransformRules = []defaultTransformFunc{
 		return d, false
 	},
 	func(a *Attribute, d string) (string, bool) {
-		return "None", strings.HasPrefix(a.Type, "Option(")
+		return "None", a.IsOptional()
 	},
 	func(a *Attribute, d string) (string, bool) { return "True", d == "true" },
 	func(a *Attribute, d string) (string, bool) {
@@ -491,7 +492,7 @@ var typeTransformRules = []typeTransformFunction{
 	func(attr *Attribute, text string, _ *string) bool { return attr.listOf(text) },
 	func(attr *Attribute, text string, adef *string) bool { return attr.nullOrUndefined(text, adef) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.number(text) },
-	func(attr *Attribute, text string, adef *string) bool { return attr.handleRegexTypes(text, adef) },
+	func(attr *Attribute, text string, _ *string) bool { return attr.handleRegexTypes(text) },
 }
 
 // varType determines if the Gleam type for the attribute must be
@@ -512,7 +513,7 @@ func (attr *Attribute) varType(text string, adef *string) {
 }
 
 // handleRegexTypes handles more complex manifest types
-func (attr *Attribute) handleRegexTypes(text string, adef *string) (matched bool) {
+func (attr *Attribute) handleRegexTypes(text string) (matched bool) {
 
 	// Does the type in the manifest match 'something | somethingelse'
 	if matches1 := typeRe1.FindStringSubmatch(text); len(matches1) == 3 {
@@ -541,6 +542,11 @@ func (attr *Attribute) toGleamStandardType(text string) {
 // IsOptional returns true if the Attribute's type is Option(something)
 func (attr *Attribute) IsOptional() bool {
 	return attr.Properties.Contains(Optional)
+}
+
+// IsList returns true if the Attribute is declared as a Gleam List
+func (attr *Attribute) IsList() bool {
+	return attr.Properties.Contains(List)
 }
 
 // IsSemBool returns true if the Attribute is a semantic boolean
