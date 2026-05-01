@@ -1,100 +1,140 @@
-import gleam/int
+import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 
-import m3e/helpers
+import m3e/time.{type Time}
+import m3e/timezone.{type TimeZone}
+import m3e/ymd.{type Ymd}
 
 // --- Types ---
 
-/// Date is a date
+/// Date represents a date value, optionally with a time and timezone. Aligning with
+/// Material Expressive's subset of the ISO 8601 standard, Date supprts the following
+/// string formats:
+/// - yyyy-MM-dd,
+/// - yyyy-MM-ddTHH:mm:ss,
+/// - yyyy-MM-ddTHH:mm:ssZ,
+/// - yyyy-MM-ddTHH:mm:ss±HH:mm.
 ///
 pub opaque type Date {
-  Date(year: Int, month: Int, day: Int)
+  Full(date: Ymd, time: Time, timezone: TimeZone)
+  Date(date: Ymd)
+  DateTime(date: Ymd, time: Time)
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-pub fn new(year: Int, month: Int, day: Int) -> Result(Date, String) {
-  use year <- result.try(year_(int.to_string(year)))
-  use month <- result.try(month_(int.to_string(month)))
-  use day <- result.try(day_(int.to_string(day), month, year))
-  Ok(Date(year: year, month: month, day: day))
-}
+pub const default = Date(ymd.default)
 
+// --- Constructors ---
+
+/// from_string parses a string into a DateTime value.
+///
 pub fn from_string(input: String) -> Result(Date, String) {
-  case string.split(input, "-") {
-    [y, m, d] -> {
-      use year <- result.try(year_(y))
-      use month <- result.try(month_(m))
-      use day <- result.try(day_(d, month, year))
-      Ok(Date(year: year, month: month, day: day))
+  let input = string.uppercase(input)
+  case string.split(input, "T") {
+    // Case 1: yyyy-MM-dd
+    [date] -> {
+      use d <- result.try(ymd.from_string(date))
+      Ok(Date(d))
     }
-    _ -> Error(input <> " is an invalid date string, must be yyyy-mm-dd")
-  }
-}
 
-/// zero returns the date 1970-01-01
-pub fn zero() -> Date {
-  Date(year: 1970, month: 1, day: 1)
-}
-
-// --- RENDERING ---
-
-pub fn to_string(date: Date) -> String {
-  int.to_string(date.year)
-  <> "-"
-  <> string.pad_start(int.to_string(date.month), 2, "0")
-  <> "-"
-  <> string.pad_start(int.to_string(date.day), 2, "0")
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn day_(dd: String, month: Int, year: Int) -> Result(Int, String) {
-  use day <- result.try(
-    int.parse(dd)
-    |> result.replace_error("Cannot parse day " <> dd <> " as an integer"),
-  )
-  use day <- result.try(helpers.positive_(day))
-  use month <- result.try(helpers.range_(month, 1, 12))
-  use year <- result.try(helpers.positive_(year))
-
-  let is_leap = { year % 4 == 0 && year % 100 != 0 } || { year % 400 == 0 }
-
-  let day_ok = case month {
-    4 | 6 | 9 | 11 -> day >= 1 && day <= 30
-    2 if is_leap -> day >= 1 && day <= 29
-    2 -> day >= 1 && day <= 28
-    _ -> day >= 1 && day <= 31
-  }
-
-  case day_ok {
-    True -> Ok(day)
-    False ->
+    // Case 2: yyyy-MM-ddTHH:mm:ss...
+    [date, rest] -> {
+      full(date, rest)
+    }
+    _ ->
       Error(
-        dd
-        <> " is not a valid day for month "
-        <> int.to_string(month)
-        <> " in year "
-        <> int.to_string(year),
+        input
+        <> " is an invalid date-time format, must be yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss or yyyy-MM-ddTHH:mm:ssZ or yyyy-MM-ddTHH:mm:ss±HH:mm",
       )
   }
 }
 
-fn month_(mm: String) -> Result(Int, String) {
-  use month <- result.try(
-    int.parse(mm)
-    |> result.replace_error("Cannot parse month " <> mm <> " as an integer"),
-  )
-  use month <- result.try(helpers.range_(month, 1, 12))
-  Ok(month)
+/// new creates a Date value from a Ymd, Time, and TimeZone.
+///
+pub fn new(d: Ymd, t: Option(Time), tz: Option(TimeZone)) -> Date {
+  case t, tz {
+    Some(t), Some(tz) -> Full(d, t, tz)
+    Some(t), None -> DateTime(d, t)
+    None, _ -> Date(d)
+  }
 }
 
-fn year_(y: String) -> Result(Int, String) {
-  use year <- result.try(
-    int.parse(y)
-    |> result.replace_error("Cannot parse year " <> y <> " as an integer"),
-  )
-  use year <- result.try(helpers.positive_(year))
-  Ok(year)
+/// today_utc creates a Date (pure year-month-day form) with today's
+/// date in UTC (i.e. no timezone)
+///
+pub fn today_utc() -> Date {
+  new(ymd.today_utc(), None, None)
+}
+
+// --- Rendering ---
+
+/// to_string converts a Date value to a string in the format yyyy-MM-dd or
+/// yyyy-MM-ddTHH:mm:ss or yyyy-MM-ddTHH:mm:ssZ or yyyy-MM-ddTHH:mm:ss±HH:mm.
+///
+pub fn to_string(d: Date) -> String {
+  case d {
+    Full(date, time, tz) ->
+      ymd.to_string(date)
+      <> "T"
+      <> time.to_string(time)
+      <> timezone.to_string(tz)
+    Date(date) -> ymd.to_string(date)
+    DateTime(date, time) -> ymd.to_string(date) <> "T" <> time.to_string(time)
+  }
+}
+
+// --- Private Helper Functions
+
+fn date_time(date: String, time: String) -> Result(Date, String) {
+  use tim <- result.try(time.from_string(time))
+  use d <- result.try(ymd.from_string(date))
+  Ok(DateTime(d, tim))
+}
+
+fn date_time_tz(
+  date: String,
+  time: String,
+  offset: String,
+  sign: timezone.Direction,
+) -> Result(Date, String) {
+  use tim <- result.try(time.from_string(time))
+  use d <- result.try(ymd.from_string(date))
+  use tz_time <- result.try(time.from_string(offset))
+  use tz <- result.try(timezone.new(sign, tz_time))
+  Ok(Full(d, tim, tz))
+}
+
+fn date_time_zulu(date: String, time: String) -> Result(Date, String) {
+  use t <- result.try(time.from_string(time))
+  use d <- result.try(ymd.from_string(date))
+  Ok(Full(d, t, timezone.zulu()))
+}
+
+fn full(date: String, rest: String) -> Result(Date, String) {
+  let rest = string.uppercase(rest)
+  case string.ends_with(rest, "Z") {
+    True -> {
+      date_time_zulu(date, string.drop_end(rest, 1))
+    }
+    False -> {
+      full_not_zulu(date, rest)
+    }
+  }
+}
+
+fn full_not_zulu(date: String, rest: String) -> Result(Date, String) {
+  case string.split(rest, "+"), string.split(rest, "-") {
+    [a, b], [_] -> {
+      date_time_tz(date, a, b, timezone.Plus)
+    }
+    [_], [a, b] -> {
+      date_time_tz(date, a, b, timezone.Minus)
+    }
+    [a], [_] -> {
+      date_time(date, a)
+    }
+    _, _ -> Error(rest <> " is an invalid timezone offset, must be ±HH:mm")
+  }
 }

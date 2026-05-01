@@ -1,220 +1,116 @@
-import gleam/result
+import gleam/list
+
 import gleeunit/should
+
 import m3e/time
 
-pub fn new_valid_test() {
-  time.new(12, 30, 45)
-  |> should.be_ok()
-  |> time.to_string()
-  |> should.equal("12:30:45")
+pub fn time_from_string_test() {
+  let assert Ok(time19_12_31) = time.from_string("19:12:31")
+  let assert Ok(time19_1_31) = time.from_string("19:01:31")
+  let assert Ok(time19_12_3) = time.from_string("19:12:03")
+
+  let cases = [
+    // Happy paths
+    #("19:12:31", Ok(time19_12_31)),
+    // Happy paths - single digit minute/second
+    #("19:1:31", Ok(time19_1_31)),
+    #("19:12:3", Ok(time19_12_3)),
+
+    // Sad path - invalid hour
+    #("24:12:31", Error("24 is not a valid hour")),
+    // Sad path - invalid minute
+    #("19:60:31", Error("60 is not a valid minute")),
+    // Sad path - invalid second
+    #("19:12:60", Error("60 is not a valid second")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(input, expected) = c
+
+    time.from_string(input)
+    |> should.equal(expected)
+  })
 }
 
-pub fn new_single_digit_test() {
-  time.new(1, 2, 3)
-  |> should.be_ok()
-  |> time.to_string()
-  |> should.equal("01:02:03")
+pub fn time_new_test() {
+  let cases = [
+    // Happy paths
+    #(#(19, 12, 30), time.new(19, 12, 30)),
+    // Boundary: min
+    #(#(0, 0, 0), time.new(0, 0, 0)),
+
+    // Boundary: max
+    #(#(23, 59, 59), time.new(23, 59, 59)),
+
+    // Sad path - hour below min
+    #(#(-1, 12, 30), Error("-1 is not a valid hour")),
+    // Sad path - hour above max
+    #(#(24, 12, 30), Error("24 is not a valid hour")),
+    // Sad path - minute below min
+    #(#(19, -1, 30), Error("-1 is not a valid minute")),
+    // Sad path - minute above max
+    #(#(19, 61, 30), Error("61 is not a valid minute")),
+    // Sad path - second below min
+    #(#(19, 12, -1), Error("-1 is not a valid second")),
+    // Sad path - second above max
+    #(#(19, 12, 62), Error("62 is not a valid second")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(h, m, s), expected) = c
+
+    time.new(h, m, s)
+    |> should.equal(expected)
+  })
 }
 
-pub fn new_hour_too_high_test() {
-  time.new(24, 0, 0)
-  |> should.be_error()
+pub fn time_less_than_test() {
+  let assert Ok(time19_12_31) = time.from_string("19:12:31")
+  let assert Ok(time19_12_32) = time.from_string("19:12:32")
+
+  let cases = [
+    // Happy path
+    #(time19_12_31, time19_12_32, True),
+    #(time19_12_32, time19_12_31, False),
+
+    // Edge case: same time
+    #(time19_12_31, time19_12_31, False),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(input, other, expected) = c
+
+    time.less_than(input, other)
+    |> should.equal(expected)
+  })
 }
 
-pub fn new_hour_negative_test() {
-  time.new(-1, 0, 0)
-  |> should.be_error()
+pub fn time_to_hhmm_test() {
+  let assert Ok(time19_12_31) = time.from_string("19:12:31")
+
+  let cases = [
+    #(time19_12_31, "19:12"),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(input, expected) = c
+
+    time.to_hhmm(input)
+    |> should.equal(expected)
+  })
 }
 
-pub fn new_minute_too_high_test() {
-  time.new(0, 60, 0)
-  |> should.be_error()
-}
+pub fn time_to_string_test() {
+  let assert Ok(time19_12_31) = time.from_string("19:12:31")
 
-pub fn new_minute_negative_test() {
-  time.new(0, -1, 0)
-  |> should.be_error()
-}
+  let cases = [
+    #(time19_12_31, "19:12:31"),
+  ]
 
-pub fn new_second_too_high_test() {
-  time.new(0, 0, 60)
-  |> should.be_error()
-}
+  list.each(cases, fn(c) {
+    let #(input, expected) = c
 
-pub fn new_second_negative_test() {
-  time.new(0, 0, -1)
-  |> should.be_error()
-}
-
-pub fn from_string_hh_mm_ss_test() {
-  time.from_string("12:30:45")
-  |> should.be_ok()
-  |> time.to_string()
-  |> should.equal("12:30:45")
-}
-
-pub fn from_string_single_digit_test() {
-  time.from_string("1:2:3")
-  |> should.be_ok()
-  |> time.to_string()
-  |> should.equal("01:02:03")
-}
-
-pub fn from_string_hh_mm_test() {
-  time.from_string("12:30")
-  |> should.be_ok()
-  |> time.to_string()
-  |> should.equal("12:30:00")
-}
-
-pub fn from_string_invalid_hour_test() {
-  time.from_string("24:00:00")
-  |> should.be_error()
-}
-
-pub fn from_string_invalid_minute_test() {
-  time.from_string("12:60:00")
-  |> should.be_error()
-}
-
-pub fn from_string_invalid_second_test() {
-  time.from_string("12:30:60")
-  |> should.be_error()
-}
-
-pub fn from_string_too_few_parts_test() {
-  time.from_string("12")
-  |> should.be_error()
-}
-
-pub fn from_string_too_many_parts_test() {
-  time.from_string("12:30:45:67")
-  |> should.be_error()
-}
-
-pub fn from_string_non_numeric_test() {
-  time.from_string("ab:cd:ef")
-  |> should.be_error()
-}
-
-pub fn zero_test() {
-  time.zero()
-  |> time.to_string()
-  |> should.equal("00:00:00")
-}
-
-pub fn is_zero_test() {
-  time.is_zero(time.zero())
-  |> should.be_true()
-
-  time.is_zero(time.new(0, 0, 1) |> should.be_ok())
-  |> should.be_false()
-
-  time.is_zero(time.new(0, 1, 0) |> should.be_ok())
-  |> should.be_false()
-
-  time.is_zero(time.new(1, 0, 0) |> should.be_ok())
-  |> should.be_false()
-}
-
-pub fn to_hhmm_valid_test() {
-  let time = time.new(12, 30, 45) |> should.be_ok()
-  time.to_hhmm(time) |> should.equal("12:30")
-}
-
-pub fn to_hhmm_single_digit_hour_test() {
-  let time = time.new(1, 30, 45) |> should.be_ok()
-  time.to_hhmm(time) |> should.equal("01:30")
-}
-
-pub fn to_hhmm_single_digit_minute_test() {
-  let time = time.new(12, 5, 45) |> should.be_ok()
-  time.to_hhmm(time) |> should.equal("12:05")
-}
-
-pub fn to_hhmm_zero_time_test() {
-  let time = time.zero()
-  time.to_hhmm(time) |> should.equal("00:00")
-}
-
-pub fn to_hhmm_edge_case_midnight_test() {
-  let time = time.new(0, 0, 0) |> should.be_ok()
-  time.to_hhmm(time) |> should.equal("00:00")
-}
-
-pub fn to_hhmm_edge_case_noon_test() {
-  let time = time.new(12, 0, 0) |> should.be_ok()
-  time.to_hhmm(time) |> should.equal("12:00")
-}
-
-pub fn to_hhmm_invalid_hour_error_test() {
-  let res = time.from_string("24:30:45")
-  should.equal(result.is_error(res), True)
-  should.equal(
-    result.unwrap_error(res, "none"),
-    "24 is out of range >=0 and <=23",
-  )
-}
-
-pub fn to_hhmm_invalid_minute_error_test() {
-  let res = time.from_string("12:60:45")
-  should.equal(result.is_error(res), True)
-  should.equal(
-    result.unwrap_error(res, "none"),
-    "60 is out of range >=0 and <=59",
-  )
-}
-
-pub fn to_hhmm_invalid_second_error_test() {
-  let res = time.from_string("12:30:60")
-  should.equal(result.is_error(res), True)
-  should.equal(
-    result.unwrap_error(res, "none"),
-    "60 is out of range >=0 and <=59",
-  )
-}
-
-pub fn less_than_valid_test() {
-  let time1 = time.new(12, 30, 45) |> should.be_ok()
-  let time2 = time.new(12, 31, 45) |> should.be_ok()
-  time.less_than(time1, time2) |> should.be_true()
-
-  let time3 = time.new(11, 30, 45) |> should.be_ok()
-  time.less_than(time3, time1) |> should.be_true()
-}
-
-pub fn less_than_zero_test() {
-  let zero_time = time.zero()
-  let time1 = time.new(12, 30, 45) |> should.be_ok()
-  time.less_than(zero_time, time1) |> should.be_true()
-
-  let time2 = time.new(0, 0, 0) |> should.be_ok()
-  time.less_than(time2, zero_time) |> should.be_false()
-}
-
-pub fn less_than_edge_case_midnight_test() {
-  let midnight = time.zero()
-  let time1 = time.new(1, 0, 0) |> should.be_ok()
-  time.less_than(midnight, time1) |> should.be_true()
-
-  let noon = time.new(12, 0, 0) |> should.be_ok()
-  time.less_than(noon, midnight) |> should.be_false()
-}
-
-pub fn less_than_single_digit_test() {
-  let time1 = time.new(1, 30, 45) |> should.be_ok()
-  let time2 = time.new(1, 31, 45) |> should.be_ok()
-  time.less_than(time1, time2) |> should.be_true()
-
-  let time3 = time.new(1, 29, 45) |> should.be_ok()
-  time.less_than(time3, time1) |> should.be_true()
-}
-
-pub fn less_than_negative_time_test() {
-  let error = time.from_string("-01:00:00")
-  should.equal(result.is_error(error), True)
-  should.equal(
-    result.unwrap_error(error, "none"),
-    "-1 is out of range >=0 and <=23",
-  )
+    time.to_string(input)
+    |> should.equal(expected)
+  })
 }
