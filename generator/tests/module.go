@@ -15,10 +15,10 @@ type GleamModule struct {
 	header        *strings.Builder
 	imports       *strings.Builder
 	configuration *strings.Builder
-	// constructor     *strings.Builder
-	setters   *strings.Builder
-	renderers *strings.Builder
-	slots     *strings.Builder
+	constructor   *strings.Builder
+	setters       *strings.Builder
+	renderers     *strings.Builder
+	slots         *strings.Builder
 }
 
 func GenerateTests(directory string, module *parser.Module, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
@@ -52,10 +52,10 @@ func GenerateTests(directory string, module *parser.Module, enumerations map[str
 		return fmt.Errorf("processing of %s failed: %w", newMod.Name, err)
 	}
 
-	// gleam.constructor, err = constructors(modName, module.Attributes)
-	// if err != nil {
-	// 	return fmt.Errorf("processing of %s failed: %w", module.Name, err)
-	// }
+	gleam.constructor, err = constructors(newMod)
+	if err != nil {
+		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
+	}
 
 	gleam.setters, err = setters(newMod)
 	if err != nil {
@@ -80,7 +80,7 @@ func write(file *os.File, gleam GleamModule) {
 	fmt.Fprint(file, gleam.header.String())
 	fmt.Fprint(file, gleam.imports.String())
 	fmt.Fprint(file, gleam.configuration.String())
-	// fmt.Fprint(file, gleam.constructor.String())
+	fmt.Fprint(file, gleam.constructor.String())
 	fmt.Fprint(file, gleam.setters.String())
 	fmt.Fprint(file, gleam.renderers.String())
 	fmt.Fprint(file, gleam.slots.String())

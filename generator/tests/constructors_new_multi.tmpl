@@ -1,0 +1,17 @@
+{{ define "constructors_new_multi.tmpl" }}
+pub fn {{ .SnakeName }}_new_test() {
+  let cases = [
+    {{ .SnakeName }}.from_config({{ .SnakeName }}.Config(
+{{- range .Attributes }}
+      {{ .Name }}: {{ .QualifiedDefault }},
+{{- end }}
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    {{ .SnakeName }}.new()
+    |> should.equal(expected)
+  })
+}{{ end -}}

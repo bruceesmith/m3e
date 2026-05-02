@@ -1,0 +1,24 @@
+{{ define "constructors_from_config.tmpl" }}{{ $mod := .Mod }}
+pub fn {{ .Mod }}_from_config_test() {
+  let cases = [
+    #(
+      {{ .Mod }}.Config(
+{{- range .A }}
+        {{ .Name }}: {{ .Test.Value }},
+{{- end }}
+      ),
+      {{ .Mod }}.new()
+{{- range .A }}
+        |> {{ $mod }}.{{ .Name }}({{ .Test.Value }})
+{{- end }}
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+   {{ .Mod }}.from_config(config)
+    |> should.equal(expected)
+  })
+}
+{{ end }}

@@ -1,6 +1,6 @@
 {{ $count := len .Attributes -}}
-{{- $tag := .Tag -}}
-{{- $snake := .SnakeName }}pub fn {{ .SnakeName }}_render_test() {
+{{- $tag := .Tag }}
+{{ $snake := .SnakeName }}pub fn {{ .SnakeName }}_render_test() {
 {{- if eq $count 1 -}}
 {{ $only := index .Attributes 0 -}}
 {{ template "render_single.tmpl" (dict "Snake" $snake "QualifiedDefault" $only.QualifiedDefault "Name" $only.Name "Value" $only.Test.Value) }}

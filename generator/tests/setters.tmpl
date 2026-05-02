@@ -1,4 +1,4 @@
-{{ $module := .SnakeName }}{{ $count := len .Attributes }}
+{{- $module := .SnakeName }}{{- $count := len .Attributes }}
 {{- range $index, $val := .Attributes }}
 
 pub fn {{ $module }}_{{ $val.Name }}_test() {

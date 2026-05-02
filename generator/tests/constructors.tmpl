@@ -1,0 +1,7 @@
+{{$count := len .Attributes}}
+{{- if gt $count 1 -}}
+{{template "constructors_from_config.tmpl" (dict "Mod" .SnakeName "A" .Attributes ) }}
+{{- end }}
+{{- if gt $count 1 -}}
+{{template "constructors_new_multi.tmpl" . }}
+{{- end -}}
