@@ -3,7 +3,6 @@ package parser
 import (
 	"fmt"
 	"generator/cem"
-	"generator/metrics"
 	"os/exec"
 	"strings"
 
@@ -24,7 +23,7 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 	d.Enumerations = make(map[string][]Enumeration, len(enumerations))
 
 	buf := make([]string, 0, 50)
-	typeBuf := make([]tsTypeDef, 0, metrics.MaxEnumTypeDefs)
+	typeBuf := make([]tsTypeDef, 0, MaxEnumTypeDefs)
 	for enum := range enumerations {
 		cenum := strcase.ToCamel(enum)
 		command := exec.Command("sh", "-c", `grep -r -l "export type `+cenum+`" `+m3eSource)

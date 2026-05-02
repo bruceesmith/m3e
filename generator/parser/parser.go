@@ -14,6 +14,13 @@ import (
 	"github.com/bruceesmith/logger"
 )
 
+const (
+	// An educated guess as to the number of separately defined types
+	EstimatedEnumerations = 100
+	// An educated guess as to the number of enumerations in a separately defined type module
+	MaxEnumTypeDefs = 5
+)
+
 // Slot is an internal representation of a cem Slot
 type Slot struct {
 	Name        string
@@ -62,7 +69,7 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 	// used across all modules. "Externally defined" means that the type is
 	// defined in a small TypeScript module (but not in a TypeScript module
 	// which defines an M3E component)
-	enumerations := make(map[string]struct{}, metrics.EstimatedEnumerations)
+	enumerations := make(map[string]struct{}, EstimatedEnumerations)
 	definition = Definition{
 		Modules: make(map[string]Module, len(manifest.Modules)),
 	}
@@ -99,6 +106,9 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 	err = m.End("parse-enums")
 	if err != nil {
 		logger.Warn("failed to close parse-enums metrics", "error", err)
+	}
+	if len(definition.Enumerations) > EstimatedEnumerations {
+		logger.Info(fmt.Sprintf("EstimatedEnumerations exceeded, new value should be at least %d", len(definition.Enumerations)+10))
 	}
 	logger.Info("Enumerated type parsing complete", "types", len(definition.Enumerations))
 
