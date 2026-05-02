@@ -84,10 +84,9 @@ var (
 		"number":  "Float",
 		"string":  "String",
 	}
-	numericRe = regexp.MustCompile(`[\d\.]+`)
-	optionRe  = regexp.MustCompile(`Option\(([a-zA-Z]+)\)`)
-	typeRe    = regexp.MustCompile(`^(\w+)((?:\s+\| null)?(?:\s+\| undefined)?)$`)
-	typeRe1   = regexp.MustCompile(`^(\w+) \| (\(.+\))$`)
+	optionRe = regexp.MustCompile(`Option\(([a-zA-Z]+)\)`)
+	typeRe   = regexp.MustCompile(`^(\w+)((?:\s+\| null)?(?:\s+\| undefined)?)$`)
+	typeRe1  = regexp.MustCompile(`^(\w+) \| (\(.+\))$`)
 )
 
 // MakeAttributes converts the M3E manifest into an internal representation that is
@@ -121,9 +120,9 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 
 		// Adjust the attribute properties based on its type and options
 		var (
-			attrImports     = make(map[string]string, maxImports)
+			attrImports     map[string]string
 			externalModule  string
-			testAttrImports = make(map[string]string, maxImports)
+			testAttrImports map[string]string
 		)
 		attrImports, testAttrImports, externalModule = attribute.imports()
 		maps.Copy(moduleImports, attrImports)

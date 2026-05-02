@@ -42,7 +42,7 @@ func slots(theSlots []parser.Slot) (defBuilder *strings.Builder, fnBuilder *stri
 		return
 	}
 
-	var slots []Slot = make([]Slot, 0, len(theSlots))
+	var slots = make([]Slot, 0, len(theSlots))
 	for _, slot := range theSlots {
 		if len(slot.Name) > 0 {
 			slots = append(slots, Slot{Name: slot.Name, Description: slot.Description, Attribute: slot.Attribute})

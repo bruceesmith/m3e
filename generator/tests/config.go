@@ -21,10 +21,6 @@ func init() {
 }
 
 func config(module *parser.Module) (builder *strings.Builder, err error) {
-	type Declaration struct {
-		ModName string
-		Values  map[string]string
-	}
 	builder = &strings.Builder{}
 	if len(module.Attributes) < 2 {
 		return builder, nil

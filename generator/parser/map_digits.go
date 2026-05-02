@@ -8,7 +8,7 @@ var digitNames = [10]string{
 	"Five", "Six", "Seven", "Eight", "Nine",
 }
 
-// map digits to English names
+// MapDigits converts numeric digits to English names
 func MapDigits(s string, buf []string) string {
 	buf = buf[:0]
 	for i := 0; i < len(s); i++ {

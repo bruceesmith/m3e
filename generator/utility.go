@@ -97,6 +97,9 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 	// If JSON output is requested (--json) then switch the loggers to JSON
 	if cmd.Bool("json") {
 		err = jsonLogging()
+		if err != nil {
+			logger.Warn("cannot set JSON logging", "error", err)
+		}
 	}
 	// Parse the Custom Element Manifest into a SchemaJson struct
 	var manifest cem.SchemaJson
@@ -162,7 +165,7 @@ func customManifest() (manifest cem.SchemaJson, err error) {
 }
 
 func jsonLogging() (err error) {
-	logger.Configure(
+	err = logger.Configure(
 		logger.ConfigSetting{
 			AppliesTo: logger.Norm,
 			Key:       logger.FormatSetting,
@@ -174,5 +177,5 @@ func jsonLogging() (err error) {
 			Value:     logger.JSON,
 		},
 	)
-	return
+	return err
 }
