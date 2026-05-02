@@ -56,7 +56,7 @@ type Module struct {
 }
 
 // Parse extracts the module declarations and enumerated types from the manifest and M3e code
-func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err error) {
+func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (definition Definition, err error) {
 
 	// enumerations represents the set of externally defined enumerated types
 	// used across all modules. "Externally defined" means that the type is
@@ -68,6 +68,7 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 	}
 
 	// Extract attributes, slots and the names of enumerated types from the module declaration
+	m.Start("parse-modules")
 	for _, module := range manifest.Modules {
 		if len(module.Declarations) > 0 {
 			declaration := module.Declarations[0]
@@ -83,12 +84,21 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 			}
 		}
 	}
+	err = m.End("parse-modules")
+	if err != nil {
+		logger.Warn("failed to close parse-modules metrics", "error", err)
+	}
 	logger.Info("Module parsing complete", "modules", len(definition.Modules))
 
 	// Extract the definitions of enumerated types from the M3e code
+	m.Start("parse-enums")
 	err = definition.enumerations(m3eCode, enumerations)
 	if err != nil {
 		return definition, fmt.Errorf("failed to gather all enumerated types: %w", err)
+	}
+	err = m.End("parse-enums")
+	if err != nil {
+		logger.Warn("failed to close parse-enums metrics", "error", err)
 	}
 	logger.Info("Enumerated type parsing complete", "types", len(definition.Enumerations))
 

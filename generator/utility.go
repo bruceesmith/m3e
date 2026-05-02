@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"generator/cem"
 	"generator/code"
+	"generator/metrics"
 	"generator/parser"
 	"generator/tests"
 	"os"
@@ -44,6 +45,10 @@ func Utility() (err error) {
 			&cli.BoolFlag{
 				Name:  "no-code",
 				Usage: "Do not generate the Gleam wrappers",
+			},
+			&cli.BoolFlag{
+				Name:  "no-metrics",
+				Usage: "Do not capture or report metrics",
 			},
 			&cli.BoolFlag{
 				Name:  "no-tests",
@@ -82,6 +87,11 @@ func Utility() (err error) {
 }
 
 func run(ctx context.Context, cmd *cli.Command) (err error) {
+	var metrics = metrics.New()
+	if cmd.Bool("no-metrics") {
+		metrics.Disable()
+	}
+
 	logger.Info("Starting generation...")
 
 	// If JSON output is requested (--json) then switch the loggers to JSON
@@ -90,14 +100,20 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 	}
 	// Parse the Custom Element Manifest into a SchemaJson struct
 	var manifest cem.SchemaJson
+	metrics.Start("cem")
 	manifest, err = customManifest()
 	if err != nil {
 		return fmt.Errorf("failed to load custom manifest: %w", err)
 	}
+	err = metrics.End("cem")
+	if err != nil {
+		logger.Warn("failed to close cem metrics", "error", err)
+	}
+	logger.Info("CEM parsing complete ...")
 
 	// Parse the SchemaJson into the internal format of a Definition struct
 	var modules parser.Definition
-	modules, err = parser.Parse(&manifest, cfg.M3ESource)
+	modules, err = parser.Parse(&manifest, cfg.M3ESource, metrics)
 	if err != nil {
 		return fmt.Errorf("failed to parse the custom manifest: %w", err)
 	}
@@ -105,21 +121,32 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 	// Generate Gleam/Lustre wrappers for the modules
 	date := time.Now().Format(time.RFC3339)
 	if !cmd.Bool("no-code") {
+		metrics.Start("generate-code")
 		if err := code.Generate(&modules, filepath.Join(cfg.Destination, "src/m3e/"), cmd.Version, date); err != nil {
 			return fmt.Errorf("failed to generate wrappers: %w", err)
 		}
+		err = metrics.End("generate-code")
+		if err != nil {
+			logger.Warn("failed to close generate-code metrics", "error", err)
+		}
+		logger.Info("Module code generation complete ...")
 	}
-	logger.Info("Module code generation complete ...")
 
 	// Generate unit tests for the wrappers
-	//
+
 	if !cmd.Bool("no-tests") {
+		metrics.Start("generate-tests")
 		if err := tests.Generate(&modules, filepath.Join(cfg.Destination, "test/m3e/"), cmd.Version, date); err != nil {
 			return fmt.Errorf("failed to generate tests: %w", err)
 		}
+		err = metrics.End("generate-tests")
+		if err != nil {
+			logger.Warn("failed to close generate-tests metrics", "error", err)
+		}
+		logger.Info("Unit test generation complete ...")
 	}
-	logger.Info("Unit test generation complete ...")
 
+	metrics.Report()
 	return
 }
 
