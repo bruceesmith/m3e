@@ -84,6 +84,10 @@ func Utility() (err error) {
 func run(ctx context.Context, cmd *cli.Command) (err error) {
 	logger.Info("Starting generation...")
 
+	// If JSON output is requested (--json) then switch the loggers to JSON
+	if cmd.Bool("json") {
+		err = jsonLogging()
+	}
 	// Parse the Custom Element Manifest into a SchemaJson struct
 	var manifest cem.SchemaJson
 	manifest, err = customManifest()
@@ -128,4 +132,20 @@ func customManifest() (manifest cem.SchemaJson, err error) {
 		return manifest, fmt.Errorf("failed to unmarshal custom-elements.json: %w", err)
 	}
 	return manifest, nil
+}
+
+func jsonLogging() (err error) {
+	logger.Configure(
+		logger.ConfigSetting{
+			AppliesTo: logger.Norm,
+			Key:       logger.FormatSetting,
+			Value:     logger.JSON,
+		},
+		logger.ConfigSetting{
+			AppliesTo: logger.Tracy,
+			Key:       logger.FormatSetting,
+			Value:     logger.JSON,
+		},
+	)
+	return
 }
