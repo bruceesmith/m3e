@@ -10,7 +10,7 @@ import (
 	"unicode"
 
 	"github.com/bruceesmith/logger"
-	"github.com/bruceesmith/set"
+	set "github.com/deckarep/golang-set/v2"
 	"github.com/iancoleman/strcase"
 )
 
@@ -64,7 +64,7 @@ type Attribute struct {
 	// CamelCase type name
 	Type string
 	// Properties of an Attribute
-	Properties *set.Set[Property]
+	Properties set.Set[Property]
 }
 
 var (
@@ -109,7 +109,7 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 	maps.Copy(testModuleImports, commonTestImports)
 
 	for _, attr := range attrs {
-		attribute := Attribute{Name: attr.Name, Properties: set.New[Property]()}
+		attribute := Attribute{Name: attr.Name, Properties: set.NewSet[Property]()}
 
 		// Extract & standardise the type of this Attribute
 		if attr.Type == nil {
@@ -422,7 +422,7 @@ func (attr *Attribute) function(text string) (matched bool) {
 	if strings.HasPrefix(text, "(") {
 		attr.Type = "String"
 		attr.Properties.Add(Standard)
-		attr.Properties.Delete(Optional)
+		attr.Properties.Remove(Optional)
 		return true
 	}
 	return false
@@ -431,7 +431,7 @@ func (attr *Attribute) function(text string) (matched bool) {
 func (attr *Attribute) linkTarget(text string, adef *string) (matched bool) {
 	if text == "LinkTarget" && adef != nil && *adef == `""` {
 		attr.Type = "Option(" + text + ")"
-		attr.Properties.Delete(Standard)
+		attr.Properties.Remove(Standard)
 		attr.Properties.Add(Optional)
 		return true
 	}
@@ -472,7 +472,7 @@ func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool)
 		}
 		attr.toGleamStandardType(matches[1])
 		if !attr.IsStandard() && attr.IsOptional() && adef != nil && *adef != `""` && *adef != "null" && *adef != "undefined" {
-			attr.Properties.Delete(Optional)
+			attr.Properties.Remove(Optional)
 		}
 		if attr.IsOptional() {
 			attr.Type = "Option(" + attr.Type + ")"
@@ -485,8 +485,8 @@ func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool)
 func (attr *Attribute) number(text string) (matched bool) {
 	if text == `number | "all"` {
 		attr.Type = "number_string.NumberString"
-		attr.Properties.Delete(Standard)
-		attr.Properties.Delete(Optional)
+		attr.Properties.Remove(Standard)
+		attr.Properties.Remove(Optional)
 		return true
 	}
 	return false
@@ -518,8 +518,8 @@ func (attr *Attribute) varType(text string, adef *string) {
 	// No rule matched, so assume the type in the manifest can be translated
 	// directly to a Gleam Type
 	attr.Type = text
-	attr.Properties.Delete(Standard)
-	attr.Properties.Delete(Optional)
+	attr.Properties.Remove(Standard)
+	attr.Properties.Remove(Optional)
 }
 
 // handleRegexTypes handles more complex manifest types
@@ -540,7 +540,7 @@ func (attr *Attribute) toGleamStandardType(text string) {
 		attr.Properties.Add(Standard)
 		attr.Type = s
 	} else {
-		attr.Properties.Delete(Standard)
+		attr.Properties.Remove(Standard)
 		attr.Type = text
 	}
 }

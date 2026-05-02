@@ -3,9 +3,9 @@ module generator
 go 1.26
 
 require (
-	github.com/bruceesmith/echidna v1.1.10
-	github.com/bruceesmith/logger v1.3.8
-	github.com/bruceesmith/set v1.0.0
+	github.com/bruceesmith/echidna v1.1.11
+	github.com/bruceesmith/logger v1.3.9
+	github.com/deckarep/golang-set/v2 v2.9.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/knadh/koanf v1.5.0
 	github.com/tree-sitter/go-tree-sitter v0.25.0
@@ -21,14 +21,13 @@ require (
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/atombender/go-jsonschema v0.23.0 // indirect
 	github.com/boyter/scc v2.12.0+incompatible // indirect
-	github.com/bruceesmith/terminator v1.1.6 // indirect
+	github.com/bruceesmith/terminator v1.2.1 // indirect
 	github.com/cheggaaa/pb/v3 v3.1.7 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/cyphar/filepath-securejoin v0.6.1 // indirect
 	github.com/dbaggerman/cuba v0.3.2 // indirect
-	github.com/deckarep/golang-set/v2 v2.8.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
@@ -80,6 +79,7 @@ require (
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
+	go.mongodb.org/mongo-driver v1.17.9 // indirect
 	go.uber.org/mock v0.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.50.0 // indirect
@@ -93,7 +93,6 @@ require (
 	golang.org/x/text v0.36.0 // indirect
 	golang.org/x/tools v0.44.0 // indirect
 	golang.org/x/vuln v1.2.0 // indirect
-	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
