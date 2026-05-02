@@ -32,7 +32,7 @@ type configuration struct {
 
 func (c configuration) Validate() error { return nil }
 
-var cfg configuration = configuration{Destination: "../", M3ESource: "../"}
+var cfg configuration = configuration{}
 
 // Utility is the function launched to actually perform all the work
 func Utility() (err error) {
@@ -51,7 +51,7 @@ func Utility() (err error) {
 			},
 		},
 		Usage:   "Generator Tool",
-		Version: "0.0.1",
+		Version: "0.1.0",
 	}
 
 	loaders := []echidna.Loader{
@@ -105,6 +105,7 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 			return fmt.Errorf("failed to generate wrappers: %w", err)
 		}
 	}
+	logger.Info("Module code generation complete ...")
 
 	// Generate unit tests for the wrappers
 	//
@@ -113,6 +114,7 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 			return fmt.Errorf("failed to generate tests: %w", err)
 		}
 	}
+	logger.Info("Unit test generation complete ...")
 
 	return
 }

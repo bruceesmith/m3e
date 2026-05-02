@@ -10,6 +10,8 @@ import (
 	"generator/cem"
 	"generator/metrics"
 	"strings"
+
+	"github.com/bruceesmith/logger"
 )
 
 // Slot is an internal representation of a cem Slot
@@ -81,12 +83,14 @@ func Parse(manifest *cem.SchemaJson, m3eCode string) (definition Definition, err
 			}
 		}
 	}
+	logger.Info("Module parsing complete", "modules", len(definition.Modules))
 
 	// Extract the definitions of enumerated types from the M3e code
 	err = definition.enumerations(m3eCode, enumerations)
 	if err != nil {
 		return definition, fmt.Errorf("failed to gather all enumerated types: %w", err)
 	}
+	logger.Info("Enumerated type parsing complete", "types", len(definition.Enumerations))
 
 	return
 }
