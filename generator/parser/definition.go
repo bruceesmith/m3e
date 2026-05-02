@@ -67,7 +67,7 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 		Slots:     MakeSlots(declaration.Slots),
 		Name:      name,
 		SnakeName: strcase.ToSnake(name),
-		Imports:   make(map[string]string),
+		Imports:   make(map[string]string, maxImports),
 	}
 	desc := *declaration.Description
 	first, remainder := desc[0], desc[1:]

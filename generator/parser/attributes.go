@@ -14,6 +14,11 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+const (
+	// Educated estimate of the maximum number of impport lines in any modules (code / test)
+	maxImports = 15
+)
+
 // Test represents each of the pieces of data required to generate unit tests
 type Test struct {
 	// Attribute string value for use in setter tests.
@@ -116,9 +121,9 @@ func MakeAttributes(modName string, attrs []cem.Attribute) (
 
 		// Adjust the attribute properties based on its type and options
 		var (
-			attrImports     = make(map[string]string)
+			attrImports     = make(map[string]string, maxImports)
 			externalModule  string
-			testAttrImports = make(map[string]string)
+			testAttrImports = make(map[string]string, maxImports)
 		)
 		attrImports, testAttrImports, externalModule = attribute.imports()
 		maps.Copy(moduleImports, attrImports)
@@ -355,8 +360,8 @@ func (attr *Attribute) description(desc *string) {
 
 // imports returns the list of imports required by the attribute
 func (attr *Attribute) imports() (importStrings map[string]string, testImportStrings map[string]string, importedModule string) {
-	importStrings = make(map[string]string)
-	testImportStrings = make(map[string]string)
+	importStrings = make(map[string]string, maxImports)
+	testImportStrings = make(map[string]string, maxImports)
 	if attr.IsOptional() {
 		importStrings["gleam/option"] = ".{type Option, None}"
 		if attr.Type == "Option(String)" {

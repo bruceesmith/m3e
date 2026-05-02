@@ -8,7 +8,7 @@ import (
 // Unique takes a slice and returns a new sorted slice containing only the unique elements
 func Unique[T cmp.Ordered](input []T) []T {
 	// seen tracks items we've already added
-	seen := make(map[T]struct{})
+	seen := make(map[T]struct{}, len(input))
 	result := []T{}
 	for _, val := range input {
 		// If the key is not in the map, it's a new unique element
