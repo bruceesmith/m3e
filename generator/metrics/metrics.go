@@ -1,8 +1,11 @@
-/*
-	package metrics is responsible for collecting and reporting memory and garbage collector
-
-information as the program progresses
-*/
+// Package metrics is responsible for collecting and reporting memory and garbage collector
+// information as the program progresses.
+//
+// # Usage
+//   - create a Metrics instance by calling New()
+//   - start a sample named (for example) "id" with Start("id")
+//   - after the processing under measurement is completed, call End("id")
+//   - at an appropriate point call Report() to generate a summary of all samples
 package metrics
 
 import (
@@ -12,11 +15,9 @@ import (
 	"github.com/bruceesmith/logger"
 )
 
-const (
-	EstimatedEnumerations = 100
-	MaxEnumTypeDefs       = 5
-)
-
+// sample is a set of memry & GC metrics. It stores the difference between
+// the runtime metrics when it was created by ST=tart() and when it was
+// closed by End()
 type sample struct {
 	stats  runtime.MemStats
 	allocs uint64
@@ -24,19 +25,26 @@ type sample struct {
 	numGC  uint32
 }
 
+// Metrics is a container for zero or more sets of runtime metric samples
 type Metrics struct {
 	disabled bool
 	samples  map[string]sample
 }
 
+// New creates a new container for runtime metric samples
 func New() *Metrics {
 	return &Metrics{samples: make(map[string]sample)}
 }
 
+// Disable stops collection of metrics, turning the various methods (Start, End
+// and Report) into no-ops. This allows calls to these functions to be left in
+// code but not actually do anything
 func (m *Metrics) Disable() {
 	m.disabled = true
 }
 
+// End captures the current runtime metrics and calculates the difference between
+// them and the set of runtime metrics captured when Start() was called
 func (m *Metrics) End(id string) (err error) {
 	if m.disabled {
 		return nil
@@ -54,6 +62,7 @@ func (m *Metrics) End(id string) (err error) {
 	return nil
 }
 
+// Report creates a report of each of the samples that have been captured to date
 func (m *Metrics) Report() {
 	if m.disabled {
 		return
@@ -63,6 +72,7 @@ func (m *Metrics) Report() {
 	}
 }
 
+// Start captures the runtime metrics and initialises a new sample from them
 func (m *Metrics) Start(id string) {
 	if m.disabled {
 		return
