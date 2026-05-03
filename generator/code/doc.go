@@ -1,0 +1,58 @@
+// Package code is responsible for creating the Gleam files that represent the TypeScript modules
+// described by the Custom Element Manifest.
+//
+// # Files per Material 3 Expressive Component
+//
+// One file will be generated for each Module in the manifest which
+//   - has a Declaration
+//   - that Declaration has a Description
+//   - that Declaration's Name is of the form "M3E****Element"
+//   - the file name will be the snake_case transformation of the **** in the Declaration's Name
+//
+// In each generated code file there is a public Gleam opaque type whose name is the **** from the Declaration's Name.
+//
+// If the Declaration has no Attributes, there is
+//   - a new() function that creates a new instance of the type
+//   - a render() function which creates a Lustre Element(msg) from the type instance
+//
+// If the Declaration as exactly 1 Attribute, there is
+//   - a new(*) function with 1 parameter (the Attribute)
+//   - a setter function (whose name is the snake_case transformation of the Attribute)
+//     that creates a new type instance with the new value of the Attribute
+//   - a render() function which creates a Lustre Element(msg) from the type instance
+//
+// If the Declaration has more than 2 Attributes, there is
+//   - a new() function that creates a new instance of the type
+//   - a public Gleam record type Config with one field for each Attribute
+//   - a from_config() functin which creates a new type instance from a Config record
+//   - a setter function for each Attribute (whose name is the snake_case transformation of the Attribute)
+//     that creates a new type instance, based on an existing type instance, where only the single
+//     Attribute value is changed
+//   - a render() function which creates a Lustre Element(msg) from the type instance
+//   - a render_config() function which creates a Lustre Element(msg) from a Config record
+//
+// # Slots for the Shadow DOM
+//
+// Material 3 Expressive components make extensive use of Shadow DOM slots. In the generated Gleam
+// module for an M3E component, if that component defines slots (in the Declaration.Slot fields in
+// the manifest), then the Gleam file defines a public Slot type (a Gleam custom type whose variants
+// are the CamelCase slot names), and a public slots() function that renders the Lustre Attribute(msg) values
+// corresponding to each slot value.
+//
+// # Files per TypeScript String Literal Union Type
+//
+// Some Material 3 Expressive modules do not represent a custom web component. Instead, they simply define
+// the value of HTML attributes as string unions, for example
+//
+//	export type LinearProgressMode = "determinate" | "indeterminate" | "buffer" | "query";
+//
+// Each such type is generated to a corresponding Gleam file whose name is the snake_case
+// transformation of the TypeScript type name, e.g. linear_progress_mode.gleam in the
+// above example. The raw TypeScript type name becomes the name of a Gleam custom type
+// in the generated file. The CamelCase transformations of each union value become the Gleam
+// variants for the Gleam type, for example Determinate and Buffer.
+//
+// These Gleam types are imported by any Gleam web component modules which references them.
+//
+//go:generate bash -c "go tool gomarkdoc . > doc.md"
+package code
