@@ -6,7 +6,8 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-func MakeSlots(theSlots []cem.Slot) (slots []Slot) {
+// makeSlots generates the slots() function in a Gleam module
+func makeSlots(theSlots []cem.Slot) (slots []Slot) {
 
 	if len(theSlots) == 0 {
 		return

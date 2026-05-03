@@ -11,7 +11,7 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-func GenerateEnums(destination string, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
+func generateEnums(destination string, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
 	for name, enum := range enumerations {
 		err = writeEnumFile(destination, name, enum, version, date)
 	}

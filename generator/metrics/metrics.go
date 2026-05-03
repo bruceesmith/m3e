@@ -1,11 +1,3 @@
-// Package metrics is responsible for collecting and reporting memory and garbage collector
-// information as the program progresses.
-//
-// # Usage
-//   - create a Metrics instance by calling New()
-//   - start a sample named (for example) "id" with Start("id")
-//   - after the processing under measurement is completed, call End("id")
-//   - at an appropriate point call Report() to generate a summary of all samples
 package metrics
 
 import (

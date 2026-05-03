@@ -20,10 +20,7 @@ Several TS types deserve special mention.
 
 ## Index
 
-- [Constants](<#constants>)
-- [func MapDigits\(s string, buf \[\]string\) string](<#MapDigits>)
 - [type Attribute](<#Attribute>)
-  - [func MakeAttributes\(modName string, attrs \[\]cem.Attribute\) \(refined \[\]Attribute, moduleImports map\[string\]string, testModuleImports map\[string\]string, externalModules \[\]string\)](<#MakeAttributes>)
   - [func \(attr \*Attribute\) IsList\(\) bool](<#Attribute.IsList>)
   - [func \(attr \*Attribute\) IsOptional\(\) bool](<#Attribute.IsOptional>)
   - [func \(attr \*Attribute\) IsSemBool\(\) bool](<#Attribute.IsSemBool>)
@@ -34,31 +31,8 @@ Several TS types deserve special mention.
 - [type Module](<#Module>)
 - [type Property](<#Property>)
 - [type Slot](<#Slot>)
-  - [func MakeSlots\(theSlots \[\]cem.Slot\) \(slots \[\]Slot\)](<#MakeSlots>)
 - [type Test](<#Test>)
 
-
-## Constants
-
-<a name="EstimatedEnumerations"></a>
-
-```go
-const (
-    // An educated guess as to the number of separately defined types
-    EstimatedEnumerations = 100
-    // An educated guess as to the number of enumerations in a separately defined type module
-    MaxEnumTypeDefs = 5
-)
-```
-
-<a name="MapDigits"></a>
-## func [MapDigits](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/map_digits.go#L12>)
-
-```go
-func MapDigits(s string, buf []string) string
-```
-
-MapDigits converts numeric digits to English names
 
 <a name="Attribute"></a>
 ## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L43-L68>)
@@ -93,17 +67,6 @@ type Attribute struct {
     Properties set.Set[Property]
 }
 ```
-
-<a name="MakeAttributes"></a>
-### func [MakeAttributes](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L97-L101>)
-
-```go
-func MakeAttributes(modName string, attrs []cem.Attribute) (refined []Attribute, moduleImports map[string]string, testModuleImports map[string]string, externalModules []string)
-```
-
-MakeAttributes converts the M3E manifest into an internal representation that is optimised for code and unit test generation.
-
-In addition to returning the internal representation, it also returns a list of enum type names that are referenced by the attributes.
 
 <a name="Attribute.IsList"></a>
 ### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L557>)
@@ -142,7 +105,7 @@ func (attr *Attribute) IsStandard() bool
 IsStandard returns true if the Attribute's type is one of the Gleam intrinsic types
 
 <a name="Definition"></a>
-## type [Definition](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/definition.go#L15-L20>)
+## type [Definition](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/definition.go#L16-L21>)
 
 Definition is the internal representation of the entire CEM manifest for the Material 3 Expression components
 
@@ -242,15 +205,6 @@ type Slot struct {
     Attribute   string
 }
 ```
-
-<a name="MakeSlots"></a>
-### func [MakeSlots](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/slots.go#L9>)
-
-```go
-func MakeSlots(theSlots []cem.Slot) (slots []Slot)
-```
-
-
 
 <a name="Test"></a>
 ## type [Test](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L23-L30>)

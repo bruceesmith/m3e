@@ -10,7 +10,7 @@ import (
 	"github.com/bruceesmith/logger"
 )
 
-type GleamModule struct {
+type gleamModule struct {
 	header        *strings.Builder
 	imports       *strings.Builder
 	slotDefs      *strings.Builder
@@ -22,8 +22,8 @@ type GleamModule struct {
 	renderers     *strings.Builder
 }
 
-func GenerateModule(directory string, module *parser.Module, version string, date string) (err error) {
-	gleam := GleamModule{}
+func generateModule(directory string, module *parser.Module, version string, date string) (err error) {
+	gleam := gleamModule{}
 	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", module.Name, module.Description))
 
 	file, err := os.Create(filepath.Join(directory, module.SnakeName+".gleam"))
@@ -76,7 +76,7 @@ func GenerateModule(directory string, module *parser.Module, version string, dat
 	return
 }
 
-func write(file *os.File, gleam GleamModule) {
+func write(file *os.File, gleam gleamModule) {
 	fmt.Fprint(file, gleam.header.String())
 	fmt.Fprint(file, gleam.imports.String())
 	fmt.Fprint(file, gleam.declaration.String())

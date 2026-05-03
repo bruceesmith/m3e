@@ -89,12 +89,12 @@ var (
 	typeRe1  = regexp.MustCompile(`^(\w+) \| (\(.+\))$`)
 )
 
-// MakeAttributes converts the M3E manifest into an internal representation that is
+// makeAttributes converts the M3E manifest into an internal representation that is
 // optimised for code and unit test generation.
 //
 // In addition to returning the internal representation, it also returns a list of enum
 // type names that are referenced by the attributes.
-func MakeAttributes(modName string, attrs []cem.Attribute) (
+func makeAttributes(modName string, attrs []cem.Attribute) (
 	refined []Attribute,
 	moduleImports map[string]string,
 	testModuleImports map[string]string,
@@ -214,7 +214,7 @@ var defaultTransformRules = []defaultTransformFunc{
 	func(a *Attribute, d string) (string, bool) {
 		if a.Type != "Float" && unicode.IsDigit(rune(d[0])) {
 			buf := make([]string, 0, 50)
-			return strcase.ToSnake(a.Type) + "." + MapDigits(d, buf), true
+			return strcase.ToSnake(a.Type) + "." + internal.MapDigits(d, buf), true
 		}
 		return d, false
 	},

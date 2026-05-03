@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"generator/cem"
+	"generator/internal"
 	"os/exec"
 	"strings"
 
@@ -23,7 +24,7 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 	d.Enumerations = make(map[string][]Enumeration, len(enumerations))
 
 	buf := make([]string, 0, 50)
-	typeBuf := make([]tsTypeDef, 0, MaxEnumTypeDefs)
+	typeBuf := make([]tsTypeDef, 0, maxEnumTypeDefs)
 	for enum := range enumerations {
 		cenum := strcase.ToCamel(enum)
 		command := exec.Command("sh", "-c", `grep -r -l "export type `+cenum+`" `+m3eSource)
@@ -44,7 +45,7 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 			def := make([]Enumeration, 0, len(tipe.Values))
 			for _, value := range tipe.Values {
 				value = strings.Trim(value, `"`)
-				name := MapDigits(strcase.ToCamel(value), buf)
+				name := internal.MapDigits(strcase.ToCamel(value), buf)
 				def = append(def, Enumeration{
 					Name:      name,
 					Attribute: value,
@@ -64,7 +65,7 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 	}
 	mod := Module{
 		Tag:       *declaration.TagName,
-		Slots:     MakeSlots(declaration.Slots),
+		Slots:     makeSlots(declaration.Slots),
 		Name:      name,
 		SnakeName: strcase.ToSnake(name),
 		Imports:   make(map[string]string, maxImports),
@@ -75,7 +76,7 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 	desc = strings.ReplaceAll(desc, "\n", "\n//// ")
 	mod.Description = desc
 
-	mod.Attributes, mod.Imports, mod.TestImports, externalModules = MakeAttributes(name, declaration.Attributes)
+	mod.Attributes, mod.Imports, mod.TestImports, externalModules = makeAttributes(name, declaration.Attributes)
 	logger.TraceID("module", fmt.Sprintf("Module %s", name))
 	d.Modules[name] = mod
 	return externalModules

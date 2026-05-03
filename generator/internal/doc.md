@@ -18,6 +18,7 @@ Functions included are:
 ## Index
 
 - [func ErrorAttr\(err error\) slog.Attr](<#ErrorAttr>)
+- [func MapDigits\(s string, buf \[\]string\) string](<#MapDigits>)
 - [func Unique\[T cmp.Ordered\]\(input \[\]T\) \[\]T](<#Unique>)
 
 
@@ -29,6 +30,15 @@ func ErrorAttr(err error) slog.Attr
 ```
 
 ErrorAttr converts a series of wrapped \(with %w\) error messages into a slog.Attr for use with either the standard [log/slog](<https://pkg.go.dev/log/slog/>) package or the [github.com/bruceesmith/logger](<https://pkg.go.dev/github.com/bruceesmith/logger/>) package
+
+<a name="MapDigits"></a>
+## func [MapDigits](<https://github.com/bruceesmith/m3e/blob/main/generator/internal/map_digits.go#L12>)
+
+```go
+func MapDigits(s string, buf []string) string
+```
+
+MapDigits converts numeric digits to English names
 
 <a name="Unique"></a>
 ## func [Unique](<https://github.com/bruceesmith/m3e/blob/main/generator/internal/unique.go#L9>)

@@ -11,7 +11,7 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-type GleamModule struct {
+type gleamModule struct {
 	header        *strings.Builder
 	imports       *strings.Builder
 	configuration *strings.Builder
@@ -21,9 +21,10 @@ type GleamModule struct {
 	slots         *strings.Builder
 }
 
-func GenerateTests(directory string, module *parser.Module, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
+// generateTests creates all the unit test files
+func generateTests(directory string, module *parser.Module, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
 
-	gleam := GleamModule{}
+	gleam := gleamModule{}
 	logger.TraceID("tests", fmt.Sprintf("Module %s", module.Name))
 
 	// Before proceeding it is necessary to fix up test values for enumerated types
@@ -76,7 +77,7 @@ func GenerateTests(directory string, module *parser.Module, enumerations map[str
 	return
 }
 
-func write(file *os.File, gleam GleamModule) {
+func write(file *os.File, gleam gleamModule) {
 	fmt.Fprint(file, gleam.header.String())
 	fmt.Fprint(file, gleam.imports.String())
 	fmt.Fprint(file, gleam.configuration.String())

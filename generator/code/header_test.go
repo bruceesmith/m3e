@@ -79,8 +79,8 @@ func Test_header(t *testing.T) {
 //// Badge is badge component
 ////
 //// This file was generated:
-////    By: m3e/generator version
-////    At:
+////    By: m3e/generator version 
+////    At: 
 ////
 ////          DO NOT EDIT
 ////
