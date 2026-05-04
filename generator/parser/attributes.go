@@ -63,6 +63,8 @@ type Attribute struct {
 	Test Test
 	// CamelCase type name
 	Type string
+	// CamelCase type name of an Option(***) Type
+	BaseType string
 	// Properties of an Attribute
 	Properties set.Set[Property]
 }
@@ -251,7 +253,7 @@ func (attr *Attribute) nilDefault(modName string) {
 	if attr.Type == "String" {
 		attr.Default = `""`
 	} else {
-		logger.TraceID("defs", fmt.Sprintf("%s in %s has no def", attr.Name, modName))
+		logger.TraceID("defs", fmt.Sprintf("%s in %s has no default", attr.Name, modName))
 		// Provoke a Gleam compile error in this case
 		attr.Default = "invalid-default"
 	}
@@ -293,41 +295,20 @@ func (attr *Attribute) testValues(modName string) {
 			Value:          `Some(date.today_utc())`,
 			AttributeValue: `date.to_string(date.today_utc())`,
 		}
-	case attr.Type == "Option(ElevationLevel)":
-		attr.Test = Test{
-			Value:          `Some(elevation_level.Two)`,
-			AttributeValue: `"2"`,
-		}
 	case attr.Type == "Option(Float)":
 		attr.Test = Test{
 			Value:          `Some(42.0)`,
 			AttributeValue: `"42.0"`,
-		}
-	case attr.Type == "Option(HeadingLevel)":
-		attr.Test = Test{
-			Value:          `Some(heading_level.Three)`,
-			AttributeValue: `"3"`,
 		}
 	case attr.Type == "Option(LinkTarget)":
 		attr.Test = Test{
 			Value:          `Some(link_target.Self)`,
 			AttributeValue: `"_self"`,
 		}
-	case attr.Type == "Option(ShapeName)":
-		attr.Test = Test{
-			Value:          `Some(shape_name.FourLeafClover)`,
-			AttributeValue: `"4-leaf-clover"`,
-		}
 	case attr.Type == "Option(String)":
 		attr.Test = Test{
 			Value:          `Some("test")`,
 			AttributeValue: `"test"`,
-		}
-	case attr.IsOptional():
-		logger.TraceID("testvalue", "missing test value setting for "+attr.Type)
-		attr.Test = Test{
-			Value:          `"None"`,
-			AttributeValue: `"nothing"`,
 		}
 	case attr.Type == "String":
 		attr.Test = Test{
@@ -339,8 +320,10 @@ func (attr *Attribute) testValues(modName string) {
 			Value:          strcase.ToSnake(modName) + "." + "Is" + attr.SemBool,
 			AttributeValue: `""`,
 		}
+	case !attr.IsStandard():
+		// The Value & Attribute will be filled out in tests/module.go
 	default:
-		logger.TraceID("testvalue", "no way to set a test value for type "+attr.Type)
+		logger.TraceID("testvalue", "no way to set a test value for type "+attr.Type, "optional", attr.IsOptional())
 	}
 }
 
@@ -430,6 +413,7 @@ func (attr *Attribute) function(text string) (matched bool) {
 func (attr *Attribute) linkTarget(text string, adef *string) (matched bool) {
 	if text == "LinkTarget" && adef != nil && *adef == `""` {
 		attr.Type = "Option(" + text + ")"
+		attr.BaseType = text
 		attr.Properties.Remove(Standard)
 		attr.Properties.Add(Optional)
 		return true
@@ -455,9 +439,11 @@ func (attr *Attribute) listOf(text string) (matched bool) {
 	}
 	attr.toGleamStandardType(tx)
 	if attr.IsStandard() {
+		attr.BaseType = attr.Type
 		attr.Type = "List(" + attr.Type + ")"
 	} else {
 		attr.Type = "List(" + strcase.ToSnake(tx) + "." + tx + ")"
+		attr.BaseType = strcase.ToSnake(tx) + "." + tx
 	}
 	attr.Properties.Add(List)
 	return true
@@ -474,6 +460,7 @@ func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool)
 			attr.Properties.Remove(Optional)
 		}
 		if attr.IsOptional() {
+			attr.BaseType = attr.Type
 			attr.Type = "Option(" + attr.Type + ")"
 		}
 		return true

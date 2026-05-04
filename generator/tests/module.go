@@ -96,24 +96,13 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 	renderAttributes := make([]parser.Attribute, 0, len(module.Attributes))
 	for _, v := range module.Attributes {
 		attr := v
-		if !v.IsStandard() && !v.IsOptional() && !v.IsSemBool() && v.Type != "Date" && v.Type != "number_string.NumberString" {
-			parts := strings.Split(attr.Default, ".")
-			if len(parts) != 2 {
-				logger.Info(fmt.Sprintf("default value %s for attribute %s in module %s should be qualified", attr.Default, module.Name, attr.Name))
-				continue
-			}
-			def := ""
-			for _, v := range enumerations[attr.Type] {
-				if v.Name != parts[1] {
-					def = v.Name
-					break
+		if !v.IsStandard() && !v.IsSemBool() && v.Type != "Date" && v.Type != "number_string.NumberString" {
+			if attr.IsOptional() {
+				if v.BaseType != "Date" {
+					attr.Test.Value, attr.Test.AttributeValue = anyValue(attr.BaseType, enumerations)
 				}
-			}
-			if def == "" {
-				logger.Info(fmt.Sprintf("default value %s for attribute %s in module %s cannot be extracted\n", attr.Default, module.Name, attr.Name))
 			} else {
-				attr.Test.Value = strcase.ToSnake(v.Type) + "." + def
-				attr.Test.AttributeValue = strcase.ToSnake(v.Type) + ".to_string(" + attr.Test.Value + ")"
+				attr.Test.Value, attr.Test.AttributeValue = nonDefaultValue(attr.Type, attr.Default, enumerations)
 			}
 		}
 		renderAttributes = append(renderAttributes, attr)
@@ -121,4 +110,37 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 	renderModule = module
 	renderModule.Attributes = renderAttributes
 	return renderModule
+}
+
+func anyValue(lookup string, enumerations map[string][]parser.Enumeration) (value, attribute string) {
+	values, ok := enumerations[lookup]
+	if !ok || len(values) == 0 {
+		logger.Error("anyValue cannot find external type in enumerations", "type", lookup)
+		return "Unknown", "unknown"
+	}
+	return "Some(" + strcase.ToSnake(lookup) + "." + values[0].Name + ")",
+		strcase.ToSnake(lookup) + ".to_string(" + strcase.ToSnake(lookup) + "." + values[0].Name + ")"
+}
+
+func nonDefaultValue(lookup string, defawlt string, enumerations map[string][]parser.Enumeration) (value, attribute string) {
+	values, ok := enumerations[lookup]
+	if !ok || len(values) == 0 {
+		logger.Error("nonDefaultValue cannot find external type in enumerations", "type", lookup)
+		return "Unknown", "unknown"
+	}
+	parts := strings.Split(defawlt, ".")
+	if len(parts) != 2 {
+		logger.Info(fmt.Sprintf("default value %s should be qualified", defawlt))
+	}
+	for _, v := range values {
+		if v.Name != parts[1] {
+			value = v.Name
+			break
+		}
+	}
+	if value == "" {
+		return "Unknown", "unknown"
+	}
+	return strcase.ToSnake(lookup) + "." + value,
+		strcase.ToSnake(lookup) + ".to_string(" + strcase.ToSnake(lookup) + "." + value + ")"
 }

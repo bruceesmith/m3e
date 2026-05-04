@@ -27,7 +27,8 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 	typeBuf := make([]tsTypeDef, 0, maxEnumTypeDefs)
 	for enum := range enumerations {
 		cenum := strcase.ToCamel(enum)
-		command := exec.Command("sh", "-c", `grep -r -l "export type `+cenum+`" `+m3eSource)
+		cmd := []string{"-c", `grep -r -l "export type ` + cenum + `" ` + m3eSource}
+		command := exec.Command("sh", cmd...)
 		stdoutStderr, err := command.CombinedOutput()
 		if err != nil {
 			return fmt.Errorf("failed to find enumeration declaration file for %s: %w", cenum, err)
