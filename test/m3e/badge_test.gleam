@@ -1,124 +1,194 @@
-import gleam/option.{Some}
-import gleeunit/should
+//// Badge unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/badge.{Config}
+import m3e/badge_position
+import m3e/badge_size
 
-import m3e/badge.{Before, Below}
-import m3e/config
+pub fn badge_default_config_test() {
+  let cases = [
+    Config(
+      size: badge_size.Medium,
+      position: badge_position.AboveAfter,
+      for: None,
+    ),
+  ]
 
-pub fn badge_basic_test() {
-  let b = badge.new("Test Badge")
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("size", "medium"),
-        attribute.attribute("position", "above-after"),
-      ],
-      [element.text("Test Badge")],
-    )
-  badge.render(b) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    badge.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn badge_full_test() {
-  let b =
-    badge.new("Original Label")
-    |> badge.for(Some("element_id"))
-    |> badge.size(config.Large)
-    |> badge.badge_position(Below)
-    |> badge.label("Final Label")
+pub fn badge_from_config_test() {
+  let cases = [
+    #(
+      badge.Config(
+        size: badge_size.Small,
+        position: badge_position.AboveBefore,
+        for: Some("test"),
+      ),
+      badge.new()
+        |> badge.size(badge_size.Small)
+        |> badge.position(badge_position.AboveBefore)
+        |> badge.for(Some("test")),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("for", "element_id"),
-        attribute.attribute("size", "large"),
-        attribute.attribute("position", "below"),
-      ],
-      [element.text("Final Label")],
-    )
-  badge.render(b) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    badge.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn badge_new_test() {
+  let cases = [
+    badge.from_config(badge.Config(
+      size: badge_size.Medium,
+      position: badge_position.AboveAfter,
+      for: None,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    badge.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn badge_size_test() {
-  let b = badge.new("Test") |> badge.size(config.Small)
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("position", "above-after"),
-      ],
-      [element.text("Test")],
-    )
-  badge.render(b) |> should.equal(expected)
+  let mod = badge.new()
+  let cases = [
+    #(
+      badge_size.Small,
+      badge.from_config(
+        badge.Config(..badge.default_config(), size: badge_size.Small),
+      ),
+    ),
+  ]
 
-  let b = b |> badge.size(config.Large)
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("size", "large"),
-        attribute.attribute("position", "above-after"),
-      ],
-      [element.text("Test")],
-    )
-  badge.render(b) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let b = b |> badge.size(config.Medium)
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("size", "medium"),
-        attribute.attribute("position", "above-after"),
-      ],
-      [element.text("Test")],
-    )
-  badge.render(b) |> should.equal(expected)
+    badge.size(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn badge_position_test() {
-  let b = badge.new("Test") |> badge.badge_position(Before)
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("size", "medium"),
-        attribute.attribute("position", "before"),
-      ],
-      [element.text("Test")],
-    )
-  badge.render(b) |> should.equal(expected)
+  let mod = badge.new()
+  let cases = [
+    #(
+      badge_position.AboveBefore,
+      badge.from_config(
+        badge.Config(
+          ..badge.default_config(),
+          position: badge_position.AboveBefore,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    badge.position(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn badge_for_test() {
-  let b = badge.new("Test") |> badge.for(Some("other_element"))
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("for", "other_element"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("position", "above-after"),
-      ],
-      [element.text("Test")],
-    )
-  badge.render(b) |> should.equal(expected)
+  let mod = badge.new()
+  let cases = [
+    #(
+      Some("test"),
+      badge.from_config(
+        badge.Config(..badge.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    badge.for(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn badge_label_test() {
-  let b = badge.new("Test") |> badge.label("New Label")
-  let expected =
-    element.element(
-      "m3e-badge",
-      [
-        attribute.attribute("size", "medium"),
-        attribute.attribute("position", "above-after"),
-      ],
-      [element.text("New Label")],
-    )
-  badge.render(b) |> should.equal(expected)
+pub fn badge_render_test() {
+  let mod = badge.new()
+
+  let mod_size = badge.new() |> badge.size(badge_size.Small)
+  let mod_position = badge.new() |> badge.position(badge_position.AboveBefore)
+  let mod_for = badge.new() |> badge.for(Some("test"))
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-badge", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-badge", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-badge", [], [html.br([])]),
+    ),
+
+    // Happy path with a size attribute
+    #(
+      #(mod_size, [], []),
+      element.element(
+        "m3e-badge",
+        [attribute.attribute("size", badge_size.to_string(badge_size.Small))],
+        [],
+      ),
+    ),
+    // Happy path with a position attribute
+    #(
+      #(mod_position, [], []),
+      element.element(
+        "m3e-badge",
+        [
+          attribute.attribute(
+            "position",
+            badge_position.to_string(badge_position.AboveBefore),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element("m3e-badge", [attribute.attribute("for", "test")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    badge.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

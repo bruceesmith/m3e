@@ -1,231 +1,241 @@
-import gleam/option.{Some}
-import gleeunit/should
+//// Switch unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/switch.{Config}
+import m3e/switch_icons
 
-import m3e/form_submission
-import m3e/state.{Checked, Disabled}
-import m3e/switch.{Both, Selected}
-
-pub fn switch_basic_test() {
-  let s = switch.new("test_id") |> switch.label(Some("Test Label"))
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [attribute.id("test_id"), attribute.attribute("icons", "none")],
-      [],
+pub fn switch_default_config_test() {
+  let cases = [
+    Config(
+      checked: switch.IsNotChecked,
+      disabled: switch.IsNotDisabled,
+      icons: switch_icons.None,
+      name: "",
+      value: "on",
     ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
   ]
-  switch.render(s, []) |> should.equal(expected)
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    switch.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn switch_full_test() {
-  let s =
-    switch.new("test_id")
-    |> switch.label(Some("Test Label"))
-    |> switch.checked(Checked)
-    |> switch.disabled(Disabled)
-    |> switch.form(Some(
-      form_submission.new()
-      |> form_submission.name("key")
-      |> form_submission.value("value"),
-    ))
-    |> switch.icon(Both)
-
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [
-        attribute.id("test_id"),
-        attribute.attribute("icons", "both"),
-        attribute.attribute("checked", ""),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("name", "key"),
-        attribute.attribute("value", "value"),
-      ],
-      [],
+pub fn switch_from_config_test() {
+  let cases = [
+    #(
+      switch.Config(
+        checked: switch.IsChecked,
+        disabled: switch.IsDisabled,
+        icons: switch_icons.Selected,
+        name: "test",
+        value: "test",
+      ),
+      switch.new()
+        |> switch.checked(switch.IsChecked)
+        |> switch.disabled(switch.IsDisabled)
+        |> switch.icons(switch_icons.Selected)
+        |> switch.name("test")
+        |> switch.value("test"),
     ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
   ]
-  switch.render(s, []) |> should.equal(expected)
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    switch.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn switch_element_test() {
-  let s =
-    switch.new("test_id")
-    |> switch.label(Some("Test Label"))
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [attribute.id("test_id"), attribute.attribute("icons", "none")],
-      [],
-    ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
+pub fn switch_new_test() {
+  let cases = [
+    switch.from_config(switch.Config(
+      checked: switch.IsNotChecked,
+      disabled: switch.IsNotDisabled,
+      icons: switch_icons.None,
+      name: "",
+      value: "on",
+    )),
   ]
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    switch.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn switch_checked_test() {
-  let s =
-    switch.new("test_id")
-    |> switch.label(Some("Test Label"))
-    |> switch.checked(Checked)
-
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [
-        attribute.id("test_id"),
-        attribute.attribute("icons", "none"),
-        attribute.attribute("checked", ""),
-      ],
-      [],
+  let mod = switch.new()
+  let cases = [
+    #(
+      switch.IsChecked,
+      switch.from_config(
+        switch.Config(..switch.default_config(), checked: switch.IsChecked),
+      ),
     ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
   ]
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    switch.checked(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn switch_disabled_test() {
-  let s =
-    switch.new("test_id")
-    |> switch.label(Some("Test Label"))
-    |> switch.disabled(Disabled)
-
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [
-        attribute.id("test_id"),
-        attribute.attribute("icons", "none"),
-        attribute.attribute("disabled", ""),
-      ],
-      [],
+  let mod = switch.new()
+  let cases = [
+    #(
+      switch.IsDisabled,
+      switch.from_config(
+        switch.Config(..switch.default_config(), disabled: switch.IsDisabled),
+      ),
     ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
   ]
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    switch.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn switch_form_test() {
-  let s =
-    switch.new("test_id")
-    |> switch.label(Some("Test Label"))
-    |> switch.form(Some(
-      form_submission.new()
-      |> form_submission.name("some_key")
-      |> form_submission.value("some_value"),
-    ))
-
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [
-        attribute.id("test_id"),
-        attribute.attribute("icons", "none"),
-        attribute.attribute("name", "some_key"),
-        attribute.attribute("value", "some_value"),
-      ],
-      [],
+pub fn switch_icons_test() {
+  let mod = switch.new()
+  let cases = [
+    #(
+      switch_icons.Selected,
+      switch.from_config(
+        switch.Config(..switch.default_config(), icons: switch_icons.Selected),
+      ),
     ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
   ]
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    switch.icons(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn switch_icon_test() {
-  let s =
-    switch.new("test_id")
-    |> switch.label(Some("Test Label"))
-    |> switch.icon(Both)
-
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [attribute.id("test_id"), attribute.attribute("icons", "both")],
-      [],
+pub fn switch_name_test() {
+  let mod = switch.new()
+  let cases = [
+    #(
+      "test",
+      switch.from_config(switch.Config(..switch.default_config(), name: "test")),
     ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
   ]
-  s
-  |> switch.render([])
-  |> should.equal(expected)
 
-  let s = s |> switch.icon(Selected)
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [attribute.id("test_id"), attribute.attribute("icons", "selected")],
-      [],
-    ),
-    element.element("label", [attribute.for("test_id")], [
-      element.text("Test Label"),
-    ]),
-  ]
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    switch.name(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_with_label_test() {
-  let s = switch.new("my-switch") |> switch.label(Some("My Label"))
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [
-        attribute.attribute("id", "my-switch"),
-        attribute.attribute("icons", "none"),
-      ],
-      [],
+pub fn switch_value_test() {
+  let mod = switch.new()
+  let cases = [
+    #(
+      "test",
+      switch.from_config(
+        switch.Config(..switch.default_config(), value: "test"),
+      ),
     ),
-    element.element("label", [attribute.attribute("for", "my-switch")], [
-      element.text("My Label"),
-    ]),
   ]
 
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    switch.value(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_without_label_test() {
-  let s = switch.new("my-switch")
-  let expected = [
-    element.element(
-      "m3e-switch",
-      [
-        attribute.attribute("id", "my-switch"),
-        attribute.attribute("icons", "none"),
-      ],
-      [],
+pub fn switch_render_test() {
+  let mod = switch.new()
+
+  let mod_checked = switch.new() |> switch.checked(switch.IsChecked)
+  let mod_disabled = switch.new() |> switch.disabled(switch.IsDisabled)
+  let mod_icons = switch.new() |> switch.icons(switch_icons.Selected)
+  let mod_name = switch.new() |> switch.name("test")
+  let mod_value = switch.new() |> switch.value("test")
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-switch", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-switch", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-switch", [], [html.br([])]),
+    ),
+
+    // Happy path with a checked attribute
+    #(
+      #(mod_checked, [], []),
+      element.element("m3e-switch", [attribute.attribute("checked", "")], []),
+    ),
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element("m3e-switch", [attribute.attribute("disabled", "")], []),
+    ),
+    // Happy path with a icons attribute
+    #(
+      #(mod_icons, [], []),
+      element.element(
+        "m3e-switch",
+        [
+          attribute.attribute(
+            "icons",
+            switch_icons.to_string(switch_icons.Selected),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element("m3e-switch", [attribute.attribute("name", "test")], []),
+    ),
+    // Happy path with a value attribute
+    #(
+      #(mod_value, [], []),
+      element.element("m3e-switch", [attribute.attribute("value", "test")], []),
     ),
   ]
 
-  s
-  |> switch.render([])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    switch.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

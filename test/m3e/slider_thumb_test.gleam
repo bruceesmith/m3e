@@ -1,125 +1,188 @@
+//// SliderThumb unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/slider_thumb
-import m3e/state.{Disabled, Enabled}
+import lustre/element/html
+import m3e/slider_thumb.{Config}
 
-pub fn default_test() {
-  slider_thumb.new()
-  |> slider_thumb.render([])
-  |> should.equal(element.element("m3e-slider-thumb", [], []))
+pub fn slider_thumb_default_config_test() {
+  let cases = [
+    Config(disabled: slider_thumb.IsNotDisabled, name: "", value: None),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    slider_thumb.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn disabled_test() {
-  slider_thumb.new()
-  |> slider_thumb.disabled(Disabled)
-  |> slider_thumb.render([])
-  |> should.equal(
-    element.element(
-      "m3e-slider-thumb",
-      [attribute.attribute("disabled", "")],
-      [],
+pub fn slider_thumb_from_config_test() {
+  let cases = [
+    #(
+      slider_thumb.Config(
+        disabled: slider_thumb.IsDisabled,
+        name: "test",
+        value: Some(42.0),
+      ),
+      slider_thumb.new()
+        |> slider_thumb.disabled(slider_thumb.IsDisabled)
+        |> slider_thumb.name("test")
+        |> slider_thumb.value(Some(42.0)),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    slider_thumb.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn name_test() {
-  slider_thumb.new()
-  |> slider_thumb.name(Some("test-name"))
-  |> slider_thumb.render([])
-  |> should.equal(
-    element.element(
-      "m3e-slider-thumb",
-      [attribute.attribute("name", "test-name")],
-      [],
+pub fn slider_thumb_new_test() {
+  let cases = [
+    slider_thumb.from_config(slider_thumb.Config(
+      disabled: slider_thumb.IsNotDisabled,
+      name: "",
+      value: None,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    slider_thumb.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn slider_thumb_disabled_test() {
+  let mod = slider_thumb.new()
+  let cases = [
+    #(
+      slider_thumb.IsDisabled,
+      slider_thumb.from_config(
+        slider_thumb.Config(
+          ..slider_thumb.default_config(),
+          disabled: slider_thumb.IsDisabled,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slider_thumb.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn value_test() {
-  slider_thumb.new()
-  |> slider_thumb.value(Some(42.0))
-  |> slider_thumb.render([])
-  |> should.equal(
-    element.element(
-      "m3e-slider-thumb",
-      [attribute.attribute("value", "42.0")],
-      [],
+pub fn slider_thumb_name_test() {
+  let mod = slider_thumb.new()
+  let cases = [
+    #(
+      "test",
+      slider_thumb.from_config(
+        slider_thumb.Config(..slider_thumb.default_config(), name: "test"),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slider_thumb.name(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn custom_attributes_test() {
-  slider_thumb.new()
-  |> slider_thumb.render([attribute.class("custom")])
-  |> should.equal(
-    element.element("m3e-slider-thumb", [attribute.class("custom")], []),
-  )
-}
-
-pub fn combined_test() {
-  slider_thumb.new()
-  |> slider_thumb.disabled(Disabled)
-  |> slider_thumb.name(Some("vol"))
-  |> slider_thumb.render([attribute.id("thumb-1")])
-  |> should.equal(
-    element.element(
-      "m3e-slider-thumb",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("name", "vol"),
-        attribute.id("thumb-1"),
-      ],
-      [],
+pub fn slider_thumb_value_test() {
+  let mod = slider_thumb.new()
+  let cases = [
+    #(
+      Some(42.0),
+      slider_thumb.from_config(
+        slider_thumb.Config(..slider_thumb.default_config(), value: Some(42.0)),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slider_thumb.value(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn config_test() {
-  let c =
-    slider_thumb.Config(
-      disabled: Disabled,
-      name: Some("config-name"),
-      value: Some(10.5),
-    )
+pub fn slider_thumb_render_test() {
+  let mod = slider_thumb.new()
 
-  let s = slider_thumb.from_config(c)
+  let mod_disabled =
+    slider_thumb.new() |> slider_thumb.disabled(slider_thumb.IsDisabled)
+  let mod_name = slider_thumb.new() |> slider_thumb.name("test")
+  let mod_value = slider_thumb.new() |> slider_thumb.value(Some(42.0))
 
-  slider_thumb.render(s, [])
-  |> should.equal(
-    element.element(
-      "m3e-slider-thumb",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("name", "config-name"),
-        attribute.attribute("value", "10.5"),
-      ],
-      [],
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-slider-thumb", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-slider-thumb", [attribute.id("id")], []),
     ),
-  )
-}
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-slider-thumb", [], [html.br([])]),
+    ),
 
-pub fn default_config_test() {
-  let c = slider_thumb.default_config()
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-slider-thumb",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element(
+        "m3e-slider-thumb",
+        [attribute.attribute("name", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a value attribute
+    #(
+      #(mod_value, [], []),
+      element.element(
+        "m3e-slider-thumb",
+        [attribute.attribute("value", "42.0")],
+        [],
+      ),
+    ),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.name |> should.equal(None)
-  c.value |> should.equal(None)
-}
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-pub fn from_config_test() {
-  let c = slider_thumb.default_config()
-  let s = slider_thumb.from_config(c)
-
-  slider_thumb.render(s, [])
-  |> should.equal(slider_thumb.render(slider_thumb.new(), []))
-}
-
-pub fn render_config_test() {
-  let c = slider_thumb.default_config()
-  let expected = slider_thumb.render(slider_thumb.from_config(c), [])
-
-  slider_thumb.render_config(c, [])
-  |> should.equal(expected)
+    slider_thumb.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

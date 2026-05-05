@@ -1,104 +1,241 @@
-import gleam/option.{None, Some}
+//// SegmentedButton unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/segmented_button.{Config}
 
-import m3e/config.{Multi, Single}
-import m3e/segmented_button
-import m3e/state.{Disabled, Enabled}
+pub fn segmented_button_default_config_test() {
+  let cases = [
+    Config(
+      disabled: segmented_button.IsNotDisabled,
+      hide_selection_indicator: segmented_button.IsNotHideSelectionIndicator,
+      multi: segmented_button.IsNotMulti,
+      name: "",
+    ),
+  ]
 
-pub fn segmented_button_creation_test() {
-  let s = segmented_button.new()
-  let expected = element.element("m3e-segmented-button", [], [])
-  segmented_button.render(s, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    segmented_button.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn segmented_button_from_config_test() {
+  let cases = [
+    #(
+      segmented_button.Config(
+        disabled: segmented_button.IsDisabled,
+        hide_selection_indicator: segmented_button.IsHideSelectionIndicator,
+        multi: segmented_button.IsMulti,
+        name: "test",
+      ),
+      segmented_button.new()
+        |> segmented_button.disabled(segmented_button.IsDisabled)
+        |> segmented_button.hide_selection_indicator(
+          segmented_button.IsHideSelectionIndicator,
+        )
+        |> segmented_button.multi(segmented_button.IsMulti)
+        |> segmented_button.name("test"),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    segmented_button.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn segmented_button_new_test() {
+  let cases = [
+    segmented_button.from_config(segmented_button.Config(
+      disabled: segmented_button.IsNotDisabled,
+      hide_selection_indicator: segmented_button.IsNotHideSelectionIndicator,
+      multi: segmented_button.IsNotMulti,
+      name: "",
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    segmented_button.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn segmented_button_disabled_test() {
+  let mod = segmented_button.new()
+  let cases = [
+    #(
+      segmented_button.IsDisabled,
+      segmented_button.from_config(
+        segmented_button.Config(
+          ..segmented_button.default_config(),
+          disabled: segmented_button.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    segmented_button.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn segmented_button_hide_selection_indicator_test() {
+  let mod = segmented_button.new()
+  let cases = [
+    #(
+      segmented_button.IsHideSelectionIndicator,
+      segmented_button.from_config(
+        segmented_button.Config(
+          ..segmented_button.default_config(),
+          hide_selection_indicator: segmented_button.IsHideSelectionIndicator,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    segmented_button.hide_selection_indicator(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn segmented_button_multi_test() {
+  let mod = segmented_button.new()
+  let cases = [
+    #(
+      segmented_button.IsMulti,
+      segmented_button.from_config(
+        segmented_button.Config(
+          ..segmented_button.default_config(),
+          multi: segmented_button.IsMulti,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    segmented_button.multi(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn segmented_button_name_test() {
+  let mod = segmented_button.new()
+  let cases = [
+    #(
+      "test",
+      segmented_button.from_config(
+        segmented_button.Config(
+          ..segmented_button.default_config(),
+          name: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    segmented_button.name(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn segmented_button_render_test() {
-  let s = segmented_button.new()
-  let expected =
-    element.element(
-      "m3e-segmented-button",
-      [attribute.attribute("class", "extra")],
-      [
-        element.text("Child"),
-      ],
-    )
-  segmented_button.render(s, [attribute.attribute("class", "extra")], [
-    element.text("Child"),
-  ])
-  |> should.equal(expected)
-}
+  let mod = segmented_button.new()
 
-pub fn segmented_button_setters_test() {
-  let s =
+  let mod_disabled =
     segmented_button.new()
-    |> segmented_button.disabled(Disabled)
-    |> segmented_button.hide_selection_indicator(segmented_button.Hidden)
-    |> segmented_button.multi(Multi)
-    |> segmented_button.name(Some("group"))
-
-  let expected =
-    element.element(
-      "m3e-segmented-button",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("multi", ""),
-        attribute.attribute("name", "group"),
-      ],
-      [],
+    |> segmented_button.disabled(segmented_button.IsDisabled)
+  let mod_hide_selection_indicator =
+    segmented_button.new()
+    |> segmented_button.hide_selection_indicator(
+      segmented_button.IsHideSelectionIndicator,
     )
-  segmented_button.render(s, [], []) |> should.equal(expected)
-}
+  let mod_multi =
+    segmented_button.new() |> segmented_button.multi(segmented_button.IsMulti)
+  let mod_name = segmented_button.new() |> segmented_button.name("test")
 
-pub fn config_test() {
-  let c =
-    segmented_button.Config(
-      disabled: Disabled,
-      hide_selection_indicator: segmented_button.Hidden,
-      multi: Multi,
-      name: Some("config-group"),
-    )
-
-  let s = segmented_button.from_config(c)
-
-  segmented_button.render(s, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-segmented-button",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("multi", ""),
-        attribute.attribute("name", "config-group"),
-      ],
-      [],
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-segmented-button", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-segmented-button", [attribute.id("id")], []),
     ),
-  )
-}
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-segmented-button", [], [html.br([])]),
+    ),
 
-pub fn default_config_test() {
-  let c = segmented_button.default_config()
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-segmented-button",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_selection_indicator attribute
+    #(
+      #(mod_hide_selection_indicator, [], []),
+      element.element(
+        "m3e-segmented-button",
+        [attribute.attribute("hide-selection-indicator", "")],
+        [],
+      ),
+    ),
+    // Happy path with a multi attribute
+    #(
+      #(mod_multi, [], []),
+      element.element(
+        "m3e-segmented-button",
+        [attribute.attribute("multi", "")],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element(
+        "m3e-segmented-button",
+        [attribute.attribute("name", "test")],
+        [],
+      ),
+    ),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.hide_selection_indicator |> should.equal(segmented_button.Visible)
-  c.multi |> should.equal(Single)
-  c.name |> should.equal(None)
-}
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-pub fn from_config_test() {
-  let c = segmented_button.default_config()
-  let s = segmented_button.from_config(c)
-
-  segmented_button.render(s, [], [])
-  |> should.equal(segmented_button.render(segmented_button.new(), [], []))
-}
-
-pub fn render_config_test() {
-  let c = segmented_button.default_config()
-  let expected =
-    segmented_button.render(segmented_button.from_config(c), [], [])
-
-  segmented_button.render_config(c, [], [])
-  |> should.equal(expected)
+    segmented_button.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

@@ -1,158 +1,215 @@
-import gleam/option.{None, Some}
+//// NavMenuItem unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html
+import m3e/nav_menu_item.{Config}
 
-import m3e/nav_menu_item
-import m3e/state.{Disabled, Enabled, Selected, Unselected}
-
-pub fn basic_render_test() {
-  let label = "Home"
-  let item = nav_menu_item.new(label)
-
-  nav_menu_item.render(item, [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-menu-item",
-      [attribute.none(), attribute.none(), attribute.none(), attribute.none()],
-      [
-        element.none(),
-        element.none(),
-        html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        element.none(),
-        element.none(),
-      ],
+pub fn nav_menu_item_default_config_test() {
+  let cases = [
+    Config(
+      disabled: nav_menu_item.IsNotDisabled,
+      open: nav_menu_item.IsNotOpen,
+      selected: nav_menu_item.IsNotSelected,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    nav_menu_item.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn properties_test() {
-  let label = "Inbox"
-  let badge_text = "3"
-
-  let item =
-    nav_menu_item.new(label)
-    |> nav_menu_item.badge(Some(badge_text))
-    |> nav_menu_item.disabled(Disabled)
-    |> nav_menu_item.open(nav_menu_item.Open)
-    |> nav_menu_item.selected(Selected)
-
-  nav_menu_item.render(item, [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-menu-item",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("open", ""),
-        attribute.attribute("selected", ""),
-      ],
-      [
-        html.span([attribute.attribute("slot", "badge")], [
-          html.text(badge_text),
-        ]),
-        element.none(),
-        html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        element.none(),
-        element.none(),
-      ],
-    ),
-  )
-}
-
-pub fn config_test() {
-  let label = "Settings"
-  let c =
-    nav_menu_item.default_config(label)
-    |> fn(c) {
+pub fn nav_menu_item_from_config_test() {
+  let cases = [
+    #(
       nav_menu_item.Config(
-        ..c,
-        disabled: Disabled,
-        indeterminate: nav_menu_item.Indeterminate,
-        open: nav_menu_item.Open,
-        selected: Selected,
-      )
-    }
-
-  let item = nav_menu_item.from_config(c)
-
-  nav_menu_item.render(item, [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-menu-item",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("indeterminate", ""),
-        attribute.attribute("open", ""),
-        attribute.attribute("selected", ""),
-      ],
-      [
-        element.none(),
-        element.none(),
-        html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        element.none(),
-        element.none(),
-      ],
+        disabled: nav_menu_item.IsDisabled,
+        open: nav_menu_item.IsOpen,
+        selected: nav_menu_item.IsSelected,
+      ),
+      nav_menu_item.new()
+        |> nav_menu_item.disabled(nav_menu_item.IsDisabled)
+        |> nav_menu_item.open(nav_menu_item.IsOpen)
+        |> nav_menu_item.selected(nav_menu_item.IsSelected),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    nav_menu_item.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let label = "Test"
-  let c = nav_menu_item.default_config(label)
+pub fn nav_menu_item_new_test() {
+  let cases = [
+    nav_menu_item.from_config(nav_menu_item.Config(
+      disabled: nav_menu_item.IsNotDisabled,
+      open: nav_menu_item.IsNotOpen,
+      selected: nav_menu_item.IsNotSelected,
+    )),
+  ]
 
-  c.label |> should.equal(label)
-  c.disabled |> should.equal(Enabled)
-  c.open |> should.equal(nav_menu_item.Closed)
-  c.indeterminate |> should.equal(nav_menu_item.Determinate)
-  c.selected |> should.equal(Unselected)
-  c.badge |> should.equal(None)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    nav_menu_item.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  let label = "Test"
-  let c = nav_menu_item.default_config(label)
-  let item = nav_menu_item.from_config(c)
-
-  nav_menu_item.render(item, [])
-  |> should.equal(nav_menu_item.render(nav_menu_item.new(label), []))
-}
-
-pub fn render_config_test() {
-  let label = "Test"
-  let c = nav_menu_item.default_config(label)
-  let expected = nav_menu_item.render(nav_menu_item.from_config(c), [])
-
-  nav_menu_item.render_config(c, [])
-  |> should.equal(expected)
-}
-
-pub fn setters_test() {
-  let label = "Test"
-  let item =
-    nav_menu_item.new(label)
-    |> nav_menu_item.disabled(Disabled)
-    |> nav_menu_item.indeterminate(nav_menu_item.Indeterminate)
-    |> nav_menu_item.open(nav_menu_item.Open)
-    |> nav_menu_item.selected(Selected)
-
-  nav_menu_item.render(item, [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-menu-item",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("indeterminate", ""),
-        attribute.attribute("open", ""),
-        attribute.attribute("selected", ""),
-      ],
-      [
-        element.none(),
-        element.none(),
-        html.span([attribute.attribute("slot", "label")], [html.text(label)]),
-        element.none(),
-        element.none(),
-      ],
+pub fn nav_menu_item_disabled_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      nav_menu_item.IsDisabled,
+      nav_menu_item.from_config(
+        nav_menu_item.Config(
+          ..nav_menu_item.default_config(),
+          disabled: nav_menu_item.IsDisabled,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_menu_item_open_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      nav_menu_item.IsOpen,
+      nav_menu_item.from_config(
+        nav_menu_item.Config(
+          ..nav_menu_item.default_config(),
+          open: nav_menu_item.IsOpen,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.open(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_menu_item_selected_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      nav_menu_item.IsSelected,
+      nav_menu_item.from_config(
+        nav_menu_item.Config(
+          ..nav_menu_item.default_config(),
+          selected: nav_menu_item.IsSelected,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.selected(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_menu_item_render_test() {
+  let mod = nav_menu_item.new()
+
+  let mod_disabled =
+    nav_menu_item.new() |> nav_menu_item.disabled(nav_menu_item.IsDisabled)
+  let mod_open = nav_menu_item.new() |> nav_menu_item.open(nav_menu_item.IsOpen)
+  let mod_selected =
+    nav_menu_item.new() |> nav_menu_item.selected(nav_menu_item.IsSelected)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-nav-menu-item", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-nav-menu-item", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-nav-menu-item", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a open attribute
+    #(
+      #(mod_open, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("open", "")],
+        [],
+      ),
+    ),
+    // Happy path with a selected attribute
+    #(
+      #(mod_selected, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("selected", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    nav_menu_item.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_menu_item_slot_test() {
+  let cases = [
+    #(nav_menu_item.Label, attribute.attribute("slot", "label")),
+    #(nav_menu_item.Icon, attribute.attribute("slot", "icon")),
+    #(nav_menu_item.Badge, attribute.attribute("slot", "badge")),
+    #(nav_menu_item.SelectedIcon, attribute.attribute("slot", "selected-icon")),
+    #(nav_menu_item.ToggleIcon, attribute.attribute("slot", "toggle-icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    nav_menu_item.slot(s)
+    |> should.equal(expected)
+  })
 }

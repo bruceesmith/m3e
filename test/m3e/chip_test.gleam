@@ -1,93 +1,156 @@
-import gleam/option.{None, Some}
+//// Chip unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/chip
-import m3e/form_submission
+import lustre/element/html
+import m3e/chip.{Config}
+import m3e/chip_variant
 
-pub fn default_config_test() {
-  let assert chip.Config(form_submission: None, variant: chip.Outlined) =
+pub fn chip_default_config_test() {
+  let cases = [
+    Config(value: "", variant: chip_variant.Outlined),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
     chip.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_test() {
-  let actual =
-    chip.default_config()
-    |> chip.from_config
-    |> chip.render([], [element.text("Label")])
+pub fn chip_from_config_test() {
+  let cases = [
+    #(
+      chip.Config(value: "test", variant: chip_variant.Elevated),
+      chip.new()
+        |> chip.value("test")
+        |> chip.variant(chip_variant.Elevated),
+    ),
+  ]
 
-  let expected =
-    element.element("m3e-chip", [attribute.attribute("variant", "outlined")], [
-      element.text("Label"),
-    ])
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
 
-  let assert True = actual == expected
-}
-
-pub fn variant_setter_test() {
-  let config = chip.Config(form_submission: None, variant: chip.Outlined)
-
-  let actual =
     chip.from_config(config)
-    |> chip.variant(chip.Elevated)
-    |> chip.render([], [])
-
-  let expected =
-    element.element(
-      "m3e-chip",
-      [attribute.attribute("variant", "elevated")],
-      [],
-    )
-
-  let assert True = actual == expected
+    |> should.equal(expected)
+  })
 }
 
-pub fn form_submission_test() {
-  let submission =
-    form_submission.new()
-    |> form_submission.name("group")
-    |> form_submission.value("1")
+pub fn chip_new_test() {
+  let cases = [
+    chip.from_config(chip.Config(value: "", variant: chip_variant.Outlined)),
+  ]
 
-  let actual =
-    chip.default_config()
-    |> chip.from_config
-    |> chip.form(Some(submission))
-    |> chip.render([], [])
+  list.each(cases, fn(c) {
+    let expected = c
 
-  let expected =
-    element.element(
-      "m3e-chip",
-      [
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("name", "group"),
-        attribute.attribute("value", "1"),
-      ],
-      [],
-    )
-
-  let assert True = actual == expected
+    chip.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let config = chip.Config(form_submission: None, variant: chip.Elevated)
+pub fn chip_value_test() {
+  let mod = chip.new()
+  let cases = [
+    #(
+      "test",
+      chip.from_config(chip.Config(..chip.default_config(), value: "test")),
+    ),
+  ]
 
-  let actual = chip.render_config(config, [attribute.id("chip")], [])
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let expected =
-    element.element(
-      "m3e-chip",
-      [
-        attribute.attribute("variant", "elevated"),
-        attribute.id("chip"),
-      ],
-      [],
-    )
-
-  let assert True = actual == expected
+    chip.value(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_test() {
-  let icon_slot = chip.slot(chip.Icon)
-  let expected = attribute.attribute("slot", "icon")
+pub fn chip_variant_test() {
+  let mod = chip.new()
+  let cases = [
+    #(
+      chip_variant.Elevated,
+      chip.from_config(
+        chip.Config(..chip.default_config(), variant: chip_variant.Elevated),
+      ),
+    ),
+  ]
 
-  let assert True = icon_slot == expected
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    chip.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn chip_render_test() {
+  let mod = chip.new()
+
+  let mod_value = chip.new() |> chip.value("test")
+  let mod_variant = chip.new() |> chip.variant(chip_variant.Elevated)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-chip", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-chip", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(#(mod, [], [html.br([])]), element.element("m3e-chip", [], [html.br([])])),
+
+    // Happy path with a value attribute
+    #(
+      #(mod_value, [], []),
+      element.element("m3e-chip", [attribute.attribute("value", "test")], []),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-chip",
+        [
+          attribute.attribute(
+            "variant",
+            chip_variant.to_string(chip_variant.Elevated),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    chip.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn chip_slot_test() {
+  let cases = [
+    #(chip.Icon, attribute.attribute("slot", "icon")),
+    #(chip.TrailingIcon, attribute.attribute("slot", "trailing-icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    chip.slot(s)
+    |> should.equal(expected)
+  })
 }

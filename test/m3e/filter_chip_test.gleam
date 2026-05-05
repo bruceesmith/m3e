@@ -1,131 +1,290 @@
+//// FilterChip unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/chip
-import m3e/filter_chip
-import m3e/state
+import lustre/element/html
+import m3e/chip_variant
+import m3e/filter_chip.{Config}
 
-pub fn default_config_test() {
-  let config = filter_chip.default_config()
+pub fn filter_chip_default_config_test() {
+  let cases = [
+    Config(
+      disabled: filter_chip.IsNotDisabled,
+      disabled_interactive: filter_chip.IsNotDisabledInteractive,
+      selected: filter_chip.IsNotSelected,
+      value: "",
+      variant: chip_variant.Outlined,
+    ),
+  ]
 
-  config.disabled |> should.equal(state.default_interaction)
-  config.disabled_interactive |> should.equal(state.default_interaction)
-  config.selected |> should.equal(state.default_selection_state)
-  config.value |> should.equal("")
-  config.variant |> should.equal(chip.default_variant)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    filter_chip.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_default_test() {
-  filter_chip.render(filter_chip.from_config(filter_chip.default_config()), [], [
-    element.text("Filter"),
-  ])
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.text("Filter")],
+pub fn filter_chip_from_config_test() {
+  let cases = [
+    #(
+      filter_chip.Config(
+        disabled: filter_chip.IsDisabled,
+        disabled_interactive: filter_chip.IsDisabledInteractive,
+        selected: filter_chip.IsSelected,
+        value: "test",
+        variant: chip_variant.Elevated,
+      ),
+      filter_chip.new()
+        |> filter_chip.disabled(filter_chip.IsDisabled)
+        |> filter_chip.disabled_interactive(filter_chip.IsDisabledInteractive)
+        |> filter_chip.selected(filter_chip.IsSelected)
+        |> filter_chip.value("test")
+        |> filter_chip.variant(chip_variant.Elevated),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    filter_chip.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_selected_test() {
-  filter_chip.render(
-    filter_chip.selected(
-      filter_chip.from_config(filter_chip.default_config()),
-      state.Selected,
-    ),
-    [],
-    [element.text("Selected Filter")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.attribute("selected", ""),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.text("Selected Filter")],
-    ),
-  )
+pub fn filter_chip_new_test() {
+  let cases = [
+    filter_chip.from_config(filter_chip.Config(
+      disabled: filter_chip.IsNotDisabled,
+      disabled_interactive: filter_chip.IsNotDisabledInteractive,
+      selected: filter_chip.IsNotSelected,
+      value: "",
+      variant: chip_variant.Outlined,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    filter_chip.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_disabled_test() {
-  filter_chip.render(
-    filter_chip.disabled(
-      filter_chip.from_config(filter_chip.default_config()),
-      state.Disabled,
+pub fn filter_chip_disabled_test() {
+  let mod = filter_chip.new()
+  let cases = [
+    #(
+      filter_chip.IsDisabled,
+      filter_chip.from_config(
+        filter_chip.Config(
+          ..filter_chip.default_config(),
+          disabled: filter_chip.IsDisabled,
+        ),
+      ),
     ),
-    [],
-    [element.text("Disabled Filter")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.text("Disabled Filter")],
-    ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_with_value_test() {
-  filter_chip.render(
-    filter_chip.value(
-      filter_chip.from_config(filter_chip.default_config()),
-      "category:tech",
+pub fn filter_chip_disabled_interactive_test() {
+  let mod = filter_chip.new()
+  let cases = [
+    #(
+      filter_chip.IsDisabledInteractive,
+      filter_chip.from_config(
+        filter_chip.Config(
+          ..filter_chip.default_config(),
+          disabled_interactive: filter_chip.IsDisabledInteractive,
+        ),
+      ),
     ),
-    [],
-    [element.text("Tech Filter")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.attribute("value", "category:tech"),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [element.text("Tech Filter")],
-    ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip.disabled_interactive(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let config =
-    filter_chip.Config(
-      disabled: state.default_interaction,
-      disabled_interactive: state.default_interaction,
-      selected: state.Selected,
-      value: "active",
-      variant: chip.Elevated,
-    )
-
-  filter_chip.render_config(config, [attribute.id("filter-chip")], [
-    element.text("Configured Filter"),
-  ])
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip",
-      [
-        attribute.attribute("selected", ""),
-        attribute.attribute("value", "active"),
-        attribute.attribute("variant", "elevated"),
-        attribute.id("filter-chip"),
-      ],
-      [element.text("Configured Filter")],
+pub fn filter_chip_selected_test() {
+  let mod = filter_chip.new()
+  let cases = [
+    #(
+      filter_chip.IsSelected,
+      filter_chip.from_config(
+        filter_chip.Config(
+          ..filter_chip.default_config(),
+          selected: filter_chip.IsSelected,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip.selected(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_icon_test() {
-  filter_chip.slot(filter_chip.Icon)
-  |> should.equal(attribute.attribute("slot", "icon"))
+pub fn filter_chip_value_test() {
+  let mod = filter_chip.new()
+  let cases = [
+    #(
+      "test",
+      filter_chip.from_config(
+        filter_chip.Config(..filter_chip.default_config(), value: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip.value(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_trailing_icon_test() {
-  filter_chip.slot(filter_chip.TrailingIcon)
-  |> should.equal(attribute.attribute("slot", "trailing-icon"))
+pub fn filter_chip_variant_test() {
+  let mod = filter_chip.new()
+  let cases = [
+    #(
+      chip_variant.Elevated,
+      filter_chip.from_config(
+        filter_chip.Config(
+          ..filter_chip.default_config(),
+          variant: chip_variant.Elevated,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn filter_chip_render_test() {
+  let mod = filter_chip.new()
+
+  let mod_disabled =
+    filter_chip.new() |> filter_chip.disabled(filter_chip.IsDisabled)
+  let mod_disabled_interactive =
+    filter_chip.new()
+    |> filter_chip.disabled_interactive(filter_chip.IsDisabledInteractive)
+  let mod_selected =
+    filter_chip.new() |> filter_chip.selected(filter_chip.IsSelected)
+  let mod_value = filter_chip.new() |> filter_chip.value("test")
+  let mod_variant =
+    filter_chip.new() |> filter_chip.variant(chip_variant.Elevated)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-filter-chip", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-filter-chip", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-filter-chip", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-filter-chip",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a disabled_interactive attribute
+    #(
+      #(mod_disabled_interactive, [], []),
+      element.element(
+        "m3e-filter-chip",
+        [attribute.attribute("disabled-interactive", "")],
+        [],
+      ),
+    ),
+    // Happy path with a selected attribute
+    #(
+      #(mod_selected, [], []),
+      element.element(
+        "m3e-filter-chip",
+        [attribute.attribute("selected", "")],
+        [],
+      ),
+    ),
+    // Happy path with a value attribute
+    #(
+      #(mod_value, [], []),
+      element.element(
+        "m3e-filter-chip",
+        [attribute.attribute("value", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-filter-chip",
+        [
+          attribute.attribute(
+            "variant",
+            chip_variant.to_string(chip_variant.Elevated),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    filter_chip.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn filter_chip_slot_test() {
+  let cases = [
+    #(filter_chip.Icon, attribute.attribute("slot", "icon")),
+    #(filter_chip.TrailingIcon, attribute.attribute("slot", "trailing-icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    filter_chip.slot(s)
+    |> should.equal(expected)
+  })
 }

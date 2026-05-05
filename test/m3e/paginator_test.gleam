@@ -1,229 +1,572 @@
+//// Paginator unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/form_field_variant
+import m3e/number_string
+import m3e/paginator.{Config}
 
-import m3e/form_field.{Filled}
-import m3e/paginator.{PageSize, PageSizeAll}
-import m3e/state.{Disabled, Enabled}
-
-pub fn paginator_creation_test() {
-  let p = paginator.new()
-  let expected =
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("first-page-label", "First page"),
-        attribute.attribute("items-per-page-label", "Items per page"),
-        attribute.attribute("last-page-label", "Last page"),
-        attribute.attribute("length", "0"),
-        attribute.attribute("next-page-label", "Next page"),
-        attribute.attribute("page-index", "0"),
-        attribute.attribute("page-size", "50"),
-        attribute.attribute("page-sizes", "5,10,25,50,100"),
-        attribute.attribute("page-size-variant", "outlined"),
-        attribute.attribute("previous-page-label", "Previous page"),
-      ],
-      [],
-    )
-  paginator.render(p, [], []) |> should.equal(expected)
-}
-
-pub fn paginator_full_test() {
-  let p =
-    paginator.new()
-    |> paginator.disabled(Disabled)
-    |> paginator.first_page_label("Primeira")
-    |> paginator.hide_page_size(paginator.Hidden)
-    |> paginator.items_per_page_label("Itens")
-    |> paginator.last_page_label("Última")
-    |> paginator.length(1000)
-    |> paginator.next_page_label("Próxima")
-    |> paginator.page_index(1)
-    |> paginator.page_size(PageSize(10))
-    |> paginator.page_sizes([PageSize(10), PageSize(20), PageSizeAll])
-    |> paginator.page_size_variant(Filled)
-    |> paginator.previous_page_label("Anterior")
-    |> paginator.show_first_last_buttons(paginator.Shown)
-
-  let expected =
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("first-page-label", "Primeira"),
-        attribute.attribute("hide-page-size", ""),
-        attribute.attribute("items-per-page-label", "Itens"),
-        attribute.attribute("last-page-label", "Última"),
-        attribute.attribute("length", "1000"),
-        attribute.attribute("next-page-label", "Próxima"),
-        attribute.attribute("page-index", "1"),
-        attribute.attribute("page-size", "10"),
-        attribute.attribute("page-sizes", "10,20,all"),
-        attribute.attribute("page-size-variant", "filled"),
-        attribute.attribute("previous-page-label", "Anterior"),
-        attribute.attribute("show-first-last-buttons", ""),
-      ],
-      [],
-    )
-  paginator.render(p, [], []) |> should.equal(expected)
-}
-
-pub fn paginator_element_test() {
-  let p = paginator.new()
-  let expected =
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("first-page-label", "First page"),
-        attribute.attribute("items-per-page-label", "Items per page"),
-        attribute.attribute("last-page-label", "Last page"),
-        attribute.attribute("length", "0"),
-        attribute.attribute("next-page-label", "Next page"),
-        attribute.attribute("page-index", "0"),
-        attribute.attribute("page-size", "50"),
-        attribute.attribute("page-sizes", "5,10,25,50,100"),
-        attribute.attribute("page-size-variant", "outlined"),
-        attribute.attribute("previous-page-label", "Previous page"),
-      ],
-      [element.text("Child")],
-    )
-  p |> paginator.render([], [element.text("Child")]) |> should.equal(expected)
-}
-
-pub fn paginator_setters_test() {
-  let p = paginator.new()
-
-  let p_disabled = p |> paginator.disabled(Disabled)
-  let expected_disabled =
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("first-page-label", "First page"),
-        attribute.attribute("items-per-page-label", "Items per page"),
-        attribute.attribute("last-page-label", "Last page"),
-        attribute.attribute("length", "0"),
-        attribute.attribute("next-page-label", "Next page"),
-        attribute.attribute("page-index", "0"),
-        attribute.attribute("page-size", "50"),
-        attribute.attribute("page-sizes", "5,10,25,50,100"),
-        attribute.attribute("page-size-variant", "outlined"),
-        attribute.attribute("previous-page-label", "Previous page"),
-      ],
-      [],
-    )
-  paginator.render(p_disabled, [], []) |> should.equal(expected_disabled)
-
-  let p_hide = p |> paginator.hide_page_size(paginator.Hidden)
-  let expected_hide =
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("first-page-label", "First page"),
-        attribute.attribute("hide-page-size", ""),
-        attribute.attribute("items-per-page-label", "Items per page"),
-        attribute.attribute("last-page-label", "Last page"),
-        attribute.attribute("length", "0"),
-        attribute.attribute("next-page-label", "Next page"),
-        attribute.attribute("page-index", "0"),
-        attribute.attribute("page-size", "50"),
-        attribute.attribute("page-sizes", "5,10,25,50,100"),
-        attribute.attribute("page-size-variant", "outlined"),
-        attribute.attribute("previous-page-label", "Previous page"),
-      ],
-      [],
-    )
-  paginator.render(p_hide, [], []) |> should.equal(expected_hide)
-
-  let p_show = p |> paginator.show_first_last_buttons(paginator.Shown)
-  let expected_show =
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("first-page-label", "First page"),
-        attribute.attribute("items-per-page-label", "Items per page"),
-        attribute.attribute("last-page-label", "Last page"),
-        attribute.attribute("length", "0"),
-        attribute.attribute("next-page-label", "Next page"),
-        attribute.attribute("page-index", "0"),
-        attribute.attribute("page-size", "50"),
-        attribute.attribute("page-sizes", "5,10,25,50,100"),
-        attribute.attribute("page-size-variant", "outlined"),
-        attribute.attribute("previous-page-label", "Previous page"),
-        attribute.attribute("show-first-last-buttons", ""),
-      ],
-      [],
-    )
-  paginator.render(p_show, [], []) |> should.equal(expected_show)
-}
-
-pub fn config_test() {
-  let c =
-    paginator.Config(
-      disabled: Disabled,
-      first_page_label: "First",
-      hide_page_size: paginator.Hidden,
-      items_per_page_label: "Items",
-      last_page_label: "Last",
-      length: 100,
-      next_page_label: "Next",
-      page_index: 5,
-      page_size: PageSize(10),
-      page_sizes: [PageSize(10), PageSizeAll],
-      page_size_variant: Filled,
-      previous_page_label: "Prev",
-      show_first_last_buttons: paginator.Shown,
-    )
-
-  let p = paginator.from_config(c)
-
-  paginator.render(p, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-paginator",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("first-page-label", "First"),
-        attribute.attribute("hide-page-size", ""),
-        attribute.attribute("items-per-page-label", "Items"),
-        attribute.attribute("last-page-label", "Last"),
-        attribute.attribute("length", "100"),
-        attribute.attribute("next-page-label", "Next"),
-        attribute.attribute("page-index", "5"),
-        attribute.attribute("page-size", "10"),
-        attribute.attribute("page-sizes", "10,all"),
-        attribute.attribute("page-size-variant", "filled"),
-        attribute.attribute("previous-page-label", "Prev"),
-        attribute.attribute("show-first-last-buttons", ""),
-      ],
-      [],
+pub fn paginator_default_config_test() {
+  let cases = [
+    Config(
+      disabled: paginator.IsNotDisabled,
+      first_page_label: "First page",
+      hide_page_size: paginator.IsNotHidePageSize,
+      items_per_page_label: "Items per page:",
+      last_page_label: "Last page",
+      length: 0.0,
+      next_page_label: "Next page",
+      page_index: 0.0,
+      page_size: number_string.NumberVal(50.0),
+      page_sizes: "5,10,25,50,100",
+      page_size_variant: form_field_variant.Outlined,
+      previous_page_label: "Previous page",
+      show_first_last_buttons: paginator.IsNotShowFirstLastButtons,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    paginator.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let c = paginator.default_config()
+pub fn paginator_from_config_test() {
+  let cases = [
+    #(
+      paginator.Config(
+        disabled: paginator.IsDisabled,
+        first_page_label: "test",
+        hide_page_size: paginator.IsHidePageSize,
+        items_per_page_label: "test",
+        last_page_label: "test",
+        length: 42.0,
+        next_page_label: "test",
+        page_index: 42.0,
+        page_size: number_string.StringVal("10"),
+        page_sizes: "test",
+        page_size_variant: form_field_variant.Filled,
+        previous_page_label: "test",
+        show_first_last_buttons: paginator.IsShowFirstLastButtons,
+      ),
+      paginator.new()
+        |> paginator.disabled(paginator.IsDisabled)
+        |> paginator.first_page_label("test")
+        |> paginator.hide_page_size(paginator.IsHidePageSize)
+        |> paginator.items_per_page_label("test")
+        |> paginator.last_page_label("test")
+        |> paginator.length(42.0)
+        |> paginator.next_page_label("test")
+        |> paginator.page_index(42.0)
+        |> paginator.page_size(number_string.StringVal("10"))
+        |> paginator.page_sizes("test")
+        |> paginator.page_size_variant(form_field_variant.Filled)
+        |> paginator.previous_page_label("test")
+        |> paginator.show_first_last_buttons(paginator.IsShowFirstLastButtons),
+    ),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.hide_page_size |> should.equal(paginator.Visible)
-  c.show_first_last_buttons |> should.equal(paginator.Omitted)
-  c.length |> should.equal(0)
-  c.page_index |> should.equal(0)
-  c.page_size |> should.equal(PageSize(50))
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    paginator.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  let c = paginator.default_config()
-  let p = paginator.from_config(c)
+pub fn paginator_new_test() {
+  let cases = [
+    paginator.from_config(paginator.Config(
+      disabled: paginator.IsNotDisabled,
+      first_page_label: "First page",
+      hide_page_size: paginator.IsNotHidePageSize,
+      items_per_page_label: "Items per page:",
+      last_page_label: "Last page",
+      length: 0.0,
+      next_page_label: "Next page",
+      page_index: 0.0,
+      page_size: number_string.NumberVal(50.0),
+      page_sizes: "5,10,25,50,100",
+      page_size_variant: form_field_variant.Outlined,
+      previous_page_label: "Previous page",
+      show_first_last_buttons: paginator.IsNotShowFirstLastButtons,
+    )),
+  ]
 
-  paginator.render(p, [], [])
-  |> should.equal(paginator.render(paginator.new(), [], []))
+  list.each(cases, fn(c) {
+    let expected = c
+
+    paginator.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let c = paginator.default_config()
-  let expected = paginator.render(paginator.from_config(c), [], [])
+pub fn paginator_disabled_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      paginator.IsDisabled,
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          disabled: paginator.IsDisabled,
+        ),
+      ),
+    ),
+  ]
 
-  paginator.render_config(c, [], [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_first_page_label_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      "test",
+      paginator.from_config(
+        paginator.Config(..paginator.default_config(), first_page_label: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.first_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_hide_page_size_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      paginator.IsHidePageSize,
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          hide_page_size: paginator.IsHidePageSize,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.hide_page_size(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_items_per_page_label_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      "test",
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          items_per_page_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.items_per_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_last_page_label_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      "test",
+      paginator.from_config(
+        paginator.Config(..paginator.default_config(), last_page_label: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.last_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_length_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      42.0,
+      paginator.from_config(
+        paginator.Config(..paginator.default_config(), length: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.length(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_next_page_label_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      "test",
+      paginator.from_config(
+        paginator.Config(..paginator.default_config(), next_page_label: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.next_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_page_index_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      42.0,
+      paginator.from_config(
+        paginator.Config(..paginator.default_config(), page_index: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.page_index(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_page_size_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      number_string.StringVal("10"),
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          page_size: number_string.StringVal("10"),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.page_size(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_page_sizes_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      "test",
+      paginator.from_config(
+        paginator.Config(..paginator.default_config(), page_sizes: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.page_sizes(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_page_size_variant_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      form_field_variant.Filled,
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          page_size_variant: form_field_variant.Filled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.page_size_variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_previous_page_label_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      "test",
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          previous_page_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.previous_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_show_first_last_buttons_test() {
+  let mod = paginator.new()
+  let cases = [
+    #(
+      paginator.IsShowFirstLastButtons,
+      paginator.from_config(
+        paginator.Config(
+          ..paginator.default_config(),
+          show_first_last_buttons: paginator.IsShowFirstLastButtons,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    paginator.show_first_last_buttons(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_render_test() {
+  let mod = paginator.new()
+
+  let mod_disabled = paginator.new() |> paginator.disabled(paginator.IsDisabled)
+  let mod_first_page_label =
+    paginator.new() |> paginator.first_page_label("test")
+  let mod_hide_page_size =
+    paginator.new() |> paginator.hide_page_size(paginator.IsHidePageSize)
+  let mod_items_per_page_label =
+    paginator.new() |> paginator.items_per_page_label("test")
+  let mod_last_page_label = paginator.new() |> paginator.last_page_label("test")
+  let mod_length = paginator.new() |> paginator.length(42.0)
+  let mod_next_page_label = paginator.new() |> paginator.next_page_label("test")
+  let mod_page_index = paginator.new() |> paginator.page_index(42.0)
+  let mod_page_size =
+    paginator.new() |> paginator.page_size(number_string.StringVal("10"))
+  let mod_page_sizes = paginator.new() |> paginator.page_sizes("test")
+  let mod_page_size_variant =
+    paginator.new() |> paginator.page_size_variant(form_field_variant.Filled)
+  let mod_previous_page_label =
+    paginator.new() |> paginator.previous_page_label("test")
+  let mod_show_first_last_buttons =
+    paginator.new()
+    |> paginator.show_first_last_buttons(paginator.IsShowFirstLastButtons)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-paginator", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-paginator", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-paginator", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a first_page_label attribute
+    #(
+      #(mod_first_page_label, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("first-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_page_size attribute
+    #(
+      #(mod_hide_page_size, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("hide-page-size", "")],
+        [],
+      ),
+    ),
+    // Happy path with a items_per_page_label attribute
+    #(
+      #(mod_items_per_page_label, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("items-per-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a last_page_label attribute
+    #(
+      #(mod_last_page_label, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("last-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a length attribute
+    #(
+      #(mod_length, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("length", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a next_page_label attribute
+    #(
+      #(mod_next_page_label, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("next-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a page_index attribute
+    #(
+      #(mod_page_index, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("page-index", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a page_size attribute
+    #(
+      #(mod_page_size, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("page-size", "10")],
+        [],
+      ),
+    ),
+    // Happy path with a page_sizes attribute
+    #(
+      #(mod_page_sizes, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("page-sizes", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a page_size_variant attribute
+    #(
+      #(mod_page_size_variant, [], []),
+      element.element(
+        "m3e-paginator",
+        [
+          attribute.attribute(
+            "page-size-variant",
+            form_field_variant.to_string(form_field_variant.Filled),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a previous_page_label attribute
+    #(
+      #(mod_previous_page_label, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("previous-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a show_first_last_buttons attribute
+    #(
+      #(mod_show_first_last_buttons, [], []),
+      element.element(
+        "m3e-paginator",
+        [attribute.attribute("show-first-last-buttons", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    paginator.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn paginator_slot_test() {
+  let cases = [
+    #(paginator.FirstPageIcon, attribute.attribute("slot", "first-page-icon")),
+    #(
+      paginator.PreviousPageIcon,
+      attribute.attribute("slot", "previous-page-icon"),
+    ),
+    #(paginator.NextPageIcon, attribute.attribute("slot", "next-page-icon")),
+    #(paginator.LastPageIcon, attribute.attribute("slot", "last-page-icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    paginator.slot(s)
+    |> should.equal(expected)
+  })
 }

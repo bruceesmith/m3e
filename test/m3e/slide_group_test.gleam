@@ -1,100 +1,283 @@
+//// SlideGroup unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/slide_group.{Config}
 
-import m3e/layout.{Horizontal, Vertical}
-import m3e/slide_group
-import m3e/state.{Disabled, Enabled}
-
-pub fn slide_group_creation_test() {
-  let s = slide_group.new()
-  let expected =
-    element.element(
-      "m3e-slide-group",
-      [
-        attribute.attribute("next-page-label", "Next page"),
-        attribute.attribute("previous-page-label", "Previous page"),
-        attribute.attribute("threshold", "0"),
-      ],
-      [],
-    )
-  slide_group.render(s, [], []) |> should.equal(expected)
-}
-
-pub fn slide_group_setters_test() {
-  let s =
-    slide_group.new()
-    |> slide_group.disabled(Disabled)
-    |> slide_group.next_page_label("Next")
-    |> slide_group.previous_page_label("Prev")
-    |> slide_group.threshold(100)
-    |> slide_group.vertical(Vertical)
-
-  let expected =
-    element.element(
-      "m3e-slide-group",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("next-page-label", "Next"),
-        attribute.attribute("previous-page-label", "Prev"),
-        attribute.attribute("threshold", "100"),
-        attribute.attribute("vertical", ""),
-      ],
-      [element.text("Child")],
-    )
-  slide_group.render(s, [], [element.text("Child")]) |> should.equal(expected)
-}
-
-pub fn config_test() {
-  let c =
-    slide_group.Config(
-      disabled: Disabled,
-      next_page_label: "Forward",
-      previous_page_label: "Back",
-      threshold: 50,
-      vertical: Vertical,
-    )
-
-  let s = slide_group.from_config(c)
-
-  slide_group.render(s, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-slide-group",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("next-page-label", "Forward"),
-        attribute.attribute("previous-page-label", "Back"),
-        attribute.attribute("threshold", "50"),
-        attribute.attribute("vertical", ""),
-      ],
-      [],
+pub fn slide_group_default_config_test() {
+  let cases = [
+    Config(
+      disabled: slide_group.IsNotDisabled,
+      next_page_label: "Next page",
+      previous_page_label: "Previous page",
+      threshold: 0.0,
+      vertical: slide_group.IsNotVertical,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    slide_group.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let c = slide_group.default_config()
+pub fn slide_group_from_config_test() {
+  let cases = [
+    #(
+      slide_group.Config(
+        disabled: slide_group.IsDisabled,
+        next_page_label: "test",
+        previous_page_label: "test",
+        threshold: 42.0,
+        vertical: slide_group.IsVertical,
+      ),
+      slide_group.new()
+        |> slide_group.disabled(slide_group.IsDisabled)
+        |> slide_group.next_page_label("test")
+        |> slide_group.previous_page_label("test")
+        |> slide_group.threshold(42.0)
+        |> slide_group.vertical(slide_group.IsVertical),
+    ),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.next_page_label |> should.equal("Next page")
-  c.previous_page_label |> should.equal("Previous page")
-  c.threshold |> should.equal(0)
-  c.vertical |> should.equal(Horizontal)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    slide_group.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  let c = slide_group.default_config()
-  let s = slide_group.from_config(c)
+pub fn slide_group_new_test() {
+  let cases = [
+    slide_group.from_config(slide_group.Config(
+      disabled: slide_group.IsNotDisabled,
+      next_page_label: "Next page",
+      previous_page_label: "Previous page",
+      threshold: 0.0,
+      vertical: slide_group.IsNotVertical,
+    )),
+  ]
 
-  slide_group.render(s, [], [])
-  |> should.equal(slide_group.render(slide_group.new(), [], []))
+  list.each(cases, fn(c) {
+    let expected = c
+
+    slide_group.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let c = slide_group.default_config()
-  let expected = slide_group.render(slide_group.from_config(c), [], [])
+pub fn slide_group_disabled_test() {
+  let mod = slide_group.new()
+  let cases = [
+    #(
+      slide_group.IsDisabled,
+      slide_group.from_config(
+        slide_group.Config(
+          ..slide_group.default_config(),
+          disabled: slide_group.IsDisabled,
+        ),
+      ),
+    ),
+  ]
 
-  slide_group.render_config(c, [], [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slide_group.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn slide_group_next_page_label_test() {
+  let mod = slide_group.new()
+  let cases = [
+    #(
+      "test",
+      slide_group.from_config(
+        slide_group.Config(
+          ..slide_group.default_config(),
+          next_page_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slide_group.next_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn slide_group_previous_page_label_test() {
+  let mod = slide_group.new()
+  let cases = [
+    #(
+      "test",
+      slide_group.from_config(
+        slide_group.Config(
+          ..slide_group.default_config(),
+          previous_page_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slide_group.previous_page_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn slide_group_threshold_test() {
+  let mod = slide_group.new()
+  let cases = [
+    #(
+      42.0,
+      slide_group.from_config(
+        slide_group.Config(..slide_group.default_config(), threshold: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slide_group.threshold(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn slide_group_vertical_test() {
+  let mod = slide_group.new()
+  let cases = [
+    #(
+      slide_group.IsVertical,
+      slide_group.from_config(
+        slide_group.Config(
+          ..slide_group.default_config(),
+          vertical: slide_group.IsVertical,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slide_group.vertical(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn slide_group_render_test() {
+  let mod = slide_group.new()
+
+  let mod_disabled =
+    slide_group.new() |> slide_group.disabled(slide_group.IsDisabled)
+  let mod_next_page_label =
+    slide_group.new() |> slide_group.next_page_label("test")
+  let mod_previous_page_label =
+    slide_group.new() |> slide_group.previous_page_label("test")
+  let mod_threshold = slide_group.new() |> slide_group.threshold(42.0)
+  let mod_vertical =
+    slide_group.new() |> slide_group.vertical(slide_group.IsVertical)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-slide-group", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-slide-group", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-slide-group", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-slide-group",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a next_page_label attribute
+    #(
+      #(mod_next_page_label, [], []),
+      element.element(
+        "m3e-slide-group",
+        [attribute.attribute("next-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a previous_page_label attribute
+    #(
+      #(mod_previous_page_label, [], []),
+      element.element(
+        "m3e-slide-group",
+        [attribute.attribute("previous-page-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a threshold attribute
+    #(
+      #(mod_threshold, [], []),
+      element.element(
+        "m3e-slide-group",
+        [attribute.attribute("threshold", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a vertical attribute
+    #(
+      #(mod_vertical, [], []),
+      element.element(
+        "m3e-slide-group",
+        [attribute.attribute("vertical", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    slide_group.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn slide_group_slot_test() {
+  let cases = [
+    #(slide_group.NextIcon, attribute.attribute("slot", "next-icon")),
+    #(slide_group.PrevIcon, attribute.attribute("slot", "prev-icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    slide_group.slot(s)
+    |> should.equal(expected)
+  })
 }

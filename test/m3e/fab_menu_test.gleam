@@ -1,113 +1,58 @@
+//// FabMenu unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/fab_menu
+import m3e/fab_menu_variant
 
-pub fn basic_test() {
-  let m = fab_menu.new("my-menu")
+pub fn fab_menu_render_test() {
+  let mod = fab_menu.new(fab_menu_variant.Primary)
+  let mod_variant = fab_menu.new(fab_menu_variant.Secondary)
 
-  let expected =
-    element.element(
-      "m3e-fab-menu",
-      [
-        attribute.attribute("id", "my-menu"),
-        attribute.attribute("variant", "primary"),
-      ],
-      [],
-    )
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-fab-menu", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-fab-menu", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-fab-menu", [], [html.br([])]),
+    ),
 
-  fab_menu.render(m, [], [])
-  |> should.equal(expected)
-}
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-fab-menu",
+        [
+          attribute.attribute(
+            "variant",
+            fab_menu_variant.to_string(fab_menu_variant.Secondary),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
 
-pub fn id_test() {
-  let m =
-    fab_menu.new("my-menu")
-    |> fab_menu.id("other-menu")
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-  let expected =
-    element.element(
-      "m3e-fab-menu",
-      [
-        attribute.attribute("id", "other-menu"),
-        attribute.attribute("variant", "primary"),
-      ],
-      [],
-    )
-
-  fab_menu.render(m, [], [])
-  |> should.equal(expected)
-}
-
-pub fn variant_test() {
-  let m =
-    fab_menu.new("my-menu")
-    |> fab_menu.variant(fab_menu.Secondary)
-
-  let expected =
-    element.element(
-      "m3e-fab-menu",
-      [
-        attribute.attribute("id", "my-menu"),
-        attribute.attribute("variant", "secondary"),
-      ],
-      [],
-    )
-
-  fab_menu.render(m, [], [])
-  |> should.equal(expected)
-
-  let m2 =
-    fab_menu.new("my-menu")
-    |> fab_menu.variant(fab_menu.Tertiary)
-
-  let expected2 =
-    element.element(
-      "m3e-fab-menu",
-      [
-        attribute.attribute("id", "my-menu"),
-        attribute.attribute("variant", "tertiary"),
-      ],
-      [],
-    )
-
-  fab_menu.render(m2, [], [])
-  |> should.equal(expected2)
-}
-
-pub fn children_test() {
-  let m = fab_menu.new("my-menu")
-  let child = element.element("div", [], [])
-
-  let expected =
-    element.element(
-      "m3e-fab-menu",
-      [
-        attribute.attribute("id", "my-menu"),
-        attribute.attribute("variant", "primary"),
-      ],
-      [child],
-    )
-
-  fab_menu.render(m, [], [child])
-  |> should.equal(expected)
-}
-
-pub fn attributes_test() {
-  let m = fab_menu.new("my-menu")
-  let attr = attribute.attribute("class", "custom")
-
-  let expected =
-    element.element(
-      "m3e-fab-menu",
-      [
-        attribute.attribute("id", "my-menu"),
-        attribute.attribute("variant", "primary"),
-        attr,
-      ],
-      [],
-    )
-
-  fab_menu.render(m, [attr], [])
-  |> should.equal(expected)
+    fab_menu.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

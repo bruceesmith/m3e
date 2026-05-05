@@ -1,182 +1,187 @@
-import gleeunit/should
+//// SplitButton unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/button_size
+import m3e/split_button.{Config}
+import m3e/split_button_variant
 
-import m3e/config
-import m3e/split_button.{Elevated, Outlined, Tonal}
+pub fn split_button_default_config_test() {
+  let cases = [
+    Config(variant: split_button_variant.Filled, size: button_size.Small),
+  ]
 
-pub fn split_button_new_test() {
-  let leading = element.text("Leading")
-  let trailing = element.text("Trailing")
-  let sb = split_button.new(leading, trailing)
+  list.each(cases, fn(c) {
+    let expected = c
 
-  let expected =
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "filled"),
-      ],
-      [leading, trailing],
-    )
-
-  split_button.render(sb, []) |> should.equal(expected)
+    split_button.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn split_button_size_test() {
-  let leading = element.text("L")
-  let trailing = element.text("T")
-
-  split_button.new(leading, trailing)
-  |> split_button.size(config.ExtraLarge)
-  |> split_button.render([])
-  |> should.equal(
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "extra-large"),
-        attribute.attribute("variant", "filled"),
-      ],
-      [leading, trailing],
+pub fn split_button_from_config_test() {
+  let cases = [
+    #(
+      split_button.Config(
+        variant: split_button_variant.Elevated,
+        size: button_size.ExtraSmall,
+      ),
+      split_button.new()
+        |> split_button.variant(split_button_variant.Elevated)
+        |> split_button.size(button_size.ExtraSmall),
     ),
-  )
+  ]
 
-  split_button.new(leading, trailing)
-  |> split_button.size(config.Large)
-  |> split_button.render([])
-  |> should.equal(
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "large"),
-        attribute.attribute("variant", "filled"),
-      ],
-      [leading, trailing],
-    ),
-  )
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    split_button.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn split_button_new_test() {
+  let cases = [
+    split_button.from_config(split_button.Config(
+      variant: split_button_variant.Filled,
+      size: button_size.Small,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    split_button.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn split_button_variant_test() {
-  let leading = element.text("L")
-  let trailing = element.text("T")
-
-  split_button.new(leading, trailing)
-  |> split_button.variant(Elevated)
-  |> split_button.render([])
-  |> should.equal(
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "elevated"),
-      ],
-      [leading, trailing],
+  let mod = split_button.new()
+  let cases = [
+    #(
+      split_button_variant.Elevated,
+      split_button.from_config(
+        split_button.Config(
+          ..split_button.default_config(),
+          variant: split_button_variant.Elevated,
+        ),
+      ),
     ),
-  )
+  ]
 
-  split_button.new(leading, trailing)
-  |> split_button.variant(Outlined)
-  |> split_button.render([])
-  |> should.equal(
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "outlined"),
-      ],
-      [leading, trailing],
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    split_button.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn split_button_size_test() {
+  let mod = split_button.new()
+  let cases = [
+    #(
+      button_size.ExtraSmall,
+      split_button.from_config(
+        split_button.Config(
+          ..split_button.default_config(),
+          size: button_size.ExtraSmall,
+        ),
+      ),
     ),
-  )
+  ]
 
-  split_button.new(leading, trailing)
-  |> split_button.variant(Tonal)
-  |> split_button.render([])
-  |> should.equal(
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "tonal"),
-      ],
-      [leading, trailing],
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    split_button.size(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn split_button_render_test() {
+  let mod = split_button.new()
+
+  let mod_variant =
+    split_button.new() |> split_button.variant(split_button_variant.Elevated)
+  let mod_size = split_button.new() |> split_button.size(button_size.ExtraSmall)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-split-button", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-split-button", [attribute.id("id")], []),
     ),
-  )
-}
-
-pub fn split_button_render_attributes_test() {
-  let leading = element.text("L")
-  let trailing = element.text("T")
-  let sb = split_button.new(leading, trailing)
-
-  let expected =
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "filled"),
-        attribute.attribute("id", "test-id"),
-      ],
-      [leading, trailing],
-    )
-
-  split_button.render(sb, [attribute.attribute("id", "test-id")])
-  |> should.equal(expected)
-}
-
-pub fn split_button_leading_trailing_update_test() {
-  let l1 = element.text("L1")
-  let t1 = element.text("T1")
-  let l2 = element.text("L2")
-  let t2 = element.text("T2")
-
-  split_button.new(l1, t1)
-  |> split_button.leading(l2)
-  |> split_button.trailing(t2)
-  |> split_button.render([])
-  |> should.equal(
-    element.element(
-      "m3e-split-button",
-      [
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "filled"),
-      ],
-      [l2, t2],
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-split-button", [], [html.br([])]),
     ),
-  )
+
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-split-button",
+        [
+          attribute.attribute(
+            "variant",
+            split_button_variant.to_string(split_button_variant.Elevated),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a size attribute
+    #(
+      #(mod_size, [], []),
+      element.element(
+        "m3e-split-button",
+        [
+          attribute.attribute(
+            "size",
+            button_size.to_string(button_size.ExtraSmall),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    split_button.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }
 
-pub fn config_test() {
-  let leading = element.text("L")
-  let trailing = element.text("T")
-  split_button.default_config(leading, trailing)
-  |> should.equal(split_button.Config(
-    leading: leading,
-    size: config.Small,
-    trailing: trailing,
-    variant: split_button.Filled,
-  ))
-}
+pub fn split_button_slot_test() {
+  let cases = [
+    #(split_button.LeadingButton, attribute.attribute("slot", "leading-button")),
+    #(
+      split_button.TrailingButton,
+      attribute.attribute("slot", "trailing-button"),
+    ),
+  ]
 
-pub fn from_config_test() {
-  let leading = element.text("L")
-  let trailing = element.text("T")
-  let config = split_button.default_config(leading, trailing)
-  split_button.from_config(config)
-  |> split_button.render([])
-  |> should.equal(
-    split_button.new(leading, trailing)
-    |> split_button.render([]),
-  )
-}
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
 
-pub fn render_config_test() {
-  let leading = element.text("L")
-  let trailing = element.text("T")
-  let config = split_button.default_config(leading, trailing)
-  split_button.render_config(config, [])
-  |> should.equal(
-    split_button.new(leading, trailing)
-    |> split_button.render([]),
-  )
+    split_button.slot(s)
+    |> should.equal(expected)
+  })
 }

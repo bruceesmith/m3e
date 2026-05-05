@@ -1,33 +1,41 @@
+//// MenuItemGroup unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/menu_item_group
 
-pub fn basic_test() {
-  let g = menu_item_group.new()
+pub fn menu_item_group_render_test() {
+  let mod = menu_item_group.new()
 
-  let expected = element.element("m3e-menu-item-group", [], [])
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-menu-item-group", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-menu-item-group", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-menu-item-group", [], [html.br([])]),
+    ),
+  ]
 
-  menu_item_group.render(g, [], [])
-  |> should.equal(expected)
-}
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-pub fn children_test() {
-  let g = menu_item_group.new()
-  let child = element.element("span", [], [])
-
-  let expected = element.element("m3e-menu-item-group", [], [child])
-
-  menu_item_group.render(g, [], [child])
-  |> should.equal(expected)
-}
-
-pub fn attributes_test() {
-  let g = menu_item_group.new()
-  let attr = attribute.attribute("class", "custom")
-
-  let expected = element.element("m3e-menu-item-group", [attr], [])
-
-  menu_item_group.render(g, [attr], [])
-  |> should.equal(expected)
+    menu_item_group.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

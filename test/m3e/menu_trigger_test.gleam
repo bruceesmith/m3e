@@ -1,24 +1,53 @@
+//// MenuTrigger unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/menu_trigger
 
-pub fn basic_test() {
-  let t = menu_trigger.new("my-menu")
+pub fn menu_trigger_render_test() {
+  let mod = menu_trigger.new(None)
+  let mod_for = menu_trigger.new(Some("test"))
 
-  let expected = element.element("m3e-menu-trigger", [attribute.for("my-menu")], [])
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-menu-trigger", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-menu-trigger", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-menu-trigger", [], [html.br([])]),
+    ),
 
-  menu_trigger.render(t)
-  |> should.equal(expected)
-}
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-menu-trigger",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+  ]
 
-pub fn for_test() {
-  let t =
-    menu_trigger.new("my-menu")
-    |> menu_trigger.for("other-menu")
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-  let expected = element.element("m3e-menu-trigger", [attribute.for("other-menu")], [])
-
-  menu_trigger.render(t)
-  |> should.equal(expected)
+    menu_trigger.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

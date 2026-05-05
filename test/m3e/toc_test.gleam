@@ -1,66 +1,145 @@
-import gleeunit/should
+//// Toc unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/toc.{Config}
 
-import m3e/toc
+pub fn toc_default_config_test() {
+  let cases = [
+    Config(for: None, max_depth: 2.0),
+  ]
 
-pub fn toc_basic_test() {
-  let t = toc.new("test_id")
-  let expected =
-    element.element(
-      "m3e-toc",
-      [
-        attribute.attribute("for", "test_id"),
-        attribute.attribute("max-depth", "0"),
-      ],
-      [],
-    )
-  toc.render(t, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    toc.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn toc_full_test() {
-  let t =
-    toc.new("test_id")
-    |> toc.for("another_id")
-    |> toc.max_depth(3)
+pub fn toc_from_config_test() {
+  let cases = [
+    #(
+      toc.Config(for: Some("test"), max_depth: 42.0),
+      toc.new()
+        |> toc.for(Some("test"))
+        |> toc.max_depth(42.0),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-toc",
-      [
-        attribute.attribute("for", "another_id"),
-        attribute.attribute("max-depth", "3"),
-      ],
-      [],
-    )
-  toc.render(t, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    toc.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn toc_new_test() {
+  let cases = [
+    toc.from_config(toc.Config(for: None, max_depth: 2.0)),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    toc.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn toc_for_test() {
-  let t = toc.new("test_id") |> toc.for("new_id")
-  let expected =
-    element.element(
-      "m3e-toc",
-      [
-        attribute.attribute("for", "new_id"),
-        attribute.attribute("max-depth", "0"),
-      ],
-      [],
-    )
-  toc.render(t, [], []) |> should.equal(expected)
+  let mod = toc.new()
+  let cases = [
+    #(
+      Some("test"),
+      toc.from_config(toc.Config(..toc.default_config(), for: Some("test"))),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    toc.for(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn toc_max_depth_test() {
-  let t = toc.new("test_id") |> toc.max_depth(5)
-  let expected =
-    element.element(
-      "m3e-toc",
-      [
-        attribute.attribute("for", "test_id"),
-        attribute.attribute("max-depth", "5"),
-      ],
-      [],
-    )
-  toc.render(t, [], []) |> should.equal(expected)
+  let mod = toc.new()
+  let cases = [
+    #(
+      42.0,
+      toc.from_config(toc.Config(..toc.default_config(), max_depth: 42.0)),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    toc.max_depth(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn toc_render_test() {
+  let mod = toc.new()
+
+  let mod_for = toc.new() |> toc.for(Some("test"))
+  let mod_max_depth = toc.new() |> toc.max_depth(42.0)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-toc", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-toc", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(#(mod, [], [html.br([])]), element.element("m3e-toc", [], [html.br([])])),
+
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element("m3e-toc", [attribute.attribute("for", "test")], []),
+    ),
+    // Happy path with a max_depth attribute
+    #(
+      #(mod_max_depth, [], []),
+      element.element("m3e-toc", [attribute.attribute("max-depth", "42.0")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    toc.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn toc_slot_test() {
+  let cases = [
+    #(toc.Overline, attribute.attribute("slot", "overline")),
+    #(toc.Title, attribute.attribute("slot", "title")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    toc.slot(s)
+    |> should.equal(expected)
+  })
 }

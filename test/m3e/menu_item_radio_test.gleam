@@ -1,75 +1,180 @@
+//// MenuItemRadio unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/menu_item_radio.{Config}
 
-import m3e/menu_item_radio
-import m3e/state.{Checked, Unchecked}
+pub fn menu_item_radio_default_config_test() {
+  let cases = [
+    Config(
+      disabled: menu_item_radio.IsNotDisabled,
+      checked: menu_item_radio.IsNotChecked,
+    ),
+  ]
 
-pub fn basic_test() {
-  let m = menu_item_radio.new()
+  list.each(cases, fn(c) {
+    let expected = c
 
-  let expected = element.element("m3e-menu-item-radio", [], [])
-
-  menu_item_radio.render(m, [], [])
-  |> should.equal(expected)
+    menu_item_radio.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn checked_test() {
-  let m =
+pub fn menu_item_radio_from_config_test() {
+  let cases = [
+    #(
+      menu_item_radio.Config(
+        disabled: menu_item_radio.IsDisabled,
+        checked: menu_item_radio.IsChecked,
+      ),
+      menu_item_radio.new()
+        |> menu_item_radio.disabled(menu_item_radio.IsDisabled)
+        |> menu_item_radio.checked(menu_item_radio.IsChecked),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    menu_item_radio.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_item_radio_new_test() {
+  let cases = [
+    menu_item_radio.from_config(menu_item_radio.Config(
+      disabled: menu_item_radio.IsNotDisabled,
+      checked: menu_item_radio.IsNotChecked,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
     menu_item_radio.new()
-    |> menu_item_radio.checked(Checked)
-
-  let expected = element.element("m3e-menu-item-radio", [attribute.attribute("checked", "")], [])
-
-  menu_item_radio.render(m, [], [])
-  |> should.equal(expected)
-
-  let m2 =
-    m
-    |> menu_item_radio.checked(Unchecked)
-
-  let expected2 = element.element("m3e-menu-item-radio", [], [])
-
-  menu_item_radio.render(m2, [], [])
-  |> should.equal(expected2)
+    |> should.equal(expected)
+  })
 }
 
-pub fn disabled_test() {
-  let m =
+pub fn menu_item_radio_disabled_test() {
+  let mod = menu_item_radio.new()
+  let cases = [
+    #(
+      menu_item_radio.IsDisabled,
+      menu_item_radio.from_config(
+        menu_item_radio.Config(
+          ..menu_item_radio.default_config(),
+          disabled: menu_item_radio.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    menu_item_radio.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_item_radio_checked_test() {
+  let mod = menu_item_radio.new()
+  let cases = [
+    #(
+      menu_item_radio.IsChecked,
+      menu_item_radio.from_config(
+        menu_item_radio.Config(
+          ..menu_item_radio.default_config(),
+          checked: menu_item_radio.IsChecked,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    menu_item_radio.checked(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_item_radio_render_test() {
+  let mod = menu_item_radio.new()
+
+  let mod_disabled =
     menu_item_radio.new()
-    |> menu_item_radio.disabled(True)
+    |> menu_item_radio.disabled(menu_item_radio.IsDisabled)
+  let mod_checked =
+    menu_item_radio.new() |> menu_item_radio.checked(menu_item_radio.IsChecked)
 
-  let expected = element.element("m3e-menu-item-radio", [attribute.attribute("disabled", "")], [])
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-menu-item-radio", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-menu-item-radio", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-menu-item-radio", [], [html.br([])]),
+    ),
 
-  menu_item_radio.render(m, [], [])
-  |> should.equal(expected)
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-menu-item-radio",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a checked attribute
+    #(
+      #(mod_checked, [], []),
+      element.element(
+        "m3e-menu-item-radio",
+        [attribute.attribute("checked", "")],
+        [],
+      ),
+    ),
+  ]
 
-  let m2 =
-    m
-    |> menu_item_radio.disabled(False)
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-  let expected2 = element.element("m3e-menu-item-radio", [], [])
-
-  menu_item_radio.render(m2, [], [])
-  |> should.equal(expected2)
+    menu_item_radio.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }
 
-pub fn children_test() {
-  let m = menu_item_radio.new()
-  let child = element.element("span", [], [])
+pub fn menu_item_radio_slot_test() {
+  let cases = [
+    #(menu_item_radio.Icon, attribute.attribute("slot", "icon")),
+    #(
+      menu_item_radio.TrailingIcon,
+      attribute.attribute("slot", "trailing-icon"),
+    ),
+  ]
 
-  let expected = element.element("m3e-menu-item-radio", [], [child])
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
 
-  menu_item_radio.render(m, [], [child])
-  |> should.equal(expected)
-}
-
-pub fn attributes_test() {
-  let m = menu_item_radio.new()
-  let attr = attribute.attribute("class", "custom")
-
-  let expected = element.element("m3e-menu-item-radio", [attr], [])
-
-  menu_item_radio.render(m, [attr], [])
-  |> should.equal(expected)
+    menu_item_radio.slot(s)
+    |> should.equal(expected)
+  })
 }

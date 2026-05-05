@@ -1,44 +1,54 @@
-import gleeunit/should
+//// NavMenuItemGroup unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html
-
-import m3e/config
-import m3e/heading
 import m3e/nav_menu_item_group
 
-pub fn basic_render_test() {
-  let heading_text = "Group Title"
-  let content = [html.text("Item 1"), html.text("Item 2")]
+pub fn nav_menu_item_group_render_test() {
+  let mod = nav_menu_item_group.new()
 
-  let expected_heading =
-    heading.new(heading_text)
-    |> heading.size(config.Large)
-    |> heading.variant(heading.Label)
-    |> heading.render([attribute.attribute("slot", "group-label")])
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-nav-menu-item-group", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-nav-menu-item-group", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-nav-menu-item-group", [], [html.br([])]),
+    ),
+  ]
 
-  nav_menu_item_group.new(heading_text)
-  |> nav_menu_item_group.render([], content)
-  |> should.equal(
-    element.element("m3e-nav-menu-item-group", [], [expected_heading, ..content]),
-  )
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    nav_menu_item_group.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }
 
-pub fn heading_update_test() {
-  let initial = "Initial"
-  let updated = "Updated"
+pub fn nav_menu_item_group_slot_test() {
+  let cases = [
+    #(nav_menu_item_group.Label, attribute.attribute("slot", "label")),
+  ]
 
-  let expected_heading =
-    heading.new(updated)
-    |> heading.size(config.Large)
-    |> heading.variant(heading.Label)
-    |> heading.render([attribute.attribute("slot", "group-label")])
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
 
-  nav_menu_item_group.new(initial)
-  |> nav_menu_item_group.heading(updated)
-  |> nav_menu_item_group.render([], [])
-  |> should.equal(
-    element.element("m3e-nav-menu-item-group", [], [expected_heading]),
-  )
+    nav_menu_item_group.slot(s)
+    |> should.equal(expected)
+  })
 }

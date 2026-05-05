@@ -1,72 +1,58 @@
+//// NavRail unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/nav_bar_mode
 import m3e/nav_rail
 
-pub fn basic_test() {
-  let r = nav_rail.new()
+pub fn nav_rail_render_test() {
+  let mod = nav_rail.new(nav_bar_mode.Compact)
+  let mod_mode = nav_rail.new(nav_bar_mode.Expanded)
 
-  let expected =
-    element.element("m3e-nav-rail", [attribute.attribute("mode", "auto")], [])
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-nav-rail", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-nav-rail", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-nav-rail", [], [html.br([])]),
+    ),
 
-  nav_rail.render(r, [], [])
-  |> should.equal(expected)
-}
+    // Happy path with a mode attribute
+    #(
+      #(mod_mode, [], []),
+      element.element(
+        "m3e-nav-rail",
+        [
+          attribute.attribute(
+            "mode",
+            nav_bar_mode.to_string(nav_bar_mode.Expanded),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
 
-pub fn mode_test() {
-  let r =
-    nav_rail.new()
-    |> nav_rail.mode(nav_rail.Compact)
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-  let expected =
-    element.element(
-      "m3e-nav-rail",
-      [attribute.attribute("mode", "compact")],
-      [],
-    )
-
-  nav_rail.render(r, [], [])
-  |> should.equal(expected)
-
-  let r2 =
-    nav_rail.new()
-    |> nav_rail.mode(nav_rail.Expanded)
-
-  let expected2 =
-    element.element(
-      "m3e-nav-rail",
-      [attribute.attribute("mode", "expanded")],
-      [],
-    )
-
-  nav_rail.render(r2, [], [])
-  |> should.equal(expected2)
-}
-
-pub fn children_test() {
-  let r = nav_rail.new()
-  let child = element.element("div", [], [])
-
-  let expected =
-    element.element("m3e-nav-rail", [attribute.attribute("mode", "auto")], [
-      child,
-    ])
-
-  nav_rail.render(r, [], [child])
-  |> should.equal(expected)
-}
-
-pub fn attributes_test() {
-  let r = nav_rail.new()
-  let attr = attribute.attribute("class", "custom")
-
-  let expected =
-    element.element(
-      "m3e-nav-rail",
-      [attribute.attribute("mode", "auto"), attr],
-      [],
-    )
-
-  nav_rail.render(r, [attr], [])
-  |> should.equal(expected)
+    nav_rail.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

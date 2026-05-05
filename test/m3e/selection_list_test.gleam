@@ -1,166 +1,280 @@
+//// SelectionList unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-
-import m3e/config.{Multi, Single}
+import lustre/element/html
 import m3e/list_variant
-import m3e/selection_list
-import m3e/state.{Disabled, Enabled}
+import m3e/selection_list.{Config}
 
-// --- CONFIGURATION ---
-
-pub fn default_config_test() {
-  selection_list.default_config()
-  |> should.equal(selection_list.Config(
-    disabled: Enabled,
-    hide_selection_indicator: selection_list.Visible,
-    multi: Single,
-    variant: list_variant.Standard,
-  ))
-}
-
-// --- CONSTRUCTORS ---
-
-pub fn new_test() {
-  selection_list.new()
-  |> selection_list.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [attribute.attribute("variant", "standard")],
-      [],
+pub fn selection_list_default_config_test() {
+  let cases = [
+    Config(
+      hide_selection_indicator: selection_list.IsNotHideSelectionIndicator,
+      multi: selection_list.IsNotMulti,
+      variant: list_variant.Standard,
+      name: "",
+      disabled: selection_list.IsNotDisabled,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    selection_list.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  selection_list.from_config(selection_list.default_config())
-  |> selection_list.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [attribute.attribute("variant", "standard")],
-      [],
+pub fn selection_list_from_config_test() {
+  let cases = [
+    #(
+      selection_list.Config(
+        hide_selection_indicator: selection_list.IsHideSelectionIndicator,
+        multi: selection_list.IsMulti,
+        variant: list_variant.Segmented,
+        name: "test",
+        disabled: selection_list.IsDisabled,
+      ),
+      selection_list.new()
+        |> selection_list.hide_selection_indicator(
+          selection_list.IsHideSelectionIndicator,
+        )
+        |> selection_list.multi(selection_list.IsMulti)
+        |> selection_list.variant(list_variant.Segmented)
+        |> selection_list.name("test")
+        |> selection_list.disabled(selection_list.IsDisabled),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    selection_list.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-// --- SETTERS ---
+pub fn selection_list_new_test() {
+  let cases = [
+    selection_list.from_config(selection_list.Config(
+      hide_selection_indicator: selection_list.IsNotHideSelectionIndicator,
+      multi: selection_list.IsNotMulti,
+      variant: list_variant.Standard,
+      name: "",
+      disabled: selection_list.IsNotDisabled,
+    )),
+  ]
 
-pub fn disabled_test() {
-  selection_list.new()
-  |> selection_list.disabled(Disabled)
-  |> selection_list.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
+  list.each(cases, fn(c) {
+    let expected = c
+
+    selection_list.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn selection_list_hide_selection_indicator_test() {
+  let mod = selection_list.new()
+  let cases = [
+    #(
+      selection_list.IsHideSelectionIndicator,
+      selection_list.from_config(
+        selection_list.Config(
+          ..selection_list.default_config(),
+          hide_selection_indicator: selection_list.IsHideSelectionIndicator,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    selection_list.hide_selection_indicator(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn hide_selection_indicator_test() {
-  selection_list.new()
-  |> selection_list.hide_selection_indicator(selection_list.Hidden)
-  |> selection_list.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
+pub fn selection_list_multi_test() {
+  let mod = selection_list.new()
+  let cases = [
+    #(
+      selection_list.IsMulti,
+      selection_list.from_config(
+        selection_list.Config(
+          ..selection_list.default_config(),
+          multi: selection_list.IsMulti,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    selection_list.multi(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn multi_test() {
-  selection_list.new()
-  |> selection_list.multi(Multi)
-  |> selection_list.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [
-        attribute.attribute("multi", ""),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
+pub fn selection_list_variant_test() {
+  let mod = selection_list.new()
+  let cases = [
+    #(
+      list_variant.Segmented,
+      selection_list.from_config(
+        selection_list.Config(
+          ..selection_list.default_config(),
+          variant: list_variant.Segmented,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    selection_list.variant(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn variant_test() {
-  selection_list.new()
-  |> selection_list.variant(list_variant.Segmented)
-  |> selection_list.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [attribute.attribute("variant", "segmented")],
-      [],
+pub fn selection_list_name_test() {
+  let mod = selection_list.new()
+  let cases = [
+    #(
+      "test",
+      selection_list.from_config(
+        selection_list.Config(..selection_list.default_config(), name: "test"),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    selection_list.name(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-// --- RENDERING ---
-
-pub fn render_config_test() {
-  selection_list.render_config(selection_list.default_config(), [], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [attribute.attribute("variant", "standard")],
-      [],
+pub fn selection_list_disabled_test() {
+  let mod = selection_list.new()
+  let cases = [
+    #(
+      selection_list.IsDisabled,
+      selection_list.from_config(
+        selection_list.Config(
+          ..selection_list.default_config(),
+          disabled: selection_list.IsDisabled,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    selection_list.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_test() {
-  let attrs = [attribute.class("custom-class")]
-  let children = [element.text("content")]
+pub fn selection_list_render_test() {
+  let mod = selection_list.new()
 
-  selection_list.new()
-  |> selection_list.disabled(Disabled)
-  |> selection_list.multi(Multi)
-  |> selection_list.render(attrs, children)
-  |> should.equal(element.element(
-    "m3e-selection-list",
-    [
-      attribute.attribute("disabled", ""),
-      attribute.attribute("multi", ""),
-      attribute.attribute("variant", "standard"),
-      attribute.class("custom-class"),
-    ],
-    children,
-  ))
-}
-
-pub fn config_full_test() {
-  let config =
-    selection_list.Config(
-      disabled: Disabled,
-      hide_selection_indicator: selection_list.Hidden,
-      multi: Multi,
-      variant: list_variant.Segmented,
+  let mod_hide_selection_indicator =
+    selection_list.new()
+    |> selection_list.hide_selection_indicator(
+      selection_list.IsHideSelectionIndicator,
     )
+  let mod_multi =
+    selection_list.new() |> selection_list.multi(selection_list.IsMulti)
+  let mod_variant =
+    selection_list.new() |> selection_list.variant(list_variant.Segmented)
+  let mod_name = selection_list.new() |> selection_list.name("test")
+  let mod_disabled =
+    selection_list.new() |> selection_list.disabled(selection_list.IsDisabled)
 
-  selection_list.render_config(config, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-selection-list",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("multi", ""),
-        attribute.attribute("variant", "segmented"),
-      ],
-      [],
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-selection-list", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-selection-list", [attribute.id("id")], []),
     ),
-  )
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-selection-list", [], [html.br([])]),
+    ),
+
+    // Happy path with a hide_selection_indicator attribute
+    #(
+      #(mod_hide_selection_indicator, [], []),
+      element.element(
+        "m3e-selection-list",
+        [attribute.attribute("hide-selection-indicator", "")],
+        [],
+      ),
+    ),
+    // Happy path with a multi attribute
+    #(
+      #(mod_multi, [], []),
+      element.element(
+        "m3e-selection-list",
+        [attribute.attribute("multi", "")],
+        [],
+      ),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-selection-list",
+        [
+          attribute.attribute(
+            "variant",
+            list_variant.to_string(list_variant.Segmented),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element(
+        "m3e-selection-list",
+        [attribute.attribute("name", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-selection-list",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    selection_list.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

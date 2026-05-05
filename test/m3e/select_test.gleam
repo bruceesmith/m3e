@@ -1,111 +1,287 @@
-import gleam/option.{None, Some}
+//// Select unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/select.{Config}
 
-import m3e/config.{Multi, Single}
-import m3e/select
-import m3e/state.{Disabled, Enabled, Optional, Required}
+pub fn select_default_config_test() {
+  let cases = [
+    Config(
+      disabled: select.IsNotDisabled,
+      hide_selection_indicator: select.IsNotHideSelectionIndicator,
+      multi: select.IsNotMulti,
+      name: "",
+      panel_class: "",
+      required: select.IsNotRequired,
+    ),
+  ]
 
-pub fn select_creation_test() {
-  let s = select.new()
-  let expected = element.element("m3e-select", [], [])
-  select.render(s, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    select.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_from_config_test() {
+  let cases = [
+    #(
+      select.Config(
+        disabled: select.IsDisabled,
+        hide_selection_indicator: select.IsHideSelectionIndicator,
+        multi: select.IsMulti,
+        name: "test",
+        panel_class: "test",
+        required: select.IsRequired,
+      ),
+      select.new()
+        |> select.disabled(select.IsDisabled)
+        |> select.hide_selection_indicator(select.IsHideSelectionIndicator)
+        |> select.multi(select.IsMulti)
+        |> select.name("test")
+        |> select.panel_class("test")
+        |> select.required(select.IsRequired),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    select.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_new_test() {
+  let cases = [
+    select.from_config(select.Config(
+      disabled: select.IsNotDisabled,
+      hide_selection_indicator: select.IsNotHideSelectionIndicator,
+      multi: select.IsNotMulti,
+      name: "",
+      panel_class: "",
+      required: select.IsNotRequired,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    select.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_disabled_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      select.IsDisabled,
+      select.from_config(
+        select.Config(..select.default_config(), disabled: select.IsDisabled),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_hide_selection_indicator_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      select.IsHideSelectionIndicator,
+      select.from_config(
+        select.Config(
+          ..select.default_config(),
+          hide_selection_indicator: select.IsHideSelectionIndicator,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.hide_selection_indicator(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_multi_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      select.IsMulti,
+      select.from_config(
+        select.Config(..select.default_config(), multi: select.IsMulti),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.multi(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_name_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      "test",
+      select.from_config(select.Config(..select.default_config(), name: "test")),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.name(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_panel_class_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      "test",
+      select.from_config(
+        select.Config(..select.default_config(), panel_class: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.panel_class(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn select_required_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      select.IsRequired,
+      select.from_config(
+        select.Config(..select.default_config(), required: select.IsRequired),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.required(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn select_render_test() {
-  let s = select.new()
-  let expected =
-    element.element("m3e-select", [attribute.attribute("class", "extra")], [
-      element.text("Option"),
-    ])
-  select.render(s, [attribute.attribute("class", "extra")], [
-    element.text("Option"),
-  ])
-  |> should.equal(expected)
-}
+  let mod = select.new()
 
-pub fn select_setters_test() {
-  let s =
+  let mod_disabled = select.new() |> select.disabled(select.IsDisabled)
+  let mod_hide_selection_indicator =
     select.new()
-    |> select.disabled(Disabled)
-    |> select.hide_selection_indicator(select.Hidden)
-    |> select.id(Some("my-id"))
-    |> select.multi(Multi)
-    |> select.name(Some("my-name"))
-    |> select.required(Required)
+    |> select.hide_selection_indicator(select.IsHideSelectionIndicator)
+  let mod_multi = select.new() |> select.multi(select.IsMulti)
+  let mod_name = select.new() |> select.name("test")
+  let mod_panel_class = select.new() |> select.panel_class("test")
+  let mod_required = select.new() |> select.required(select.IsRequired)
 
-  let expected =
-    element.element(
-      "m3e-select",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("id", "my-id"),
-        attribute.attribute("multi", ""),
-        attribute.attribute("name", "my-name"),
-        attribute.attribute("required", ""),
-      ],
-      [],
-    )
-  select.render(s, [], []) |> should.equal(expected)
-}
-
-pub fn config_test() {
-  let c =
-    select.Config(
-      disabled: Disabled,
-      hide_selection_indicator: select.Hidden,
-      id: Some("config-id"),
-      multi: Multi,
-      name: Some("config-name"),
-      panel_class: Some("config-panel-class"),
-      required: Required,
-    )
-
-  let s = select.from_config(c)
-
-  select.render(s, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-select",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("id", "config-id"),
-        attribute.attribute("multi", ""),
-        attribute.attribute("name", "config-name"),
-        attribute.attribute("panel-class", "config-panel-class"),
-        attribute.attribute("required", ""),
-      ],
-      [],
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-select", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-select", [attribute.id("id")], []),
     ),
-  )
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-select", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element("m3e-select", [attribute.attribute("disabled", "")], []),
+    ),
+    // Happy path with a hide_selection_indicator attribute
+    #(
+      #(mod_hide_selection_indicator, [], []),
+      element.element(
+        "m3e-select",
+        [attribute.attribute("hide-selection-indicator", "")],
+        [],
+      ),
+    ),
+    // Happy path with a multi attribute
+    #(
+      #(mod_multi, [], []),
+      element.element("m3e-select", [attribute.attribute("multi", "")], []),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element("m3e-select", [attribute.attribute("name", "test")], []),
+    ),
+    // Happy path with a panel_class attribute
+    #(
+      #(mod_panel_class, [], []),
+      element.element(
+        "m3e-select",
+        [attribute.attribute("panel-class", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a required attribute
+    #(
+      #(mod_required, [], []),
+      element.element("m3e-select", [attribute.attribute("required", "")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    select.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let c = select.default_config()
+pub fn select_slot_test() {
+  let cases = [
+    #(select.Arrow, attribute.attribute("slot", "arrow")),
+    #(select.Value, attribute.attribute("slot", "value")),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.hide_selection_indicator |> should.equal(select.Visible)
-  c.id |> should.equal(None)
-  c.multi |> should.equal(Single)
-  c.name |> should.equal(None)
-  c.required |> should.equal(Optional)
-}
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
 
-pub fn from_config_test() {
-  let c = select.default_config()
-  let s = select.from_config(c)
-
-  select.render(s, [], [])
-  |> should.equal(select.render(select.new(), [], []))
-}
-
-pub fn render_config_test() {
-  let c = select.default_config()
-  let expected = select.render(select.from_config(c), [], [])
-
-  select.render_config(c, [], [])
-  |> should.equal(expected)
+    select.slot(s)
+    |> should.equal(expected)
+  })
 }

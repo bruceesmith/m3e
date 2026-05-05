@@ -1,217 +1,326 @@
+//// RichTooltip unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/rich_tooltip
-import m3e/state.{Disabled, Enabled}
+import lustre/element/html
+import m3e/rich_tooltip.{Config}
+import m3e/rich_tooltip_position
+import m3e/tooltip_touch_gestures
 
-// --- CONFIGURATION ---
-
-pub fn default_config_test() {
-  rich_tooltip.default_config()
-  |> should.equal(rich_tooltip.Config(
-    disabled: Enabled,
-    for: "",
-    hide_delay: 1500,
-    position: rich_tooltip.Below,
-    show_delay: 0,
-  ))
-}
-
-// --- CONSTRUCTORS ---
-
-pub fn new_test() {
-  rich_tooltip.new()
-  |> rich_tooltip.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("for", ""),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [],
+pub fn rich_tooltip_default_config_test() {
+  let cases = [
+    Config(
+      disabled: rich_tooltip.IsNotDisabled,
+      for: None,
+      hide_delay: 200.0,
+      position: rich_tooltip_position.BelowAfter,
+      show_delay: 0.0,
+      touch_gestures: tooltip_touch_gestures.Auto,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    rich_tooltip.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  let config = rich_tooltip.default_config()
-  rich_tooltip.from_config(config)
-  |> rich_tooltip.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("for", ""),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [],
+pub fn rich_tooltip_from_config_test() {
+  let cases = [
+    #(
+      rich_tooltip.Config(
+        disabled: rich_tooltip.IsDisabled,
+        for: Some("test"),
+        hide_delay: 42.0,
+        position: rich_tooltip_position.AboveAfter,
+        show_delay: 42.0,
+        touch_gestures: tooltip_touch_gestures.On,
+      ),
+      rich_tooltip.new()
+        |> rich_tooltip.disabled(rich_tooltip.IsDisabled)
+        |> rich_tooltip.for(Some("test"))
+        |> rich_tooltip.hide_delay(42.0)
+        |> rich_tooltip.position(rich_tooltip_position.AboveAfter)
+        |> rich_tooltip.show_delay(42.0)
+        |> rich_tooltip.touch_gestures(tooltip_touch_gestures.On),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    rich_tooltip.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-// --- SETTERS ---
+pub fn rich_tooltip_new_test() {
+  let cases = [
+    rich_tooltip.from_config(rich_tooltip.Config(
+      disabled: rich_tooltip.IsNotDisabled,
+      for: None,
+      hide_delay: 200.0,
+      position: rich_tooltip_position.BelowAfter,
+      show_delay: 0.0,
+      touch_gestures: tooltip_touch_gestures.Auto,
+    )),
+  ]
 
-pub fn disabled_test() {
-  rich_tooltip.new()
-  |> rich_tooltip.disabled(Disabled)
-  |> rich_tooltip.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("for", ""),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [],
-    ),
-  )
-}
+  list.each(cases, fn(c) {
+    let expected = c
 
-pub fn for_test() {
-  rich_tooltip.new()
-  |> rich_tooltip.for("my-id")
-  |> rich_tooltip.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("for", "my-id"),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [],
-    ),
-  )
-}
-
-pub fn hide_delay_test() {
-  rich_tooltip.new()
-  |> rich_tooltip.hide_delay(500)
-  |> rich_tooltip.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("for", ""),
-        attribute.attribute("hide-delay", "500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [],
-    ),
-  )
-}
-
-pub fn show_delay_test() {
-  rich_tooltip.new()
-  |> rich_tooltip.show_delay(250)
-  |> rich_tooltip.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("for", ""),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "250"),
-      ],
-      [],
-    ),
-  )
-}
-
-// --- RENDERING ---
-
-pub fn render_test() {
-  let attrs = [attribute.class("custom-class")]
-  let children = [element.text("content")]
-
-  rich_tooltip.new()
-  |> rich_tooltip.disabled(Disabled)
-  |> rich_tooltip.for("test-id")
-  |> rich_tooltip.position(rich_tooltip.Above)
-  |> rich_tooltip.render(attrs, children)
-  |> should.equal(element.element(
-    "m3e-rich-tooltip",
-    [
-      attribute.attribute("disabled", ""),
-      attribute.attribute("for", "test-id"),
-      attribute.attribute("hide-delay", "1500"),
-      attribute.attribute("position", "above"),
-      attribute.attribute("show-delay", "0"),
-      attribute.class("custom-class"),
-    ],
-    children,
-  ))
-}
-
-pub fn render_config_test() {
-  let config =
-    rich_tooltip.Config(
-      disabled: Disabled,
-      for: "config-id",
-      hide_delay: 100,
-      position: rich_tooltip.Before,
-      show_delay: 200,
-    )
-  rich_tooltip.render_config(config, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("for", "config-id"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "before"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [],
-    ),
-  )
-}
-
-pub fn all_positions_test() {
-  let test_pos = fn(p, s) {
     rich_tooltip.new()
-    |> rich_tooltip.position(p)
-    |> rich_tooltip.render([], [])
-    |> should.equal(
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_disabled_test() {
+  let mod = rich_tooltip.new()
+  let cases = [
+    #(
+      rich_tooltip.IsDisabled,
+      rich_tooltip.from_config(
+        rich_tooltip.Config(
+          ..rich_tooltip.default_config(),
+          disabled: rich_tooltip.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    rich_tooltip.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_for_test() {
+  let mod = rich_tooltip.new()
+  let cases = [
+    #(
+      Some("test"),
+      rich_tooltip.from_config(
+        rich_tooltip.Config(..rich_tooltip.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    rich_tooltip.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_hide_delay_test() {
+  let mod = rich_tooltip.new()
+  let cases = [
+    #(
+      42.0,
+      rich_tooltip.from_config(
+        rich_tooltip.Config(..rich_tooltip.default_config(), hide_delay: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    rich_tooltip.hide_delay(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_position_test() {
+  let mod = rich_tooltip.new()
+  let cases = [
+    #(
+      rich_tooltip_position.AboveAfter,
+      rich_tooltip.from_config(
+        rich_tooltip.Config(
+          ..rich_tooltip.default_config(),
+          position: rich_tooltip_position.AboveAfter,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    rich_tooltip.position(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_show_delay_test() {
+  let mod = rich_tooltip.new()
+  let cases = [
+    #(
+      42.0,
+      rich_tooltip.from_config(
+        rich_tooltip.Config(..rich_tooltip.default_config(), show_delay: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    rich_tooltip.show_delay(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_touch_gestures_test() {
+  let mod = rich_tooltip.new()
+  let cases = [
+    #(
+      tooltip_touch_gestures.On,
+      rich_tooltip.from_config(
+        rich_tooltip.Config(
+          ..rich_tooltip.default_config(),
+          touch_gestures: tooltip_touch_gestures.On,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    rich_tooltip.touch_gestures(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn rich_tooltip_render_test() {
+  let mod = rich_tooltip.new()
+
+  let mod_disabled =
+    rich_tooltip.new() |> rich_tooltip.disabled(rich_tooltip.IsDisabled)
+  let mod_for = rich_tooltip.new() |> rich_tooltip.for(Some("test"))
+  let mod_hide_delay = rich_tooltip.new() |> rich_tooltip.hide_delay(42.0)
+  let mod_position =
+    rich_tooltip.new()
+    |> rich_tooltip.position(rich_tooltip_position.AboveAfter)
+  let mod_show_delay = rich_tooltip.new() |> rich_tooltip.show_delay(42.0)
+  let mod_touch_gestures =
+    rich_tooltip.new() |> rich_tooltip.touch_gestures(tooltip_touch_gestures.On)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-rich-tooltip", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-rich-tooltip", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-rich-tooltip", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-rich-tooltip",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-rich-tooltip",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_delay attribute
+    #(
+      #(mod_hide_delay, [], []),
+      element.element(
+        "m3e-rich-tooltip",
+        [attribute.attribute("hide-delay", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a position attribute
+    #(
+      #(mod_position, [], []),
       element.element(
         "m3e-rich-tooltip",
         [
-          attribute.attribute("for", ""),
-          attribute.attribute("hide-delay", "1500"),
-          attribute.attribute("position", s),
-          attribute.attribute("show-delay", "0"),
+          attribute.attribute(
+            "position",
+            rich_tooltip_position.to_string(rich_tooltip_position.AboveAfter),
+          ),
         ],
         [],
       ),
-    )
-  }
+    ),
+    // Happy path with a show_delay attribute
+    #(
+      #(mod_show_delay, [], []),
+      element.element(
+        "m3e-rich-tooltip",
+        [attribute.attribute("show-delay", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a touch_gestures attribute
+    #(
+      #(mod_touch_gestures, [], []),
+      element.element(
+        "m3e-rich-tooltip",
+        [
+          attribute.attribute(
+            "touch-gestures",
+            tooltip_touch_gestures.to_string(tooltip_touch_gestures.On),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
 
-  test_pos(rich_tooltip.AboveAfter, "above-after")
-  test_pos(rich_tooltip.AboveBefore, "above-before")
-  test_pos(rich_tooltip.BelowBefore, "below-before")
-  test_pos(rich_tooltip.BelowAfter, "below-after")
-  test_pos(rich_tooltip.Before, "before")
-  test_pos(rich_tooltip.After, "after")
-  test_pos(rich_tooltip.Above, "above")
-  test_pos(rich_tooltip.Below, "below")
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    rich_tooltip.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_test() {
-  rich_tooltip.slot(rich_tooltip.Actions)
-  |> should.equal(attribute.attribute("slot", "actions"))
+pub fn rich_tooltip_slot_test() {
+  let cases = [
+    #(rich_tooltip.Subhead, attribute.attribute("slot", "subhead")),
+    #(rich_tooltip.Actions, attribute.attribute("slot", "actions")),
+  ]
 
-  rich_tooltip.slot(rich_tooltip.Subhead)
-  |> should.equal(attribute.attribute("slot", "subhead"))
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    rich_tooltip.slot(s)
+    |> should.equal(expected)
+  })
 }

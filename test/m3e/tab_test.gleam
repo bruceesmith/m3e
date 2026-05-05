@@ -1,34 +1,180 @@
+//// Tab unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/tab.{Config}
 
-import m3e/state.{Disabled}
-import m3e/tab.{Selected}
+pub fn tab_default_config_test() {
+  let cases = [
+    Config(disabled: tab.IsNotDisabled, for: None, selected: tab.IsNotSelected),
+  ]
 
-pub fn tab_new_test() {
-  tab.new()
-  |> tab.render([], [])
-  |> should.equal(
-    element.element("m3e-tab", [attribute.attribute("for", "")], []),
-  )
+  list.each(cases, fn(c) {
+    let expected = c
+
+    tab.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn tab_full_test() {
-  tab.new()
-  |> tab.disabled(Disabled)
-  |> tab.for("my-control")
-  |> tab.selected(Selected)
-  |> tab.render([attribute.attribute("id", "t-1")], [element.text("Tab 1")])
-  |> should.equal(
-    element.element(
-      "m3e-tab",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("for", "my-control"),
-        attribute.attribute("selected", ""),
-        attribute.attribute("id", "t-1"),
-      ],
-      [element.text("Tab 1")],
+pub fn tab_from_config_test() {
+  let cases = [
+    #(
+      tab.Config(
+        disabled: tab.IsDisabled,
+        for: Some("test"),
+        selected: tab.IsSelected,
+      ),
+      tab.new()
+        |> tab.disabled(tab.IsDisabled)
+        |> tab.for(Some("test"))
+        |> tab.selected(tab.IsSelected),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    tab.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tab_new_test() {
+  let cases = [
+    tab.from_config(tab.Config(
+      disabled: tab.IsNotDisabled,
+      for: None,
+      selected: tab.IsNotSelected,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    tab.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn tab_disabled_test() {
+  let mod = tab.new()
+  let cases = [
+    #(
+      tab.IsDisabled,
+      tab.from_config(
+        tab.Config(..tab.default_config(), disabled: tab.IsDisabled),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tab.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tab_for_test() {
+  let mod = tab.new()
+  let cases = [
+    #(
+      Some("test"),
+      tab.from_config(tab.Config(..tab.default_config(), for: Some("test"))),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tab.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tab_selected_test() {
+  let mod = tab.new()
+  let cases = [
+    #(
+      tab.IsSelected,
+      tab.from_config(
+        tab.Config(..tab.default_config(), selected: tab.IsSelected),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tab.selected(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tab_render_test() {
+  let mod = tab.new()
+
+  let mod_disabled = tab.new() |> tab.disabled(tab.IsDisabled)
+  let mod_for = tab.new() |> tab.for(Some("test"))
+  let mod_selected = tab.new() |> tab.selected(tab.IsSelected)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-tab", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-tab", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(#(mod, [], [html.br([])]), element.element("m3e-tab", [], [html.br([])])),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element("m3e-tab", [attribute.attribute("disabled", "")], []),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element("m3e-tab", [attribute.attribute("for", "test")], []),
+    ),
+    // Happy path with a selected attribute
+    #(
+      #(mod_selected, [], []),
+      element.element("m3e-tab", [attribute.attribute("selected", "")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    tab.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tab_slot_test() {
+  let cases = [
+    #(tab.Icon, attribute.attribute("slot", "icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    tab.slot(s)
+    |> should.equal(expected)
+  })
 }

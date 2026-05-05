@@ -1,142 +1,376 @@
+//// NavItem unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/link_target
+import m3e/nav_item.{Config}
+import m3e/nav_item_orientation
 
-import m3e/layout.{Horizontal, Vertical}
-import m3e/link
-import m3e/nav_item
-import m3e/state.{Disabled, Enabled, Selected, Unselected}
-
-pub fn basic_render_test() {
-  nav_item.new()
-  |> nav_item.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-item",
-      [attribute.attribute("orientation", "vertical")],
-      [],
+pub fn nav_item_default_config_test() {
+  let cases = [
+    Config(
+      disabled: nav_item.IsNotDisabled,
+      disabled_interactive: nav_item.IsNotDisabledInteractive,
+      download: None,
+      href: "",
+      orientation: nav_item_orientation.Vertical,
+      rel: "",
+      selected: nav_item.IsNotSelected,
+      target: None,
     ),
-  )
-}
+  ]
 
-pub fn link_property_test() {
-  let test_link =
-    link.new("https://example.com")
-    |> link.target(link.Blank)
+  list.each(cases, fn(c) {
+    let expected = c
 
-  nav_item.new()
-  |> nav_item.link(Some(test_link))
-  |> nav_item.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-item",
-      [
-        attribute.attribute("orientation", "vertical"),
-        attribute.attribute("href", "https://example.com"),
-        attribute.attribute("target", "_blank"),
-      ],
-      [],
-    ),
-  )
-}
-
-pub fn properties_test() {
-  nav_item.new()
-  |> nav_item.disabled(Disabled)
-  |> nav_item.disabled_interactive(Disabled)
-  |> nav_item.selected(Selected)
-  |> nav_item.orientation(Horizontal)
-  |> nav_item.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-item",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("disabled-interactive", ""),
-        attribute.attribute("selected", ""),
-        attribute.attribute("orientation", "horizontal"),
-      ],
-      [],
-    ),
-  )
-}
-
-pub fn config_test() {
-  let c =
     nav_item.default_config()
-    |> fn(c) {
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_from_config_test() {
+  let cases = [
+    #(
       nav_item.Config(
-        ..c,
-        disabled: Disabled,
-        disabled_interactive: Disabled,
-        selected: Selected,
-        orientation: Horizontal,
-      )
-    }
-
-  let item = nav_item.from_config(c)
-
-  nav_item.render(item, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-item",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("disabled-interactive", ""),
-        attribute.attribute("selected", ""),
-        attribute.attribute("orientation", "horizontal"),
-      ],
-      [],
+        disabled: nav_item.IsDisabled,
+        disabled_interactive: nav_item.IsDisabledInteractive,
+        download: Some("test"),
+        href: "test",
+        orientation: nav_item_orientation.Horizontal,
+        rel: "test",
+        selected: nav_item.IsSelected,
+        target: Some(link_target.Self),
+      ),
+      nav_item.new()
+        |> nav_item.disabled(nav_item.IsDisabled)
+        |> nav_item.disabled_interactive(nav_item.IsDisabledInteractive)
+        |> nav_item.download(Some("test"))
+        |> nav_item.href("test")
+        |> nav_item.orientation(nav_item_orientation.Horizontal)
+        |> nav_item.rel("test")
+        |> nav_item.selected(nav_item.IsSelected)
+        |> nav_item.target(Some(link_target.Self)),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    nav_item.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let c = nav_item.default_config()
+pub fn nav_item_new_test() {
+  let cases = [
+    nav_item.from_config(nav_item.Config(
+      disabled: nav_item.IsNotDisabled,
+      disabled_interactive: nav_item.IsNotDisabledInteractive,
+      download: None,
+      href: "",
+      orientation: nav_item_orientation.Vertical,
+      rel: "",
+      selected: nav_item.IsNotSelected,
+      target: None,
+    )),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.disabled_interactive |> should.equal(Enabled)
-  c.selected |> should.equal(Unselected)
-  c.orientation |> should.equal(Vertical)
-  c.link |> should.equal(None)
-}
+  list.each(cases, fn(c) {
+    let expected = c
 
-pub fn from_config_test() {
-  let c = nav_item.default_config()
-  let item = nav_item.from_config(c)
-
-  nav_item.render(item, [], [])
-  |> should.equal(nav_item.render(nav_item.new(), [], []))
-}
-
-pub fn render_config_test() {
-  let c = nav_item.default_config()
-  let expected = nav_item.render(nav_item.from_config(c), [], [])
-
-  nav_item.render_config(c, [], [])
-  |> should.equal(expected)
-}
-
-pub fn setters_test() {
-  let item =
     nav_item.new()
-    |> nav_item.disabled(Disabled)
-    |> nav_item.disabled_interactive(Disabled)
-    |> nav_item.selected(Selected)
-    |> nav_item.orientation(Horizontal)
+    |> should.equal(expected)
+  })
+}
 
-  nav_item.render(item, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-nav-item",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("disabled-interactive", ""),
-        attribute.attribute("selected", ""),
-        attribute.attribute("orientation", "horizontal"),
-      ],
-      [],
+pub fn nav_item_disabled_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      nav_item.IsDisabled,
+      nav_item.from_config(
+        nav_item.Config(
+          ..nav_item.default_config(),
+          disabled: nav_item.IsDisabled,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_disabled_interactive_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      nav_item.IsDisabledInteractive,
+      nav_item.from_config(
+        nav_item.Config(
+          ..nav_item.default_config(),
+          disabled_interactive: nav_item.IsDisabledInteractive,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.disabled_interactive(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_download_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      Some("test"),
+      nav_item.from_config(
+        nav_item.Config(..nav_item.default_config(), download: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.download(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_href_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      "test",
+      nav_item.from_config(
+        nav_item.Config(..nav_item.default_config(), href: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.href(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_orientation_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      nav_item_orientation.Horizontal,
+      nav_item.from_config(
+        nav_item.Config(
+          ..nav_item.default_config(),
+          orientation: nav_item_orientation.Horizontal,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.orientation(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_rel_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      "test",
+      nav_item.from_config(
+        nav_item.Config(..nav_item.default_config(), rel: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.rel(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_selected_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      nav_item.IsSelected,
+      nav_item.from_config(
+        nav_item.Config(
+          ..nav_item.default_config(),
+          selected: nav_item.IsSelected,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.selected(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_target_test() {
+  let mod = nav_item.new()
+  let cases = [
+    #(
+      Some(link_target.Self),
+      nav_item.from_config(
+        nav_item.Config(
+          ..nav_item.default_config(),
+          target: Some(link_target.Self),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_item.target(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_render_test() {
+  let mod = nav_item.new()
+
+  let mod_disabled = nav_item.new() |> nav_item.disabled(nav_item.IsDisabled)
+  let mod_disabled_interactive =
+    nav_item.new()
+    |> nav_item.disabled_interactive(nav_item.IsDisabledInteractive)
+  let mod_download = nav_item.new() |> nav_item.download(Some("test"))
+  let mod_href = nav_item.new() |> nav_item.href("test")
+  let mod_orientation =
+    nav_item.new() |> nav_item.orientation(nav_item_orientation.Horizontal)
+  let mod_rel = nav_item.new() |> nav_item.rel("test")
+  let mod_selected = nav_item.new() |> nav_item.selected(nav_item.IsSelected)
+  let mod_target = nav_item.new() |> nav_item.target(Some(link_target.Self))
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-nav-item", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-nav-item", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-nav-item", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element("m3e-nav-item", [attribute.attribute("disabled", "")], []),
+    ),
+    // Happy path with a disabled_interactive attribute
+    #(
+      #(mod_disabled_interactive, [], []),
+      element.element(
+        "m3e-nav-item",
+        [attribute.attribute("disabled-interactive", "")],
+        [],
+      ),
+    ),
+    // Happy path with a download attribute
+    #(
+      #(mod_download, [], []),
+      element.element(
+        "m3e-nav-item",
+        [attribute.attribute("download", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a href attribute
+    #(
+      #(mod_href, [], []),
+      element.element("m3e-nav-item", [attribute.attribute("href", "test")], []),
+    ),
+    // Happy path with a orientation attribute
+    #(
+      #(mod_orientation, [], []),
+      element.element(
+        "m3e-nav-item",
+        [
+          attribute.attribute(
+            "orientation",
+            nav_item_orientation.to_string(nav_item_orientation.Horizontal),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a rel attribute
+    #(
+      #(mod_rel, [], []),
+      element.element("m3e-nav-item", [attribute.attribute("rel", "test")], []),
+    ),
+    // Happy path with a selected attribute
+    #(
+      #(mod_selected, [], []),
+      element.element("m3e-nav-item", [attribute.attribute("selected", "")], []),
+    ),
+    // Happy path with a target attribute
+    #(
+      #(mod_target, [], []),
+      element.element(
+        "m3e-nav-item",
+        [attribute.attribute("target", link_target.to_string(link_target.Self))],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    nav_item.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_item_slot_test() {
+  let cases = [
+    #(nav_item.Icon, attribute.attribute("slot", "icon")),
+    #(nav_item.SelectedIcon, attribute.attribute("slot", "selected-icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    nav_item.slot(s)
+    |> should.equal(expected)
+  })
 }

@@ -1,133 +1,276 @@
-import gleam/option.{None, Some}
+//// FilterChipSet unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/config
-import m3e/filter_chip_set
-import m3e/layout
-import m3e/state
+import lustre/element/html
+import m3e/filter_chip_set.{Config}
 
-pub fn default_config_test() {
-  let config = filter_chip_set.default_config()
-
-  config.disabled |> should.equal(state.default_interaction)
-  config.hide_selection_indicator
-  |> should.equal(config.default_selection_indicator)
-  config.multi |> should.equal(config.default_selection_mode)
-  config.name |> should.equal(None)
-  config.vertical |> should.equal(layout.default_orientation)
-}
-
-pub fn render_default_test() {
-  filter_chip_set.render(filter_chip_set.new(), [], [
-    element.text("Filter Chip Set"),
-  ])
-  |> should.equal(
-    element.element("m3e-filter-chip-set", [], [element.text("Filter Chip Set")]),
-  )
-}
-
-pub fn render_disabled_test() {
-  filter_chip_set.render(
-    filter_chip_set.disabled(filter_chip_set.new(), state.Disabled),
-    [],
-    [element.text("Disabled Filter Chip Set")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip-set",
-      [attribute.attribute("disabled", "")],
-      [element.text("Disabled Filter Chip Set")],
+pub fn filter_chip_set_default_config_test() {
+  let cases = [
+    Config(
+      disabled: filter_chip_set.IsNotDisabled,
+      hide_selection_indicator: filter_chip_set.IsNotHideSelectionIndicator,
+      multi: filter_chip_set.IsNotMulti,
+      name: "",
+      vertical: filter_chip_set.IsNotVertical,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    filter_chip_set.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_multi_test() {
-  filter_chip_set.render(
-    filter_chip_set.multi(filter_chip_set.new(), config.Multi),
-    [],
-    [element.text("Multi Filter Chip Set")],
-  )
-  |> should.equal(
-    element.element("m3e-filter-chip-set", [attribute.attribute("multi", "")], [
-      element.text("Multi Filter Chip Set"),
-    ]),
-  )
-}
-
-pub fn render_vertical_test() {
-  filter_chip_set.render(
-    filter_chip_set.vertical(filter_chip_set.new(), layout.Vertical),
-    [],
-    [element.text("Vertical Filter Chip Set")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip-set",
-      [attribute.attribute("vertical", "")],
-      [element.text("Vertical Filter Chip Set")],
+pub fn filter_chip_set_from_config_test() {
+  let cases = [
+    #(
+      filter_chip_set.Config(
+        disabled: filter_chip_set.IsDisabled,
+        hide_selection_indicator: filter_chip_set.IsHideSelectionIndicator,
+        multi: filter_chip_set.IsMulti,
+        name: "test",
+        vertical: filter_chip_set.IsVertical,
+      ),
+      filter_chip_set.new()
+        |> filter_chip_set.disabled(filter_chip_set.IsDisabled)
+        |> filter_chip_set.hide_selection_indicator(
+          filter_chip_set.IsHideSelectionIndicator,
+        )
+        |> filter_chip_set.multi(filter_chip_set.IsMulti)
+        |> filter_chip_set.name("test")
+        |> filter_chip_set.vertical(filter_chip_set.IsVertical),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    filter_chip_set.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_hide_selection_indicator_test() {
-  filter_chip_set.render(
-    filter_chip_set.hide_selection_indicator(
-      filter_chip_set.new(),
-      config.HideSelectionIndicator,
-    ),
-    [],
-    [element.text("Hidden Indicator Filter Chip Set")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip-set",
-      [attribute.attribute("hide-selection-indicator", "")],
-      [element.text("Hidden Indicator Filter Chip Set")],
-    ),
-  )
+pub fn filter_chip_set_new_test() {
+  let cases = [
+    filter_chip_set.from_config(filter_chip_set.Config(
+      disabled: filter_chip_set.IsNotDisabled,
+      hide_selection_indicator: filter_chip_set.IsNotHideSelectionIndicator,
+      multi: filter_chip_set.IsNotMulti,
+      name: "",
+      vertical: filter_chip_set.IsNotVertical,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    filter_chip_set.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_with_name_test() {
-  filter_chip_set.render(
-    filter_chip_set.name(filter_chip_set.new(), Some("filter-group")),
-    [],
-    [element.text("Named Filter Chip Set")],
-  )
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip-set",
-      [attribute.attribute("name", "filter-group")],
-      [element.text("Named Filter Chip Set")],
+pub fn filter_chip_set_disabled_test() {
+  let mod = filter_chip_set.new()
+  let cases = [
+    #(
+      filter_chip_set.IsDisabled,
+      filter_chip_set.from_config(
+        filter_chip_set.Config(
+          ..filter_chip_set.default_config(),
+          disabled: filter_chip_set.IsDisabled,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip_set.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let config =
-    filter_chip_set.Config(
-      disabled: state.Disabled,
-      hide_selection_indicator: config.HideSelectionIndicator,
-      multi: config.Multi,
-      name: Some("test-filters"),
-      vertical: layout.Vertical,
+pub fn filter_chip_set_hide_selection_indicator_test() {
+  let mod = filter_chip_set.new()
+  let cases = [
+    #(
+      filter_chip_set.IsHideSelectionIndicator,
+      filter_chip_set.from_config(
+        filter_chip_set.Config(
+          ..filter_chip_set.default_config(),
+          hide_selection_indicator: filter_chip_set.IsHideSelectionIndicator,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip_set.hide_selection_indicator(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn filter_chip_set_multi_test() {
+  let mod = filter_chip_set.new()
+  let cases = [
+    #(
+      filter_chip_set.IsMulti,
+      filter_chip_set.from_config(
+        filter_chip_set.Config(
+          ..filter_chip_set.default_config(),
+          multi: filter_chip_set.IsMulti,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip_set.multi(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn filter_chip_set_name_test() {
+  let mod = filter_chip_set.new()
+  let cases = [
+    #(
+      "test",
+      filter_chip_set.from_config(
+        filter_chip_set.Config(..filter_chip_set.default_config(), name: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip_set.name(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn filter_chip_set_vertical_test() {
+  let mod = filter_chip_set.new()
+  let cases = [
+    #(
+      filter_chip_set.IsVertical,
+      filter_chip_set.from_config(
+        filter_chip_set.Config(
+          ..filter_chip_set.default_config(),
+          vertical: filter_chip_set.IsVertical,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    filter_chip_set.vertical(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn filter_chip_set_render_test() {
+  let mod = filter_chip_set.new()
+
+  let mod_disabled =
+    filter_chip_set.new()
+    |> filter_chip_set.disabled(filter_chip_set.IsDisabled)
+  let mod_hide_selection_indicator =
+    filter_chip_set.new()
+    |> filter_chip_set.hide_selection_indicator(
+      filter_chip_set.IsHideSelectionIndicator,
     )
+  let mod_multi =
+    filter_chip_set.new() |> filter_chip_set.multi(filter_chip_set.IsMulti)
+  let mod_name = filter_chip_set.new() |> filter_chip_set.name("test")
+  let mod_vertical =
+    filter_chip_set.new()
+    |> filter_chip_set.vertical(filter_chip_set.IsVertical)
 
-  filter_chip_set.render_config(config, [attribute.id("filter-chip-set")], [
-    element.text("Configured Filter Chip Set"),
-  ])
-  |> should.equal(
-    element.element(
-      "m3e-filter-chip-set",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("multi", ""),
-        attribute.attribute("name", "test-filters"),
-        attribute.attribute("vertical", ""),
-        attribute.id("filter-chip-set"),
-      ],
-      [element.text("Configured Filter Chip Set")],
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-filter-chip-set", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-filter-chip-set", [attribute.id("id")], []),
     ),
-  )
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-filter-chip-set", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-filter-chip-set",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_selection_indicator attribute
+    #(
+      #(mod_hide_selection_indicator, [], []),
+      element.element(
+        "m3e-filter-chip-set",
+        [attribute.attribute("hide-selection-indicator", "")],
+        [],
+      ),
+    ),
+    // Happy path with a multi attribute
+    #(
+      #(mod_multi, [], []),
+      element.element(
+        "m3e-filter-chip-set",
+        [attribute.attribute("multi", "")],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element(
+        "m3e-filter-chip-set",
+        [attribute.attribute("name", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a vertical attribute
+    #(
+      #(mod_vertical, [], []),
+      element.element(
+        "m3e-filter-chip-set",
+        [attribute.attribute("vertical", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    filter_chip_set.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

@@ -1,76 +1,260 @@
+//// Stepper unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/stepper.{Auto, Below, Check, Horizontal, LabelBelow, Vertical}
+import lustre/element/html
+import m3e/step_header_position
+import m3e/step_label_position
+import m3e/stepper.{Config}
+import m3e/stepper_orientation
 
-pub fn stepper_new_test() {
-  stepper.new()
-  |> stepper.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-stepper",
-      [
-        attribute.attribute("header-position", "above"),
-        attribute.attribute("label-position", "end"),
-        attribute.attribute("orientation", "horizontal"),
-      ],
-      [],
+pub fn stepper_default_config_test() {
+  let cases = [
+    Config(
+      header_position: step_header_position.Above,
+      label_position: step_label_position.End,
+      linear: stepper.IsNotLinear,
+      orientation: stepper_orientation.Horizontal,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    stepper.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn stepper_full_test() {
-  stepper.new()
-  |> stepper.header_position(Below)
-  |> stepper.label_position(LabelBelow)
-  |> stepper.linear(Check)
-  |> stepper.orientation(Vertical)
-  |> stepper.render([attribute.attribute("id", "my-stepper")], [
-    element.text("Child"),
-  ])
-  |> should.equal(
-    element.element(
-      "m3e-stepper",
-      [
-        attribute.attribute("header-position", "below"),
-        attribute.attribute("label-position", "below"),
-        attribute.attribute("linear", ""),
-        attribute.attribute("orientation", "vertical"),
-        attribute.attribute("id", "my-stepper"),
-      ],
-      [element.text("Child")],
+pub fn stepper_from_config_test() {
+  let cases = [
+    #(
+      stepper.Config(
+        header_position: step_header_position.Below,
+        label_position: step_label_position.Below,
+        linear: stepper.IsLinear,
+        orientation: stepper_orientation.Vertical,
+      ),
+      stepper.new()
+        |> stepper.header_position(step_header_position.Below)
+        |> stepper.label_position(step_label_position.Below)
+        |> stepper.linear(stepper.IsLinear)
+        |> stepper.orientation(stepper_orientation.Vertical),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    stepper.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn stepper_new_test() {
+  let cases = [
+    stepper.from_config(stepper.Config(
+      header_position: step_header_position.Above,
+      label_position: step_label_position.End,
+      linear: stepper.IsNotLinear,
+      orientation: stepper_orientation.Horizontal,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    stepper.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn stepper_header_position_test() {
+  let mod = stepper.new()
+  let cases = [
+    #(
+      step_header_position.Below,
+      stepper.from_config(
+        stepper.Config(
+          ..stepper.default_config(),
+          header_position: step_header_position.Below,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    stepper.header_position(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn stepper_label_position_test() {
+  let mod = stepper.new()
+  let cases = [
+    #(
+      step_label_position.Below,
+      stepper.from_config(
+        stepper.Config(
+          ..stepper.default_config(),
+          label_position: step_label_position.Below,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    stepper.label_position(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn stepper_linear_test() {
+  let mod = stepper.new()
+  let cases = [
+    #(
+      stepper.IsLinear,
+      stepper.from_config(
+        stepper.Config(..stepper.default_config(), linear: stepper.IsLinear),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    stepper.linear(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn stepper_orientation_test() {
-  stepper.new()
-  |> stepper.orientation(Auto)
-  |> stepper.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-stepper",
-      [
-        attribute.attribute("header-position", "above"),
-        attribute.attribute("label-position", "end"),
-        attribute.attribute("orientation", "auto"),
-      ],
-      [],
+  let mod = stepper.new()
+  let cases = [
+    #(
+      stepper_orientation.Vertical,
+      stepper.from_config(
+        stepper.Config(
+          ..stepper.default_config(),
+          orientation: stepper_orientation.Vertical,
+        ),
+      ),
     ),
-  )
+  ]
 
-  stepper.new()
-  |> stepper.orientation(Horizontal)
-  |> stepper.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-stepper",
-      [
-        attribute.attribute("header-position", "above"),
-        attribute.attribute("label-position", "end"),
-        attribute.attribute("orientation", "horizontal"),
-      ],
-      [],
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    stepper.orientation(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn stepper_render_test() {
+  let mod = stepper.new()
+
+  let mod_header_position =
+    stepper.new() |> stepper.header_position(step_header_position.Below)
+  let mod_label_position =
+    stepper.new() |> stepper.label_position(step_label_position.Below)
+  let mod_linear = stepper.new() |> stepper.linear(stepper.IsLinear)
+  let mod_orientation =
+    stepper.new() |> stepper.orientation(stepper_orientation.Vertical)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-stepper", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-stepper", [attribute.id("id")], []),
     ),
-  )
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-stepper", [], [html.br([])]),
+    ),
+
+    // Happy path with a header_position attribute
+    #(
+      #(mod_header_position, [], []),
+      element.element(
+        "m3e-stepper",
+        [
+          attribute.attribute(
+            "header-position",
+            step_header_position.to_string(step_header_position.Below),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a label_position attribute
+    #(
+      #(mod_label_position, [], []),
+      element.element(
+        "m3e-stepper",
+        [
+          attribute.attribute(
+            "label-position",
+            step_label_position.to_string(step_label_position.Below),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a linear attribute
+    #(
+      #(mod_linear, [], []),
+      element.element("m3e-stepper", [attribute.attribute("linear", "")], []),
+    ),
+    // Happy path with a orientation attribute
+    #(
+      #(mod_orientation, [], []),
+      element.element(
+        "m3e-stepper",
+        [
+          attribute.attribute(
+            "orientation",
+            stepper_orientation.to_string(stepper_orientation.Vertical),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    stepper.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn stepper_slot_test() {
+  let cases = [
+    #(stepper.Step, attribute.attribute("slot", "step")),
+    #(stepper.Panel, attribute.attribute("slot", "panel")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    stepper.slot(s)
+    |> should.equal(expected)
+  })
 }

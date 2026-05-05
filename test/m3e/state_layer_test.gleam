@@ -1,0 +1,196 @@
+//// StateLayer unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
+import lustre/attribute
+import lustre/element
+import lustre/element/html
+import m3e/state_layer.{Config}
+
+pub fn state_layer_default_config_test() {
+  let cases = [
+    Config(
+      disabled: state_layer.IsNotDisabled,
+      disable_hover: state_layer.IsNotDisableHover,
+      for: None,
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    state_layer.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn state_layer_from_config_test() {
+  let cases = [
+    #(
+      state_layer.Config(
+        disabled: state_layer.IsDisabled,
+        disable_hover: state_layer.IsDisableHover,
+        for: Some("test"),
+      ),
+      state_layer.new()
+        |> state_layer.disabled(state_layer.IsDisabled)
+        |> state_layer.disable_hover(state_layer.IsDisableHover)
+        |> state_layer.for(Some("test")),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    state_layer.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn state_layer_new_test() {
+  let cases = [
+    state_layer.from_config(state_layer.Config(
+      disabled: state_layer.IsNotDisabled,
+      disable_hover: state_layer.IsNotDisableHover,
+      for: None,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    state_layer.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn state_layer_disabled_test() {
+  let mod = state_layer.new()
+  let cases = [
+    #(
+      state_layer.IsDisabled,
+      state_layer.from_config(
+        state_layer.Config(
+          ..state_layer.default_config(),
+          disabled: state_layer.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    state_layer.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn state_layer_disable_hover_test() {
+  let mod = state_layer.new()
+  let cases = [
+    #(
+      state_layer.IsDisableHover,
+      state_layer.from_config(
+        state_layer.Config(
+          ..state_layer.default_config(),
+          disable_hover: state_layer.IsDisableHover,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    state_layer.disable_hover(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn state_layer_for_test() {
+  let mod = state_layer.new()
+  let cases = [
+    #(
+      Some("test"),
+      state_layer.from_config(
+        state_layer.Config(..state_layer.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    state_layer.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn state_layer_render_test() {
+  let mod = state_layer.new()
+
+  let mod_disabled =
+    state_layer.new() |> state_layer.disabled(state_layer.IsDisabled)
+  let mod_disable_hover =
+    state_layer.new() |> state_layer.disable_hover(state_layer.IsDisableHover)
+  let mod_for = state_layer.new() |> state_layer.for(Some("test"))
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-state-layer", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-state-layer", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-state-layer", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-state-layer",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a disable_hover attribute
+    #(
+      #(mod_disable_hover, [], []),
+      element.element(
+        "m3e-state-layer",
+        [attribute.attribute("disable-hover", "")],
+        [],
+      ),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-state-layer",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    state_layer.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}

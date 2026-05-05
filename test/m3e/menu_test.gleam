@@ -1,224 +1,231 @@
-import gleam/option.{None, Some}
+//// Menu unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/menu
-import m3e/state.{Disabled, Enabled}
+import lustre/element/html
+import m3e/menu.{Config}
+import m3e/menu_position_x
+import m3e/menu_position_y
+import m3e/menu_variant
 
-pub fn basic_test() {
-  let m = menu.new()
+pub fn menu_default_config_test() {
+  let cases = [
+    Config(
+      position_x: menu_position_x.After,
+      position_y: menu_position_y.Below,
+      variant: menu_variant.Standard,
+      submenu: menu.IsNotSubmenu,
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
+  list.each(cases, fn(c) {
+    let expected = c
 
-  menu.render(m, [], [])
-  |> should.equal(expected)
-}
-
-pub fn position_x_test() {
-  let m =
-    menu.new()
-    |> menu_with_x(menu.Before)
-
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("position-x", "before"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
-
-  menu.render(m, [], [])
-  |> should.equal(expected)
-}
-
-fn menu_with_x(m: menu.Menu, x: menu.PositionX) -> menu.Menu {
-  menu.position_x(m, x)
-}
-
-pub fn position_y_test() {
-  let m =
-    menu.new()
-    |> menu_with_y(menu.Above)
-
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "above"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
-
-  menu.render(m, [], [])
-  |> should.equal(expected)
-}
-
-fn menu_with_y(m: menu.Menu, y: menu.PositionY) -> menu.Menu {
-  menu.position_y(m, y)
-}
-
-pub fn variant_test() {
-  let m =
-    menu.new()
-    |> menu_with_variant(menu.Vibrant)
-
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("variant", "vibrant"),
-      ],
-      [],
-    )
-
-  menu.render(m, [], [])
-  |> should.equal(expected)
-}
-
-fn menu_with_variant(m: menu.Menu, v: menu.Variant) -> menu.Menu {
-  menu.variant(m, v)
-}
-
-pub fn children_test() {
-  let m = menu.new()
-  let child = element.element("span", [], [])
-
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [child],
-    )
-
-  menu.render(m, [], [child])
-  |> should.equal(expected)
-}
-
-pub fn attributes_test() {
-  let m = menu.new()
-  let attr = attribute.attribute("class", "custom")
-
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("variant", "standard"),
-        attr,
-      ],
-      [],
-    )
-
-  menu.render(m, [attr], [])
-  |> should.equal(expected)
-}
-
-pub fn config_test() {
-  let c =
     menu.default_config()
-    |> fn(c) {
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_from_config_test() {
+  let cases = [
+    #(
       menu.Config(
-        ..c,
-        anchor: Some("my-anchor"),
-        disabled: Disabled,
-        state: menu.Open,
-        quick: menu.Instant,
-      )
-    }
+        position_x: menu_position_x.Before,
+        position_y: menu_position_y.Above,
+        variant: menu_variant.Vibrant,
+        submenu: menu.IsSubmenu,
+      ),
+      menu.new()
+        |> menu.position_x(menu_position_x.Before)
+        |> menu.position_y(menu_position_y.Above)
+        |> menu.variant(menu_variant.Vibrant)
+        |> menu.submenu(menu.IsSubmenu),
+    ),
+  ]
 
-  let m = menu.from_config(c)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
 
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("anchor", "my-anchor"),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("open", ""),
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("quick", ""),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
-
-  menu.render(m, [], [])
-  |> should.equal(expected)
+    menu.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let c = menu.default_config()
+pub fn menu_new_test() {
+  let cases = [
+    menu.from_config(menu.Config(
+      position_x: menu_position_x.After,
+      position_y: menu_position_y.Below,
+      variant: menu_variant.Standard,
+      submenu: menu.IsNotSubmenu,
+    )),
+  ]
 
-  c.anchor |> should.equal(None)
-  c.disabled |> should.equal(Enabled)
-  c.position_x |> should.equal(menu.After)
-  c.position_y |> should.equal(menu.Below)
-  c.quick |> should.equal(menu.Animated)
-  c.state |> should.equal(menu.Closed)
-  c.variant |> should.equal(menu.Standard)
-}
+  list.each(cases, fn(c) {
+    let expected = c
 
-pub fn from_config_test() {
-  let c = menu.default_config()
-  let m = menu.from_config(c)
-
-  menu.render(m, [], [])
-  |> should.equal(menu.render(menu.new(), [], []))
-}
-
-pub fn render_config_test() {
-  let c = menu.default_config()
-  let expected = menu.render(menu.from_config(c), [], [])
-
-  menu.render_config(c, [], [])
-  |> should.equal(expected)
-}
-
-pub fn setters_test() {
-  let m =
     menu.new()
-    |> menu.anchor("my-anchor")
-    |> menu.disabled(Disabled)
-    |> menu.open(menu.Open)
-    |> menu.quick(menu.Instant)
+    |> should.equal(expected)
+  })
+}
 
-  let expected =
-    element.element(
-      "m3e-menu",
-      [
-        attribute.attribute("anchor", "my-anchor"),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("open", ""),
-        attribute.attribute("position-x", "after"),
-        attribute.attribute("position-y", "below"),
-        attribute.attribute("quick", ""),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
+pub fn menu_position_x_test() {
+  let mod = menu.new()
+  let cases = [
+    #(
+      menu_position_x.Before,
+      menu.from_config(
+        menu.Config(..menu.default_config(), position_x: menu_position_x.Before),
+      ),
+    ),
+  ]
 
-  menu.render(m, [], [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    menu.position_x(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_position_y_test() {
+  let mod = menu.new()
+  let cases = [
+    #(
+      menu_position_y.Above,
+      menu.from_config(
+        menu.Config(..menu.default_config(), position_y: menu_position_y.Above),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    menu.position_y(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_variant_test() {
+  let mod = menu.new()
+  let cases = [
+    #(
+      menu_variant.Vibrant,
+      menu.from_config(
+        menu.Config(..menu.default_config(), variant: menu_variant.Vibrant),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    menu.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_submenu_test() {
+  let mod = menu.new()
+  let cases = [
+    #(
+      menu.IsSubmenu,
+      menu.from_config(
+        menu.Config(..menu.default_config(), submenu: menu.IsSubmenu),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    menu.submenu(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn menu_render_test() {
+  let mod = menu.new()
+
+  let mod_position_x = menu.new() |> menu.position_x(menu_position_x.Before)
+  let mod_position_y = menu.new() |> menu.position_y(menu_position_y.Above)
+  let mod_variant = menu.new() |> menu.variant(menu_variant.Vibrant)
+  let mod_submenu = menu.new() |> menu.submenu(menu.IsSubmenu)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-menu", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-menu", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(#(mod, [], [html.br([])]), element.element("m3e-menu", [], [html.br([])])),
+
+    // Happy path with a position_x attribute
+    #(
+      #(mod_position_x, [], []),
+      element.element(
+        "m3e-menu",
+        [
+          attribute.attribute(
+            "position-x",
+            menu_position_x.to_string(menu_position_x.Before),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a position_y attribute
+    #(
+      #(mod_position_y, [], []),
+      element.element(
+        "m3e-menu",
+        [
+          attribute.attribute(
+            "position-y",
+            menu_position_y.to_string(menu_position_y.Above),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-menu",
+        [
+          attribute.attribute(
+            "variant",
+            menu_variant.to_string(menu_variant.Vibrant),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a submenu attribute
+    #(
+      #(mod_submenu, [], []),
+      element.element("m3e-menu", [attribute.attribute("submenu", "")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    menu.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

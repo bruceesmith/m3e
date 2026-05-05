@@ -1,87 +1,53 @@
+//// FabMenuTrigger unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/fab_menu_trigger
-import m3e/icon
 
-pub fn basic_test() {
-  let i = icon.new("add")
-  let t = fab_menu_trigger.new("my-menu", i)
+pub fn fab_menu_trigger_render_test() {
+  let mod = fab_menu_trigger.new(None)
+  let mod_for = fab_menu_trigger.new(Some("test"))
 
-  let expected =
-    element.element(
-      "m3e-fab-menu-trigger",
-      [attribute.attribute("for", "my-menu")],
-      [icon.render(i, [], [])],
-    )
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-fab-menu-trigger", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-fab-menu-trigger", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-fab-menu-trigger", [], [html.br([])]),
+    ),
 
-  fab_menu_trigger.render(t, [], [])
-  |> should.equal(expected)
-}
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-fab-menu-trigger",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+  ]
 
-pub fn for_test() {
-  let i = icon.new("add")
-  let t =
-    fab_menu_trigger.new("my-menu", i)
-    |> fab_menu_trigger.for_("other-menu")
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-  let expected =
-    element.element(
-      "m3e-fab-menu-trigger",
-      [attribute.attribute("for", "other-menu")],
-      [icon.render(i, [], [])],
-    )
-
-  fab_menu_trigger.render(t, [], [])
-  |> should.equal(expected)
-}
-
-pub fn icon_test() {
-  let i1 = icon.new("add")
-  let i2 = icon.new("remove")
-  let t =
-    fab_menu_trigger.new("my-menu", i1)
-    |> fab_menu_trigger.icon(i2)
-
-  let expected =
-    element.element(
-      "m3e-fab-menu-trigger",
-      [attribute.attribute("for", "my-menu")],
-      [icon.render(i2, [], [])],
-    )
-
-  fab_menu_trigger.render(t, [], [])
-  |> should.equal(expected)
-}
-
-pub fn children_test() {
-  let i = icon.new("add")
-  let t = fab_menu_trigger.new("my-menu", i)
-  let child = element.element("span", [], [element.text("hello")])
-
-  let expected =
-    element.element(
-      "m3e-fab-menu-trigger",
-      [attribute.attribute("for", "my-menu")],
-      [icon.render(i, [], []), child],
-    )
-
-  fab_menu_trigger.render(t, [], [child])
-  |> should.equal(expected)
-}
-
-pub fn attributes_test() {
-  let i = icon.new("add")
-  let t = fab_menu_trigger.new("my-menu", i)
-  let attr = attribute.attribute("class", "custom")
-
-  let expected =
-    element.element(
-      "m3e-fab-menu-trigger",
-      [attribute.attribute("for", "my-menu"), attr],
-      [icon.render(i, [], [])],
-    )
-
-  fab_menu_trigger.render(t, [attr], [])
-  |> should.equal(expected)
+    fab_menu_trigger.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

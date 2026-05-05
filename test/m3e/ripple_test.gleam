@@ -1,0 +1,234 @@
+//// Ripple unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
+import lustre/attribute
+import lustre/element
+import lustre/element/html
+import m3e/ripple.{Config}
+
+pub fn ripple_default_config_test() {
+  let cases = [
+    Config(
+      centered: ripple.IsNotCentered,
+      disabled: ripple.IsNotDisabled,
+      for: None,
+      radius: None,
+      unbounded: ripple.IsNotUnbounded,
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    ripple.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_from_config_test() {
+  let cases = [
+    #(
+      ripple.Config(
+        centered: ripple.IsCentered,
+        disabled: ripple.IsDisabled,
+        for: Some("test"),
+        radius: Some(42.0),
+        unbounded: ripple.IsUnbounded,
+      ),
+      ripple.new()
+        |> ripple.centered(ripple.IsCentered)
+        |> ripple.disabled(ripple.IsDisabled)
+        |> ripple.for(Some("test"))
+        |> ripple.radius(Some(42.0))
+        |> ripple.unbounded(ripple.IsUnbounded),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    ripple.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_new_test() {
+  let cases = [
+    ripple.from_config(ripple.Config(
+      centered: ripple.IsNotCentered,
+      disabled: ripple.IsNotDisabled,
+      for: None,
+      radius: None,
+      unbounded: ripple.IsNotUnbounded,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    ripple.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_centered_test() {
+  let mod = ripple.new()
+  let cases = [
+    #(
+      ripple.IsCentered,
+      ripple.from_config(
+        ripple.Config(..ripple.default_config(), centered: ripple.IsCentered),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    ripple.centered(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_disabled_test() {
+  let mod = ripple.new()
+  let cases = [
+    #(
+      ripple.IsDisabled,
+      ripple.from_config(
+        ripple.Config(..ripple.default_config(), disabled: ripple.IsDisabled),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    ripple.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_for_test() {
+  let mod = ripple.new()
+  let cases = [
+    #(
+      Some("test"),
+      ripple.from_config(
+        ripple.Config(..ripple.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    ripple.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_radius_test() {
+  let mod = ripple.new()
+  let cases = [
+    #(
+      Some(42.0),
+      ripple.from_config(
+        ripple.Config(..ripple.default_config(), radius: Some(42.0)),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    ripple.radius(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_unbounded_test() {
+  let mod = ripple.new()
+  let cases = [
+    #(
+      ripple.IsUnbounded,
+      ripple.from_config(
+        ripple.Config(..ripple.default_config(), unbounded: ripple.IsUnbounded),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    ripple.unbounded(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn ripple_render_test() {
+  let mod = ripple.new()
+
+  let mod_centered = ripple.new() |> ripple.centered(ripple.IsCentered)
+  let mod_disabled = ripple.new() |> ripple.disabled(ripple.IsDisabled)
+  let mod_for = ripple.new() |> ripple.for(Some("test"))
+  let mod_radius = ripple.new() |> ripple.radius(Some(42.0))
+  let mod_unbounded = ripple.new() |> ripple.unbounded(ripple.IsUnbounded)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-ripple", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-ripple", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-ripple", [], [html.br([])]),
+    ),
+
+    // Happy path with a centered attribute
+    #(
+      #(mod_centered, [], []),
+      element.element("m3e-ripple", [attribute.attribute("centered", "")], []),
+    ),
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element("m3e-ripple", [attribute.attribute("disabled", "")], []),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element("m3e-ripple", [attribute.attribute("for", "test")], []),
+    ),
+    // Happy path with a radius attribute
+    #(
+      #(mod_radius, [], []),
+      element.element("m3e-ripple", [attribute.attribute("radius", "42.0")], []),
+    ),
+    // Happy path with a unbounded attribute
+    #(
+      #(mod_unbounded, [], []),
+      element.element("m3e-ripple", [attribute.attribute("unbounded", "")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    ripple.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}

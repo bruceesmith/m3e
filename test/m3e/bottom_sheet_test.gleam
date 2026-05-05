@@ -1,278 +1,422 @@
+//// BottomSheet unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/bottom_sheet.{Config}
 
-import m3e/bottom_sheet
-
-pub fn new_test() {
-  let sheet = bottom_sheet.new()
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn detent_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.detent(1)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "1"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn detents_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.detents([bottom_sheet.Full, bottom_sheet.Half])
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("detents", "full half"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn handle_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.handle(bottom_sheet.ShowHandle)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle", ""),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn handle_label_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.handle_label("Drag me")
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", "Drag me"),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn hideable_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.hideable(bottom_sheet.Hideable)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hideable", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn hide_friction_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.hide_friction(0.8)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.8"),
-        attribute.attribute("id", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn id_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.id("my-sheet")
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", "my-sheet"),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn modal_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.modal(bottom_sheet.Modal)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-        attribute.attribute("modal", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn open_test() {
-  let sheet =
-    bottom_sheet.new()
-    |> bottom_sheet.open(bottom_sheet.Open)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-        attribute.attribute("open", ""),
-      ],
-      [],
-    )
-
-  sheet
-  |> bottom_sheet.render([])
-  |> should.equal(expected)
-}
-
-pub fn children_test() {
-  let sheet = bottom_sheet.new()
-  let child = element.element("div", [], [element.text("content")])
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle-label", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", ""),
-      ],
-      [child],
-    )
-
-  sheet
-  |> bottom_sheet.render([child])
-  |> should.equal(expected)
-}
-
-pub fn config_test() {
-  let config =
-    bottom_sheet.Config(
-      detent: 0,
+pub fn bottom_sheet_default_config_test() {
+  let cases = [
+    Config(
+      detent: 0.0,
       detents: [],
-      handle: bottom_sheet.ShowHandle,
-      handle_label: "Drag me",
-      hideable: bottom_sheet.Hideable,
+      handle: bottom_sheet.IsNotHandle,
+      handle_label: "Drag handle",
+      hideable: bottom_sheet.IsNotHideable,
       hide_friction: 0.5,
-      id: "my-sheet",
-      modal: bottom_sheet.Modal,
-      open: bottom_sheet.Open,
-    )
-  let expected =
-    element.element(
-      "m3e-bottom-sheet",
-      [
-        attribute.attribute("detent", "0"),
-        attribute.attribute("handle", ""),
-        attribute.attribute("handle-label", "Drag me"),
-        attribute.attribute("hideable", ""),
-        attribute.attribute("hide-friction", "0.5"),
-        attribute.attribute("id", "my-sheet"),
-        attribute.attribute("modal", ""),
-        attribute.attribute("open", ""),
-      ],
-      [],
-    )
+      modal: bottom_sheet.IsNotModal,
+      open: bottom_sheet.IsNotOpen,
+      overshoot_limit: 4.0,
+    ),
+  ]
 
-  config
-  |> bottom_sheet.render_config([])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    bottom_sheet.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_test() {
-  bottom_sheet.Header
-  |> bottom_sheet.slot
-  |> should.equal(attribute.attribute("slot", "header"))
+pub fn bottom_sheet_from_config_test() {
+  let cases = [
+    #(
+      bottom_sheet.Config(
+        detent: 42.0,
+        detents: ["test1", "test2"],
+        handle: bottom_sheet.IsHandle,
+        handle_label: "test",
+        hideable: bottom_sheet.IsHideable,
+        hide_friction: 42.0,
+        modal: bottom_sheet.IsModal,
+        open: bottom_sheet.IsOpen,
+        overshoot_limit: 42.0,
+      ),
+      bottom_sheet.new()
+        |> bottom_sheet.detent(42.0)
+        |> bottom_sheet.detents(["test1", "test2"])
+        |> bottom_sheet.handle(bottom_sheet.IsHandle)
+        |> bottom_sheet.handle_label("test")
+        |> bottom_sheet.hideable(bottom_sheet.IsHideable)
+        |> bottom_sheet.hide_friction(42.0)
+        |> bottom_sheet.modal(bottom_sheet.IsModal)
+        |> bottom_sheet.open(bottom_sheet.IsOpen)
+        |> bottom_sheet.overshoot_limit(42.0),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    bottom_sheet.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_new_test() {
+  let cases = [
+    bottom_sheet.from_config(bottom_sheet.Config(
+      detent: 0.0,
+      detents: [],
+      handle: bottom_sheet.IsNotHandle,
+      handle_label: "Drag handle",
+      hideable: bottom_sheet.IsNotHideable,
+      hide_friction: 0.5,
+      modal: bottom_sheet.IsNotModal,
+      open: bottom_sheet.IsNotOpen,
+      overshoot_limit: 4.0,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    bottom_sheet.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_detent_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      42.0,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(..bottom_sheet.default_config(), detent: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.detent(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_detents_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      ["test1", "test2"],
+      bottom_sheet.from_config(
+        bottom_sheet.Config(..bottom_sheet.default_config(), detents: [
+          "test1",
+          "test2",
+        ]),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.detents(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_handle_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      bottom_sheet.IsHandle,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          handle: bottom_sheet.IsHandle,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.handle(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_handle_label_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      "test",
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          handle_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.handle_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_hideable_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      bottom_sheet.IsHideable,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          hideable: bottom_sheet.IsHideable,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.hideable(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_hide_friction_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      42.0,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          hide_friction: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.hide_friction(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_modal_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      bottom_sheet.IsModal,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          modal: bottom_sheet.IsModal,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.modal(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_open_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      bottom_sheet.IsOpen,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          open: bottom_sheet.IsOpen,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.open(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_overshoot_limit_test() {
+  let mod = bottom_sheet.new()
+  let cases = [
+    #(
+      42.0,
+      bottom_sheet.from_config(
+        bottom_sheet.Config(
+          ..bottom_sheet.default_config(),
+          overshoot_limit: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet.overshoot_limit(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_render_test() {
+  let mod = bottom_sheet.new()
+
+  let mod_detent = bottom_sheet.new() |> bottom_sheet.detent(42.0)
+  let mod_detents =
+    bottom_sheet.new() |> bottom_sheet.detents(["test1", "test2"])
+  let mod_handle =
+    bottom_sheet.new() |> bottom_sheet.handle(bottom_sheet.IsHandle)
+  let mod_handle_label = bottom_sheet.new() |> bottom_sheet.handle_label("test")
+  let mod_hideable =
+    bottom_sheet.new() |> bottom_sheet.hideable(bottom_sheet.IsHideable)
+  let mod_hide_friction = bottom_sheet.new() |> bottom_sheet.hide_friction(42.0)
+  let mod_modal = bottom_sheet.new() |> bottom_sheet.modal(bottom_sheet.IsModal)
+  let mod_open = bottom_sheet.new() |> bottom_sheet.open(bottom_sheet.IsOpen)
+  let mod_overshoot_limit =
+    bottom_sheet.new() |> bottom_sheet.overshoot_limit(42.0)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-bottom-sheet", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-bottom-sheet", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-bottom-sheet", [], [html.br([])]),
+    ),
+
+    // Happy path with a detent attribute
+    #(
+      #(mod_detent, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("detent", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a detents attribute
+    #(
+      #(mod_detents, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("detents", "test1 test2")],
+        [],
+      ),
+    ),
+    // Happy path with a handle attribute
+    #(
+      #(mod_handle, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("handle", "")],
+        [],
+      ),
+    ),
+    // Happy path with a handle_label attribute
+    #(
+      #(mod_handle_label, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("handle-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a hideable attribute
+    #(
+      #(mod_hideable, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("hideable", "")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_friction attribute
+    #(
+      #(mod_hide_friction, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("hide-friction", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a modal attribute
+    #(
+      #(mod_modal, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("modal", "")],
+        [],
+      ),
+    ),
+    // Happy path with a open attribute
+    #(
+      #(mod_open, [], []),
+      element.element("m3e-bottom-sheet", [attribute.attribute("open", "")], []),
+    ),
+    // Happy path with a overshoot_limit attribute
+    #(
+      #(mod_overshoot_limit, [], []),
+      element.element(
+        "m3e-bottom-sheet",
+        [attribute.attribute("overshoot-limit", "42.0")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    bottom_sheet.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_slot_test() {
+  let cases = [
+    #(bottom_sheet.Header, attribute.attribute("slot", "header")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    bottom_sheet.slot(s)
+    |> should.equal(expected)
+  })
 }

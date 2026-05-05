@@ -1,40 +1,53 @@
+//// DatepickerToggle unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-
+import lustre/element/html
 import m3e/datepicker_toggle
 
 pub fn datepicker_toggle_render_test() {
-  let toggle = datepicker_toggle.new(None)
-  let expected = element.element("m3e-datepicker-toggle", [], [])
+  let mod = datepicker_toggle.new(None)
+  let mod_for = datepicker_toggle.new(Some("test"))
 
-  datepicker_toggle.render(toggle, [])
-  |> should.equal(expected)
-}
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-datepicker-toggle", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-datepicker-toggle", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-datepicker-toggle", [], [html.br([])]),
+    ),
 
-pub fn datepicker_toggle_for_test() {
-  let toggle = datepicker_toggle.new(Some("my-datepicker"))
-  let expected =
-    element.element(
-      "m3e-datepicker-toggle",
-      [attribute.attribute("for", "my-datepicker")],
-      [],
-    )
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-datepicker-toggle",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+  ]
 
-  datepicker_toggle.render(toggle, [])
-  |> should.equal(expected)
-}
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-pub fn datepicker_toggle_attributes_test() {
-  let toggle = datepicker_toggle.new(None)
-  let expected =
-    element.element(
-      "m3e-datepicker-toggle",
-      [attribute.class("custom-class")],
-      [],
-    )
-
-  datepicker_toggle.render(toggle, [attribute.class("custom-class")])
-  |> should.equal(expected)
+    datepicker_toggle.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

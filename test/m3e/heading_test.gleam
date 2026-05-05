@@ -1,252 +1,248 @@
-import gleeunit/should
+//// Heading unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html
+import m3e/heading.{Config}
+import m3e/heading_level
+import m3e/heading_size
+import m3e/heading_variant
 
-import m3e/config
-import m3e/heading.{Config, Emphasized, Headline, Title}
-
-pub fn heading_test() {
-  let h = heading.new("Hello") |> heading.size(config.Large)
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "large"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Hello")],
-    )
-  heading.render(h, []) |> should.equal(expected)
-}
-
-pub fn basic_test() {
-  let h = heading.new("World")
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("World")],
-    )
-  heading.render(h, []) |> should.equal(expected)
-}
-
-pub fn element_test() {
-  let h =
-    heading.new("Test")
-    |> heading.emphasized(Emphasized)
-    |> heading.size(config.Small)
-    |> heading.variant(Title)
-
-  let result = heading.render(h, [])
-
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("emphasized", ""),
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "title"),
-      ],
-      [html.text("Test")],
-    )
-
-  result |> should.equal(expected)
-}
-
-pub fn element_basic_test() {
-  let h = heading.new("Basic Test")
-  let result = heading.render(h, [])
-
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Basic Test")],
-    )
-
-  result |> should.equal(expected)
-}
-
-pub fn emphasized_test() {
-  let h = heading.new("Emphasized")
-  let expected_basic =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Emphasized")],
-    )
-  heading.render(h, []) |> should.equal(expected_basic)
-
-  let h2 = heading.emphasized(h, Emphasized)
-  let expected_emphasized =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("emphasized", ""),
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Emphasized")],
-    )
-  heading.render(h2, []) |> should.equal(expected_emphasized)
-}
-
-pub fn size_test() {
-  let h = heading.new("Size")
-  let h2 = heading.size(h, config.Large)
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "large"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Size")],
-    )
-  heading.render(h2, []) |> should.equal(expected)
-
-  let h3 = heading.size(h2, config.Small)
-  let expected_small =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Size")],
-    )
-  heading.render(h3, []) |> should.equal(expected_small)
-}
-
-pub fn variant_test() {
-  let h = heading.new("Variant")
-  let h2 = heading.variant(h, Headline)
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "headline"),
-      ],
-      [html.text("Variant")],
-    )
-  heading.render(h2, []) |> should.equal(expected)
-}
-
-pub fn element_with_attributes_test() {
-  let h = heading.new("Test with Attributes")
-  let custom_attributes = [
-    attribute.attribute("id", "my-heading"),
-    attribute.attribute("class", "custom-class"),
-  ]
-  let result = heading.render(h, custom_attributes)
-
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-        attribute.attribute("id", "my-heading"),
-        attribute.attribute("class", "custom-class"),
-      ],
-      [html.text("Test with Attributes")],
-    )
-
-  result |> should.equal(expected)
-}
-
-pub fn level_test() {
-  let h = heading.new("Level Test")
-
-  // Test valid levels
-  heading.level(h, 2)
-  |> heading.render([])
-  |> should.equal(
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "2"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Level Test")],
-    ),
-  )
-
-  // Test clamping: Below range (0) should default to 1
-  heading.level(h, 0)
-  |> heading.render([])
-  |> should.equal(
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Level Test")],
-    ),
-  )
-
-  // Test clamping: Above range (7) should default to 1
-  heading.level(h, 7)
-  |> heading.render([])
-  |> should.equal(
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("level", "1"),
-        attribute.attribute("size", "medium"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Level Test")],
-    ),
-  )
-}
-
-pub fn render_config_test() {
-  let config =
+pub fn heading_default_config_test() {
+  let cases = [
     Config(
-      ..heading.default_config(),
-      text: "Config Text",
-      emphasized: Emphasized,
-      size: config.Small,
-      level: 3,
-    )
-  let expected =
-    element.element(
-      "m3e-heading",
-      [
-        attribute.attribute("emphasized", ""),
-        attribute.attribute("level", "3"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "display"),
-      ],
-      [html.text("Config Text")],
-    )
+      emphasized: heading.IsNotEmphasized,
+      level: None,
+      size: heading_size.Medium,
+      variant: heading_variant.Display,
+    ),
+  ]
 
-  heading.render_config(config, [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    heading.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_from_config_test() {
+  let cases = [
+    #(
+      heading.Config(
+        emphasized: heading.IsEmphasized,
+        level: Some(heading_level.One),
+        size: heading_size.Small,
+        variant: heading_variant.Headline,
+      ),
+      heading.new()
+        |> heading.emphasized(heading.IsEmphasized)
+        |> heading.level(Some(heading_level.One))
+        |> heading.size(heading_size.Small)
+        |> heading.variant(heading_variant.Headline),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    heading.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_new_test() {
+  let cases = [
+    heading.from_config(heading.Config(
+      emphasized: heading.IsNotEmphasized,
+      level: None,
+      size: heading_size.Medium,
+      variant: heading_variant.Display,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    heading.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_emphasized_test() {
+  let mod = heading.new()
+  let cases = [
+    #(
+      heading.IsEmphasized,
+      heading.from_config(
+        heading.Config(
+          ..heading.default_config(),
+          emphasized: heading.IsEmphasized,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    heading.emphasized(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_level_test() {
+  let mod = heading.new()
+  let cases = [
+    #(
+      Some(heading_level.One),
+      heading.from_config(
+        heading.Config(
+          ..heading.default_config(),
+          level: Some(heading_level.One),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    heading.level(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_size_test() {
+  let mod = heading.new()
+  let cases = [
+    #(
+      heading_size.Small,
+      heading.from_config(
+        heading.Config(..heading.default_config(), size: heading_size.Small),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    heading.size(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_variant_test() {
+  let mod = heading.new()
+  let cases = [
+    #(
+      heading_variant.Headline,
+      heading.from_config(
+        heading.Config(
+          ..heading.default_config(),
+          variant: heading_variant.Headline,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    heading.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn heading_render_test() {
+  let mod = heading.new()
+
+  let mod_emphasized = heading.new() |> heading.emphasized(heading.IsEmphasized)
+  let mod_level = heading.new() |> heading.level(Some(heading_level.One))
+  let mod_size = heading.new() |> heading.size(heading_size.Small)
+  let mod_variant = heading.new() |> heading.variant(heading_variant.Headline)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-heading", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-heading", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-heading", [], [html.br([])]),
+    ),
+
+    // Happy path with a emphasized attribute
+    #(
+      #(mod_emphasized, [], []),
+      element.element(
+        "m3e-heading",
+        [attribute.attribute("emphasized", "")],
+        [],
+      ),
+    ),
+    // Happy path with a level attribute
+    #(
+      #(mod_level, [], []),
+      element.element(
+        "m3e-heading",
+        [
+          attribute.attribute(
+            "level",
+            heading_level.to_string(heading_level.One),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a size attribute
+    #(
+      #(mod_size, [], []),
+      element.element(
+        "m3e-heading",
+        [
+          attribute.attribute(
+            "size",
+            heading_size.to_string(heading_size.Small),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-heading",
+        [
+          attribute.attribute(
+            "variant",
+            heading_variant.to_string(heading_variant.Headline),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    heading.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

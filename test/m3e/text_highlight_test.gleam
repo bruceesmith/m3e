@@ -1,0 +1,239 @@
+//// TextHighlight unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleeunit/should
+import lustre/attribute
+import lustre/element
+import lustre/element/html
+import m3e/text_highlight.{Config}
+import m3e/text_highlight_mode
+
+pub fn text_highlight_default_config_test() {
+  let cases = [
+    Config(
+      case_sensitive: text_highlight.IsNotCaseSensitive,
+      disabled: text_highlight.IsNotDisabled,
+      mode: text_highlight_mode.Contains,
+      term: "",
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    text_highlight.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_from_config_test() {
+  let cases = [
+    #(
+      text_highlight.Config(
+        case_sensitive: text_highlight.IsCaseSensitive,
+        disabled: text_highlight.IsDisabled,
+        mode: text_highlight_mode.StartsWith,
+        term: "test",
+      ),
+      text_highlight.new()
+        |> text_highlight.case_sensitive(text_highlight.IsCaseSensitive)
+        |> text_highlight.disabled(text_highlight.IsDisabled)
+        |> text_highlight.mode(text_highlight_mode.StartsWith)
+        |> text_highlight.term("test"),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    text_highlight.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_new_test() {
+  let cases = [
+    text_highlight.from_config(text_highlight.Config(
+      case_sensitive: text_highlight.IsNotCaseSensitive,
+      disabled: text_highlight.IsNotDisabled,
+      mode: text_highlight_mode.Contains,
+      term: "",
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    text_highlight.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_case_sensitive_test() {
+  let mod = text_highlight.new()
+  let cases = [
+    #(
+      text_highlight.IsCaseSensitive,
+      text_highlight.from_config(
+        text_highlight.Config(
+          ..text_highlight.default_config(),
+          case_sensitive: text_highlight.IsCaseSensitive,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    text_highlight.case_sensitive(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_disabled_test() {
+  let mod = text_highlight.new()
+  let cases = [
+    #(
+      text_highlight.IsDisabled,
+      text_highlight.from_config(
+        text_highlight.Config(
+          ..text_highlight.default_config(),
+          disabled: text_highlight.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    text_highlight.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_mode_test() {
+  let mod = text_highlight.new()
+  let cases = [
+    #(
+      text_highlight_mode.StartsWith,
+      text_highlight.from_config(
+        text_highlight.Config(
+          ..text_highlight.default_config(),
+          mode: text_highlight_mode.StartsWith,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    text_highlight.mode(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_term_test() {
+  let mod = text_highlight.new()
+  let cases = [
+    #(
+      "test",
+      text_highlight.from_config(
+        text_highlight.Config(..text_highlight.default_config(), term: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    text_highlight.term(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn text_highlight_render_test() {
+  let mod = text_highlight.new()
+
+  let mod_case_sensitive =
+    text_highlight.new()
+    |> text_highlight.case_sensitive(text_highlight.IsCaseSensitive)
+  let mod_disabled =
+    text_highlight.new() |> text_highlight.disabled(text_highlight.IsDisabled)
+  let mod_mode =
+    text_highlight.new() |> text_highlight.mode(text_highlight_mode.StartsWith)
+  let mod_term = text_highlight.new() |> text_highlight.term("test")
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-text-highlight", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-text-highlight", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-text-highlight", [], [html.br([])]),
+    ),
+
+    // Happy path with a case_sensitive attribute
+    #(
+      #(mod_case_sensitive, [], []),
+      element.element(
+        "m3e-text-highlight",
+        [attribute.attribute("case-sensitive", "")],
+        [],
+      ),
+    ),
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-text-highlight",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a mode attribute
+    #(
+      #(mod_mode, [], []),
+      element.element(
+        "m3e-text-highlight",
+        [
+          attribute.attribute(
+            "mode",
+            text_highlight_mode.to_string(text_highlight_mode.StartsWith),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a term attribute
+    #(
+      #(mod_term, [], []),
+      element.element(
+        "m3e-text-highlight",
+        [attribute.attribute("term", "test")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    text_highlight.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}

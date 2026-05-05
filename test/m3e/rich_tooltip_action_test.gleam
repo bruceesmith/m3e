@@ -1,72 +1,54 @@
+//// RichTooltipAction unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/rich_tooltip_action
 
-// --- CONFIGURATION ---
+pub fn rich_tooltip_action_render_test() {
+  let mod =
+    rich_tooltip_action.new(rich_tooltip_action.IsNotDisableRestoreFocus)
+  let mod_disable_restore_focus =
+    rich_tooltip_action.new(rich_tooltip_action.IsDisableRestoreFocus)
 
-pub fn default_config_test() {
-  rich_tooltip_action.default_config()
-  |> should.equal(rich_tooltip_action.Config(disable_restore_focus: False))
-}
-
-// --- CONSTRUCTORS ---
-
-pub fn new_test() {
-  rich_tooltip_action.new()
-  |> rich_tooltip_action.render([], [])
-  |> should.equal(element.element("m3e-rich-tooltip", [], []))
-}
-
-pub fn from_config_test() {
-  let config = rich_tooltip_action.default_config()
-  rich_tooltip_action.from_config(config)
-  |> rich_tooltip_action.render([], [])
-  |> should.equal(element.element("m3e-rich-tooltip", [], []))
-}
-
-// --- SETTERS ---
-
-pub fn disable_restore_focus_test() {
-  rich_tooltip_action.new()
-  |> rich_tooltip_action.disable_restore_focus(True)
-  |> rich_tooltip_action.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [attribute.attribute("disable-restore-focus", "")],
-      [],
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-rich-tooltip-action", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-rich-tooltip-action", [attribute.id("id")], []),
     ),
-  )
-}
-
-// --- RENDERING ---
-
-pub fn render_test() {
-  let attrs = [attribute.class("custom-class")]
-  let children = [element.text("content")]
-
-  rich_tooltip_action.new()
-  |> rich_tooltip_action.disable_restore_focus(True)
-  |> rich_tooltip_action.render(attrs, children)
-  |> should.equal(element.element(
-    "m3e-rich-tooltip",
-    [
-      attribute.attribute("disable-restore-focus", ""),
-      attribute.class("custom-class"),
-    ],
-    children,
-  ))
-}
-
-pub fn render_config_test() {
-  let config = rich_tooltip_action.Config(disable_restore_focus: True)
-  rich_tooltip_action.render_config(config, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-rich-tooltip",
-      [attribute.attribute("disable-restore-focus", "")],
-      [],
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-rich-tooltip-action", [], [html.br([])]),
     ),
-  )
+
+    // Happy path with a disable_restore_focus attribute
+    #(
+      #(mod_disable_restore_focus, [], []),
+      element.element(
+        "m3e-rich-tooltip-action",
+        [attribute.attribute("disable-restore-focus", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    rich_tooltip_action.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

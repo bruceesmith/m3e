@@ -1,246 +1,595 @@
-import gleam/option.{Some}
+//// Autocomplete unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/autocomplete.{Config}
+import m3e/autocomplete_filter_mode
 
-import m3e/autocomplete
-import m3e/config.{HideSelectionIndicator, ShowSelectionIndicator}
-import m3e/option as m3e_opt
-import m3e/state.{Required}
-
-pub fn new_test() {
-  autocomplete.new("test-id")
-  |> autocomplete.auto_activate(autocomplete.AutoActivate)
-  |> autocomplete.required(Required)
-  |> autocomplete.hide_selection_indicator(ShowSelectionIndicator)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("auto-activate", ""),
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "test-id"),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("required", ""),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_default_config_test() {
+  let cases = [
+    Config(
+      auto_activate: autocomplete.IsNotAutoActivate,
+      case_sensitive: autocomplete.IsNotCaseSensitive,
+      filter: autocomplete_filter_mode.Contains,
+      hide_selection_indicator: autocomplete.IsNotHideSelectionIndicator,
+      hide_loading: autocomplete.IsNotHideLoading,
+      hide_no_data: autocomplete.IsNotHideNoData,
+      loading: autocomplete.IsNotLoading,
+      loading_label: "Loading...",
+      no_data_label: "No options",
+      panel_class: "",
+      required: autocomplete.IsNotRequired,
+      results_label: "",
+      for: None,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    autocomplete.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_test() {
-  let ac =
-    autocomplete.new("test-id")
-    |> autocomplete.auto_activate(autocomplete.AutoActivate)
-    |> autocomplete.required(Required)
-    |> autocomplete.hide_selection_indicator(HideSelectionIndicator)
-  let opt = m3e_opt.new() |> m3e_opt.value(Some("val"))
+pub fn autocomplete_from_config_test() {
+  let cases = [
+    #(
+      autocomplete.Config(
+        auto_activate: autocomplete.IsAutoActivate,
+        case_sensitive: autocomplete.IsCaseSensitive,
+        filter: autocomplete_filter_mode.StartsWith,
+        hide_selection_indicator: autocomplete.IsHideSelectionIndicator,
+        hide_loading: autocomplete.IsHideLoading,
+        hide_no_data: autocomplete.IsHideNoData,
+        loading: autocomplete.IsLoading,
+        loading_label: "test",
+        no_data_label: "test",
+        panel_class: "test",
+        required: autocomplete.IsRequired,
+        results_label: "test",
+        for: Some("test"),
+      ),
+      autocomplete.new()
+        |> autocomplete.auto_activate(autocomplete.IsAutoActivate)
+        |> autocomplete.case_sensitive(autocomplete.IsCaseSensitive)
+        |> autocomplete.filter(autocomplete_filter_mode.StartsWith)
+        |> autocomplete.hide_selection_indicator(
+          autocomplete.IsHideSelectionIndicator,
+        )
+        |> autocomplete.hide_loading(autocomplete.IsHideLoading)
+        |> autocomplete.hide_no_data(autocomplete.IsHideNoData)
+        |> autocomplete.loading(autocomplete.IsLoading)
+        |> autocomplete.loading_label("test")
+        |> autocomplete.no_data_label("test")
+        |> autocomplete.panel_class("test")
+        |> autocomplete.required(autocomplete.IsRequired)
+        |> autocomplete.results_label("test")
+        |> autocomplete.for(Some("test")),
+    ),
+  ]
 
-  autocomplete.render(ac, [opt])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("auto-activate", ""),
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "test-id"),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("required", ""),
-        attribute.attribute("results-label", ""),
-      ],
-      [
-        element.element(
-          "m3e-option",
-          [
-            attribute.attribute("highlight-mode", "contains"),
-            attribute.attribute("value", "val"),
-          ],
-          [],
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    autocomplete.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_new_test() {
+  let cases = [
+    autocomplete.from_config(autocomplete.Config(
+      auto_activate: autocomplete.IsNotAutoActivate,
+      case_sensitive: autocomplete.IsNotCaseSensitive,
+      filter: autocomplete_filter_mode.Contains,
+      hide_selection_indicator: autocomplete.IsNotHideSelectionIndicator,
+      hide_loading: autocomplete.IsNotHideLoading,
+      hide_no_data: autocomplete.IsNotHideNoData,
+      loading: autocomplete.IsNotLoading,
+      loading_label: "Loading...",
+      no_data_label: "No options",
+      panel_class: "",
+      required: autocomplete.IsNotRequired,
+      results_label: "",
+      for: None,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    autocomplete.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_auto_activate_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsAutoActivate,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          auto_activate: autocomplete.IsAutoActivate,
         ),
-      ],
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.auto_activate(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_defaults_test() {
-  let ac = autocomplete.new("test-id")
-
-  autocomplete.render(ac, [])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "test-id"),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_case_sensitive_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsCaseSensitive,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          case_sensitive: autocomplete.IsCaseSensitive,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.case_sensitive(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn auto_activate_test() {
-  autocomplete.new("id")
-  |> autocomplete.auto_activate(autocomplete.AutoActivate)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("auto-activate", ""),
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_filter_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete_filter_mode.StartsWith,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          filter: autocomplete_filter_mode.StartsWith,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.filter(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn for_test() {
-  autocomplete.new("id")
-  |> autocomplete.for_("new-id")
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "new-id"),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_hide_selection_indicator_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsHideSelectionIndicator,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          hide_selection_indicator: autocomplete.IsHideSelectionIndicator,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.hide_selection_indicator(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn required_test() {
-  autocomplete.new("id")
-  |> autocomplete.required(Required)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("required", ""),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_hide_loading_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsHideLoading,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          hide_loading: autocomplete.IsHideLoading,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.hide_loading(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn hide_hide_selection_indicator_test() {
-  autocomplete.new("id")
-  |> autocomplete.hide_selection_indicator(HideSelectionIndicator)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("hide-selection-indicator", ""),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_hide_no_data_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsHideNoData,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          hide_no_data: autocomplete.IsHideNoData,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.hide_no_data(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn hide_no_data_test() {
-  autocomplete.new("id")
-  |> autocomplete.hide_no_data(autocomplete.HideEmptyMenu)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("hide-no-data", ""),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_loading_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsLoading,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          loading: autocomplete.IsLoading,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.loading(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn case_sensitive_test() {
-  autocomplete.new("id")
-  |> autocomplete.case_sensitive(autocomplete.CaseSensitive)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("case-sensitive", ""),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_loading_label_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      "test",
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          loading_label: "test",
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.loading_label(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn hide_loading_test() {
-  autocomplete.new("id")
-  |> autocomplete.hide_loading(autocomplete.HideLoadingIndicator)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("hide-loading", ""),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_no_data_label_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      "test",
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          no_data_label: "test",
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.no_data_label(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn loading_test() {
-  autocomplete.new("id")
-  |> autocomplete.loading(autocomplete.IsLoading)
-  |> autocomplete.render([])
-  |> should.equal(
-    element.element(
-      "m3e-autocomplete",
-      [
-        attribute.attribute("filter", "contains"),
-        attribute.attribute("for", "id"),
-        attribute.attribute("loading", ""),
-        attribute.attribute("loading-label", "Loading..."),
-        attribute.attribute("no-data-label", "No options"),
-        attribute.attribute("results-label", ""),
-      ],
-      [],
+pub fn autocomplete_panel_class_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      "test",
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          panel_class: "test",
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.panel_class(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_required_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      autocomplete.IsRequired,
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          required: autocomplete.IsRequired,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.required(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_results_label_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      "test",
+      autocomplete.from_config(
+        autocomplete.Config(
+          ..autocomplete.default_config(),
+          results_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.results_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_for_test() {
+  let mod = autocomplete.new()
+  let cases = [
+    #(
+      Some("test"),
+      autocomplete.from_config(
+        autocomplete.Config(..autocomplete.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    autocomplete.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_render_test() {
+  let mod = autocomplete.new()
+
+  let mod_auto_activate =
+    autocomplete.new()
+    |> autocomplete.auto_activate(autocomplete.IsAutoActivate)
+  let mod_case_sensitive =
+    autocomplete.new()
+    |> autocomplete.case_sensitive(autocomplete.IsCaseSensitive)
+  let mod_filter =
+    autocomplete.new()
+    |> autocomplete.filter(autocomplete_filter_mode.StartsWith)
+  let mod_hide_selection_indicator =
+    autocomplete.new()
+    |> autocomplete.hide_selection_indicator(
+      autocomplete.IsHideSelectionIndicator,
+    )
+  let mod_hide_loading =
+    autocomplete.new() |> autocomplete.hide_loading(autocomplete.IsHideLoading)
+  let mod_hide_no_data =
+    autocomplete.new() |> autocomplete.hide_no_data(autocomplete.IsHideNoData)
+  let mod_loading =
+    autocomplete.new() |> autocomplete.loading(autocomplete.IsLoading)
+  let mod_loading_label =
+    autocomplete.new() |> autocomplete.loading_label("test")
+  let mod_no_data_label =
+    autocomplete.new() |> autocomplete.no_data_label("test")
+  let mod_panel_class = autocomplete.new() |> autocomplete.panel_class("test")
+  let mod_required =
+    autocomplete.new() |> autocomplete.required(autocomplete.IsRequired)
+  let mod_results_label =
+    autocomplete.new() |> autocomplete.results_label("test")
+  let mod_for = autocomplete.new() |> autocomplete.for(Some("test"))
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-autocomplete", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-autocomplete", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-autocomplete", [], [html.br([])]),
+    ),
+
+    // Happy path with a auto_activate attribute
+    #(
+      #(mod_auto_activate, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("auto-activate", "")],
+        [],
+      ),
+    ),
+    // Happy path with a case_sensitive attribute
+    #(
+      #(mod_case_sensitive, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("case-sensitive", "")],
+        [],
+      ),
+    ),
+    // Happy path with a filter attribute
+    #(
+      #(mod_filter, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [
+          attribute.attribute(
+            "filter",
+            autocomplete_filter_mode.to_string(
+              autocomplete_filter_mode.StartsWith,
+            ),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a hide_selection_indicator attribute
+    #(
+      #(mod_hide_selection_indicator, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("hide-selection-indicator", "")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_loading attribute
+    #(
+      #(mod_hide_loading, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("hide-loading", "")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_no_data attribute
+    #(
+      #(mod_hide_no_data, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("hide-no-data", "")],
+        [],
+      ),
+    ),
+    // Happy path with a loading attribute
+    #(
+      #(mod_loading, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("loading", "")],
+        [],
+      ),
+    ),
+    // Happy path with a loading_label attribute
+    #(
+      #(mod_loading_label, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("loading-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a no_data_label attribute
+    #(
+      #(mod_no_data_label, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("no-data-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a panel_class attribute
+    #(
+      #(mod_panel_class, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("panel-class", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a required attribute
+    #(
+      #(mod_required, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("required", "")],
+        [],
+      ),
+    ),
+    // Happy path with a results_label attribute
+    #(
+      #(mod_results_label, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("results-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-autocomplete",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    autocomplete.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn autocomplete_slot_test() {
+  let cases = [
+    #(autocomplete.Loading, attribute.attribute("slot", "loading")),
+    #(autocomplete.NoData, attribute.attribute("slot", "no-data")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    autocomplete.slot(s)
+    |> should.equal(expected)
+  })
 }

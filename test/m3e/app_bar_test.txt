@@ -1,0 +1,246 @@
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
+
+import lustre/attribute
+import lustre/element
+import lustre/element/html
+
+import m3e/app_bar.{Config}
+import m3e/app_bar_size
+
+pub fn app_bar_default_config_test() {
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    Config(
+      centered: app_bar.IsNotCentered,
+      for: None,
+      size: app_bar_size.Small
+    ),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let expected = c
+
+    app_bar.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_from_config_test() {
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    #(
+      Config(
+        centered: app_bar.IsNotCentered,
+        for: None,
+        size: app_bar_size.Small,
+      ),
+      app_bar.new()
+        |> app_bar.centered(app_bar.IsNotCentered)
+        |> app_bar.for(None)
+        |> app_bar.size(app_bar_size.Small),
+    ),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    app_bar.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_new_test() {
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    app_bar.from_config(Config(
+      centered: app_bar.IsNotCentered,
+      for: None,
+      size: app_bar_size.Small,
+    )),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let expected = c
+
+    app_bar.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_centered_test() {
+  let ab = app_bar.new()
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    // Happy paths
+    #(
+      app_bar.IsCentered,
+      app_bar.from_config(
+        app_bar.Config(..app_bar.default_config(), centered: app_bar.IsCentered),
+      ),
+    ),
+    #(
+      app_bar.IsNotCentered,
+      app_bar.from_config(
+        app_bar.Config(
+          ..app_bar.default_config(),
+          centered: app_bar.IsNotCentered,
+        ),
+      ),
+    ),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let #(centered, expected) = c
+
+    app_bar.centered(ab, centered)
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_for_test() {
+  let ab = app_bar.new()
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    // Happy paths
+    #(
+      Some("text"),
+      app_bar.from_config(
+        app_bar.Config(..app_bar.default_config(), for: option.Some("text")),
+      ),
+    ),
+    #(
+      None,
+      app_bar.from_config(
+        app_bar.Config(..app_bar.default_config(), for: option.None),
+      ),
+    ),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let #(for, expected) = c
+
+    app_bar.for(ab, for)
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_size_test() {
+  let ab = app_bar.new()
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    // Happy paths
+    #(
+      app_bar_size.Small,
+      app_bar.from_config(
+        app_bar.Config(..app_bar.default_config(), size: app_bar_size.Small),
+      ),
+    ),
+    #(
+      app_bar_size.Medium,
+      app_bar.from_config(
+        app_bar.Config(..app_bar.default_config(), size: app_bar_size.Medium),
+      ),
+    ),
+    #(
+      app_bar_size.Large,
+      app_bar.from_config(
+        app_bar.Config(..app_bar.default_config(), size: app_bar_size.Large),
+      ),
+    ),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let #(size, expected) = c
+
+    app_bar.size(ab, size)
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_render_test() {
+  let ab = app_bar.new()
+  let ab_centered = app_bar.new() |> app_bar.centered(app_bar.IsCentered)
+  let ab_for_some = app_bar.new() |> app_bar.for(Some("id"))
+  let ab_for_none = app_bar.new() |> app_bar.for(None)
+  let ab_size_small = app_bar.new() |> app_bar.size(app_bar_size.Small)
+  let ab_size_medium = app_bar.new() |> app_bar.size(app_bar_size.Medium)
+  let ab_size_large = app_bar.new() |> app_bar.size(app_bar_size.Large)
+
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(ab, [], []), element.element("m3e-app-bar", [], [])),
+    // Happy path with no children
+    #(
+      #(ab, [attribute.id("id")], []),
+      element.element("m3e-app-bar", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(ab, [], [html.br([])]),
+      element.element("m3e-app-bar", [], [html.br([])]),
+    ),
+    // Happy path with a centered attribute
+    #(
+      #(ab_centered, [], []),
+      element.element("m3e-app-bar", [attribute.attribute("centered", "")], []),
+    ),
+    // Happy path with a for Some attribute
+    #(
+      #(ab_for_some, [], []),
+      element.element("m3e-app-bar", [attribute.attribute("for", "id")], []),
+    ),
+    // Happy path with a for None attribute
+    #(#(ab_for_none, [], []), element.element("m3e-app-bar", [], [])),
+    // Happy path with a size attribute
+    #(#(ab_size_small, [], []), element.element("m3e-app-bar", [], [])),
+    #(
+      #(ab_size_medium, [], []),
+      element.element(
+        "m3e-app-bar",
+        [attribute.attribute("size", "medium")],
+        [],
+      ),
+    ),
+    #(
+      #(ab_size_large, [], []),
+      element.element("m3e-app-bar", [attribute.attribute("size", "large")], []),
+    ),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let #(#(ab, attrs, kids), expected) = c
+
+    app_bar.render(ab, attrs, kids)
+    |> should.equal(expected)
+  })
+}
+
+pub fn app_bar_slot_test() {
+  // 1. Define the test cases in a list of tuples: #(input, expected)
+  let cases = [
+    #(app_bar.Leading, attribute.attribute("slot", "leading")),
+    #(app_bar.Subtitle, attribute.attribute("slot", "subtitle")),
+    #(app_bar.Title, attribute.attribute("slot", "title")),
+    #(app_bar.Trailing, attribute.attribute("slot", "trailing")),
+    #(app_bar.LeadingIcon, attribute.attribute("slot", "leading-icon")),
+    #(app_bar.TrailingIcon, attribute.attribute("slot", "trailing-icon")),
+  ]
+
+  // 2. Iterate over the list and run assertions for each
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    app_bar.slot(s)
+    |> should.equal(expected)
+  })
+}

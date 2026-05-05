@@ -1,101 +1,227 @@
-import gleeunit/should
+//// Toolbar unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/toolbar.{Config}
+import m3e/toolbar_shape
+import m3e/toolbar_variant
 
-import m3e/layout.{Vertical}
-import m3e/toolbar.{Raised, Rounded, Vibrant}
+pub fn toolbar_default_config_test() {
+  let cases = [
+    Config(
+      elevated: toolbar.IsNotElevated,
+      shape: toolbar_shape.Square,
+      variant: toolbar_variant.Standard,
+      vertical: toolbar.IsNotVertical,
+    ),
+  ]
 
-pub fn toolbar_basic_test() {
-  let t = toolbar.new()
-  let expected =
-    element.element(
-      "m3e-toolbar",
-      [
-        attribute.attribute("shape", "square"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
-  toolbar.render(t, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    toolbar.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn toolbar_full_test() {
-  let t =
-    toolbar.new()
-    |> toolbar.elevated(Raised)
-    |> toolbar.shape(Rounded)
-    |> toolbar.variant(Vibrant)
-    |> toolbar.vertical(Vertical)
+pub fn toolbar_from_config_test() {
+  let cases = [
+    #(
+      toolbar.Config(
+        elevated: toolbar.IsElevated,
+        shape: toolbar_shape.Rounded,
+        variant: toolbar_variant.Vibrant,
+        vertical: toolbar.IsVertical,
+      ),
+      toolbar.new()
+        |> toolbar.elevated(toolbar.IsElevated)
+        |> toolbar.shape(toolbar_shape.Rounded)
+        |> toolbar.variant(toolbar_variant.Vibrant)
+        |> toolbar.vertical(toolbar.IsVertical),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-toolbar",
-      [
-        attribute.attribute("elevated", ""),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("variant", "vibrant"),
-        attribute.attribute("vertical", ""),
-      ],
-      [],
-    )
-  toolbar.render(t, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    toolbar.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn toolbar_new_test() {
+  let cases = [
+    toolbar.from_config(toolbar.Config(
+      elevated: toolbar.IsNotElevated,
+      shape: toolbar_shape.Square,
+      variant: toolbar_variant.Standard,
+      vertical: toolbar.IsNotVertical,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    toolbar.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn toolbar_elevated_test() {
-  let t = toolbar.new() |> toolbar.elevated(Raised)
-  let expected =
-    element.element(
-      "m3e-toolbar",
-      [
-        attribute.attribute("elevated", ""),
-        attribute.attribute("shape", "square"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
-  toolbar.render(t, [], []) |> should.equal(expected)
+  let mod = toolbar.new()
+  let cases = [
+    #(
+      toolbar.IsElevated,
+      toolbar.from_config(
+        toolbar.Config(..toolbar.default_config(), elevated: toolbar.IsElevated),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    toolbar.elevated(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn toolbar_shape_test() {
-  let t = toolbar.new() |> toolbar.shape(Rounded)
-  let expected =
-    element.element(
-      "m3e-toolbar",
-      [
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("variant", "standard"),
-      ],
-      [],
-    )
-  toolbar.render(t, [], []) |> should.equal(expected)
+  let mod = toolbar.new()
+  let cases = [
+    #(
+      toolbar_shape.Rounded,
+      toolbar.from_config(
+        toolbar.Config(..toolbar.default_config(), shape: toolbar_shape.Rounded),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    toolbar.shape(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn toolbar_variant_test() {
-  let t = toolbar.new() |> toolbar.variant(Vibrant)
-  let expected =
-    element.element(
-      "m3e-toolbar",
-      [
-        attribute.attribute("shape", "square"),
-        attribute.attribute("variant", "vibrant"),
-      ],
-      [],
-    )
-  toolbar.render(t, [], []) |> should.equal(expected)
+  let mod = toolbar.new()
+  let cases = [
+    #(
+      toolbar_variant.Vibrant,
+      toolbar.from_config(
+        toolbar.Config(
+          ..toolbar.default_config(),
+          variant: toolbar_variant.Vibrant,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    toolbar.variant(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn toolbar_vertical_test() {
-  let t = toolbar.new() |> toolbar.vertical(Vertical)
-  let expected =
-    element.element(
-      "m3e-toolbar",
-      [
-        attribute.attribute("shape", "square"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("vertical", ""),
-      ],
-      [],
-    )
-  toolbar.render(t, [], []) |> should.equal(expected)
+  let mod = toolbar.new()
+  let cases = [
+    #(
+      toolbar.IsVertical,
+      toolbar.from_config(
+        toolbar.Config(..toolbar.default_config(), vertical: toolbar.IsVertical),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    toolbar.vertical(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn toolbar_render_test() {
+  let mod = toolbar.new()
+
+  let mod_elevated = toolbar.new() |> toolbar.elevated(toolbar.IsElevated)
+  let mod_shape = toolbar.new() |> toolbar.shape(toolbar_shape.Rounded)
+  let mod_variant = toolbar.new() |> toolbar.variant(toolbar_variant.Vibrant)
+  let mod_vertical = toolbar.new() |> toolbar.vertical(toolbar.IsVertical)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-toolbar", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-toolbar", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-toolbar", [], [html.br([])]),
+    ),
+
+    // Happy path with a elevated attribute
+    #(
+      #(mod_elevated, [], []),
+      element.element("m3e-toolbar", [attribute.attribute("elevated", "")], []),
+    ),
+    // Happy path with a shape attribute
+    #(
+      #(mod_shape, [], []),
+      element.element(
+        "m3e-toolbar",
+        [
+          attribute.attribute(
+            "shape",
+            toolbar_shape.to_string(toolbar_shape.Rounded),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-toolbar",
+        [
+          attribute.attribute(
+            "variant",
+            toolbar_variant.to_string(toolbar_variant.Vibrant),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a vertical attribute
+    #(
+      #(mod_vertical, [], []),
+      element.element("m3e-toolbar", [attribute.attribute("vertical", "")], []),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    toolbar.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

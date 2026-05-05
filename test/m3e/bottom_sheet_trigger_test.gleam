@@ -1,87 +1,201 @@
-import gleam/option.{Some}
+//// BottomSheetTrigger unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/bottom_sheet_trigger
+import lustre/element/html
+import m3e/bottom_sheet_trigger.{Config}
 
-pub fn new_test() {
-  let trigger = bottom_sheet_trigger.new()
-  let expected =
-    element.element(
-      "m3e-bottom-sheet-trigger",
-      [attribute.attribute("for", "")],
-      [element.text("")],
-    )
+pub fn bottom_sheet_trigger_default_config_test() {
+  let cases = [
+    Config(
+      detent: None,
+      secondary: bottom_sheet_trigger.IsNotSecondary,
+      for: None,
+    ),
+  ]
 
-  trigger
-  |> bottom_sheet_trigger.render
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    bottom_sheet_trigger.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn detent_test() {
-  let trigger =
-    bottom_sheet_trigger.new()
-    |> bottom_sheet_trigger.detent(Some(1))
-  let expected =
-    element.element(
-      "m3e-bottom-sheet-trigger",
-      [attribute.attribute("detent", "1"), attribute.attribute("for", "")],
-      [element.text("")],
-    )
+pub fn bottom_sheet_trigger_from_config_test() {
+  let cases = [
+    #(
+      bottom_sheet_trigger.Config(
+        detent: Some(42.0),
+        secondary: bottom_sheet_trigger.IsSecondary,
+        for: Some("test"),
+      ),
+      bottom_sheet_trigger.new()
+        |> bottom_sheet_trigger.detent(Some(42.0))
+        |> bottom_sheet_trigger.secondary(bottom_sheet_trigger.IsSecondary)
+        |> bottom_sheet_trigger.for(Some("test")),
+    ),
+  ]
 
-  trigger
-  |> bottom_sheet_trigger.render
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    bottom_sheet_trigger.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn for_test() {
-  let trigger =
-    bottom_sheet_trigger.new()
-    |> bottom_sheet_trigger.for("my-sheet")
-  let expected =
-    element.element(
-      "m3e-bottom-sheet-trigger",
-      [attribute.attribute("for", "my-sheet")],
-      [
-        element.text(""),
-      ],
-    )
+pub fn bottom_sheet_trigger_new_test() {
+  let cases = [
+    bottom_sheet_trigger.from_config(bottom_sheet_trigger.Config(
+      detent: None,
+      secondary: bottom_sheet_trigger.IsNotSecondary,
+      for: None,
+    )),
+  ]
 
-  trigger
-  |> bottom_sheet_trigger.render
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    bottom_sheet_trigger.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn label_test() {
-  let trigger =
-    bottom_sheet_trigger.new()
-    |> bottom_sheet_trigger.label("My Label")
-  let expected =
-    element.element(
-      "m3e-bottom-sheet-trigger",
-      [attribute.attribute("for", "")],
-      [
-        element.text("My Label"),
-      ],
-    )
+pub fn bottom_sheet_trigger_detent_test() {
+  let mod = bottom_sheet_trigger.new()
+  let cases = [
+    #(
+      Some(42.0),
+      bottom_sheet_trigger.from_config(
+        bottom_sheet_trigger.Config(
+          ..bottom_sheet_trigger.default_config(),
+          detent: Some(42.0),
+        ),
+      ),
+    ),
+  ]
 
-  trigger
-  |> bottom_sheet_trigger.render
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet_trigger.detent(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn secondary_test() {
-  let trigger =
-    bottom_sheet_trigger.new()
-    |> bottom_sheet_trigger.secondary(bottom_sheet_trigger.Secondary)
-  let expected =
-    element.element(
-      "m3e-bottom-sheet-trigger",
-      [attribute.attribute("for", ""), attribute.attribute("secondary", "")],
-      [element.text("")],
-    )
+pub fn bottom_sheet_trigger_secondary_test() {
+  let mod = bottom_sheet_trigger.new()
+  let cases = [
+    #(
+      bottom_sheet_trigger.IsSecondary,
+      bottom_sheet_trigger.from_config(
+        bottom_sheet_trigger.Config(
+          ..bottom_sheet_trigger.default_config(),
+          secondary: bottom_sheet_trigger.IsSecondary,
+        ),
+      ),
+    ),
+  ]
 
-  trigger
-  |> bottom_sheet_trigger.render
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet_trigger.secondary(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_trigger_for_test() {
+  let mod = bottom_sheet_trigger.new()
+  let cases = [
+    #(
+      Some("test"),
+      bottom_sheet_trigger.from_config(
+        bottom_sheet_trigger.Config(
+          ..bottom_sheet_trigger.default_config(),
+          for: Some("test"),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    bottom_sheet_trigger.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn bottom_sheet_trigger_render_test() {
+  let mod = bottom_sheet_trigger.new()
+
+  let mod_detent =
+    bottom_sheet_trigger.new() |> bottom_sheet_trigger.detent(Some(42.0))
+  let mod_secondary =
+    bottom_sheet_trigger.new()
+    |> bottom_sheet_trigger.secondary(bottom_sheet_trigger.IsSecondary)
+  let mod_for =
+    bottom_sheet_trigger.new() |> bottom_sheet_trigger.for(Some("test"))
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-bottom-sheet-trigger", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-bottom-sheet-trigger", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-bottom-sheet-trigger", [], [html.br([])]),
+    ),
+
+    // Happy path with a detent attribute
+    #(
+      #(mod_detent, [], []),
+      element.element(
+        "m3e-bottom-sheet-trigger",
+        [attribute.attribute("detent", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a secondary attribute
+    #(
+      #(mod_secondary, [], []),
+      element.element(
+        "m3e-bottom-sheet-trigger",
+        [attribute.attribute("secondary", "")],
+        [],
+      ),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-bottom-sheet-trigger",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    bottom_sheet_trigger.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

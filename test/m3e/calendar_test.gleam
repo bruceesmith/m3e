@@ -1,127 +1,577 @@
-import gleam/option.{None, Some}
-import gleam/result
-import gleeunit/should
+//// Calendar unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/calendar.{Config}
+import m3e/calendar_view
+import m3e/date
 
-import m3e/calendar
-import m3e/datetime
-
-pub fn default_config_test() {
-  let config = calendar.default_config()
-  config.date |> should.equal(None)
-  config.max_date |> should.equal(None)
-  config.min_date |> should.equal(None)
-  config.range_end |> should.equal(None)
-  config.range_start |> should.equal(None)
-  config.start_at |> should.equal(None)
-  config.start_view |> should.equal(calendar.Month)
-  config.previous_month_label
-  |> should.equal(calendar.default_previous_month_label)
-  config.next_month_label |> should.equal(calendar.default_next_month_label)
-  config.previous_year_label
-  |> should.equal(calendar.default_previous_year_label)
-  config.next_year_label |> should.equal(calendar.default_next_year_label)
-  config.previous_multi_year_label
-  |> should.equal(calendar.default_previous_multi_year_label)
-  config.next_multi_year_label
-  |> should.equal(calendar.default_next_multi_year_label)
-  config.special_dates |> should.equal(None)
-  config.blackout_dates |> should.equal(None)
-}
-
-pub fn new_test() {
-  let cal = calendar.new()
-  calendar.render(cal, [])
-  |> should.equal(element.element("m3e-calendar", [], []))
-}
-
-pub fn from_config_test() {
-  let date =
-    datetime.from_string("2023-01-01")
-    |> result.lazy_unwrap(fn() { panic as "Invalid date" })
-
-  let config = calendar.Config(..calendar.default_config(), date: Some(date))
-  let cal = calendar.from_config(config)
-
-  calendar.render(cal, [])
-  |> should.equal(
-    element.element(
-      "m3e-calendar",
-      [attribute.attribute("date", "2023-01-01")],
-      [],
+pub fn calendar_default_config_test() {
+  let cases = [
+    Config(
+      date: None,
+      max_date: None,
+      min_date: None,
+      range_end: None,
+      range_start: None,
+      start_at: None,
+      start_view: calendar_view.Month,
+      previous_month_label: "Previous month",
+      next_month_label: "Next month",
+      previous_year_label: "Previous year",
+      next_year_label: "Next year",
+      previous_multi_year_label: "Previous 24 years",
+      next_multi_year_label: "Next 24 years",
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    calendar.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn setters_test() {
-  let date =
-    datetime.from_string("2023-01-01")
-    |> result.lazy_unwrap(fn() { panic as "Invalid date" })
-  let max_date =
-    datetime.from_string("2023-12-31")
-    |> result.lazy_unwrap(fn() { panic as "Invalid date" })
-
-  calendar.new()
-  |> calendar.date(Some(date))
-  |> calendar.max_date(Some(max_date))
-  |> calendar.min_date(Some(date))
-  |> calendar.range_start(Some(date))
-  |> calendar.range_end(Some(max_date))
-  |> calendar.start_at(Some(date))
-  |> calendar.start_view(calendar.Year)
-  |> calendar.previous_month_label("Prev")
-  |> calendar.next_month_label("Next")
-  |> calendar.previous_year_label("Prev Year")
-  |> calendar.next_year_label("Next Year")
-  |> calendar.previous_multi_year_label("Prev 24")
-  |> calendar.next_multi_year_label("Next 24")
-  |> calendar.special_dates(Some("special"))
-  |> calendar.blackout_dates(Some("blackout"))
-  |> calendar.render([])
-  |> should.equal(
-    element.element(
-      "m3e-calendar",
-      [
-        attribute.attribute("date", "2023-01-01"),
-        attribute.attribute("min-date", "2023-01-01"),
-        attribute.attribute("max-date", "2023-12-31"),
-        attribute.attribute("range-end", "2023-12-31"),
-        attribute.attribute("range-start", "2023-01-01"),
-        attribute.attribute("start-at", "2023-01-01"),
-        attribute.attribute("start-view", "year"),
-        attribute.attribute("previous-month-label", "Prev"),
-        attribute.attribute("next-month-label", "Next"),
-        attribute.attribute("previous-year-label", "Prev Year"),
-        attribute.attribute("next-year-label", "Next Year"),
-        attribute.attribute("previous-multi-year-label", "Prev 24"),
-        attribute.attribute("next-multi-year-label", "Next 24"),
-        attribute.attribute("specialDates", "special"),
-        attribute.attribute("blackoutDates", "blackout"),
-      ],
-      [],
+pub fn calendar_from_config_test() {
+  let cases = [
+    #(
+      calendar.Config(
+        date: Some(date.today_utc()),
+        max_date: Some(date.today_utc()),
+        min_date: Some(date.today_utc()),
+        range_end: Some(date.today_utc()),
+        range_start: Some(date.today_utc()),
+        start_at: Some(date.today_utc()),
+        start_view: calendar_view.Year,
+        previous_month_label: "test",
+        next_month_label: "test",
+        previous_year_label: "test",
+        next_year_label: "test",
+        previous_multi_year_label: "test",
+        next_multi_year_label: "test",
+      ),
+      calendar.new()
+        |> calendar.date(Some(date.today_utc()))
+        |> calendar.max_date(Some(date.today_utc()))
+        |> calendar.min_date(Some(date.today_utc()))
+        |> calendar.range_end(Some(date.today_utc()))
+        |> calendar.range_start(Some(date.today_utc()))
+        |> calendar.start_at(Some(date.today_utc()))
+        |> calendar.start_view(calendar_view.Year)
+        |> calendar.previous_month_label("test")
+        |> calendar.next_month_label("test")
+        |> calendar.previous_year_label("test")
+        |> calendar.next_year_label("test")
+        |> calendar.previous_multi_year_label("test")
+        |> calendar.next_multi_year_label("test"),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    calendar.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_header_test() {
-  let header_slot = calendar.slot(calendar.Header)
-  should.equal(header_slot, attribute.attribute("slot", "header"))
+pub fn calendar_new_test() {
+  let cases = [
+    calendar.from_config(calendar.Config(
+      date: None,
+      max_date: None,
+      min_date: None,
+      range_end: None,
+      range_start: None,
+      start_at: None,
+      start_view: calendar_view.Month,
+      previous_month_label: "Previous month",
+      next_month_label: "Next month",
+      previous_year_label: "Previous year",
+      next_year_label: "Next year",
+      previous_multi_year_label: "Previous 24 years",
+      next_multi_year_label: "Next 24 years",
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    calendar.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_attributes_test() {
-  let cal = calendar.new()
-  calendar.render(cal, [attribute.class("custom")])
-  |> should.equal(
-    element.element("m3e-calendar", [attribute.class("custom")], []),
-  )
+pub fn calendar_date_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      Some(date.today_utc()),
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          date: Some(date.today_utc()),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.date(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let config = calendar.default_config()
-  calendar.render_config(config, [attribute.class("custom")])
-  |> should.equal(
-    element.element("m3e-calendar", [attribute.class("custom")], []),
-  )
+pub fn calendar_max_date_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      Some(date.today_utc()),
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          max_date: Some(date.today_utc()),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.max_date(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_min_date_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      Some(date.today_utc()),
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          min_date: Some(date.today_utc()),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.min_date(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_range_end_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      Some(date.today_utc()),
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          range_end: Some(date.today_utc()),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.range_end(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_range_start_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      Some(date.today_utc()),
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          range_start: Some(date.today_utc()),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.range_start(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_start_at_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      Some(date.today_utc()),
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          start_at: Some(date.today_utc()),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.start_at(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_start_view_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      calendar_view.Year,
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          start_view: calendar_view.Year,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.start_view(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_previous_month_label_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      "test",
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          previous_month_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.previous_month_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_next_month_label_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      "test",
+      calendar.from_config(
+        calendar.Config(..calendar.default_config(), next_month_label: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.next_month_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_previous_year_label_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      "test",
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          previous_year_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.previous_year_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_next_year_label_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      "test",
+      calendar.from_config(
+        calendar.Config(..calendar.default_config(), next_year_label: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.next_year_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_previous_multi_year_label_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      "test",
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          previous_multi_year_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.previous_multi_year_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_next_multi_year_label_test() {
+  let mod = calendar.new()
+  let cases = [
+    #(
+      "test",
+      calendar.from_config(
+        calendar.Config(
+          ..calendar.default_config(),
+          next_multi_year_label: "test",
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    calendar.next_multi_year_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_render_test() {
+  let mod = calendar.new()
+
+  let mod_date = calendar.new() |> calendar.date(Some(date.today_utc()))
+  let mod_max_date = calendar.new() |> calendar.max_date(Some(date.today_utc()))
+  let mod_min_date = calendar.new() |> calendar.min_date(Some(date.today_utc()))
+  let mod_range_end =
+    calendar.new() |> calendar.range_end(Some(date.today_utc()))
+  let mod_range_start =
+    calendar.new() |> calendar.range_start(Some(date.today_utc()))
+  let mod_start_at = calendar.new() |> calendar.start_at(Some(date.today_utc()))
+  let mod_start_view = calendar.new() |> calendar.start_view(calendar_view.Year)
+  let mod_previous_month_label =
+    calendar.new() |> calendar.previous_month_label("test")
+  let mod_next_month_label = calendar.new() |> calendar.next_month_label("test")
+  let mod_previous_year_label =
+    calendar.new() |> calendar.previous_year_label("test")
+  let mod_next_year_label = calendar.new() |> calendar.next_year_label("test")
+  let mod_previous_multi_year_label =
+    calendar.new() |> calendar.previous_multi_year_label("test")
+  let mod_next_multi_year_label =
+    calendar.new() |> calendar.next_multi_year_label("test")
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-calendar", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-calendar", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-calendar", [], [html.br([])]),
+    ),
+
+    // Happy path with a date attribute
+    #(
+      #(mod_date, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("date", date.to_string(date.today_utc()))],
+        [],
+      ),
+    ),
+    // Happy path with a max_date attribute
+    #(
+      #(mod_max_date, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("max-date", date.to_string(date.today_utc()))],
+        [],
+      ),
+    ),
+    // Happy path with a min_date attribute
+    #(
+      #(mod_min_date, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("min-date", date.to_string(date.today_utc()))],
+        [],
+      ),
+    ),
+    // Happy path with a range_end attribute
+    #(
+      #(mod_range_end, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("range-end", date.to_string(date.today_utc()))],
+        [],
+      ),
+    ),
+    // Happy path with a range_start attribute
+    #(
+      #(mod_range_start, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("range-start", date.to_string(date.today_utc()))],
+        [],
+      ),
+    ),
+    // Happy path with a start_at attribute
+    #(
+      #(mod_start_at, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("start-at", date.to_string(date.today_utc()))],
+        [],
+      ),
+    ),
+    // Happy path with a start_view attribute
+    #(
+      #(mod_start_view, [], []),
+      element.element(
+        "m3e-calendar",
+        [
+          attribute.attribute(
+            "start-view",
+            calendar_view.to_string(calendar_view.Year),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a previous_month_label attribute
+    #(
+      #(mod_previous_month_label, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("previous-month-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a next_month_label attribute
+    #(
+      #(mod_next_month_label, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("next-month-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a previous_year_label attribute
+    #(
+      #(mod_previous_year_label, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("previous-year-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a next_year_label attribute
+    #(
+      #(mod_next_year_label, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("next-year-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a previous_multi_year_label attribute
+    #(
+      #(mod_previous_multi_year_label, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("previous-multi-year-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a next_multi_year_label attribute
+    #(
+      #(mod_next_multi_year_label, [], []),
+      element.element(
+        "m3e-calendar",
+        [attribute.attribute("next-multi-year-label", "test")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    calendar.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn calendar_slot_test() {
+  let cases = [
+    #(calendar.Header, attribute.attribute("slot", "header")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    calendar.slot(s)
+    |> should.equal(expected)
+  })
 }

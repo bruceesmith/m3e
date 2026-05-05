@@ -1,41 +1,48 @@
+//// ChipSet unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/chip_set
 
-import m3e/chip_set.{Config}
-import m3e/layout.{Vertical}
+pub fn chip_set_render_test() {
+  let mod = chip_set.new(chip_set.IsNotVertical)
+  let mod_vertical = chip_set.new(chip_set.IsVertical)
 
-pub fn chip_set_basic_test() {
-  let c = chip_set.new()
-  let expected = element.element("m3e-chip-set", [], [])
-  c
-  |> chip_set.render([], [])
-  |> should.equal(expected)
-}
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-chip-set", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-chip-set", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-chip-set", [], [html.br([])]),
+    ),
 
-pub fn chip_set_element_test() {
-  let c = chip_set.new()
-  let expected = element.element("m3e-chip-set", [], [])
-  c
-  |> chip_set.render([], [])
-  |> should.equal(expected)
-}
+    // Happy path with a vertical attribute
+    #(
+      #(mod_vertical, [], []),
+      element.element("m3e-chip-set", [attribute.attribute("vertical", "")], []),
+    ),
+  ]
 
-pub fn chip_set_vertical_test() {
-  let c = chip_set.new() |> chip_set.vertical(Vertical)
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
 
-  let expected =
-    element.element("m3e-chip-set", [attribute.attribute("vertical", "")], [])
-  c
-  |> chip_set.render([], [])
-  |> should.equal(expected)
-}
-
-pub fn chip_set_render_config_test() {
-  let config = Config(vertical: Vertical)
-  let expected =
-    element.element("m3e-chip-set", [attribute.attribute("vertical", "")], [])
-
-  chip_set.render_config(config, [], [])
-  |> should.equal(expected)
+    chip_set.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

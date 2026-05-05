@@ -1,110 +1,228 @@
-import gleam/option.{None, Some}
+//// RadioGroup unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/radio_group.{Config}
 
-import m3e/radio_group
-import m3e/state.{Disabled, Enabled, Optional, Required}
-
-pub fn radio_group_creation_test() {
-  let rg = radio_group.new()
-  let expected = element.element("m3e-radio-group", [], [])
-  radio_group.render(rg, [], []) |> should.equal(expected)
-}
-
-pub fn radio_group_setters_test() {
-  let rg = radio_group.new()
-
-  let rg_disabled = rg |> radio_group.disabled(Disabled)
-  let expected_disabled =
-    element.element(
-      "m3e-radio-group",
-      [attribute.attribute("disabled", "")],
-      [],
-    )
-  radio_group.render(rg_disabled, [], []) |> should.equal(expected_disabled)
-
-  let rg_id = rg |> radio_group.id(Some("test-id"))
-  let expected_id =
-    element.element(
-      "m3e-radio-group",
-      [attribute.attribute("id", "test-id")],
-      [],
-    )
-  radio_group.render(rg_id, [], []) |> should.equal(expected_id)
-
-  let rg_name = rg |> radio_group.name(Some("test-name"))
-  let expected_name =
-    element.element(
-      "m3e-radio-group",
-      [attribute.attribute("name", "test-name")],
-      [],
-    )
-  radio_group.render(rg_name, [], []) |> should.equal(expected_name)
-
-  let rg_required = rg |> radio_group.required(Required)
-  let expected_required =
-    element.element(
-      "m3e-radio-group",
-      [attribute.attribute("required", "")],
-      [],
-    )
-  radio_group.render(rg_required, [], []) |> should.equal(expected_required)
-}
-
-pub fn radio_group_element_test() {
-  let rg = radio_group.new()
-  let expected = element.element("m3e-radio-group", [], [element.text("Child")])
-  radio_group.render(rg, [], [element.text("Child")]) |> should.equal(expected)
-}
-
-pub fn config_test() {
-  let c =
-    radio_group.Config(
-      disabled: Disabled,
-      id: Some("config-id"),
-      name: Some("config-name"),
-      required: Required,
-    )
-
-  let rg = radio_group.from_config(c)
-
-  radio_group.render(rg, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-radio-group",
-      [
-        attribute.attribute("disabled", ""),
-        attribute.attribute("id", "config-id"),
-        attribute.attribute("name", "config-name"),
-        attribute.attribute("required", ""),
-      ],
-      [],
+pub fn radio_group_default_config_test() {
+  let cases = [
+    Config(
+      aria_invalid: "",
+      disabled: radio_group.IsNotDisabled,
+      name: "",
+      required: radio_group.IsNotRequired,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    radio_group.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn default_config_test() {
-  let c = radio_group.default_config()
+pub fn radio_group_from_config_test() {
+  let cases = [
+    #(
+      radio_group.Config(
+        aria_invalid: "test",
+        disabled: radio_group.IsDisabled,
+        name: "test",
+        required: radio_group.IsRequired,
+      ),
+      radio_group.new()
+        |> radio_group.aria_invalid("test")
+        |> radio_group.disabled(radio_group.IsDisabled)
+        |> radio_group.name("test")
+        |> radio_group.required(radio_group.IsRequired),
+    ),
+  ]
 
-  c.disabled |> should.equal(Enabled)
-  c.id |> should.equal(None)
-  c.name |> should.equal(None)
-  c.required |> should.equal(Optional)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    radio_group.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  let c = radio_group.default_config()
-  let rg = radio_group.from_config(c)
+pub fn radio_group_new_test() {
+  let cases = [
+    radio_group.from_config(radio_group.Config(
+      aria_invalid: "",
+      disabled: radio_group.IsNotDisabled,
+      name: "",
+      required: radio_group.IsNotRequired,
+    )),
+  ]
 
-  radio_group.render(rg, [], [])
-  |> should.equal(radio_group.render(radio_group.new(), [], []))
+  list.each(cases, fn(c) {
+    let expected = c
+
+    radio_group.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let c = radio_group.default_config()
-  let expected = radio_group.render(radio_group.from_config(c), [], [])
+pub fn radio_group_aria_invalid_test() {
+  let mod = radio_group.new()
+  let cases = [
+    #(
+      "test",
+      radio_group.from_config(
+        radio_group.Config(..radio_group.default_config(), aria_invalid: "test"),
+      ),
+    ),
+  ]
 
-  radio_group.render_config(c, [], [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    radio_group.aria_invalid(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn radio_group_disabled_test() {
+  let mod = radio_group.new()
+  let cases = [
+    #(
+      radio_group.IsDisabled,
+      radio_group.from_config(
+        radio_group.Config(
+          ..radio_group.default_config(),
+          disabled: radio_group.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    radio_group.disabled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn radio_group_name_test() {
+  let mod = radio_group.new()
+  let cases = [
+    #(
+      "test",
+      radio_group.from_config(
+        radio_group.Config(..radio_group.default_config(), name: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    radio_group.name(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn radio_group_required_test() {
+  let mod = radio_group.new()
+  let cases = [
+    #(
+      radio_group.IsRequired,
+      radio_group.from_config(
+        radio_group.Config(
+          ..radio_group.default_config(),
+          required: radio_group.IsRequired,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    radio_group.required(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn radio_group_render_test() {
+  let mod = radio_group.new()
+
+  let mod_aria_invalid = radio_group.new() |> radio_group.aria_invalid("test")
+  let mod_disabled =
+    radio_group.new() |> radio_group.disabled(radio_group.IsDisabled)
+  let mod_name = radio_group.new() |> radio_group.name("test")
+  let mod_required =
+    radio_group.new() |> radio_group.required(radio_group.IsRequired)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-radio-group", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-radio-group", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-radio-group", [], [html.br([])]),
+    ),
+
+    // Happy path with a aria_invalid attribute
+    #(
+      #(mod_aria_invalid, [], []),
+      element.element(
+        "m3e-radio-group",
+        [attribute.attribute("aria-invalid", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-radio-group",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element(
+        "m3e-radio-group",
+        [attribute.attribute("name", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a required attribute
+    #(
+      #(mod_required, [], []),
+      element.element(
+        "m3e-radio-group",
+        [attribute.attribute("required", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    radio_group.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

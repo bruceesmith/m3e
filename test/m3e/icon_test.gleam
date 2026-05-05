@@ -1,571 +1,284 @@
+//// Icon unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-
-import m3e/button
-import m3e/icon.{Config, Filled, High, Low, Medium, NotFilled, Rounded, Sharp}
-
-pub fn basic_test() {
-  let basic_icon = icon.new("home")
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(basic_icon, [], []) |> should.equal(expected)
-}
-
-pub fn element_test() {
-  let i =
-    icon.new("home")
-    |> icon.filled(Filled)
-    |> icon.grade(High)
-    |> icon.optical_size(40)
-    |> icon.purpose(button.slot(button.TrailingIcon))
-    |> icon.variant(Rounded)
-    |> icon.weight(600)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("filled", "1"),
-        attribute.attribute("grade", "high"),
-        attribute.attribute("optical-size", "40"),
-        attribute.attribute("slot", "trailing-icon"),
-        attribute.attribute("variant", "rounded"),
-        attribute.attribute("weight", "600"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn filled_test() {
-  let i =
-    icon.new("home")
-    |> icon.filled(Filled)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("filled", "1"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(i, [], []) |> should.equal(expected)
-}
-
-pub fn filled_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.filled(Filled)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("filled", "1"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
-  let i =
-    icon.new("home")
-    |> icon.filled(NotFilled)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn grade_test() {
-  let i =
-    icon.new("home")
-    |> icon.grade(Low)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "low"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(i, [], []) |> should.equal(expected)
-}
-
-pub fn grade_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.grade(Low)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "low"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
-  let i =
-    icon.new("home")
-    |> icon.grade(Medium)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
-  let i =
-    icon.new("home")
-    |> icon.grade(High)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "high"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn optical_size_test() {
-  let i = icon.new("home")
-
-  // Valid cases
-  let icon_os_20 = i |> icon.optical_size(20)
-  let expected_20 =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "20"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(icon_os_20, [], []) |> should.equal(expected_20)
-
-  let icon_os_30 = i |> icon.optical_size(30)
-  let expected_30 =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "30"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(icon_os_30, [], []) |> should.equal(expected_30)
-
-  let icon_os_48 = i |> icon.optical_size(48)
-  let expected_48 =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "48"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(icon_os_48, [], []) |> should.equal(expected_48)
-
-  // Invalid cases
-  let expected_default =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  let icon_os_19 = i |> icon.optical_size(19)
-  icon.render(icon_os_19, [], []) |> should.equal(expected_default)
-
-  let icon_os_49 = i |> icon.optical_size(49)
-  icon.render(icon_os_49, [], []) |> should.equal(expected_default)
-
-  let icon_os_0 = i |> icon.optical_size(0)
-  icon.render(icon_os_0, [], []) |> should.equal(expected_default)
-
-  let icon_os_100 = i |> icon.optical_size(100)
-  icon.render(icon_os_100, [], []) |> should.equal(expected_default)
-}
-
-pub fn optical_size_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.optical_size(36)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "36"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn purpose_test() {
-  let i =
-    icon.new("home")
-    |> icon.purpose(button.slot(button.SelectedIcon))
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("slot", "selected-icon"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(i, [], []) |> should.equal(expected)
-}
-
-pub fn purpose_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.purpose(button.slot(button.SelectedIcon))
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("slot", "selected-icon"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
-  let i =
-    icon.new("home")
-    |> icon.purpose(button.slot(button.TrailingIcon))
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("slot", "trailing-icon"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn variant_test() {
-  let i =
-    icon.new("home")
-    |> icon.variant(icon.Sharp)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "sharp"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(i, [], []) |> should.equal(expected)
-}
-
-pub fn variant_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.variant(icon.Outlined)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
-  let i =
-    icon.new("home")
-    |> icon.variant(icon.Rounded)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "rounded"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-
-  let i =
-    icon.new("home")
-    |> icon.variant(icon.Sharp)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "sharp"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn weight_test() {
-  let i = icon.new("home")
-
-  // Valid cases
-  let icon_w_100 = i |> icon.weight(100)
-  let expected_100 =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "100"),
-      ],
-      [],
-    )
-  icon.render(icon_w_100, [], []) |> should.equal(expected_100)
-
-  let icon_w_400 = i |> icon.weight(400)
-  let expected_400 =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-  icon.render(icon_w_400, [], []) |> should.equal(expected_400)
-
-  let icon_w_700 = i |> icon.weight(700)
-  let expected_700 =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "700"),
-      ],
-      [],
-    )
-  icon.render(icon_w_700, [], []) |> should.equal(expected_700)
-
-  // Invalid cases
-  let expected_default =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "400"),
-      ],
-      [],
-    )
-
-  let icon_w_99 = i |> icon.weight(99)
-  icon.render(icon_w_99, [], []) |> should.equal(expected_default)
-
-  let icon_w_701 = i |> icon.weight(701)
-  icon.render(icon_w_701, [], []) |> should.equal(expected_default)
-
-  let icon_w_0 = i |> icon.weight(0)
-  icon.render(icon_w_0, [], []) |> should.equal(expected_default)
-
-  let icon_w_800 = i |> icon.weight(800)
-  icon.render(icon_w_800, [], []) |> should.equal(expected_default)
-}
-
-pub fn weight_attr_test() {
-  let i =
-    icon.new("home")
-    |> icon.weight(600)
-
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("home"),
-        attribute.attribute("grade", "medium"),
-        attribute.attribute("optical-size", "24"),
-        attribute.attribute("variant", "outlined"),
-        attribute.attribute("weight", "600"),
-      ],
-      [],
-    )
-
-  icon.render(i, [], [])
-  |> should.equal(expected)
-}
-
-pub fn render_config_test() {
-  let config =
+import lustre/element/html
+import m3e/icon.{Config}
+import m3e/icon_grade
+import m3e/icon_variant
+import m3e/icon_weight
+
+pub fn icon_default_config_test() {
+  let cases = [
     Config(
-      ..icon.default_config(),
-      name: "settings",
-      filled: Filled,
-      grade: High,
-      optical_size: 40,
-      variant: Sharp,
-      weight: 700,
-    )
-  let expected =
-    element.element(
-      "m3e-icon",
-      [
-        attribute.name("settings"),
-        attribute.attribute("filled", "1"),
-        attribute.attribute("grade", "high"),
-        attribute.attribute("optical-size", "40"),
-        attribute.attribute("variant", "sharp"),
-        attribute.attribute("weight", "700"),
-      ],
-      [],
-    )
+      filled: icon.IsNotFilled,
+      grade: icon_grade.Medium,
+      optical_size: 24.0,
+      name: "",
+      variant: icon_variant.Outlined,
+      weight: icon_weight.FourZeroZero,
+    ),
+  ]
 
-  icon.render_config(config, [], [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    icon.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_from_config_test() {
+  let cases = [
+    #(
+      icon.Config(
+        filled: icon.IsFilled,
+        grade: icon_grade.Low,
+        optical_size: 42.0,
+        name: "test",
+        variant: icon_variant.Rounded,
+        weight: icon_weight.OneZeroZero,
+      ),
+      icon.new()
+        |> icon.filled(icon.IsFilled)
+        |> icon.grade(icon_grade.Low)
+        |> icon.optical_size(42.0)
+        |> icon.name("test")
+        |> icon.variant(icon_variant.Rounded)
+        |> icon.weight(icon_weight.OneZeroZero),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    icon.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_new_test() {
+  let cases = [
+    icon.from_config(icon.Config(
+      filled: icon.IsNotFilled,
+      grade: icon_grade.Medium,
+      optical_size: 24.0,
+      name: "",
+      variant: icon_variant.Outlined,
+      weight: icon_weight.FourZeroZero,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    icon.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_filled_test() {
+  let mod = icon.new()
+  let cases = [
+    #(
+      icon.IsFilled,
+      icon.from_config(
+        icon.Config(..icon.default_config(), filled: icon.IsFilled),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon.filled(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_grade_test() {
+  let mod = icon.new()
+  let cases = [
+    #(
+      icon_grade.Low,
+      icon.from_config(
+        icon.Config(..icon.default_config(), grade: icon_grade.Low),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon.grade(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_optical_size_test() {
+  let mod = icon.new()
+  let cases = [
+    #(
+      42.0,
+      icon.from_config(icon.Config(..icon.default_config(), optical_size: 42.0)),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon.optical_size(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_name_test() {
+  let mod = icon.new()
+  let cases = [
+    #(
+      "test",
+      icon.from_config(icon.Config(..icon.default_config(), name: "test")),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon.name(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_variant_test() {
+  let mod = icon.new()
+  let cases = [
+    #(
+      icon_variant.Rounded,
+      icon.from_config(
+        icon.Config(..icon.default_config(), variant: icon_variant.Rounded),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_weight_test() {
+  let mod = icon.new()
+  let cases = [
+    #(
+      icon_weight.OneZeroZero,
+      icon.from_config(
+        icon.Config(..icon.default_config(), weight: icon_weight.OneZeroZero),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon.weight(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_render_test() {
+  let mod = icon.new()
+
+  let mod_filled = icon.new() |> icon.filled(icon.IsFilled)
+  let mod_grade = icon.new() |> icon.grade(icon_grade.Low)
+  let mod_optical_size = icon.new() |> icon.optical_size(42.0)
+  let mod_name = icon.new() |> icon.name("test")
+  let mod_variant = icon.new() |> icon.variant(icon_variant.Rounded)
+  let mod_weight = icon.new() |> icon.weight(icon_weight.OneZeroZero)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-icon", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-icon", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(#(mod, [], [html.br([])]), element.element("m3e-icon", [], [html.br([])])),
+
+    // Happy path with a filled attribute
+    #(
+      #(mod_filled, [], []),
+      element.element("m3e-icon", [attribute.attribute("filled", "")], []),
+    ),
+    // Happy path with a grade attribute
+    #(
+      #(mod_grade, [], []),
+      element.element(
+        "m3e-icon",
+        [attribute.attribute("grade", icon_grade.to_string(icon_grade.Low))],
+        [],
+      ),
+    ),
+    // Happy path with a optical_size attribute
+    #(
+      #(mod_optical_size, [], []),
+      element.element(
+        "m3e-icon",
+        [attribute.attribute("optical-size", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element("m3e-icon", [attribute.attribute("name", "test")], []),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-icon",
+        [
+          attribute.attribute(
+            "variant",
+            icon_variant.to_string(icon_variant.Rounded),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a weight attribute
+    #(
+      #(mod_weight, [], []),
+      element.element(
+        "m3e-icon",
+        [
+          attribute.attribute(
+            "weight",
+            icon_weight.to_string(icon_weight.OneZeroZero),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    icon.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

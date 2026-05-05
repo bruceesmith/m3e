@@ -1,244 +1,671 @@
+//// IconButton unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
 import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/form_submitter_type
+import m3e/icon_button.{Config}
+import m3e/icon_button_shape
+import m3e/icon_button_size
+import m3e/icon_button_variant
+import m3e/icon_button_width
+import m3e/link_target
 
-import m3e/app_bar
-import m3e/config
-import m3e/icon_button.{Config, Filled, Narrow, Square, Toggle}
+pub fn icon_button_default_config_test() {
+  let cases = [
+    Config(
+      disabled: icon_button.IsNotDisabled,
+      disabled_interactive: icon_button.IsNotDisabledInteractive,
+      download: None,
+      href: "",
+      name: "",
+      rel: "",
+      selected: icon_button.IsNotSelected,
+      shape: icon_button_shape.Rounded,
+      size: icon_button_size.Small,
+      target: None,
+      toggle: icon_button.IsNotToggle,
+      type_: form_submitter_type.Button,
+      value: "",
+      variant: icon_button_variant.Standard,
+      width: icon_button_width.Default,
+    ),
+  ]
 
-import m3e/form_submission.{FormSubmission, Submit}
-import m3e/state.{Selected}
+  list.each(cases, fn(c) {
+    let expected = c
 
-pub fn icon_button_creation_test() {
-  let b = icon_button.new()
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  icon_button.render(b, [], []) |> should.equal(expected)
-
-  let b =
-    icon_button.new()
-    |> icon_button.disabled(state.Disabled)
-    |> icon_button.purpose(None)
-    |> icon_button.selected(Selected)
-    |> icon_button.shape(Square)
-    |> icon_button.size(config.Large)
-    |> icon_button.toggle(Toggle)
-    |> icon_button.form(Some(FormSubmission(Submit, "key", "val")))
-    |> icon_button.variant(Filled)
-    |> icon_button.width(Narrow)
-
-  let expected_full =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(True),
-        attribute.selected(True),
-        attribute.attribute("shape", "square"),
-        attribute.attribute("size", "large"),
-        attribute.attribute("toggle", ""),
-        attribute.attribute("type", "submit"),
-        attribute.attribute("name", "key"),
-        attribute.value("val"),
-        attribute.attribute("variant", "filled"),
-        attribute.attribute("width", "narrow"),
-      ],
-      [],
-    )
-  icon_button.render(b, [], []) |> should.equal(expected_full)
+    icon_button.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn icon_button_render_test() {
-  let b = icon_button.new()
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+pub fn icon_button_from_config_test() {
+  let cases = [
+    #(
+      icon_button.Config(
+        disabled: icon_button.IsDisabled,
+        disabled_interactive: icon_button.IsDisabledInteractive,
+        download: Some("test"),
+        href: "test",
+        name: "test",
+        rel: "test",
+        selected: icon_button.IsSelected,
+        shape: icon_button_shape.Square,
+        size: icon_button_size.ExtraSmall,
+        target: Some(link_target.Self),
+        toggle: icon_button.IsToggle,
+        type_: form_submitter_type.Submit,
+        value: "test",
+        variant: icon_button_variant.Filled,
+        width: icon_button_width.Narrow,
+      ),
+      icon_button.new()
+        |> icon_button.disabled(icon_button.IsDisabled)
+        |> icon_button.disabled_interactive(icon_button.IsDisabledInteractive)
+        |> icon_button.download(Some("test"))
+        |> icon_button.href("test")
+        |> icon_button.name("test")
+        |> icon_button.rel("test")
+        |> icon_button.selected(icon_button.IsSelected)
+        |> icon_button.shape(icon_button_shape.Square)
+        |> icon_button.size(icon_button_size.ExtraSmall)
+        |> icon_button.target(Some(link_target.Self))
+        |> icon_button.toggle(icon_button.IsToggle)
+        |> icon_button.type_(form_submitter_type.Submit)
+        |> icon_button.value("test")
+        |> icon_button.variant(icon_button_variant.Filled)
+        |> icon_button.width(icon_button_width.Narrow),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    icon_button.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn icon_button_purpose_test() {
-  let b =
-    icon_button.new()
-    |> icon_button.purpose(Some(app_bar.slot(app_bar.LeadingIcon)))
+pub fn icon_button_new_test() {
+  let cases = [
+    icon_button.from_config(icon_button.Config(
+      disabled: icon_button.IsNotDisabled,
+      disabled_interactive: icon_button.IsNotDisabledInteractive,
+      download: None,
+      href: "",
+      name: "",
+      rel: "",
+      selected: icon_button.IsNotSelected,
+      shape: icon_button_shape.Rounded,
+      size: icon_button_size.Small,
+      target: None,
+      toggle: icon_button.IsNotToggle,
+      type_: form_submitter_type.Button,
+      value: "",
+      variant: icon_button_variant.Standard,
+      width: icon_button_width.Default,
+    )),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.attribute("slot", "leading-icon"),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    icon_button.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn icon_button_disabled_test() {
-  let b = icon_button.new() |> icon_button.disabled(state.Disabled)
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button.IsDisabled,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          disabled: icon_button.IsDisabled,
+        ),
+      ),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(True),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn icon_button_disabled_interactive_test() {
-  let b = icon_button.new() |> icon_button.disabled_interactive(state.Disabled)
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button.IsDisabledInteractive,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          disabled_interactive: icon_button.IsDisabledInteractive,
+        ),
+      ),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.attribute("disabled-interactive", ""),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.disabled_interactive(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_download_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      Some("test"),
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          download: Some("test"),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.download(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_href_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      "test",
+      icon_button.from_config(
+        icon_button.Config(..icon_button.default_config(), href: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.href(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_name_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      "test",
+      icon_button.from_config(
+        icon_button.Config(..icon_button.default_config(), name: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.name(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_rel_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      "test",
+      icon_button.from_config(
+        icon_button.Config(..icon_button.default_config(), rel: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.rel(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn icon_button_selected_test() {
-  let b = icon_button.new() |> icon_button.selected(Selected)
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button.IsSelected,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          selected: icon_button.IsSelected,
+        ),
+      ),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.selected(True),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.selected(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn icon_button_shape_test() {
-  let b = icon_button.new() |> icon_button.shape(Square)
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button_shape.Square,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          shape: icon_button_shape.Square,
+        ),
+      ),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.selected(False),
-        attribute.attribute("shape", "square"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.shape(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn icon_button_size_test() {
-  let b = icon_button.new() |> icon_button.size(config.ExtraLarge)
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button_size.ExtraSmall,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          size: icon_button_size.ExtraSmall,
+        ),
+      ),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "extra-large"),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.size(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_target_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      Some(link_target.Self),
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          target: Some(link_target.Self),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.target(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn icon_button_toggle_test() {
-  let b = icon_button.new() |> icon_button.toggle(Toggle)
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button.IsToggle,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          toggle: icon_button.IsToggle,
+        ),
+      ),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(False),
-        attribute.selected(False),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "small"),
-        attribute.attribute("toggle", ""),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
-  b |> icon_button.render([], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.toggle(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn icon_button_render_config_test() {
-  let config =
-    Config(
-      ..icon_button.default_config(),
-      disabled: state.Disabled,
-      selected: Selected,
-      toggle: Toggle,
-      size: config.ExtraSmall,
-    )
-  let expected =
-    element.element(
-      "m3e-icon-button",
-      [
-        attribute.disabled(True),
-        attribute.selected(True),
-        attribute.attribute("shape", "rounded"),
-        attribute.attribute("size", "extra-small"),
-        attribute.attribute("toggle", ""),
-        attribute.attribute("variant", "standard"),
-        attribute.attribute("width", "default"),
-      ],
-      [],
-    )
+pub fn icon_button_type__test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      form_submitter_type.Submit,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          type_: form_submitter_type.Submit,
+        ),
+      ),
+    ),
+  ]
 
-  icon_button.render_config(config, [], [])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.type_(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_value_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      "test",
+      icon_button.from_config(
+        icon_button.Config(..icon_button.default_config(), value: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.value(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_variant_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button_variant.Filled,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          variant: icon_button_variant.Filled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_width_test() {
+  let mod = icon_button.new()
+  let cases = [
+    #(
+      icon_button_width.Narrow,
+      icon_button.from_config(
+        icon_button.Config(
+          ..icon_button.default_config(),
+          width: icon_button_width.Narrow,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    icon_button.width(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_render_test() {
+  let mod = icon_button.new()
+
+  let mod_disabled =
+    icon_button.new() |> icon_button.disabled(icon_button.IsDisabled)
+  let mod_disabled_interactive =
+    icon_button.new()
+    |> icon_button.disabled_interactive(icon_button.IsDisabledInteractive)
+  let mod_download = icon_button.new() |> icon_button.download(Some("test"))
+  let mod_href = icon_button.new() |> icon_button.href("test")
+  let mod_name = icon_button.new() |> icon_button.name("test")
+  let mod_rel = icon_button.new() |> icon_button.rel("test")
+  let mod_selected =
+    icon_button.new() |> icon_button.selected(icon_button.IsSelected)
+  let mod_shape =
+    icon_button.new() |> icon_button.shape(icon_button_shape.Square)
+  let mod_size =
+    icon_button.new() |> icon_button.size(icon_button_size.ExtraSmall)
+  let mod_target =
+    icon_button.new() |> icon_button.target(Some(link_target.Self))
+  let mod_toggle = icon_button.new() |> icon_button.toggle(icon_button.IsToggle)
+  let mod_type_ =
+    icon_button.new() |> icon_button.type_(form_submitter_type.Submit)
+  let mod_value = icon_button.new() |> icon_button.value("test")
+  let mod_variant =
+    icon_button.new() |> icon_button.variant(icon_button_variant.Filled)
+  let mod_width =
+    icon_button.new() |> icon_button.width(icon_button_width.Narrow)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-icon-button", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-icon-button", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-icon-button", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a disabled_interactive attribute
+    #(
+      #(mod_disabled_interactive, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("disabled-interactive", "")],
+        [],
+      ),
+    ),
+    // Happy path with a download attribute
+    #(
+      #(mod_download, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("download", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a href attribute
+    #(
+      #(mod_href, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("href", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a name attribute
+    #(
+      #(mod_name, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("name", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a rel attribute
+    #(
+      #(mod_rel, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("rel", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a selected attribute
+    #(
+      #(mod_selected, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("selected", "")],
+        [],
+      ),
+    ),
+    // Happy path with a shape attribute
+    #(
+      #(mod_shape, [], []),
+      element.element(
+        "m3e-icon-button",
+        [
+          attribute.attribute(
+            "shape",
+            icon_button_shape.to_string(icon_button_shape.Square),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a size attribute
+    #(
+      #(mod_size, [], []),
+      element.element(
+        "m3e-icon-button",
+        [
+          attribute.attribute(
+            "size",
+            icon_button_size.to_string(icon_button_size.ExtraSmall),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a target attribute
+    #(
+      #(mod_target, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("target", link_target.to_string(link_target.Self))],
+        [],
+      ),
+    ),
+    // Happy path with a toggle attribute
+    #(
+      #(mod_toggle, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("toggle", "")],
+        [],
+      ),
+    ),
+    // Happy path with a type_ attribute
+    #(
+      #(mod_type_, [], []),
+      element.element(
+        "m3e-icon-button",
+        [
+          attribute.attribute(
+            "type",
+            form_submitter_type.to_string(form_submitter_type.Submit),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a value attribute
+    #(
+      #(mod_value, [], []),
+      element.element(
+        "m3e-icon-button",
+        [attribute.attribute("value", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a variant attribute
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-icon-button",
+        [
+          attribute.attribute(
+            "variant",
+            icon_button_variant.to_string(icon_button_variant.Filled),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a width attribute
+    #(
+      #(mod_width, [], []),
+      element.element(
+        "m3e-icon-button",
+        [
+          attribute.attribute(
+            "width",
+            icon_button_width.to_string(icon_button_width.Narrow),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    icon_button.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn icon_button_slot_test() {
+  let cases = [
+    #(icon_button.Selected, attribute.attribute("slot", "selected")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    icon_button.slot(s)
+    |> should.equal(expected)
+  })
 }

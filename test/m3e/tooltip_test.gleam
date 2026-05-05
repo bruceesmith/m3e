@@ -1,345 +1,298 @@
+//// Tooltip unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/tooltip.{Config}
+import m3e/tooltip_position
+import m3e/tooltip_touch_gestures
 
-import m3e/state.{Disabled, Enabled}
-import m3e/tooltip.{Above, After, Before, Below}
+pub fn tooltip_default_config_test() {
+  let cases = [
+    Config(
+      disabled: tooltip.IsNotDisabled,
+      for: None,
+      hide_delay: 200.0,
+      position: tooltip_position.Below,
+      show_delay: 0.0,
+      touch_gestures: tooltip_touch_gestures.Auto,
+    ),
+  ]
 
-const tip_text = "Hello, Tooltip!"
+  list.each(cases, fn(c) {
+    let expected = c
 
-const for_id_text = "element-id"
-
-pub fn tooltip_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(Above)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
-    |> tooltip.gestures(tooltip.On)
-
-  let expected =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "on"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "above"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected)
+    tooltip.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn tooltip_validation_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(Below)
-    |> tooltip.hide_delay(9999)
-    |> tooltip.show_delay(9999)
+pub fn tooltip_from_config_test() {
+  let cases = [
+    #(
+      tooltip.Config(
+        disabled: tooltip.IsDisabled,
+        for: Some("test"),
+        hide_delay: 42.0,
+        position: tooltip_position.Above,
+        show_delay: 42.0,
+        touch_gestures: tooltip_touch_gestures.On,
+      ),
+      tooltip.new()
+        |> tooltip.disabled(tooltip.IsDisabled)
+        |> tooltip.for(Some("test"))
+        |> tooltip.hide_delay(42.0)
+        |> tooltip.position(tooltip_position.Above)
+        |> tooltip.show_delay(42.0)
+        |> tooltip.touch_gestures(tooltip_touch_gestures.On),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
 
-  let t_neg =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(Below)
-    |> tooltip.hide_delay(-1)
-    |> tooltip.show_delay(-1)
-
-  tooltip.render(t_neg, []) |> should.equal(expected)
+    tooltip.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn element_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.position(After)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
-    |> tooltip.disabled(Disabled)
-    |> tooltip.gestures(tooltip.Off)
+pub fn tooltip_new_test() {
+  let cases = [
+    tooltip.from_config(tooltip.Config(
+      disabled: tooltip.IsNotDisabled,
+      for: None,
+      hide_delay: 200.0,
+      position: tooltip_position.Below,
+      show_delay: 0.0,
+      touch_gestures: tooltip_touch_gestures.Auto,
+    )),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("touch-gestures", "off"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "after"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
+  list.each(cases, fn(c) {
+    let expected = c
 
-  tooltip.render(t, []) |> should.equal(expected)
+    tooltip.new()
+    |> should.equal(expected)
+  })
 }
 
-pub fn defaults_test() {
-  let expected =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [element.text(tip_text)],
-    )
+pub fn tooltip_disabled_test() {
+  let mod = tooltip.new()
+  let cases = [
+    #(
+      tooltip.IsDisabled,
+      tooltip.from_config(
+        tooltip.Config(..tooltip.default_config(), disabled: tooltip.IsDisabled),
+      ),
+    ),
+  ]
 
-  tooltip.new(tip_text, for_id_text)
-  |> tooltip.render([])
-  |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tooltip.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn disabled_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
+pub fn tooltip_for_test() {
+  let mod = tooltip.new()
+  let cases = [
+    #(
+      Some("test"),
+      tooltip.from_config(
+        tooltip.Config(..tooltip.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
 
-  let t = t |> tooltip.disabled(Disabled)
-  let expected_true =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_true)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let t = t |> tooltip.disabled(Enabled)
-  let expected_false =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_false)
+    tooltip.for(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn gestures_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
+pub fn tooltip_hide_delay_test() {
+  let mod = tooltip.new()
+  let cases = [
+    #(
+      42.0,
+      tooltip.from_config(
+        tooltip.Config(..tooltip.default_config(), hide_delay: 42.0),
+      ),
+    ),
+  ]
 
-  let t = t |> tooltip.gestures(tooltip.On)
-  let expected_on =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "on"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_on)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let t = t |> tooltip.gestures(tooltip.Off)
-  let expected_off =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "off"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_off)
-
-  let t = t |> tooltip.gestures(tooltip.Auto)
-  let expected_auto =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_auto)
+    tooltip.hide_delay(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn hide_delay_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
+pub fn tooltip_position_test() {
+  let mod = tooltip.new()
+  let cases = [
+    #(
+      tooltip_position.Above,
+      tooltip.from_config(
+        tooltip.Config(
+          ..tooltip.default_config(),
+          position: tooltip_position.Above,
+        ),
+      ),
+    ),
+  ]
 
-  let t = t |> tooltip.hide_delay(500)
-  let expected_500 =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_500)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let t = t |> tooltip.hide_delay(-1)
-  let expected_default =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "1500"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_default)
-
-  let t = t |> tooltip.hide_delay(9999)
-  tooltip.render(t, []) |> should.equal(expected_default)
+    tooltip.position(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn position_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
+pub fn tooltip_show_delay_test() {
+  let mod = tooltip.new()
+  let cases = [
+    #(
+      42.0,
+      tooltip.from_config(
+        tooltip.Config(..tooltip.default_config(), show_delay: 42.0),
+      ),
+    ),
+  ]
 
-  let t = t |> tooltip.position(Above)
-  let expected_above =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "above"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_above)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let t = t |> tooltip.position(After)
-  let expected_after =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "after"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_after)
-
-  let t = t |> tooltip.position(Before)
-  let expected_before =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "before"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_before)
-
-  let t = t |> tooltip.position(Below)
-  let expected_below =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "200"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_below)
+    tooltip.show_delay(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn show_delay_test() {
-  let t =
-    tooltip.new(tip_text, for_id_text)
-    |> tooltip.hide_delay(100)
-    |> tooltip.show_delay(200)
+pub fn tooltip_touch_gestures_test() {
+  let mod = tooltip.new()
+  let cases = [
+    #(
+      tooltip_touch_gestures.On,
+      tooltip.from_config(
+        tooltip.Config(
+          ..tooltip.default_config(),
+          touch_gestures: tooltip_touch_gestures.On,
+        ),
+      ),
+    ),
+  ]
 
-  let t = t |> tooltip.show_delay(300)
-  let expected_300 =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "300"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_300)
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  let t = t |> tooltip.show_delay(-1)
-  let expected_0 =
-    element.element(
-      "m3e-tooltip",
-      [
-        attribute.for(for_id_text),
-        attribute.attribute("touch-gestures", "auto"),
-        attribute.attribute("hide-delay", "100"),
-        attribute.attribute("position", "below"),
-        attribute.attribute("show-delay", "0"),
-      ],
-      [element.text(tip_text)],
-    )
-  tooltip.render(t, []) |> should.equal(expected_0)
+    tooltip.touch_gestures(mod, field)
+    |> should.equal(expected)
+  })
+}
 
-  let t = t |> tooltip.show_delay(9999)
-  tooltip.render(t, []) |> should.equal(expected_0)
+pub fn tooltip_render_test() {
+  let mod = tooltip.new()
+
+  let mod_disabled = tooltip.new() |> tooltip.disabled(tooltip.IsDisabled)
+  let mod_for = tooltip.new() |> tooltip.for(Some("test"))
+  let mod_hide_delay = tooltip.new() |> tooltip.hide_delay(42.0)
+  let mod_position = tooltip.new() |> tooltip.position(tooltip_position.Above)
+  let mod_show_delay = tooltip.new() |> tooltip.show_delay(42.0)
+  let mod_touch_gestures =
+    tooltip.new() |> tooltip.touch_gestures(tooltip_touch_gestures.On)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-tooltip", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-tooltip", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-tooltip", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element("m3e-tooltip", [attribute.attribute("disabled", "")], []),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element("m3e-tooltip", [attribute.attribute("for", "test")], []),
+    ),
+    // Happy path with a hide_delay attribute
+    #(
+      #(mod_hide_delay, [], []),
+      element.element(
+        "m3e-tooltip",
+        [attribute.attribute("hide-delay", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a position attribute
+    #(
+      #(mod_position, [], []),
+      element.element(
+        "m3e-tooltip",
+        [
+          attribute.attribute(
+            "position",
+            tooltip_position.to_string(tooltip_position.Above),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a show_delay attribute
+    #(
+      #(mod_show_delay, [], []),
+      element.element(
+        "m3e-tooltip",
+        [attribute.attribute("show-delay", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a touch_gestures attribute
+    #(
+      #(mod_touch_gestures, [], []),
+      element.element(
+        "m3e-tooltip",
+        [
+          attribute.attribute(
+            "touch-gestures",
+            tooltip_touch_gestures.to_string(tooltip_touch_gestures.On),
+          ),
+        ],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    tooltip.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }

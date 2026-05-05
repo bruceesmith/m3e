@@ -1,107 +1,324 @@
-import gleeunit/should
+//// SearchView unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/search_view.{Config}
+import m3e/search_view_mode
 
-import m3e/search_view
-
-pub fn default_config_test() {
-  let config = search_view.default_config()
-  config.contained |> should.equal(search_view.Free)
-  config.mode |> should.equal(search_view.Docked)
-  config.open |> should.equal(search_view.Collapsed)
-  config.clear_label |> should.equal(search_view.default_clear_label)
-  config.close_label |> should.equal(search_view.default_close_label)
-  config.hide_search_icon |> should.equal(search_view.Visible)
-}
-
-pub fn new_test() {
-  let view = search_view.new()
-  search_view.render(view, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-search-view",
-      [attribute.attribute("mode", "docked")],
-      [],
+pub fn search_view_default_config_test() {
+  let cases = [
+    Config(
+      contained: search_view.IsNotContained,
+      mode: search_view_mode.Docked,
+      open: search_view.IsNotOpen,
+      clear_label: "Clear",
+      close_label: "Close",
+      hide_search_icon: search_view.IsNotHideSearchIcon,
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    search_view.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn from_config_test() {
-  let config =
-    search_view.Config(
-      ..search_view.default_config(),
-      contained: search_view.Contained,
-      open: search_view.Expanded,
-      hide_search_icon: search_view.Hidden,
-    )
-  let view = search_view.from_config(config)
-
-  search_view.render(view, [], [])
-  |> should.equal(
-    element.element(
-      "m3e-search-view",
-      [
-        attribute.attribute("contained", ""),
-        attribute.attribute("mode", "docked"),
-        attribute.attribute("open", ""),
-        attribute.attribute("hide-search-icon", ""),
-      ],
-      [],
+pub fn search_view_from_config_test() {
+  let cases = [
+    #(
+      search_view.Config(
+        contained: search_view.IsContained,
+        mode: search_view_mode.Fullscreen,
+        open: search_view.IsOpen,
+        clear_label: "test",
+        close_label: "test",
+        hide_search_icon: search_view.IsHideSearchIcon,
+      ),
+      search_view.new()
+        |> search_view.contained(search_view.IsContained)
+        |> search_view.mode(search_view_mode.Fullscreen)
+        |> search_view.open(search_view.IsOpen)
+        |> search_view.clear_label("test")
+        |> search_view.close_label("test")
+        |> search_view.hide_search_icon(search_view.IsHideSearchIcon),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    search_view.from_config(config)
+    |> should.equal(expected)
+  })
 }
 
-pub fn setters_test() {
-  search_view.new()
-  |> search_view.contained(search_view.Contained)
-  |> search_view.mode(search_view.Fullscreen)
-  |> search_view.open(search_view.Expanded)
-  |> search_view.clear_label("C")
-  |> search_view.close_label("X")
-  |> search_view.hide_search_icon(search_view.Hidden)
-  |> search_view.render([], [])
-  |> should.equal(
-    element.element(
-      "m3e-search-view",
-      [
-        attribute.attribute("contained", ""),
-        attribute.attribute("mode", "fullscreen"),
-        attribute.attribute("open", ""),
-        attribute.attribute("clear-label", "C"),
-        attribute.attribute("close-label", "X"),
-        attribute.attribute("hide-search-icon", ""),
-      ],
-      [],
+pub fn search_view_new_test() {
+  let cases = [
+    search_view.from_config(search_view.Config(
+      contained: search_view.IsNotContained,
+      mode: search_view_mode.Docked,
+      open: search_view.IsNotOpen,
+      clear_label: "Clear",
+      close_label: "Close",
+      hide_search_icon: search_view.IsNotHideSearchIcon,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    search_view.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn search_view_contained_test() {
+  let mod = search_view.new()
+  let cases = [
+    #(
+      search_view.IsContained,
+      search_view.from_config(
+        search_view.Config(
+          ..search_view.default_config(),
+          contained: search_view.IsContained,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    search_view.contained(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn render_config_test() {
-  let config = search_view.default_config()
-  search_view.render_config(config, [attribute.class("custom")], [])
-  |> should.equal(
-    element.element(
-      "m3e-search-view",
-      [attribute.attribute("mode", "docked"), attribute.class("custom")],
-      [],
+pub fn search_view_mode_test() {
+  let mod = search_view.new()
+  let cases = [
+    #(
+      search_view_mode.Fullscreen,
+      search_view.from_config(
+        search_view.Config(
+          ..search_view.default_config(),
+          mode: search_view_mode.Fullscreen,
+        ),
+      ),
     ),
-  )
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    search_view.mode(mod, field)
+    |> should.equal(expected)
+  })
 }
 
-pub fn slot_test() {
-  search_view.slot(search_view.Input)
-  |> should.equal(attribute.attribute("slot", "input"))
+pub fn search_view_open_test() {
+  let mod = search_view.new()
+  let cases = [
+    #(
+      search_view.IsOpen,
+      search_view.from_config(
+        search_view.Config(
+          ..search_view.default_config(),
+          open: search_view.IsOpen,
+        ),
+      ),
+    ),
+  ]
 
-  search_view.slot(search_view.OpenLeading)
-  |> should.equal(attribute.attribute("slot", "open-leading"))
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
 
-  search_view.slot(search_view.OpenTrailing)
-  |> should.equal(attribute.attribute("slot", "open-trailing"))
+    search_view.open(mod, field)
+    |> should.equal(expected)
+  })
+}
 
-  search_view.slot(search_view.ClosedLeading)
-  |> should.equal(attribute.attribute("slot", "closed-leading"))
+pub fn search_view_clear_label_test() {
+  let mod = search_view.new()
+  let cases = [
+    #(
+      "test",
+      search_view.from_config(
+        search_view.Config(..search_view.default_config(), clear_label: "test"),
+      ),
+    ),
+  ]
 
-  search_view.slot(search_view.ClosedTrailing)
-  |> should.equal(attribute.attribute("slot", "closed-trailing"))
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    search_view.clear_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn search_view_close_label_test() {
+  let mod = search_view.new()
+  let cases = [
+    #(
+      "test",
+      search_view.from_config(
+        search_view.Config(..search_view.default_config(), close_label: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    search_view.close_label(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn search_view_hide_search_icon_test() {
+  let mod = search_view.new()
+  let cases = [
+    #(
+      search_view.IsHideSearchIcon,
+      search_view.from_config(
+        search_view.Config(
+          ..search_view.default_config(),
+          hide_search_icon: search_view.IsHideSearchIcon,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    search_view.hide_search_icon(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn search_view_render_test() {
+  let mod = search_view.new()
+
+  let mod_contained =
+    search_view.new() |> search_view.contained(search_view.IsContained)
+  let mod_mode =
+    search_view.new() |> search_view.mode(search_view_mode.Fullscreen)
+  let mod_open = search_view.new() |> search_view.open(search_view.IsOpen)
+  let mod_clear_label = search_view.new() |> search_view.clear_label("test")
+  let mod_close_label = search_view.new() |> search_view.close_label("test")
+  let mod_hide_search_icon =
+    search_view.new()
+    |> search_view.hide_search_icon(search_view.IsHideSearchIcon)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-search-view", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-search-view", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-search-view", [], [html.br([])]),
+    ),
+
+    // Happy path with a contained attribute
+    #(
+      #(mod_contained, [], []),
+      element.element(
+        "m3e-search-view",
+        [attribute.attribute("contained", "")],
+        [],
+      ),
+    ),
+    // Happy path with a mode attribute
+    #(
+      #(mod_mode, [], []),
+      element.element(
+        "m3e-search-view",
+        [
+          attribute.attribute(
+            "mode",
+            search_view_mode.to_string(search_view_mode.Fullscreen),
+          ),
+        ],
+        [],
+      ),
+    ),
+    // Happy path with a open attribute
+    #(
+      #(mod_open, [], []),
+      element.element("m3e-search-view", [attribute.attribute("open", "")], []),
+    ),
+    // Happy path with a clear_label attribute
+    #(
+      #(mod_clear_label, [], []),
+      element.element(
+        "m3e-search-view",
+        [attribute.attribute("clear-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a close_label attribute
+    #(
+      #(mod_close_label, [], []),
+      element.element(
+        "m3e-search-view",
+        [attribute.attribute("close-label", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a hide_search_icon attribute
+    #(
+      #(mod_hide_search_icon, [], []),
+      element.element(
+        "m3e-search-view",
+        [attribute.attribute("hide-search-icon", "")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    search_view.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
+}
+
+pub fn search_view_slot_test() {
+  let cases = [
+    #(search_view.Input, attribute.attribute("slot", "input")),
+    #(search_view.OpenLeading, attribute.attribute("slot", "open-leading")),
+    #(search_view.OpenTrailing, attribute.attribute("slot", "open-trailing")),
+    #(search_view.ClosedLeading, attribute.attribute("slot", "closed-leading")),
+    #(
+      search_view.ClosedTrailing,
+      attribute.attribute("slot", "closed-trailing"),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    search_view.slot(s)
+    |> should.equal(expected)
+  })
 }

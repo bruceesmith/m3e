@@ -1,106 +1,235 @@
-import gleeunit/should
+//// TextareaAutosize unit tests
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
+import gleam/option.{None, Some}
+import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
+import m3e/textarea_autosize.{Config}
 
-import m3e/state.{Disabled}
-import m3e/textarea_autosize
+pub fn textarea_autosize_default_config_test() {
+  let cases = [
+    Config(
+      disabled: textarea_autosize.IsNotDisabled,
+      for: None,
+      max_rows: 0.0,
+      min_rows: 0.0,
+    ),
+  ]
 
-pub fn textarea_autosize_basic_test() {
-  let ta = textarea_autosize.new("test_id")
-  let expected =
-    element.element(
-      "m3e-textarea-autosize",
-      [
-        attribute.attribute("for", "test_id"),
-        attribute.attribute("max-rows", "0"),
-        attribute.attribute("min-rows", "0"),
-      ],
-      [],
-    )
-  textarea_autosize.render(ta, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let expected = c
+
+    textarea_autosize.default_config()
+    |> should.equal(expected)
+  })
 }
 
-pub fn textarea_autosize_full_test() {
-  let ta =
-    textarea_autosize.new("test_id")
-    |> textarea_autosize.for("another_id")
-    |> textarea_autosize.disabled(Disabled)
-    |> textarea_autosize.max_rows(10)
-    |> textarea_autosize.min_rows(2)
+pub fn textarea_autosize_from_config_test() {
+  let cases = [
+    #(
+      textarea_autosize.Config(
+        disabled: textarea_autosize.IsDisabled,
+        for: Some("test"),
+        max_rows: 42.0,
+        min_rows: 42.0,
+      ),
+      textarea_autosize.new()
+        |> textarea_autosize.disabled(textarea_autosize.IsDisabled)
+        |> textarea_autosize.for(Some("test"))
+        |> textarea_autosize.max_rows(42.0)
+        |> textarea_autosize.min_rows(42.0),
+    ),
+  ]
 
-  let expected =
-    element.element(
-      "m3e-textarea-autosize",
-      [
-        attribute.attribute("for", "another_id"),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("max-rows", "10"),
-        attribute.attribute("min-rows", "2"),
-      ],
-      [],
-    )
-  textarea_autosize.render(ta, [], []) |> should.equal(expected)
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    textarea_autosize.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn textarea_autosize_new_test() {
+  let cases = [
+    textarea_autosize.from_config(textarea_autosize.Config(
+      disabled: textarea_autosize.IsNotDisabled,
+      for: None,
+      max_rows: 0.0,
+      min_rows: 0.0,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    textarea_autosize.new()
+    |> should.equal(expected)
+  })
 }
 
 pub fn textarea_autosize_disabled_test() {
-  let ta =
-    textarea_autosize.new("test_id") |> textarea_autosize.disabled(Disabled)
-  let expected =
-    element.element(
-      "m3e-textarea-autosize",
-      [
-        attribute.attribute("for", "test_id"),
-        attribute.attribute("disabled", ""),
-        attribute.attribute("max-rows", "0"),
-        attribute.attribute("min-rows", "0"),
-      ],
-      [],
-    )
-  textarea_autosize.render(ta, [], []) |> should.equal(expected)
+  let mod = textarea_autosize.new()
+  let cases = [
+    #(
+      textarea_autosize.IsDisabled,
+      textarea_autosize.from_config(
+        textarea_autosize.Config(
+          ..textarea_autosize.default_config(),
+          disabled: textarea_autosize.IsDisabled,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    textarea_autosize.disabled(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn textarea_autosize_for_test() {
-  let ta = textarea_autosize.new("test_id") |> textarea_autosize.for("new_id")
-  let expected =
-    element.element(
-      "m3e-textarea-autosize",
-      [
-        attribute.attribute("for", "new_id"),
-        attribute.attribute("max-rows", "0"),
-        attribute.attribute("min-rows", "0"),
-      ],
-      [],
-    )
-  textarea_autosize.render(ta, [], []) |> should.equal(expected)
+  let mod = textarea_autosize.new()
+  let cases = [
+    #(
+      Some("test"),
+      textarea_autosize.from_config(
+        textarea_autosize.Config(
+          ..textarea_autosize.default_config(),
+          for: Some("test"),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    textarea_autosize.for(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn textarea_autosize_max_rows_test() {
-  let ta = textarea_autosize.new("test_id") |> textarea_autosize.max_rows(20)
-  let expected =
-    element.element(
-      "m3e-textarea-autosize",
-      [
-        attribute.attribute("for", "test_id"),
-        attribute.attribute("max-rows", "20"),
-        attribute.attribute("min-rows", "0"),
-      ],
-      [],
-    )
-  textarea_autosize.render(ta, [], []) |> should.equal(expected)
+  let mod = textarea_autosize.new()
+  let cases = [
+    #(
+      42.0,
+      textarea_autosize.from_config(
+        textarea_autosize.Config(
+          ..textarea_autosize.default_config(),
+          max_rows: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    textarea_autosize.max_rows(mod, field)
+    |> should.equal(expected)
+  })
 }
 
 pub fn textarea_autosize_min_rows_test() {
-  let ta = textarea_autosize.new("test_id") |> textarea_autosize.min_rows(5)
-  let expected =
-    element.element(
-      "m3e-textarea-autosize",
-      [
-        attribute.attribute("for", "test_id"),
-        attribute.attribute("max-rows", "0"),
-        attribute.attribute("min-rows", "5"),
-      ],
-      [],
-    )
-  textarea_autosize.render(ta, [], []) |> should.equal(expected)
+  let mod = textarea_autosize.new()
+  let cases = [
+    #(
+      42.0,
+      textarea_autosize.from_config(
+        textarea_autosize.Config(
+          ..textarea_autosize.default_config(),
+          min_rows: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    textarea_autosize.min_rows(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn textarea_autosize_render_test() {
+  let mod = textarea_autosize.new()
+
+  let mod_disabled =
+    textarea_autosize.new()
+    |> textarea_autosize.disabled(textarea_autosize.IsDisabled)
+  let mod_for = textarea_autosize.new() |> textarea_autosize.for(Some("test"))
+  let mod_max_rows = textarea_autosize.new() |> textarea_autosize.max_rows(42.0)
+  let mod_min_rows = textarea_autosize.new() |> textarea_autosize.min_rows(42.0)
+
+  let cases = [
+    // Happy path with no attributes nor children
+    #(#(mod, [], []), element.element("m3e-textarea-autosize", [], [])),
+    // Happy path with no children
+    #(
+      #(mod, [attribute.id("id")], []),
+      element.element("m3e-textarea-autosize", [attribute.id("id")], []),
+    ),
+    // Happy path with no attributes
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-textarea-autosize", [], [html.br([])]),
+    ),
+
+    // Happy path with a disabled attribute
+    #(
+      #(mod_disabled, [], []),
+      element.element(
+        "m3e-textarea-autosize",
+        [attribute.attribute("disabled", "")],
+        [],
+      ),
+    ),
+    // Happy path with a for attribute
+    #(
+      #(mod_for, [], []),
+      element.element(
+        "m3e-textarea-autosize",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+    // Happy path with a max_rows attribute
+    #(
+      #(mod_max_rows, [], []),
+      element.element(
+        "m3e-textarea-autosize",
+        [attribute.attribute("max-rows", "42.0")],
+        [],
+      ),
+    ),
+    // Happy path with a min_rows attribute
+    #(
+      #(mod_min_rows, [], []),
+      element.element(
+        "m3e-textarea-autosize",
+        [attribute.attribute("min-rows", "42.0")],
+        [],
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes, children), expected) = c
+
+    textarea_autosize.render(mod, attributes, children)
+    |> should.equal(expected)
+  })
 }
