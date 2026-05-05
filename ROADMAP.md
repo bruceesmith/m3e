@@ -2,6 +2,10 @@
 
 This document outlines the planned improvements and future directions for the **m3e** project.
 
+## Ongoing tasks
+
+Continue to build out the showcase in the examples/ folder.
+
 ## Possible future direction
 
 The original 1.* version and the in-development 2.0 version cover the M3E custom HTML components, their attributes, and
