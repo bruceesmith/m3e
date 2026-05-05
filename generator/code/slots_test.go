@@ -31,7 +31,7 @@ func Test_slots(t *testing.T) {
 			args: args{
 				theSlots: []parser.Slot{
 					{
-						Name:        "Icon",
+						KebabName:   "Icon",
 						Description: "The icon",
 						Attribute:   "icon",
 					},
@@ -45,8 +45,8 @@ func Test_slots(t *testing.T) {
 			name: "Multiple slots",
 			args: args{
 				theSlots: []parser.Slot{
-					{Name: "Left", Description: "Left side", Attribute: "left"},
-					{Name: "Right", Description: "Right side", Attribute: "right"},
+					{KebabName: "Left", Description: "Left side", Attribute: "left"},
+					{KebabName: "Right", Description: "Right side", Attribute: "right"},
 				},
 			},
 			wantDef: "\n\n/// Slots are used in child elements to insert content into this component\n///\npub type Slot {\n Left\n // Left side\n Right\n // Right side\n}\n",
@@ -57,8 +57,8 @@ func Test_slots(t *testing.T) {
 			name: "Empty name slot ignored",
 			args: args{
 				theSlots: []parser.Slot{
-					{Name: "", Description: "Ignored", Attribute: "ignored"},
-					{Name: "Valid", Description: "Keep", Attribute: "valid"},
+					{KebabName: "", Description: "Ignored", Attribute: "ignored"},
+					{KebabName: "Valid", Description: "Keep", Attribute: "valid"},
 				},
 			},
 			wantDef: "\n\n/// Slots are used in child elements to insert content into this component\n///\npub type Slot {\n Valid\n // Keep\n}\n",
@@ -69,7 +69,7 @@ func Test_slots(t *testing.T) {
 			name: "No description",
 			args: args{
 				theSlots: []parser.Slot{
-					{Name: "NoDesc", Description: "", Attribute: "no-desc"},
+					{KebabName: "NoDesc", Description: "", Attribute: "no-desc"},
 				},
 			},
 			wantDef: "\n\n/// Slots are used in child elements to insert content into this component\n///\npub type Slot {\n NoDesc\n}\n",

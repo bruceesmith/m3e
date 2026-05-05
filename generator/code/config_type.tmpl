@@ -4,7 +4,7 @@
 pub type Config {
  Config(
 {{- range .Attributes }}
-   {{ .Name }}: {{ .Type }},
+   {{ .SnakeName }}: {{ .Type }},
 {{- end }}
  )
 }

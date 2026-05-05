@@ -3,13 +3,13 @@
 {{ range $index, $val := .Attributes }}
 {{- /* Add a blank line between functions */}}
 {{- if $index }}{{ "\n" }}{{ end }}
-/// {{ $val.Name }} sets the value of {{ $val.Name }} for this {{ $module }}.
+/// {{ $val.SnakeName }} sets the value of {{ $val.SnakeName }} for this {{ $module }}.
 ///
-{{ getSignature $count $val.Name $module $val.Type }} {
+{{ getSignature $count $val.SnakeName $module $val.Type }} {
  {{- if gt $count 1 }}
- {{ $module }}(..record, {{ $val.Name }}: {{ $val.Name }})
+ {{ $module }}(..record, {{ $val.SnakeName }}: {{ $val.SnakeName }})
  {{- else }}
- {{ $module }}({{ $val.Name }}: {{ $val.Name }})
+ {{ $module }}({{ $val.SnakeName }}: {{ $val.SnakeName }})
  {{- end }}
 }
 {{- end }}

@@ -18,9 +18,13 @@ const (
 
 // Slot is an internal representation of a cem Slot
 type Slot struct {
-	Name        string
+	// CamelCase name of the Slot
+	CamelName string
+	// kebab-case name of the slot
+	KebabName   string
 	Description string
-	Attribute   string
+	// The attribute value for this slot
+	Attribute string
 }
 
 // Enumeration is an internal representation of a cem Enumeration

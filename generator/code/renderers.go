@@ -79,17 +79,17 @@ func attributeWithDefault(attr parser.Attribute) string {
           %s.to_string(default_%s),
         )`
 	if attr.Type == "String" {
-		return fmt.Sprintf(format1, attr.Name, attr.Name, attr.Name)
+		return fmt.Sprintf(format1, attr.KebabName, attr.SnakeName, attr.SnakeName)
 	}
 	if attr.Type == "number_string.NumberString" {
-		return fmt.Sprintf(format2, attr.Name, attr.Name, attr.Name)
+		return fmt.Sprintf(format2, attr.KebabName, attr.SnakeName, attr.SnakeName)
 	}
-	return fmt.Sprintf(format3, attr.Name, strcase.ToSnake(attr.Type), attr.Name, strcase.ToSnake(attr.Type), attr.Name)
+	return fmt.Sprintf(format3, attr.KebabName, strcase.ToSnake(attr.Type), attr.SnakeName, strcase.ToSnake(attr.Type), attr.SnakeName)
 }
 
 func listAttribute(attr parser.Attribute) string {
 	const format = `attr.list_of_string("%s",model.%s)`
-	return fmt.Sprintf(format, attr.Name, attr.Name)
+	return fmt.Sprintf(format, attr.SnakeName, attr.SnakeName)
 }
 
 func optionAttribute(attr parser.Attribute) string {
@@ -106,12 +106,12 @@ func optionAttribute(attr parser.Attribute) string {
           default_%s,
         )`
 	if attr.Type == "Option(String)" {
-		return fmt.Sprintf(format1, attr.Name, attr.Name, attr.Name)
+		return fmt.Sprintf(format1, attr.SnakeName, attr.KebabName, attr.SnakeName)
 	}
 	module := strcase.ToSnake(strings.TrimSuffix(strings.TrimPrefix(attr.Type, "Option("), ")"))
-	return fmt.Sprintf(format2, attr.Name, attr.Name, module, attr.Name)
+	return fmt.Sprintf(format2, attr.SnakeName, attr.KebabName, module, attr.SnakeName)
 }
 
 func semBoolAttribute(attr parser.Attribute) string {
-	return fmt.Sprintf("attr.boolean(\"%s\", model.%s == Is%s)", attr.Name, attr.Name, attr.SemBool)
+	return fmt.Sprintf("attr.boolean(\"%s\", model.%s == Is%s)", attr.KebabName, attr.SnakeName, attr.SemBool)
 }

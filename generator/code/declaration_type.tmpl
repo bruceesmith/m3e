@@ -5,7 +5,7 @@
 ///
 {{- end }}
 {{- range .Attributes }}
-/// - {{ .Name }}: {{ .Description }}
+/// - {{ .SnakeName }}: {{ .Description }}
 {{- end }}
 {{- if .Attributes }}
 ///
@@ -14,7 +14,7 @@ pub opaque type {{ .Name }} {
 {{- if .Attributes }}
  {{ .Name }}(
 {{- range .Attributes }}
-   {{ .Name }}: {{ .Type }},
+   {{ .SnakeName }}: {{ .Type }},
 {{- end }}
  )
 }

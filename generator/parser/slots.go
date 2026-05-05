@@ -16,7 +16,7 @@ func makeSlots(theSlots []cem.Slot) (slots []Slot) {
 	slots = make([]Slot, 0, len(theSlots))
 	for _, slot := range theSlots {
 		if len(slot.Name) > 0 {
-			slots = append(slots, Slot{Name: strcase.ToCamel(slot.Name), Description: *slot.Description, Attribute: strcase.ToKebab(slot.Name)})
+			slots = append(slots, Slot{CamelName: strcase.ToCamel(slot.Name), KebabName: slot.Name, Description: *slot.Description, Attribute: slot.Name})
 		}
 	}
 	return

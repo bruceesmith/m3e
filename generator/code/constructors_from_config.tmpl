@@ -3,7 +3,7 @@
 pub fn from_config(config: Config) -> {{ .Name }} {
  {{ .Name }}(
 {{- range .Attributes }}
-   {{ .Name }}: config.{{ .Name }},
+   {{ .SnakeName }}: config.{{ .SnakeName }},
 {{- end }}
  )
 }

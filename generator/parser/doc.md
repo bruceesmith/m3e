@@ -35,14 +35,18 @@ Several TS types deserve special mention.
 
 
 <a name="Attribute"></a>
-## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L43-L70>)
+## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L43-L74>)
 
 Attribute is an internal representation of a cem Attribute
 
 ```go
 type Attribute struct {
+    // CamelCase name of the Attribute
+    CamelName string
+    // KebabCase name of the Attribute
+    KebabName string
     // snake_case name of the attribute
-    Name string
+    SnakeName string
     // CamelCase name of the semantic boolean type, if applicable
     SemBool string
     // Human-readable description of the attribute
@@ -71,7 +75,7 @@ type Attribute struct {
 ```
 
 <a name="Attribute.IsList"></a>
-### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L544>)
+### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L553>)
 
 ```go
 func (attr *Attribute) IsList() bool
@@ -80,7 +84,7 @@ func (attr *Attribute) IsList() bool
 IsList returns true if the Attribute is declared as a Gleam List
 
 <a name="Attribute.IsOptional"></a>
-### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L539>)
+### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L548>)
 
 ```go
 func (attr *Attribute) IsOptional() bool
@@ -89,7 +93,7 @@ func (attr *Attribute) IsOptional() bool
 IsOptional returns true if the Attribute's type is Option\(something\)
 
 <a name="Attribute.IsSemBool"></a>
-### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L549>)
+### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L558>)
 
 ```go
 func (attr *Attribute) IsSemBool() bool
@@ -98,7 +102,7 @@ func (attr *Attribute) IsSemBool() bool
 IsSemBool returns true if the Attribute is a semantic boolean
 
 <a name="Attribute.IsStandard"></a>
-### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L554>)
+### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L563>)
 
 ```go
 func (attr *Attribute) IsStandard() bool
@@ -121,7 +125,7 @@ type Definition struct {
 ```
 
 <a name="Parse"></a>
-### func [Parse](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L61>)
+### func [Parse](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L65>)
 
 ```go
 func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (definition Definition, err error)
@@ -130,7 +134,7 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 Parse extracts the module declarations and enumerated types from the manifest and M3e code
 
 <a name="Enumeration"></a>
-## type [Enumeration](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L27-L32>)
+## type [Enumeration](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L31-L36>)
 
 Enumeration is an internal representation of a cem Enumeration
 
@@ -144,7 +148,7 @@ type Enumeration struct {
 ```
 
 <a name="Module"></a>
-## type [Module](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L35-L58>)
+## type [Module](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L39-L62>)
 
 Module is an internal representation of a cem Module
 
@@ -196,15 +200,19 @@ const (
 ```
 
 <a name="Slot"></a>
-## type [Slot](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L20-L24>)
+## type [Slot](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L20-L28>)
 
 Slot is an internal representation of a cem Slot
 
 ```go
 type Slot struct {
-    Name        string
+    // CamelCase name of the Slot
+    CamelName string
+    // kebab-case name of the slot
+    KebabName   string
     Description string
-    Attribute   string
+    // The attribute value for this slot
+    Attribute string
 }
 ```
 

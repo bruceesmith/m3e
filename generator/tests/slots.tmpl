@@ -2,7 +2,7 @@
 {{ $name := .SnakeName }}pub fn {{ $name }}_slot_test() {
   let cases = [
 {{- range .Slots }}
-    #({{$name}}.{{ .Name }}, attribute.attribute("slot", "{{ .Attribute }}")),
+    #({{$name}}.{{ .CamelName }}, attribute.attribute("slot", "{{ .Attribute }}")),
 {{- end }}
   ]
 

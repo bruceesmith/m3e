@@ -3,7 +3,7 @@
 {{ $snake := .SnakeName }}pub fn {{ .SnakeName }}_render_test() {
 {{- if eq $count 1 -}}
 {{ $only := index .Attributes 0 -}}
-{{ template "render_single.tmpl" (dict "Snake" $snake "QualifiedDefault" $only.QualifiedDefault "Name" $only.Name "Value" $only.Test.Value) }}
+{{ template "render_single.tmpl" (dict "Snake" $snake "QualifiedDefault" $only.QualifiedDefault "Name" $only.SnakeName "Value" $only.Test.Value) }}
 {{- else }}
 {{ template "render_multiple.tmpl" (dict "Snake" $snake "Attributes" .Attributes) }}
 {{- end }}
@@ -22,10 +22,10 @@
       element.element("{{ $tag }}", [], [html.br([])]),
     ),
 {{ range .Attributes }}
-    // Happy path with a {{ .Name }} attribute
+    // Happy path with a {{ .SnakeName }} attribute
     #(
-      #(mod_{{ .Name }}, [], []),
-      element.element("{{ $tag }}", [attribute.attribute("{{ .Name }}", {{ printf "%s" .Test.AttributeValue }})], []),
+      #(mod_{{ .SnakeName }}, [], []),
+      element.element("{{ $tag }}", [attribute.attribute("{{ .KebabName }}", {{ printf "%s" .Test.AttributeValue }})], []),
     ),
 {{- end }}
   ]

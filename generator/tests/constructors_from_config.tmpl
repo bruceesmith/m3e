@@ -4,12 +4,12 @@ pub fn {{ .Mod }}_from_config_test() {
     #(
       {{ .Mod }}.Config(
 {{- range .A }}
-        {{ .Name }}: {{ .Test.Value }},
+        {{ .SnakeName }}: {{ .Test.Value }},
 {{- end }}
       ),
       {{ .Mod }}.new()
 {{- range .A }}
-        |> {{ $mod }}.{{ .Name }}({{ .Test.Value }})
+        |> {{ $mod }}.{{ .SnakeName }}({{ .Test.Value }})
 {{- end }}
     ),
   ]

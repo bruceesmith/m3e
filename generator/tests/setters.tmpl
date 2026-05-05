@@ -1,7 +1,7 @@
 {{- $module := .SnakeName }}{{- $count := len .Attributes }}
 {{- range $index, $val := .Attributes }}
 
-pub fn {{ $module }}_{{ $val.Name }}_test() {
+pub fn {{ $module }}_{{ $val.SnakeName }}_test() {
   let mod = {{ $module }}.new()
   let cases = [
 {{- template "setters_case.tmpl" (dict "Mod" $module "A" . ) }}
@@ -10,7 +10,7 @@ pub fn {{ $module }}_{{ $val.Name }}_test() {
   list.each(cases, fn(c) {
     let #(field, expected) = c
 
-    {{ $module }}.{{ $val.Name }}(mod, field)
+    {{ $module }}.{{ $val.SnakeName }}(mod, field)
     |> should.equal(expected)
   })
 }

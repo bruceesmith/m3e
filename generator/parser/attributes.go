@@ -41,8 +41,12 @@ const (
 
 // Attribute is an internal representation of a cem Attribute
 type Attribute struct {
+	// CamelCase name of the Attribute
+	CamelName string
+	// KebabCase name of the Attribute
+	KebabName string
 	// snake_case name of the attribute
-	Name string
+	SnakeName string
 	// CamelCase name of the semantic boolean type, if applicable
 	SemBool string
 	// Human-readable description of the attribute
@@ -110,7 +114,12 @@ func makeAttributes(modName string, attrs []cem.Attribute) (
 	maps.Copy(testModuleImports, commonTestImports)
 
 	for _, attr := range attrs {
-		attribute := Attribute{Name: attr.Name, Properties: set.NewSet[Property]()}
+		attribute := Attribute{
+			CamelName:  strcase.ToCamel(attr.Name),
+			KebabName:  strcase.ToKebab(attr.Name),
+			SnakeName:  attr.Name,
+			Properties: set.NewSet[Property](),
+		}
 
 		// Extract & standardise the type of this Attribute
 		if attr.Type == nil {
@@ -163,7 +172,7 @@ func makeAttributes(modName string, attrs []cem.Attribute) (
 
 // defawlt computes the default values for the attribute
 func (attr *Attribute) defawlt(adef *string, modName string) {
-	attr.DefaultName = "default_" + attr.Name
+	attr.DefaultName = "default_" + attr.SnakeName
 	if adef != nil {
 		attr.Default = attr.computeDefault(*adef)
 	} else {
@@ -244,7 +253,7 @@ func (attr *Attribute) computeDefault(def string) string {
 		}
 	}
 
-	logger.Warn(fmt.Sprintf("unhandled default %s for %s of type %s", def, attr.Name, attr.Type))
+	logger.Warn(fmt.Sprintf("unhandled default %s for %s of type %s", def, attr.SnakeName, attr.Type))
 	return def
 }
 
@@ -253,7 +262,7 @@ func (attr *Attribute) nilDefault(modName string) {
 	if attr.Type == "String" {
 		attr.Default = `""`
 	} else {
-		logger.TraceID("defs", fmt.Sprintf("%s in %s has no default", attr.Name, modName))
+		logger.TraceID("defs", fmt.Sprintf("%s in %s has no default", attr.SnakeName, modName))
 		// Provoke a Gleam compile error in this case
 		attr.Default = "invalid-default"
 	}
@@ -378,9 +387,9 @@ func (attr *Attribute) imports() (importStrings map[string]string, testImportStr
 // name adjusts the name of the attribute to be suitable for Gleam
 func (attr *Attribute) name(n string) {
 	if n == "type" {
-		attr.Name = "type_"
+		attr.SnakeName = "type_"
 	} else {
-		attr.Name = strcase.ToSnake(n)
+		attr.SnakeName = strcase.ToSnake(n)
 	}
 }
 
@@ -392,7 +401,7 @@ func (attr *Attribute) name(n string) {
 // semantic boolean to avoid "boolean blindness")
 func (attr *Attribute) boolean(text string) (matched bool) {
 	if text == "boolean" {
-		attr.SemBool = strcase.ToCamel(attr.Name)
+		attr.SemBool = attr.CamelName
 		attr.Type = attr.SemBool
 		attr.Properties.Add(SemanticBoolean)
 		return true

@@ -1,10 +1,10 @@
 {{ define "constructors_new_one.tmpl" }}
 pub fn new({{- range .Attributes -}}
-{{ .Name }}: {{ .Type }}
+{{ .SnakeName }}: {{ .Type }}
 {{- end }}) -> {{ .Name }} {
   {{ .Name }}(
 {{- range .Attributes -}}
-    {{ .Name }}: {{ .Name }}
+    {{ .SnakeName }}: {{ .SnakeName }}
 {{- end }})
 }
 {{ end }}

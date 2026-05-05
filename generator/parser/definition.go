@@ -20,6 +20,9 @@ type Definition struct {
 	Enumerations map[string][]Enumeration
 }
 
+// enumerations tracks down each TypeScript module which defines an externally declared type
+// and extract the enumerated values for it.
+// The input enumerations are snake_case
 func (d *Definition) enumerations(m3eSource string, enumerations map[string]struct{}) (err error) {
 	d.Enumerations = make(map[string][]Enumeration, len(enumerations))
 

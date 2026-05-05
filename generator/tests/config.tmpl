@@ -3,7 +3,7 @@ pub fn {{.SnakeName}}_default_config_test() {
   let cases = [
     Config(
 {{- range .Attributes }}
-      {{ .Name }}: {{ .QualifiedDefault }},
+      {{ .SnakeName }}: {{ .QualifiedDefault }},
 {{- end }}
     ),
   ]
