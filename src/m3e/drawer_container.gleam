@@ -1,338 +1,242 @@
-//// drawer_container provides Lustre support for the [M3E DrawerContainer component](https://matraic.github.io/m3e/#/components/drawer_container.html)
+//// DrawerContainer is a container for one or two sliding drawers.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import m3e/helpers
+import m3e/attr
+import m3e/drawer_mode.{type DrawerMode}
 
-// --- TYPES ---
+// --- Types ---
 
-/// Divider determines if a divider is shown
-/// 
-pub type Divider {
-  ShowDivider
-  HideDivider
-}
-
-pub const default_divider: Divider = HideDivider
-
-/// DrawerContainer is a responsive layout container that manages collapsible left and right drawers alongside main content
-/// 
-/// ## Fields:
-/// - end: Whether the end drawer is open
-/// - end_mode: The behavior mode of the end drawer
-/// - end_divider: Whether to show a divider between the end drawer and content for `side` mode
-/// - start: Whether the start drawer is open
-/// - start_mode: The behavior mode of the start drawer
-/// - start_divider: Whether to show a divider between the start drawer and content for `side` mode
+/// DrawerContainer is a View Model for this component
 ///
-pub opaque type DrawerContainer(msg) {
+/// ## Fields:
+///
+/// - end: Whether the end drawer is open.
+/// - end_mode: The behavior mode of the end drawer.
+/// - end_divider: Whether to show a divider between the end drawer and content for `side` mode.
+/// - start: Whether the start drawer is open.
+/// - start_mode: The behavior mode of the start drawer.
+/// - start_divider: Whether to show a divider between the start drawer and content for `side` mode.
+///
+pub opaque type DrawerContainer {
   DrawerContainer(
-    end: State,
-    end_divider: Divider,
-    end_drawer: Option(Element(msg)),
-    end_mode: Mode,
-    main_content: Element(msg),
-    start: State,
-    start_divider: Divider,
-    start_drawer: Option(Element(msg)),
-    start_mode: Mode,
+    end: End,
+    end_mode: DrawerMode,
+    end_divider: EndDivider,
+    start: Start,
+    start_mode: DrawerMode,
+    start_divider: StartDivider,
   )
 }
 
-/// Mode is the behaviour of a drawer
-/// 
-pub type Mode {
-  Auto
-  Over
-  Push
-  Side
+/// End is whether the end drawer is open.
+///
+pub type End {
+  IsEnd
+  IsNotEnd
 }
 
-/// Default Mode
-/// 
-pub const default_mode = Auto
+/// EndDivider is whether to show a divider between the end drawer and content for `side` mode.
+///
+pub type EndDivider {
+  IsEndDivider
+  IsNotEndDivider
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Start is whether the start drawer is open.
+///
+pub type Start {
+  IsStart
+  IsNotStart
+}
+
+/// StartDivider is whether to show a divider between the start drawer and content for `side` mode.
+///
+pub type StartDivider {
+  IsStartDivider
+  IsNotStartDivider
+}
+
+// --- Defaults ---
+
+pub const default_end: End = IsNotEnd
+
+pub const default_end_mode: DrawerMode = drawer_mode.Side
+
+pub const default_end_divider: EndDivider = IsNotEndDivider
+
+pub const default_start: Start = IsNotStart
+
+pub const default_start_mode: DrawerMode = drawer_mode.Side
+
+pub const default_start_divider: StartDivider = IsNotStartDivider
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
-  End
-  // Renders the end drawer 
   Start
-  // Renders the start drawer 
+  // Renders the start drawer.
+  End
+  // Renders the end drawer.
 }
 
-/// State determines if a drawer is open or closed
-/// 
-pub type State {
-  Open
-  Closed
-}
+// --- Configuration ---
 
-pub const default_state: State = Closed
-
-// --- CONFIGURATION ---
-
-/// Config is a transparent record used for bulk configuration
-/// 
-pub type Config(msg) {
+/// Config is a public record for configuring this component.
+///
+pub type Config {
   Config(
-    end: State,
-    end_divider: Divider,
-    end_drawer: Option(Element(msg)),
-    end_mode: Mode,
-    main_content: Element(msg),
-    start: State,
-    start_divider: Divider,
-    start_drawer: Option(Element(msg)),
-    start_mode: Mode,
+    end: End,
+    end_mode: DrawerMode,
+    end_divider: EndDivider,
+    start: Start,
+    start_mode: DrawerMode,
+    start_divider: StartDivider,
   )
 }
 
-/// default_config provides a starting point for configuration with sensible defaults.
-/// 
-pub fn default_config() -> Config(msg) {
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
   Config(
-    end: default_state,
-    end_divider: default_divider,
-    end_drawer: None,
-    end_mode: default_mode,
-    main_content: element.none(),
-    start: default_state,
-    start_divider: default_divider,
-    start_drawer: None,
-    start_mode: default_mode,
+    end: IsNotEnd,
+    end_mode: drawer_mode.Side,
+    end_divider: IsNotEndDivider,
+    start: IsNotStart,
+    start_mode: drawer_mode.Side,
+    start_divider: IsNotStartDivider,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config bridges the transparent Config to the Opaque type
-/// 
-pub fn from_config(config: Config(msg)) -> DrawerContainer(msg) {
+/// from_config creates a new DrawerContainer from the given configuration.
+///
+pub fn from_config(config: Config) -> DrawerContainer {
   DrawerContainer(
-    end: case config.end_drawer {
-      Some(_) -> config.end
-      None -> Closed
-    },
-    end_divider: case config.end_drawer {
-      Some(_) -> config.end_divider
-      None -> HideDivider
-    },
-    end_drawer: config.end_drawer,
-    end_mode: case config.end_drawer {
-      Some(_) -> config.end_mode
-      None -> default_mode
-    },
-    main_content: config.main_content,
-    start: case config.start_drawer {
-      Some(_) -> config.start
-      None -> Closed
-    },
-    start_divider: case config.start_drawer {
-      Some(_) -> config.start_divider
-      None -> HideDivider
-    },
-    start_drawer: config.start_drawer,
-    start_mode: case config.start_drawer {
-      Some(_) -> config.start_mode
-      None -> default_mode
-    },
+    end: config.end,
+    end_mode: config.end_mode,
+    end_divider: config.end_divider,
+    start: config.start,
+    start_mode: config.start_mode,
+    start_divider: config.start_divider,
   )
 }
 
-/// new creates a DrawerContainer with defaults
-/// 
-pub fn new() -> DrawerContainer(msg) {
+/// new creates a new DrawerContainer with the default configuration.
+///
+pub fn new() -> DrawerContainer {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// end sets the `end` fieldq
-/// 
-pub fn end(c: DrawerContainer(msg), end: State) -> DrawerContainer(msg) {
-  case c.end_drawer {
-    Some(_) -> DrawerContainer(..c, end: end)
-    None -> c
-  }
-}
-
-/// end_divider sets the `end_divider` field
-/// 
-pub fn end_divider(
-  c: DrawerContainer(msg),
-  end_divider: Divider,
-) -> DrawerContainer(msg) {
-  case c.end_drawer {
-    Some(_) -> DrawerContainer(..c, end_divider: end_divider)
-    None -> c
-  }
-}
-
-/// end_drawer sets the `end_drawer` field
-/// 
-pub fn end_drawer(
-  c: DrawerContainer(msg),
-  end_drawer: Option(Element(msg)),
-) -> DrawerContainer(msg) {
-  DrawerContainer(..c, end_drawer: end_drawer)
-}
-
-/// end_mode sets the `end_mode` field
-/// 
-pub fn end_mode(c: DrawerContainer(msg), end_mode: Mode) -> DrawerContainer(msg) {
-  case c.end_drawer {
-    Some(_) -> DrawerContainer(..c, end_mode: end_mode)
-    None -> c
-  }
-}
-
-/// main_content sets the `main_content` field
-/// 
-pub fn main_content(
-  c: DrawerContainer(msg),
-  main_content: Element(msg),
-) -> DrawerContainer(msg) {
-  DrawerContainer(..c, main_content: main_content)
-}
-
-/// start sets the `start` field
-/// 
-pub fn start(c: DrawerContainer(msg), start: State) -> DrawerContainer(msg) {
-  case c.start_drawer {
-    Some(_) -> DrawerContainer(..c, start: start)
-    None -> c
-  }
-}
-
-/// start_divider sets the `start_divider` field
-/// 
-pub fn start_divider(
-  c: DrawerContainer(msg),
-  start_divider: Divider,
-) -> DrawerContainer(msg) {
-  case c.start_drawer {
-    Some(_) -> DrawerContainer(..c, start_divider: start_divider)
-    None -> c
-  }
-}
-
-/// start_drawer sets the `start_drawer` field
-/// 
-pub fn start_drawer(
-  c: DrawerContainer(msg),
-  start_drawer: Option(Element(msg)),
-) -> DrawerContainer(msg) {
-  DrawerContainer(..c, start_drawer: start_drawer)
-}
-
-/// start_mode sets the `start_mode` field
-/// 
-pub fn start_mode(
-  c: DrawerContainer(msg),
-  start_mode: Mode,
-) -> DrawerContainer(msg) {
-  case c.start_drawer {
-    Some(_) -> DrawerContainer(..c, start_mode: start_mode)
-    None -> c
-  }
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a DrawerContainer
+/// end sets the value of end for this DrawerContainer.
 ///
-/// ## Parameters:
-/// - c: a DrawerContainer
-/// - attributes: a list of additional Attributes
+pub fn end(record: DrawerContainer, end: End) -> DrawerContainer {
+  DrawerContainer(..record, end: end)
+}
+
+/// end_mode sets the value of end_mode for this DrawerContainer.
+///
+pub fn end_mode(
+  record: DrawerContainer,
+  end_mode: DrawerMode,
+) -> DrawerContainer {
+  DrawerContainer(..record, end_mode: end_mode)
+}
+
+/// end_divider sets the value of end_divider for this DrawerContainer.
+///
+pub fn end_divider(
+  record: DrawerContainer,
+  end_divider: EndDivider,
+) -> DrawerContainer {
+  DrawerContainer(..record, end_divider: end_divider)
+}
+
+/// start sets the value of start for this DrawerContainer.
+///
+pub fn start(record: DrawerContainer, start: Start) -> DrawerContainer {
+  DrawerContainer(..record, start: start)
+}
+
+/// start_mode sets the value of start_mode for this DrawerContainer.
+///
+pub fn start_mode(
+  record: DrawerContainer,
+  start_mode: DrawerMode,
+) -> DrawerContainer {
+  DrawerContainer(..record, start_mode: start_mode)
+}
+
+/// start_divider sets the value of start_divider for this DrawerContainer.
+///
+pub fn start_divider(
+  record: DrawerContainer,
+  start_divider: StartDivider,
+) -> DrawerContainer {
+  DrawerContainer(..record, start_divider: start_divider)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a DrawerContainer
 ///
 pub fn render(
-  c: DrawerContainer(msg),
+  model: DrawerContainer,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  let drawers =
-    [
-      case c.start_drawer {
-        Some(d) -> d
-        None -> element.none()
-      },
-      c.main_content,
-      case c.end_drawer {
-        Some(d) -> d
-        None -> element.none()
-      },
-    ]
-    |> list.filter(fn(e) { e != element.none() })
-
   element.element(
     "m3e-drawer-container",
     list.flatten([
-      case c.end_drawer {
-        Some(_) -> {
-          [
-            helpers.boolean_attribute("end", c.end == Open),
-            helpers.boolean_attribute(
-              "end-divider",
-              c.end_divider == ShowDivider,
-            ),
-            attribute.attribute("end-mode", mode_to_string(c.end_mode)),
-          ]
-        }
-        None -> []
-      },
-      case c.start_drawer {
-        Some(_) -> {
-          [
-            helpers.boolean_attribute("start", c.start == Open),
-            helpers.boolean_attribute(
-              "start-divider",
-              c.start_divider == ShowDivider,
-            ),
-            attribute.attribute("start-mode", mode_to_string(c.start_mode)),
-          ]
-        }
-        None -> []
-      },
+      [
+        attr.boolean("end", model.end == IsEnd),
+        attr.with_default(
+          "end-mode",
+          drawer_mode.to_string(model.end_mode),
+          drawer_mode.to_string(default_end_mode),
+        ),
+        attr.boolean("end-divider", model.end_divider == IsEndDivider),
+        attr.boolean("start", model.start == IsStart),
+        attr.with_default(
+          "start-mode",
+          drawer_mode.to_string(model.start_mode),
+          drawer_mode.to_string(default_start_mode),
+        ),
+        attr.boolean("start-divider", model.start_divider == IsStartDivider),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    drawers,
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-/// ## Parameters:
-/// - config: a Config
-/// - attributes: a list of additional Attributes
+/// render_config creates a Lustre Element from a DrawerContainer Config
 ///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    End -> attribute.attribute("slot", "end")
     Start -> attribute.attribute("slot", "start")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-/// Convert a Mode to a string
-/// 
-fn mode_to_string(m: Mode) -> String {
-  case m {
-    Auto -> "auto"
-    Over -> "over"
-    Push -> "push"
-    Side -> "side"
+    End -> attribute.attribute("slot", "end")
   }
 }

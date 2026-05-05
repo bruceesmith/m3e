@@ -1,48 +1,68 @@
-//// drawer_toggle provides Lustre support for the [M3E Drawer Toggle component](https://matraic.github.io/m3e/#/components/drawer_container.html)
+//// DrawerToggle is an element, nested within a clickable element, used to toggle the opened state of a drawer.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
 
 // --- Types ---
 
-/// DrawerToggle toggles the opened state of a drawer
-/// 
+/// DrawerToggle is a View Model for this component
+///
 /// ## Fields:
-/// - for: the id of the drawer to toggle
-/// 
+///
+/// - for: The identifier of the interactive control to which this element is attached.
+///
 pub opaque type DrawerToggle {
-  DrawerToggle(for: String)
+  DrawerToggle(for: Option(String))
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a DrawerToggle
-/// 
-/// ## Parameters:
-/// - for: the id of the drawer to toggle
-/// 
-pub fn new(for: String) -> DrawerToggle {
+pub const default_for: Option(String) = None
+
+// --- Constructors ---
+
+/// new creates a new DrawerToggle with the default configuration.
+///
+pub fn new(for: Option(String)) -> DrawerToggle {
   DrawerToggle(for: for)
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element from a DrawerToggle
+/// for sets the value of for for this DrawerToggle.
 ///
-/// ## Parameters:
-/// - c: a DrawerToggle
-/// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
+pub fn for(_: DrawerToggle, for: Option(String)) -> DrawerToggle {
+  DrawerToggle(for: for)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a DrawerToggle
 ///
 pub fn render(
-  c: DrawerToggle,
+  model: DrawerToggle,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-drawer-toggle",
-    [attribute.for(c.for), ..attributes]
+    list.flatten([
+      [
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )

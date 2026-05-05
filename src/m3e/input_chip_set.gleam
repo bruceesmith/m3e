@@ -1,156 +1,183 @@
-//// input_chip_set provides Lustre support for the [M3E Input  Chip Set component](https://matraic.github.io/m3e/#/components/chip-set.html)
+//// InputChipSet is a container that transforms user input into a cohesive set of interactive chips, supporting entry, editing, and removal of discrete values.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
 
-import m3e/helpers
-import m3e/layout.{type Orientation, Vertical}
-import m3e/state.{type Interaction, type Requirement, Disabled, Required}
+// --- Types ---
 
-// --- Types --- 
-
-/// InputChipSet contains all the information for a InputChipSet
-/// 
+/// InputChipSet is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - name: The name that identifies the element when submitting the associated form
-/// - required: Whether a value is required for the element
-/// - vertical: Whether the element is oriented vertically
+///
+/// - disabled: Whether the element is disabled.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - required: Whether a value is required for the element.
+/// - vertical: Whether the element is oriented vertically.
 ///
 pub opaque type InputChipSet {
   InputChipSet(
-    disabled: Interaction,
-    name: Option(String),
-    required: Requirement,
-    vertical: Orientation,
+    disabled: Disabled,
+    name: String,
+    required: Required,
+    vertical: Vertical,
   )
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Required is whether a value is required for the element.
+///
+pub type Required {
+  IsRequired
+  IsNotRequired
+}
+
+/// Vertical is whether the element is oriented vertically.
+///
+pub type Vertical {
+  IsVertical
+  IsNotVertical
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_name: String = ""
+
+pub const default_required: Required = IsNotRequired
+
+pub const default_vertical: Vertical = IsNotVertical
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Input
-  // Renders the input element used to add new chips to the set
+  // Renders the input element used to add new chips to the set.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config holds the configuration for a InputChipSet
-///  
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: Interaction,
-    name: Option(String),
-    required: Requirement,
-    vertical: Orientation,
+    disabled: Disabled,
+    name: String,
+    required: Required,
+    vertical: Vertical,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    name: None,
-    required: state.default_requirement,
-    vertical: layout.default_orientation,
+    disabled: IsNotDisabled,
+    name: "",
+    required: IsNotRequired,
+    vertical: IsNotVertical,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new InputChipSet with default values
+/// from_config creates a new InputChipSet from the given configuration.
+///
+pub fn from_config(config: Config) -> InputChipSet {
+  InputChipSet(
+    disabled: config.disabled,
+    name: config.name,
+    required: config.required,
+    vertical: config.vertical,
+  )
+}
+
+/// new creates a new InputChipSet with the default configuration.
 ///
 pub fn new() -> InputChipSet {
   from_config(default_config())
 }
 
-/// from_config creates a InputChipSet from a Config record
-/// 
-pub fn from_config(c: Config) -> InputChipSet {
-  InputChipSet(
-    disabled: c.disabled,
-    name: c.name,
-    required: c.required,
-    vertical: c.vertical,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field
+/// disabled sets the value of disabled for this InputChipSet.
 ///
-pub fn disabled(c: InputChipSet, disabled: Interaction) -> InputChipSet {
-  InputChipSet(..c, disabled: disabled)
+pub fn disabled(record: InputChipSet, disabled: Disabled) -> InputChipSet {
+  InputChipSet(..record, disabled: disabled)
 }
 
-/// name sets the `name` field
+/// name sets the value of name for this InputChipSet.
 ///
-pub fn name(c: InputChipSet, name: Option(String)) -> InputChipSet {
-  InputChipSet(..c, name: name)
+pub fn name(record: InputChipSet, name: String) -> InputChipSet {
+  InputChipSet(..record, name: name)
 }
 
-/// required sets the `required` field
+/// required sets the value of required for this InputChipSet.
 ///
-pub fn required(c: InputChipSet, required: Requirement) -> InputChipSet {
-  InputChipSet(..c, required: required)
+pub fn required(record: InputChipSet, required: Required) -> InputChipSet {
+  InputChipSet(..record, required: required)
 }
 
-/// vertical sets the `vertical` field
+/// vertical sets the value of vertical for this InputChipSet.
 ///
-pub fn vertical(s: InputChipSet, vertical: Orientation) -> InputChipSet {
-  InputChipSet(..s, vertical: vertical)
+pub fn vertical(record: InputChipSet, vertical: Vertical) -> InputChipSet {
+  InputChipSet(..record, vertical: vertical)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a InputChipSet
+/// render creates a Lustre Element for a InputChipSet
 ///
 pub fn render(
-  s: InputChipSet,
+  model: InputChipSet,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-input-chip-set",
-    list.append(
+    list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.disabled == Disabled),
-        helpers.option_attribute(
-          s.name,
-          fn(_) { "name" },
-          function.identity,
-          None,
-        ),
-        helpers.boolean_attribute("required", s.required == Required),
-        helpers.boolean_attribute("vertical", s.vertical == Vertical),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default("name", model.name, default_name),
+        attr.boolean("required", model.required == IsRequired),
+        attr.boolean("vertical", model.vertical == IsVertical),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a InputChipSet Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Input -> attribute.attribute("slot", "input")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

@@ -1,155 +1,186 @@
-//// input_chip provides Lustre support for the [M3E Input Chip components](https://matraic.github.io/m3e/#/components/chips.html)
+//// InputChip is a chip which represents a discrete piece of information entered by a user.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/chip.{type Variant}
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
+import m3e/chip_variant.{type ChipVariant}
 
 // --- Types ---
 
-/// InputChip is A container that transforms user input into a cohesive set of interactive chips, supporting entry,
-/// editing, and removal of discrete values.
+/// InputChip is a View Model for this component
 ///
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
+/// ## Fields:
+///
+/// - disabled: Whether the element is disabled.
+/// - disabled_interactive: Whether the element is disabled and interactive.
 /// - removable: Whether the chip is removable.
 /// - remove_label: The accessible label given to the button used to remove the chip.
-/// - value: A string representing the value of the chip
-/// - variant: The appearance variant of the chip
+/// - value: A string representing the value of the chip.
+/// - variant: The appearance variant of the chip.
 ///
-pub opaque type InputChip(msg) {
+pub opaque type InputChip {
   InputChip(
-    disabled: Interaction,
-    disabled_interactive: Interaction,
-    removable: Removability,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    removable: Removable,
     remove_label: String,
-    value: Option(String),
-    variant: Variant,
+    value: String,
+    variant: ChipVariant,
   )
 }
 
-/// Removability specifies if a chip can be removed
-pub type Removability {
-  Removable
-  Permanent
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-pub const default_removability: Removability = Permanent
+/// DisabledInteractive is whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
+
+/// Removable is whether the chip is removable.
+///
+pub type Removable {
+  IsRemovable
+  IsNotRemovable
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_removable: Removable = IsNotRemovable
 
 pub const default_remove_label: String = "Remove"
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+pub const default_value: String = ""
+
+pub const default_variant: ChipVariant = chip_variant.Outlined
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Avatar
-  // Renders an avatar before the chip's label
+  // Renders an avatar before the chip's label.
   Icon
-  // Renders an icon before the chip's label 
+  // Renders an icon before the chip's label.
   RemoveIcon
-  // Renders the icon for the button used to remove the chip 
+  // Renders the icon for the button used to remove the chip.
+  TrailingIcon
+  // Renders an icon after the chip's label.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config holds the configuration for a InputChip
-/// 
-pub type Config(msg) {
-  Config(
-    disabled: Interaction,
-    disabled_interactive: Interaction,
-    removable: Removability,
-    remove_label: String,
-    value: Option(String),
-    variant: Variant,
-  )
-}
-
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config(msg) {
-  Config(
-    disabled: state.default_interaction,
-    disabled_interactive: state.default_interaction,
-    removable: default_removability,
-    remove_label: default_remove_label,
-    value: None,
-    variant: chip.default_variant,
-  )
-}
-
-// --- CONSTRUCTORS ---
-
-/// from_config creates a InputChip from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> InputChip(msg) {
-  InputChip(
-    disabled: c.disabled,
-    disabled_interactive: c.disabled_interactive,
-    removable: c.removable,
-    remove_label: c.remove_label,
-    value: c.value,
-    variant: c.variant,
-  )
-}
-
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field
+/// Config is a public record for configuring this component.
 ///
-pub fn disabled(c: InputChip(msg), disabled: Interaction) -> InputChip(msg) {
-  InputChip(..c, disabled: disabled)
+pub type Config {
+  Config(
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    removable: Removable,
+    remove_label: String,
+    value: String,
+    variant: ChipVariant,
+  )
 }
 
-/// disabled_interactive sets the `disabled_interactive` field
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    disabled: IsNotDisabled,
+    disabled_interactive: IsNotDisabledInteractive,
+    removable: IsNotRemovable,
+    remove_label: "Remove",
+    value: "",
+    variant: chip_variant.Outlined,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new InputChip from the given configuration.
+///
+pub fn from_config(config: Config) -> InputChip {
+  InputChip(
+    disabled: config.disabled,
+    disabled_interactive: config.disabled_interactive,
+    removable: config.removable,
+    remove_label: config.remove_label,
+    value: config.value,
+    variant: config.variant,
+  )
+}
+
+/// new creates a new InputChip with the default configuration.
+///
+pub fn new() -> InputChip {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// disabled sets the value of disabled for this InputChip.
+///
+pub fn disabled(record: InputChip, disabled: Disabled) -> InputChip {
+  InputChip(..record, disabled: disabled)
+}
+
+/// disabled_interactive sets the value of disabled_interactive for this InputChip.
 ///
 pub fn disabled_interactive(
-  c: InputChip(msg),
-  disabled_interactive: Interaction,
-) -> InputChip(msg) {
-  InputChip(..c, disabled_interactive: disabled_interactive)
+  record: InputChip,
+  disabled_interactive: DisabledInteractive,
+) -> InputChip {
+  InputChip(..record, disabled_interactive: disabled_interactive)
 }
 
-/// removable sets the `removable` field
+/// removable sets the value of removable for this InputChip.
 ///
-pub fn removable(c: InputChip(msg), removable: Removability) -> InputChip(msg) {
-  InputChip(..c, removable: removable)
+pub fn removable(record: InputChip, removable: Removable) -> InputChip {
+  InputChip(..record, removable: removable)
 }
 
-/// remove_label sets the `remove_label` field
+/// remove_label sets the value of remove_label for this InputChip.
 ///
-pub fn remove_label(c: InputChip(msg), remove_label: String) -> InputChip(msg) {
-  InputChip(..c, remove_label: remove_label)
+pub fn remove_label(record: InputChip, remove_label: String) -> InputChip {
+  InputChip(..record, remove_label: remove_label)
 }
 
-/// value sets the `value` field
+/// value sets the value of value for this InputChip.
 ///
-pub fn value(c: InputChip(msg), value: Option(String)) -> InputChip(msg) {
-  InputChip(..c, value: value)
+pub fn value(record: InputChip, value: String) -> InputChip {
+  InputChip(..record, value: value)
 }
 
-/// variant sets the `variant` field
+/// variant sets the value of variant for this InputChip.
 ///
-pub fn variant(c: InputChip(msg), v: Variant) -> InputChip(msg) {
-  InputChip(..c, variant: v)
+pub fn variant(record: InputChip, variant: ChipVariant) -> InputChip {
+  InputChip(..record, variant: variant)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a InputChip
-///
-/// ## Parameters:
-/// - c: a InputChip
-/// - attributes: any extra attributes, e.g. an event
-/// - children: a list of child elements
+/// render creates a Lustre Element for a InputChip
 ///
 pub fn render(
-  c: InputChip(msg),
+  model: InputChip,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -157,23 +188,23 @@ pub fn render(
     "m3e-input-chip",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", c.disabled == Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disabled-interactive",
-          c.disabled_interactive == Disabled,
+          model.disabled_interactive == IsDisabledInteractive,
         ),
-        helpers.boolean_attribute("removable", c.removable == Removable),
-        case c.removable {
-          Removable -> attribute.attribute("remove-label", c.remove_label)
-          _ -> attribute.none()
-        },
-        helpers.option_attribute(
-          c.value,
-          fn(_) { "value" },
-          function.identity,
-          None,
+        attr.boolean("removable", model.removable == IsRemovable),
+        attr.with_default(
+          "remove-label",
+          model.remove_label,
+          default_remove_label,
         ),
-        attribute.attribute("variant", chip.variant_to_string(c.variant)),
+        attr.with_default("value", model.value, default_value),
+        attr.with_default(
+          "variant",
+          chip_variant.to_string(model.variant),
+          chip_variant.to_string(default_variant),
+        ),
       ],
       attributes,
     ])
@@ -182,23 +213,23 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a InputChip Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Avatar -> attribute.attribute("slot", "avatar")
     Icon -> attribute.attribute("slot", "icon")
     RemoveIcon -> attribute.attribute("slot", "remove-icon")
+    TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

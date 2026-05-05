@@ -1,45 +1,56 @@
-//// action_list provides Lustre support for the [M3E Action List component](https://matraic.github.io/m3e/#/components/list.html)
+//// ActionList is a list of actions.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/list_variant.{type ListVariant}
 
-import m3e/list_variant.{type Variant}
+// --- Types ---
 
-// --- TYPES ---
-
-/// ActionList provides a specialized list container for action-based interactions following Material 3 design principles
-/// 
+/// ActionList is a View Model for this component
+///
 /// ## Fields:
-/// - variant: The appearance variant of the list
-/// 
+///
+/// - variant: The appearance variant of the list.
+///
 pub opaque type ActionList {
-  ActionList(variant: Variant)
+  ActionList(variant: ListVariant)
 }
 
-// --- CONFIGURATION ---
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates an ActionList with default values
-/// 
-pub fn new(variant: Variant) -> ActionList {
-  ActionList(variant)
-}
+pub const default_variant: ListVariant = list_variant.Standard
 
-// --- SETTERS ---
+// --- Constructors ---
 
-/// variant sets the `variant` field
-/// 
-pub fn variant(_: ActionList, variant: Variant) -> ActionList {
+/// new creates a new ActionList with the default configuration.
+///
+pub fn new(variant: ListVariant) -> ActionList {
   ActionList(variant: variant)
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element from an ActionList
-/// 
+/// variant sets the value of variant for this ActionList.
+///
+pub fn variant(_: ActionList, variant: ListVariant) -> ActionList {
+  ActionList(variant: variant)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ActionList
+///
 pub fn render(
-  a: ActionList,
+  model: ActionList,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -47,9 +58,10 @@ pub fn render(
     "m3e-action-list",
     list.flatten([
       [
-        attribute.attribute(
+        attr.with_default(
           "variant",
-          list_variant.variant_to_string(a.variant),
+          list_variant.to_string(model.variant),
+          list_variant.to_string(default_variant),
         ),
       ],
       attributes,

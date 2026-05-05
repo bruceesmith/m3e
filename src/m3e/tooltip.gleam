@@ -1,229 +1,206 @@
-//// tooltip provides Lustre support for the M3E Tooltip component
-//// https://matraic.github.io/m3e/#/components/tooltip.html
+//// Tooltip is adds additional context to a button or other UI element.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
+import gleam/function
 import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/tooltip_position.{type TooltipPosition}
+import m3e/tooltip_touch_gestures.{type TooltipTouchGestures}
 
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+// --- Types ---
 
-/// HideDelay is the amount of time, in milliseconds, before hiding the tooltip.
-///
-pub type HideDelay =
-  Int
-
-/// Maximum hide delay in milliseconds
-pub const maximum_hide_delay = 2000
-
-/// Default hide delay in milliseconds
-pub const default_hide_delay = 1500
-
-/// Position is tip position relative to its paired element
-///
-pub type Position {
-  Above
-  After
-  Before
-  Below
-}
-
-pub const default_position: Position = Below
-
-/// Behaviour on touch devices
-pub type TouchGestures {
-  Auto
-  Off
-  On
-}
-
-pub const default_touch_gestures: TouchGestures = Auto
-
-/// ShowDelay is the amount of time, in milliseconds, before showing the tooltip
-///
-pub type ShowDelay =
-  Int
-
-/// Default show delay in milliseconds
-pub const default_show_delay = 0
-
-/// Maximum show delay in milliseconds
-pub const maximum_show_delay = 500
-
-/// Tooltip adds additional context to a button or other UI element
+/// Tooltip is a View Model for this component
 ///
 /// ## Fields:
-/// - tip: text of the tool tip
-/// - for: The identifier of the interactive control to which this element is attached
-/// - position: The position of the tooltip
-/// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
-/// - show_delay: The amount of time, in milliseconds, before showing the tooltip
-/// - disabled: Whether the element is disabled
-/// - gestures: behaviour on touch devices
+///
+/// - disabled: Whether the element is disabled.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip.
+/// - position: The position of the tooltip.
+/// - show_delay: The amount of time, in milliseconds, before showing the tooltip.
+/// - touch_gestures: The mode in which to handle touch gestures.
 ///
 pub opaque type Tooltip {
   Tooltip(
-    tip: String,
-    for: String,
-    position: Position,
-    hide_delay: HideDelay,
-    show_delay: ShowDelay,
-    disabled: Interaction,
-    gestures: TouchGestures,
+    disabled: Disabled,
+    for: Option(String),
+    hide_delay: Float,
+    position: TooltipPosition,
+    show_delay: Float,
+    touch_gestures: TooltipTouchGestures,
   )
 }
 
-// --- CONFIGURATION ---
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Config holds the configuration for a Tooltip
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_for: Option(String) = None
+
+pub const default_hide_delay: Float = 200.0
+
+pub const default_position: TooltipPosition = tooltip_position.Below
+
+pub const default_show_delay: Float = 0.0
+
+pub const default_touch_gestures: TooltipTouchGestures = tooltip_touch_gestures.Auto
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    position: Position,
-    hide_delay: HideDelay,
-    show_delay: ShowDelay,
-    disabled: Interaction,
-    gestures: TouchGestures,
+    disabled: Disabled,
+    for: Option(String),
+    hide_delay: Float,
+    position: TooltipPosition,
+    show_delay: Float,
+    touch_gestures: TooltipTouchGestures,
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    position: default_position,
-    hide_delay: default_hide_delay,
-    show_delay: default_show_delay,
-    disabled: state.default_interaction,
-    gestures: default_touch_gestures,
+    disabled: IsNotDisabled,
+    for: None,
+    hide_delay: 200.0,
+    position: tooltip_position.Below,
+    show_delay: 0.0,
+    touch_gestures: tooltip_touch_gestures.Auto,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new returns a Tooltip
+/// from_config creates a new Tooltip from the given configuration.
 ///
-/// ## Parameters:
-/// - tip: text of the tool tip
-/// - for: the ID of the element to which the tip is associated
-/// - position: tip position relative to its paired element
-/// - hide_delay: amount of time, in milliseconds, before hiding the tooltip
-/// - show_delay: amount of time, in milliseconds, before showing the tooltip
-/// - disabled: the tooltip is disabled (or not)
-/// - gestures: behaviour on touch devices
-///
-pub fn new(tip: String, for: String) -> Tooltip {
-  from_config(default_config(), tip, for)
-}
-
-/// from_config creates a Tooltip from a Config
-///
-pub fn from_config(config: Config, tip: String, for: String) -> Tooltip {
+pub fn from_config(config: Config) -> Tooltip {
   Tooltip(
-    tip: tip,
-    for: for,
-    position: config.position,
-    hide_delay: config.hide_delay,
-    show_delay: config.show_delay,
     disabled: config.disabled,
-    gestures: config.gestures,
+    for: config.for,
+    hide_delay: config.hide_delay,
+    position: config.position,
+    show_delay: config.show_delay,
+    touch_gestures: config.touch_gestures,
   )
 }
 
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field of a tooltip
+/// new creates a new Tooltip with the default configuration.
 ///
-pub fn disabled(t: Tooltip, d: Interaction) -> Tooltip {
-  Tooltip(..t, disabled: d)
+pub fn new() -> Tooltip {
+  from_config(default_config())
 }
 
-/// gestures sets the `gestures` field of a Tooltip
+// --- Setters ---
+
+/// disabled sets the value of disabled for this Tooltip.
 ///
-pub fn gestures(t: Tooltip, g: TouchGestures) -> Tooltip {
-  Tooltip(..t, gestures: g)
+pub fn disabled(record: Tooltip, disabled: Disabled) -> Tooltip {
+  Tooltip(..record, disabled: disabled)
 }
 
-/// hide_delay sets the `hide_delay` field of a Tooltip
+/// for sets the value of for for this Tooltip.
 ///
-pub fn hide_delay(t: Tooltip, hd: HideDelay) -> Tooltip {
-  Tooltip(..t, hide_delay: hide_delay_validate(hd))
+pub fn for(record: Tooltip, for: Option(String)) -> Tooltip {
+  Tooltip(..record, for: for)
 }
 
-/// position sets the `position`field of a Tooltip
+/// hide_delay sets the value of hide_delay for this Tooltip.
 ///
-pub fn position(t: Tooltip, p: Position) -> Tooltip {
-  Tooltip(..t, position: p)
+pub fn hide_delay(record: Tooltip, hide_delay: Float) -> Tooltip {
+  Tooltip(..record, hide_delay: hide_delay)
 }
 
-/// show_delay sets the `show_delay` field of a Tooltip
+/// position sets the value of position for this Tooltip.
 ///
-pub fn show_delay(t: Tooltip, sd: ShowDelay) -> Tooltip {
-  Tooltip(..t, show_delay: show_delay_validate(sd))
+pub fn position(record: Tooltip, position: TooltipPosition) -> Tooltip {
+  Tooltip(..record, position: position)
 }
 
-// --- RENDERING ---
+/// show_delay sets the value of show_delay for this Tooltip.
+///
+pub fn show_delay(record: Tooltip, show_delay: Float) -> Tooltip {
+  Tooltip(..record, show_delay: show_delay)
+}
 
-/// render creates a Lustre Element from a Tooltip
+/// touch_gestures sets the value of touch_gestures for this Tooltip.
 ///
-/// ## Parameters:
-/// - t: a Tooltip
-/// - attributes: a list of additional Attributes
+pub fn touch_gestures(
+  record: Tooltip,
+  touch_gestures: TooltipTouchGestures,
+) -> Tooltip {
+  Tooltip(..record, touch_gestures: touch_gestures)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Tooltip
 ///
-pub fn render(t: Tooltip, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: Tooltip,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-tooltip",
-    list.append(
+    list.flatten([
       [
-        attribute.for(t.for),
-        helpers.boolean_attribute("disabled", t.disabled == Disabled),
-        attribute.attribute("touch-gestures", gestures_to_string(t.gestures)),
-        attribute.attribute("hide-delay", int.to_string(t.hide_delay)),
-        attribute.attribute("position", position_to_string(t.position)),
-        attribute.attribute("show-delay", int.to_string(t.show_delay)),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.with_default(
+          "hide-delay",
+          float.to_string(model.hide_delay),
+          float.to_string(default_hide_delay),
+        ),
+        attr.with_default(
+          "position",
+          tooltip_position.to_string(model.position),
+          tooltip_position.to_string(default_position),
+        ),
+        attr.with_default(
+          "show-delay",
+          float.to_string(model.show_delay),
+          float.to_string(default_show_delay),
+        ),
+        attr.with_default(
+          "touch-gestures",
+          tooltip_touch_gestures.to_string(model.touch_gestures),
+          tooltip_touch_gestures.to_string(default_touch_gestures),
+        ),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [element.text(t.tip)],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
+/// render_config creates a Lustre Element from a Tooltip Config
 ///
 pub fn render_config(
-  config: Config,
-  tip: String,
-  for: String,
+  c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config, tip, for), attributes)
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn gestures_to_string(g: TouchGestures) -> String {
-  case g {
-    Auto -> "auto"
-    Off -> "off"
-    On -> "on"
-  }
-}
-
-fn hide_delay_validate(hd: HideDelay) -> HideDelay {
-  helpers.clamp_with_default(hd, 0, maximum_hide_delay, default_hide_delay)
-}
-
-fn position_to_string(p: Position) -> String {
-  case p {
-    Above -> "above"
-    After -> "after"
-    Before -> "before"
-    Below -> "below"
-  }
-}
-
-fn show_delay_validate(sd: ShowDelay) -> ShowDelay {
-  helpers.clamp_with_default(sd, 0, maximum_show_delay, default_show_delay)
+  render(from_config(c), attributes, children)
 }

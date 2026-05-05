@@ -1,100 +1,135 @@
-//// list_option provides Lustre support for the [M3E List Option component](https://matraic.github.io/m3e/#/components/list.html)
+//// ListOption is a selectable option in a list.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
 
 // --- Types ---
 
-/// ListOption represents a selectable item within a list container
-/// 
+/// ListOption is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - selected: Whether the element is selected
+///
+/// - disabled: Whether the element is disabled.
+/// - selected: Whether the element is selected.
+/// - value: A string representing the value of the option.
 ///
 pub opaque type ListOption {
-  ListOption(disabled: Bool, selected: Bool)
+  ListOption(disabled: Disabled, selected: Selected, value: String)
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Selected is whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_value: String = ""
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Leading
-  // Renders the leading content of the list item 
+  // Renders the leading content of the list item.
   Overline
-  // Renders the overline of the list item 
+  // Renders the overline of the list item.
   SupportingText
-  // Renders the supporting text of the list item 
+  // Renders the supporting text of the list item.
   Trailing
-  // Renders the trailing content of the list item 
+  // Renders the trailing content of the list item.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config is the configuration of a ListOption
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(disabled: Bool, selected: Bool)
+  Config(disabled: Disabled, selected: Selected, value: String)
 }
 
-/// default_config creates a Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(disabled: False, selected: False)
+  Config(disabled: IsNotDisabled, selected: IsNotSelected, value: "")
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a ListOption from a Config
-///
-/// ## Parameters:
-/// - config: a Config
+/// from_config creates a new ListOption from the given configuration.
 ///
 pub fn from_config(config: Config) -> ListOption {
-  ListOption(disabled: config.disabled, selected: config.selected)
+  ListOption(
+    disabled: config.disabled,
+    selected: config.selected,
+    value: config.value,
+  )
 }
 
-/// new creates a ListOption with default values
+/// new creates a new ListOption with the default configuration.
 ///
 pub fn new() -> ListOption {
-  ListOption(disabled: False, selected: False)
+  from_config(default_config())
 }
 
-// --- SETTERS ---  
+// --- Setters ---
 
-/// disabled sets the `disabled` field
+/// disabled sets the value of disabled for this ListOption.
 ///
-pub fn disabled(lo: ListOption, disabled: Bool) -> ListOption {
-  ListOption(..lo, disabled: disabled)
+pub fn disabled(record: ListOption, disabled: Disabled) -> ListOption {
+  ListOption(..record, disabled: disabled)
 }
 
-/// selected sets the `selected` field
+/// selected sets the value of selected for this ListOption.
 ///
-pub fn selected(lo: ListOption, selected: Bool) -> ListOption {
-  ListOption(..lo, selected: selected)
+pub fn selected(record: ListOption, selected: Selected) -> ListOption {
+  ListOption(..record, selected: selected)
 }
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a ListOption
+/// value sets the value of value for this ListOption.
 ///
-/// ## Parameters:
-/// - lo: a ListOption
-/// - attributes: a list of additional Attributes
-/// - children: the main content
+pub fn value(record: ListOption, value: String) -> ListOption {
+  ListOption(..record, value: value)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ListOption
 ///
 pub fn render(
-  lo: ListOption,
+  model: ListOption,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-list-option",
     list.flatten([
-      [helpers.boolean_attribute("selected", lo.selected)],
-      [helpers.boolean_attribute("disabled", lo.disabled)],
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.with_default("value", model.value, default_value),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -102,21 +137,18 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-/// ## Parameters:
-/// - config: a Config
+/// render_config creates a Lustre Element from a ListOption Config
 ///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Leading -> attribute.attribute("slot", "leading")
@@ -125,4 +157,3 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     Trailing -> attribute.attribute("slot", "trailing")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

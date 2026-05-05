@@ -1,336 +1,378 @@
-//// button provides Lustre support for the [M3E Button component](https://matraic.github.io/m3e/#/components/button.html)
+//// Button is a button users interact with to perform an action.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import lustre/element/html
-
-import m3e/config.{type Size}
-import m3e/form_submission.{type FormSubmission}
-import m3e/helpers
-import m3e/link.{type Link}
-import m3e/state.{type Interaction, type SelectionState, Disabled}
+import m3e/attr
+import m3e/button_shape.{type ButtonShape}
+import m3e/button_size.{type ButtonSize}
+import m3e/button_variant.{type ButtonVariant}
+import m3e/form_submitter_type.{type FormSubmitterType}
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
-/// Button holds all the values necessary to construct am M3E Button
+/// Button is a View Model for this component
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
-/// - form_submission: handles this button's role in form submission
-/// - icons: Renders an icon before the button's label, Renders an icon after the button's label, Renders an icon before the button's label, when selected
-/// - label: Renders the label of the button
-/// - link: Make the button behave like a link
-/// - selected: Whether the toggle button is selected
-/// - selected_label: Renders the label of the button, when selected
-/// - shape: The shape of the button
-/// - size: The size of the button
-/// - toggle: Whether the button will toggle between selected and unselected states
-/// - variant: The appearance variant of the button
 ///
-pub opaque type Button(msg) {
+/// - disabled: Whether the element is disabled.
+/// - disabled_interactive: Whether the element is disabled and interactive.
+/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - href: The URL to which the link button points.
+/// - name: The name of the element, submitted as a pair with the element's `value` as part of form data, when the element is used to submit a form.
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - selected: Whether the toggle button is selected.
+/// - shape: The shape of the button.
+/// - size: The size of the button.
+/// - target: The target of the link button.
+/// - toggle: Whether the button will toggle between selected and unselected states.
+/// - type_: The type of the element.
+/// - value: The value associated with the element's name when it's submitted with form data.
+/// - variant: The appearance variant of the button.
+///
+pub opaque type Button {
   Button(
-    disabled: Interaction,
-    disabled_interactive: Interaction,
-    form_submission: Option(FormSubmission),
-    icons: List(Element(msg)),
-    label: String,
-    link: Option(Link),
-    selected: SelectionState,
-    selected_label: Option(String),
-    shape: Option(Shape),
-    size: Option(Size),
-    toggle: Bool,
-    variant: Option(Variant),
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    href: String,
+    name: String,
+    rel: String,
+    selected: Selected,
+    shape: ButtonShape,
+    size: ButtonSize,
+    target: Option(LinkTarget),
+    toggle: Toggle,
+    type_: FormSubmitterType,
+    value: String,
+    variant: ButtonVariant,
   )
 }
 
-/// The visual shape of the button.
+/// Disabled is whether the element is disabled.
 ///
-pub type Shape {
-  Rounded
-  Square
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-/// Default shape
-/// 
-pub const default_shape = Rounded
+/// DisabledInteractive is whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Selected is whether the toggle button is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+/// Toggle is whether the button will toggle between selected and unselected states.
+///
+pub type Toggle {
+  IsToggle
+  IsNotToggle
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_download: Option(String) = None
+
+pub const default_href: String = ""
+
+pub const default_name: String = ""
+
+pub const default_rel: String = ""
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_shape: ButtonShape = button_shape.Rounded
+
+pub const default_size: ButtonSize = button_size.Small
+
+pub const default_target: Option(LinkTarget) = None
+
+pub const default_toggle: Toggle = IsNotToggle
+
+pub const default_type_: FormSubmitterType = form_submitter_type.Button
+
+pub const default_value: String = ""
+
+pub const default_variant: ButtonVariant = button_variant.Text
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the button's label 
+  // Renders an icon before the button's label.
   Selected
-  // Renders the label of the button, when selected 
+  // Renders the label of the button, when selected.
   SelectedIcon
-  // Renders an icon before the button's label, when selected 
+  // Renders an icon before the button's label, when selected.
   TrailingIcon
-  // Renders an icon after the button's label 
+  // Renders an icon after the button's label.
 }
 
-/// The visual variant (style) of the button.
-/// 
-pub type Variant {
-  Elevated
-  Filled
-  Outlined
-  Text
-  Tonal
-}
+// --- Configuration ---
 
-/// Default variant
-/// 
-pub const default_variant = Text
-
-// --- CONFIGURATION ---
-
-/// Config allows for a declarative configuration of the Button
+/// Config is a public record for configuring this component.
 ///
-pub type Config(msg) {
+pub type Config {
   Config(
-    disabled: Interaction,
-    disabled_interactive: Interaction,
-    form_submission: Option(FormSubmission),
-    icons: List(Element(msg)),
-    label: String,
-    link: Option(Link),
-    selected: SelectionState,
-    selected_label: Option(String),
-    shape: Option(Shape),
-    size: Option(Size),
-    toggle: Bool,
-    variant: Option(Variant),
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    href: String,
+    name: String,
+    rel: String,
+    selected: Selected,
+    shape: ButtonShape,
+    size: ButtonSize,
+    target: Option(LinkTarget),
+    toggle: Toggle,
+    type_: FormSubmitterType,
+    value: String,
+    variant: ButtonVariant,
   )
 }
 
-/// default_config returns a default Config
+/// default_config is the default configuration for this component.
 ///
-pub fn default_config() -> Config(msg) {
+pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    disabled_interactive: state.default_interaction,
-    form_submission: None,
-    icons: [],
-    label: "",
-    link: None,
-    selected: state.default_selection_state,
-    selected_label: None,
-    shape: None,
-    size: None,
-    toggle: False,
-    variant: None,
+    disabled: IsNotDisabled,
+    disabled_interactive: IsNotDisabledInteractive,
+    download: None,
+    href: "",
+    name: "",
+    rel: "",
+    selected: IsNotSelected,
+    shape: button_shape.Rounded,
+    size: button_size.Small,
+    target: None,
+    toggle: IsNotToggle,
+    type_: form_submitter_type.Button,
+    value: "",
+    variant: button_variant.Text,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a Button from a Config
+/// from_config creates a new Button from the given configuration.
 ///
-pub fn from_config(c: Config(msg)) -> Button(msg) {
+pub fn from_config(config: Config) -> Button {
   Button(
-    disabled: c.disabled,
-    disabled_interactive: c.disabled_interactive,
-    form_submission: c.form_submission,
-    icons: c.icons,
-    label: c.label,
-    link: c.link,
-    selected: c.selected,
-    selected_label: c.selected_label,
-    shape: c.shape,
-    size: c.size,
-    toggle: c.toggle,
-    variant: c.variant,
+    disabled: config.disabled,
+    disabled_interactive: config.disabled_interactive,
+    download: config.download,
+    href: config.href,
+    name: config.name,
+    rel: config.rel,
+    selected: config.selected,
+    shape: config.shape,
+    size: config.size,
+    target: config.target,
+    toggle: config.toggle,
+    type_: config.type_,
+    value: config.value,
+    variant: config.variant,
   )
 }
 
-/// new creates a new Button
-/// 
-/// ## Parameters:
-/// - label: the text on the button
-/// - variant: the button variety
+/// new creates a new Button with the default configuration.
 ///
-pub fn new(label: String, variant: Variant) -> Button(msg) {
-  from_config(Config(..default_config(), label: label, variant: Some(variant)))
+pub fn new() -> Button {
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// disabled sets the `disabled` field
-/// 
-pub fn disabled(b: Button(msg), disabled: Interaction) -> Button(msg) {
-  Button(..b, disabled: disabled)
+/// disabled sets the value of disabled for this Button.
+///
+pub fn disabled(record: Button, disabled: Disabled) -> Button {
+  Button(..record, disabled: disabled)
 }
 
-/// disabled_interactive sets the `disabled_interactive` field
+/// disabled_interactive sets the value of disabled_interactive for this Button.
 ///
 pub fn disabled_interactive(
-  b: Button(msg),
-  disabled: Interaction,
-) -> Button(msg) {
-  Button(..b, disabled_interactive: disabled)
+  record: Button,
+  disabled_interactive: DisabledInteractive,
+) -> Button {
+  Button(..record, disabled_interactive: disabled_interactive)
 }
 
-/// form_submission sets up a Button to participate in an HTML form
+/// download sets the value of download for this Button.
 ///
-/// ## Parameters:
-/// - b: a Button
-/// - fs: a FormSubmission
-///
-pub fn form(b: Button(msg), fs: Option(FormSubmission)) -> Button(msg) {
-  Button(..b, form_submission: fs)
+pub fn download(record: Button, download: Option(String)) -> Button {
+  Button(..record, download: download)
 }
 
-/// icons sets the `icons` field
+/// href sets the value of href for this Button.
 ///
-pub fn icons(b: Button(msg), icons: List(Element(msg))) -> Button(msg) {
-  Button(..b, icons: icons)
+pub fn href(record: Button, href: String) -> Button {
+  Button(..record, href: href)
 }
 
-/// label sets the `label` field
+/// name sets the value of name for this Button.
 ///
-pub fn label(b: Button(msg), label: String) -> Button(msg) {
-  Button(..b, label: label)
+pub fn name(record: Button, name: String) -> Button {
+  Button(..record, name: name)
 }
 
-/// link sets the `link` field
+/// rel sets the value of rel for this Button.
 ///
-pub fn link(b: Button(msg), link: Option(Link)) -> Button(msg) {
-  Button(..b, link: link)
+pub fn rel(record: Button, rel: String) -> Button {
+  Button(..record, rel: rel)
 }
 
-/// selected sets the`selected` field of a Button
+/// selected sets the value of selected for this Button.
 ///
-pub fn selected(b: Button(msg), s: SelectionState) -> Button(msg) {
-  Button(..b, selected: s)
+pub fn selected(record: Button, selected: Selected) -> Button {
+  Button(..record, selected: selected)
 }
 
-/// selected_label sets the`selected_label` field of a Button
+/// shape sets the value of shape for this Button.
 ///
-pub fn selected_label(b: Button(msg), lab: String) -> Button(msg) {
-  Button(..b, selected_label: Some(lab))
+pub fn shape(record: Button, shape: ButtonShape) -> Button {
+  Button(..record, shape: shape)
 }
 
-/// shape sets the`shape` field of a Button
+/// size sets the value of size for this Button.
 ///
-pub fn shape(b: Button(msg), s: Shape) -> Button(msg) {
-  Button(..b, shape: Some(s))
+pub fn size(record: Button, size: ButtonSize) -> Button {
+  Button(..record, size: size)
 }
 
-/// size sets the`size` field of a Button
+/// target sets the value of target for this Button.
 ///
-pub fn size(b: Button(msg), s: Size) -> Button(msg) {
-  Button(..b, size: Some(s))
+pub fn target(record: Button, target: Option(LinkTarget)) -> Button {
+  Button(..record, target: target)
 }
 
-/// toggle sets the`toggle` field of a Button
+/// toggle sets the value of toggle for this Button.
 ///
-pub fn toggle(b: Button(msg), t: Bool) -> Button(msg) {
-  Button(..b, toggle: t)
+pub fn toggle(record: Button, toggle: Toggle) -> Button {
+  Button(..record, toggle: toggle)
 }
 
-/// variant sets the`variant` field of a Button
+/// type_ sets the value of type_ for this Button.
 ///
-pub fn variant(b: Button(msg), v: Variant) -> Button(msg) {
-  Button(..b, variant: Some(v))
+pub fn type_(record: Button, type_: FormSubmitterType) -> Button {
+  Button(..record, type_: type_)
 }
 
-// --- RENDERING ---
-
-/// render_config creates a Lustre Element from a Config
+/// value sets the value of value for this Button.
 ///
-pub fn render_config(
-  c: Config(msg),
+pub fn value(record: Button, value: String) -> Button {
+  Button(..record, value: value)
+}
+
+/// variant sets the value of variant for this Button.
+///
+pub fn variant(record: Button, variant: ButtonVariant) -> Button {
+  Button(..record, variant: variant)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Button
+///
+pub fn render(
+  model: Button,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(c), attributes)
-}
-
-/// render creates a Lustre Element from a Button
-///
-/// ## Parameters:
-/// - b: a Button
-/// - attributes: a list of additional Attributes
-///
-pub fn render(b: Button(msg), attributes: List(Attribute(msg))) -> Element(msg) {
   element.element(
     "m3e-button",
     list.flatten([
       [
-        attribute.disabled(b.disabled == Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disabled-interactive",
-          b.disabled_interactive == Disabled,
+          model.disabled_interactive == IsDisabledInteractive,
         ),
-        attribute.selected(b.selected == state.Selected),
-        helpers.option_attribute(
-          b.shape,
-          fn(_) { "shape" },
-          shape_to_string,
-          Some(default_shape),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
         ),
-        helpers.option_attribute(
-          b.size,
-          fn(_) { "size" },
-          config.size_to_string,
-          Some(config.default_size),
+        attr.with_default("href", model.href, default_href),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.with_default(
+          "shape",
+          button_shape.to_string(model.shape),
+          button_shape.to_string(default_shape),
         ),
-        helpers.boolean_attribute("toggle", b.toggle),
-        helpers.option_attribute(
-          b.variant,
-          fn(_) { "variant" },
-          variant_to_string,
-          Some(default_variant),
+        attr.with_default(
+          "size",
+          button_size.to_string(model.size),
+          button_size.to_string(default_size),
+        ),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
+        attr.boolean("toggle", model.toggle == IsToggle),
+        attr.with_default(
+          "type",
+          form_submitter_type.to_string(model.type_),
+          form_submitter_type.to_string(default_type_),
+        ),
+        attr.with_default("value", model.value, default_value),
+        attr.with_default(
+          "variant",
+          button_variant.to_string(model.variant),
+          button_variant.to_string(default_variant),
         ),
       ],
-      form_submission.button_attributes(b.form_submission),
-      link.attributes(b.link),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    list.flatten([
-      b.icons,
-      [element.text(b.label), selected_label_elt(b.selected_label)],
-    ])
-      |> list.filter(fn(a) { a != element.none() }),
+    children,
   )
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// render_config creates a Lustre Element from a Button Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")
     Selected -> attribute.attribute("slot", "selected")
     SelectedIcon -> attribute.attribute("slot", "selected-icon")
     TrailingIcon -> attribute.attribute("slot", "trailing-icon")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn selected_label_elt(sl: Option(String)) -> Element(msg) {
-  case sl {
-    Some(lab) -> html.span([slot(Selected)], [element.text(lab)])
-    None -> element.none()
-  }
-}
-
-fn shape_to_string(shape: Shape) -> String {
-  case shape {
-    Rounded -> "rounded"
-    Square -> "square"
-  }
-}
-
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Elevated -> "elevated"
-    Filled -> "filled"
-    Outlined -> "outlined"
-    Text -> "text"
-    Tonal -> "tonal"
   }
 }

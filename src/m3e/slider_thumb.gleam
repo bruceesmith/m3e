@@ -1,116 +1,131 @@
-//// slider_thumb provides Lustre support for the [M3E Slider Thumb component](https://matraic.github.io/m3e/#/components/slider.html)
+//// SliderThumb is a thumb used to select a value in a slider.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/float
-import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
 
 // --- Types ---
 
-/// SliderThumb provides Lustre support for the [M3E Slider Thumb component](https://matraic.github.io/m3e/#/components/slider.html)
-/// 
+/// SliderThumb is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - name: The name that identifies the element when submitting the associated form
-/// - value: The value of the thumb
-/// 
+///
+/// - disabled: Whether the element is disabled.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - value: The value of the thumb.
+///
 pub opaque type SliderThumb {
-  SliderThumb(disabled: Interaction, name: Option(String), value: Option(Float))
+  SliderThumb(disabled: Disabled, name: String, value: Option(Float))
 }
 
-// --- CONFIGURATION ---
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Config holds the configuration for a SliderThumb
-/// 
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_name: String = ""
+
+pub const default_value: Option(Float) = None
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
-  Config(disabled: Interaction, name: Option(String), value: Option(Float))
+  Config(disabled: Disabled, name: String, value: Option(Float))
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
-  Config(disabled: state.default_interaction, name: None, value: None)
+  Config(disabled: IsNotDisabled, name: "", value: None)
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new SliderThumb with default values
-/// 
+/// from_config creates a new SliderThumb from the given configuration.
+///
+pub fn from_config(config: Config) -> SliderThumb {
+  SliderThumb(disabled: config.disabled, name: config.name, value: config.value)
+}
+
+/// new creates a new SliderThumb with the default configuration.
+///
 pub fn new() -> SliderThumb {
   from_config(default_config())
 }
 
-/// from_config creates a SliderThumb from a Config record
-/// 
-pub fn from_config(c: Config) -> SliderThumb {
-  SliderThumb(disabled: c.disabled, name: c.name, value: c.value)
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
-/// 
-pub fn disabled(s: SliderThumb, disabled: Interaction) -> SliderThumb {
-  SliderThumb(..s, disabled: disabled)
-}
-
-/// name sets the name field
-/// 
-pub fn name(s: SliderThumb, name: Option(String)) -> SliderThumb {
-  SliderThumb(..s, name: name)
-}
-
-/// value sets the value field
-/// 
-pub fn value(s: SliderThumb, value: Option(Float)) -> SliderThumb {
-  SliderThumb(..s, value: value)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a SliderThumb
-/// 
-/// ## Parameters:
-/// - s: a SliderThumb
-/// - attributes: additional attributes
+/// disabled sets the value of disabled for this SliderThumb.
 ///
-pub fn render(s: SliderThumb, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn disabled(record: SliderThumb, disabled: Disabled) -> SliderThumb {
+  SliderThumb(..record, disabled: disabled)
+}
+
+/// name sets the value of name for this SliderThumb.
+///
+pub fn name(record: SliderThumb, name: String) -> SliderThumb {
+  SliderThumb(..record, name: name)
+}
+
+/// value sets the value of value for this SliderThumb.
+///
+pub fn value(record: SliderThumb, value: Option(Float)) -> SliderThumb {
+  SliderThumb(..record, value: value)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a SliderThumb
+///
+pub fn render(
+  model: SliderThumb,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-slider-thumb",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.disabled == Disabled),
-        helpers.option_attribute(
-          s.name,
-          fn(_) { "name" },
-          function.identity,
-          None,
-        ),
-        helpers.option_attribute(
-          s.value,
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default("name", model.name, default_name),
+        attr.option(
+          model.value,
           fn(_) { "value" },
           float.to_string,
-          None,
+          default_value,
         ),
       ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a SliderThumb Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes)
+  render(from_config(c), attributes, children)
 }

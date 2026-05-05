@@ -1,38 +1,43 @@
-//// stepper_reset provides Lustre support for the [M3E Stepper Reset component](https://matraic.github.io/m3e/#/components/stepper.html)
+//// StepperReset is an element, nested within a clickable element, used to reset a stepper to its initial state.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-// ---  TYPES ----
+// --- Types ---
 
-/// StepperReset provides Lustre support for the [M3E Stepper Reset component](https://matraic.github.io/m3e/#/components/stepper.html)
-/// 
-/// ## Fields:
-/// - label: The label to display for the Reset button
-/// 
+/// StepperReset is a View Model for this component
+///
 pub opaque type StepperReset {
-  StepperReset(label: String)
+  StepperReset
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new StepperReset
+// --- Constructors ---
+
+/// new creates a new StepperReset with the default configuration.
 ///
-pub fn new(label: String) -> StepperReset {
-  StepperReset(label: label)
+pub fn new() -> StepperReset {
+  StepperReset
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// label sets the label field
+// --- Renderers ---
+
+/// render creates a Lustre Element for a StepperReset
 ///
-pub fn label(_: StepperReset, label: String) -> StepperReset {
-  StepperReset(label: label)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a StepperReset
-///
-pub fn render(s: StepperReset) -> Element(msg) {
-  element.element("m3e-stepper-reset", [], [element.text(s.label)])
+pub fn render(
+  _: StepperReset,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element("m3e-stepper-reset", attributes, children)
 }

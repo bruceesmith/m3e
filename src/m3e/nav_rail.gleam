@@ -1,68 +1,72 @@
-//// nav_rail provides Lustre support for the [M3E Nav Rail component](https://matraic.github.io/m3e/#/components/nav-rail.html)
+//// NavRail is a vertical bar, typically used on larger devices, that allows a user to switch between views.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/nav_bar_mode.{type NavBarMode}
 
 // --- Types ---
 
-/// Mode is the mode in which items in the rail are presented
-/// 
-pub type Mode {
-  Auto
-  Compact
-  Expanded
-}
-
-pub const default_mode = Auto
-
-/// NavRail extends NavBar to provide a vertical navigation rail and interactive items for switching 
-/// between primary destinations in an application
-/// 
-/// ## Fields:
-/// - mode: The mode in which items in the rail are presented
-/// 
-pub opaque type NavRail {
-  NavRail(mode: Mode)
-}
-
-// --- CONSTRUCTORS ---
-
-/// new creates a NavRail
+/// NavRail is a View Model for this component
 ///
-pub fn new() -> NavRail {
-  NavRail(mode: default_mode)
+/// ## Fields:
+///
+/// - mode: The mode in which items in the rail are presented.
+///
+pub opaque type NavRail {
+  NavRail(mode: NavBarMode)
 }
 
-// --- SETTERS ---
+// --- Defaults ---
 
-/// mode sets the mode field
-/// 
-pub fn mode(_: NavRail, mode: Mode) -> NavRail {
+pub const default_mode: NavBarMode = nav_bar_mode.Compact
+
+// --- Constructors ---
+
+/// new creates a new NavRail with the default configuration.
+///
+pub fn new(mode: NavBarMode) -> NavRail {
   NavRail(mode: mode)
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element from a NavRail
-/// 
+/// mode sets the value of mode for this NavRail.
+///
+pub fn mode(_: NavRail, mode: NavBarMode) -> NavRail {
+  NavRail(mode: mode)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a NavRail
+///
 pub fn render(
-  m: NavRail,
+  model: NavRail,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-nav-rail",
-    [attribute.attribute("mode", mode_to_string(m.mode)), ..attributes],
+    list.flatten([
+      [
+        attr.with_default(
+          "mode",
+          nav_bar_mode.to_string(model.mode),
+          nav_bar_mode.to_string(default_mode),
+        ),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn mode_to_string(mode: Mode) -> String {
-  case mode {
-    Auto -> "auto"
-    Compact -> "compact"
-    Expanded -> "expanded"
-  }
 }

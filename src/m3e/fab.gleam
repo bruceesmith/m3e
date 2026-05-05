@@ -1,224 +1,285 @@
-///// fab provides Lustre support for the [M3E FAB component](https://matraic.github.io/m3e/#/components/fab.html)
+//// Fab is a floating action button (FAB) used to present important actions.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
-import gleam/option.{type Option, None, Some}
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import lustre/element/html
-
-import m3e/config.{type Size}
-import m3e/form_submission.{type FormSubmission}
-import m3e/helpers
-import m3e/link.{type Link}
-import m3e/state
+import m3e/attr
+import m3e/fab_size.{type FabSize}
+import m3e/fab_variant.{type FabVariant}
+import m3e/form_submitter_type.{type FormSubmitterType}
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
-/// Elevation specifies the elevation of the element
-/// 
-pub type Elevation {
-  Raised
-  Lowered
-}
-
-pub const default_elevation: Elevation = Raised
-
+/// Fab is a View Model for this component
 ///
-/// Extension specifies if the element is extended
-/// 
-pub type Extension {
-  Extended
-  NotExtended
-}
-
-pub const default_extension: Extension = NotExtended
-
-///
-/// FAB is a floating action button (FAB) used to present important actions
-/// 
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
-/// - extended: Whether the button is extended to show the label
-/// - extended_label: Renders the label of an extended button
-/// - form_submission: handles this element's role in form submission
-/// - link: Whether the element is a link
-/// - lowered: Whether to present a lowered elevation
-/// - size: The size of the button
-/// - variant: The appearance variant of the button
-/// 
-pub opaque type FAB {
-  FAB(
-    disabled: state.Interaction,
-    disabled_interactive: state.Interaction,
-    extended: Extension,
-    extended_label: Option(String),
-    form_submission: Option(FormSubmission),
-    link: Option(Link),
-    lowered: Elevation,
-    size: Size,
-    variant: Variant,
+///
+/// - disabled: Whether the element is disabled.
+/// - disabled_interactive: Whether the element is disabled and interactive.
+/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - extended: Whether the button is extended to show the label.
+/// - href: The URL to which the link button points.
+/// - lowered: Whether to present a lowered elevation.
+/// - name: The name of the element, submitted as a pair with the element's `value` as part of form data, when the element is used to submit a form.
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - size: The size of the button.
+/// - target: The target of the link button.
+/// - type_: The type of the element.
+/// - value: The value associated with the element's name when it's submitted with form data.
+/// - variant: The appearance variant of the button.
+///
+pub opaque type Fab {
+  Fab(
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    extended: Extended,
+    href: String,
+    lowered: Lowered,
+    name: String,
+    rel: String,
+    size: FabSize,
+    target: Option(LinkTarget),
+    type_: FormSubmitterType,
+    value: String,
+    variant: FabVariant,
   )
 }
 
-/// Default size
-/// 
-pub const default_size: Size = config.Medium
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// DisabledInteractive is whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
+
+/// Extended is whether the button is extended to show the label.
+///
+pub type Extended {
+  IsExtended
+  IsNotExtended
+}
+
+/// Lowered is whether to present a lowered elevation.
+///
+pub type Lowered {
+  IsLowered
+  IsNotLowered
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_download: Option(String) = None
+
+pub const default_extended: Extended = IsNotExtended
+
+pub const default_href: String = ""
+
+pub const default_lowered: Lowered = IsNotLowered
+
+pub const default_name: String = ""
+
+pub const default_rel: String = ""
+
+pub const default_size: FabSize = fab_size.Medium
+
+pub const default_target: Option(LinkTarget) = None
+
+pub const default_type_: FormSubmitterType = form_submitter_type.Button
+
+pub const default_value: String = ""
+
+pub const default_variant: FabVariant = fab_variant.PrimaryContainer
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
-  CloseIcon
-  // Renders the close icon when used to open a FAB menu 
   Label
-  // Renders the label of an extended button 
-  MenuItemIcon
-  // Renders an icon before the items's label 
+  // Renders the label of an extended button.
+  CloseIcon
+  // Renders the close icon when used to open a FAB menu.
 }
 
-/// Variant is the appearance variant of the button
-/// 
-pub type Variant {
-  Primary
-  PrimaryContainer
-  Secondary
-  SecondaryContainer
-  Surface
-  Tertiary
-  TertiaryContainer
-}
+// --- Configuration ---
 
-pub const default_variant = PrimaryContainer
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a FAB
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: state.Interaction,
-    disabled_interactive: state.Interaction,
-    extended: Extension,
-    extended_label: Option(String),
-    form_submission: Option(FormSubmission),
-    link: Option(Link),
-    lowered: Elevation,
-    size: Size,
-    variant: Variant,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    extended: Extended,
+    href: String,
+    lowered: Lowered,
+    name: String,
+    rel: String,
+    size: FabSize,
+    target: Option(LinkTarget),
+    type_: FormSubmitterType,
+    value: String,
+    variant: FabVariant,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    disabled_interactive: state.default_interaction,
-    extended: default_extension,
-    extended_label: None,
-    form_submission: None,
-    link: None,
-    lowered: default_elevation,
-    size: default_size,
-    variant: default_variant,
+    disabled: IsNotDisabled,
+    disabled_interactive: IsNotDisabledInteractive,
+    download: None,
+    extended: IsNotExtended,
+    href: "",
+    lowered: IsNotLowered,
+    name: "",
+    rel: "",
+    size: fab_size.Medium,
+    target: None,
+    type_: form_submitter_type.Button,
+    value: "",
+    variant: fab_variant.PrimaryContainer,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new FAB with default values
-/// 
-pub fn new() -> FAB {
+/// from_config creates a new Fab from the given configuration.
+///
+pub fn from_config(config: Config) -> Fab {
+  Fab(
+    disabled: config.disabled,
+    disabled_interactive: config.disabled_interactive,
+    download: config.download,
+    extended: config.extended,
+    href: config.href,
+    lowered: config.lowered,
+    name: config.name,
+    rel: config.rel,
+    size: config.size,
+    target: config.target,
+    type_: config.type_,
+    value: config.value,
+    variant: config.variant,
+  )
+}
+
+/// new creates a new Fab with the default configuration.
+///
+pub fn new() -> Fab {
   from_config(default_config())
 }
 
-/// from_config creates a FAB from a Config record
-/// 
-pub fn from_config(c: Config) -> FAB {
-  FAB(
-    disabled: c.disabled,
-    disabled_interactive: c.disabled_interactive,
-    extended: c.extended,
-    extended_label: c.extended_label,
-    form_submission: c.form_submission,
-    link: c.link,
-    lowered: c.lowered,
-    size: c.size,
-    variant: c.variant,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field
-/// 
-pub fn disabled(f: FAB, disabled: state.Interaction) -> FAB {
-  FAB(..f, disabled: disabled)
-}
-
-/// disabled_interactive sets the `disabled` field
-/// 
-pub fn disabled_interactive(
-  f: FAB,
-  disabled_interactive: state.Interaction,
-) -> FAB {
-  FAB(..f, disabled_interactive: disabled_interactive)
-}
-
-/// extended sets the `extended` field
-/// 
-pub fn extended(f: FAB, extended: Extension) -> FAB {
-  FAB(..f, extended: extended)
-}
-
-/// extended_label sets the extended_label field
-/// 
-pub fn extended_label(f: FAB, extended_label: Option(String)) -> FAB {
-  FAB(..f, extended_label: extended_label)
-}
-
-/// form sets the form_submission field
-/// 
-pub fn form(f: FAB, form_submission: Option(FormSubmission)) -> FAB {
-  FAB(..f, form_submission: form_submission)
-}
-
-/// link sets the link field
-/// 
-pub fn link(f: FAB, link: Option(Link)) -> FAB {
-  FAB(..f, link: link)
-}
-
-/// lowered sets the `lowered` field
-/// 
-pub fn lowered(f: FAB, lowered: Elevation) -> FAB {
-  FAB(..f, lowered: lowered)
-}
-
-/// size sets the size field
-/// 
-pub fn size(f: FAB, size: Size) -> FAB {
-  FAB(..f, size: config.clamp_to_restricted_size(size, default_size))
-}
-
-/// variant sets the variant field
-/// 
-pub fn variant(f: FAB, variant: Variant) -> FAB {
-  FAB(..f, variant: variant)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a FAB
+/// disabled sets the value of disabled for this Fab.
 ///
-/// ## Parameters:
-/// - f: a FAB
-/// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
+pub fn disabled(record: Fab, disabled: Disabled) -> Fab {
+  Fab(..record, disabled: disabled)
+}
+
+/// disabled_interactive sets the value of disabled_interactive for this Fab.
+///
+pub fn disabled_interactive(
+  record: Fab,
+  disabled_interactive: DisabledInteractive,
+) -> Fab {
+  Fab(..record, disabled_interactive: disabled_interactive)
+}
+
+/// download sets the value of download for this Fab.
+///
+pub fn download(record: Fab, download: Option(String)) -> Fab {
+  Fab(..record, download: download)
+}
+
+/// extended sets the value of extended for this Fab.
+///
+pub fn extended(record: Fab, extended: Extended) -> Fab {
+  Fab(..record, extended: extended)
+}
+
+/// href sets the value of href for this Fab.
+///
+pub fn href(record: Fab, href: String) -> Fab {
+  Fab(..record, href: href)
+}
+
+/// lowered sets the value of lowered for this Fab.
+///
+pub fn lowered(record: Fab, lowered: Lowered) -> Fab {
+  Fab(..record, lowered: lowered)
+}
+
+/// name sets the value of name for this Fab.
+///
+pub fn name(record: Fab, name: String) -> Fab {
+  Fab(..record, name: name)
+}
+
+/// rel sets the value of rel for this Fab.
+///
+pub fn rel(record: Fab, rel: String) -> Fab {
+  Fab(..record, rel: rel)
+}
+
+/// size sets the value of size for this Fab.
+///
+pub fn size(record: Fab, size: FabSize) -> Fab {
+  Fab(..record, size: size)
+}
+
+/// target sets the value of target for this Fab.
+///
+pub fn target(record: Fab, target: Option(LinkTarget)) -> Fab {
+  Fab(..record, target: target)
+}
+
+/// type_ sets the value of type_ for this Fab.
+///
+pub fn type_(record: Fab, type_: FormSubmitterType) -> Fab {
+  Fab(..record, type_: type_)
+}
+
+/// value sets the value of value for this Fab.
+///
+pub fn value(record: Fab, value: String) -> Fab {
+  Fab(..record, value: value)
+}
+
+/// variant sets the value of variant for this Fab.
+///
+pub fn variant(record: Fab, variant: FabVariant) -> Fab {
+  Fab(..record, variant: variant)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Fab
 ///
 pub fn render(
-  f: FAB,
+  model: Fab,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -226,71 +287,67 @@ pub fn render(
     "m3e-fab",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", f.disabled == state.Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disabled-interactive",
-          f.disabled_interactive == state.Disabled,
+          model.disabled_interactive == IsDisabledInteractive,
         ),
-        helpers.boolean_attribute("extended", f.extended == Extended),
-        helpers.boolean_attribute("lowered", f.lowered == Lowered),
-        attribute.attribute(
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.boolean("extended", model.extended == IsExtended),
+        attr.with_default("href", model.href, default_href),
+        attr.boolean("lowered", model.lowered == IsLowered),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.with_default(
           "size",
-          config.size_to_string(config.clamp_to_restricted_size(
-            f.size,
-            default_size,
-          )),
+          fab_size.to_string(model.size),
+          fab_size.to_string(default_size),
         ),
-        attribute.attribute("variant", variant_to_string(f.variant)),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
+        attr.with_default(
+          "type",
+          form_submitter_type.to_string(model.type_),
+          form_submitter_type.to_string(default_type_),
+        ),
+        attr.with_default("value", model.value, default_value),
+        attr.with_default(
+          "variant",
+          fab_variant.to_string(model.variant),
+          fab_variant.to_string(default_variant),
+        ),
       ],
-      form_submission.button_attributes(f.form_submission),
-      link.attributes(f.link),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [extended_label_elt(f.extended_label), ..children]
-      |> list.filter(fn(a) { a != element.none() }),
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Fab Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    CloseIcon -> attribute.attribute("slot", "close-icon")
     Label -> attribute.attribute("slot", "label")
-    MenuItemIcon -> attribute.attribute("slot", "icon")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-/// extended_label_elt sets the extended_label_elt field
-/// 
-fn extended_label_elt(el: Option(String)) -> Element(msg) {
-  case el {
-    Some(label) -> html.span([slot(Label)], [element.text(label)])
-    None -> element.none()
-  }
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Primary -> "primary"
-    PrimaryContainer -> "primary-container"
-    Secondary -> "secondary"
-    SecondaryContainer -> "secondary-container"
-    Surface -> "surface"
-    Tertiary -> "tertiary"
-    TertiaryContainer -> "tertiary-container"
+    CloseIcon -> attribute.attribute("slot", "close-icon")
   }
 }

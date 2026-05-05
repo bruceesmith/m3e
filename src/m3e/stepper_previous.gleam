@@ -1,38 +1,43 @@
-//// stepper_previous provides Lustre support for the [M3E Stepper Previous component](https://matraic.github.io/m3e/#/components/stepper.html)
+//// StepperPrevious is an element, nested within a clickable element, used to move a stepper to the previous step.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-// --- TYPES ---
+// --- Types ---
 
-/// StepperPrevious provides Lustre support for the [M3E Stepper Previous component](https://matraic.github.io/m3e/#/components/stepper.html)
-/// 
-/// ## Fields:
-/// - label: The label to display for the Previous button
-/// 
+/// StepperPrevious is a View Model for this component
+///
 pub opaque type StepperPrevious {
-  StepperPrevious(label: String)
+  StepperPrevious
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new StepperPrevious
+// --- Constructors ---
+
+/// new creates a new StepperPrevious with the default configuration.
 ///
-pub fn new(label: String) -> StepperPrevious {
-  StepperPrevious(label: label)
+pub fn new() -> StepperPrevious {
+  StepperPrevious
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// label sets the label field
+// --- Renderers ---
+
+/// render creates a Lustre Element for a StepperPrevious
 ///
-pub fn label(_: StepperPrevious, label: String) -> StepperPrevious {
-  StepperPrevious(label: label)
-}
-
-// --- RENDERERS ---
-
-/// render creates a Lustre Element(msg) from a StepperPrevious
-///
-pub fn render(s: StepperPrevious) -> Element(msg) {
-  element.element("m3e-stepper-previous", [], [element.text(s.label)])
+pub fn render(
+  _: StepperPrevious,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element("m3e-stepper-previous", attributes, children)
 }

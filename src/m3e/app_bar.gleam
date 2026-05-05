@@ -1,112 +1,120 @@
-//// app_bar provides Lustre support for the [M3E App Bar component](https://matraic.github.io/m3e/#/components/app-bar.html)
+//// AppBar is a bar, placed a the top of a screen, used to help users navigate through an application.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{type Size}
-import m3e/helpers
+import m3e/app_bar_size.{type AppBarSize}
+import m3e/attr
 
 // --- Types ---
 
-/// AppBar is a prominent user interface component that provides consistent access to key actions, 
-/// navigation, and contextual information at the top of an application screen
-/// 
+/// AppBar is a View Model for this component
+///
 /// ## Fields:
-/// - centered: Whether the title and subtitle are centered
-/// - for: The identifier of the interactive control to which this element is attached
-/// - size: The size of the bar
-/// 
+///
+/// - centered: Whether the title and subtitle are centered.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - size: The size of the bar.
+///
 pub opaque type AppBar {
-  AppBar(centered: TitleAlignment, for: Option(String), size: Size)
+  AppBar(centered: Centered, for: Option(String), size: AppBarSize)
 }
 
-/// Default size
-/// 
-pub const default_size: Size = config.Small
+/// Centered is whether the title and subtitle are centered.
+///
+pub type Centered {
+  IsCentered
+  IsNotCentered
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+// --- Defaults ---
+
+pub const default_centered: Centered = IsNotCentered
+
+pub const default_for: Option(String) = None
+
+pub const default_size: AppBarSize = app_bar_size.Small
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Leading
-  // Renders content positioned at the start of the bar
-  LeadingIcon
-  // Deprecated: use the `leading` slot 
+  // Renders content positioned at the start of the bar.
   Subtitle
-  // Renders the subtitle 
+  // Renders the subtitle of the bar.
   Title
-  // Renders the title 
+  // Renders the title of the bar.
   Trailing
-  // Renders one or more action buttons aligned to the end of the bar
+  // Renders one or more action buttons aligned to the end of the bar.
+  LeadingIcon
+  // Deprecated: use the `leading` slot.
   TrailingIcon
-  // Deprecated: use the `trailing` slot
+  // Deprecated: use the `trailing` slot.
 }
 
-/// TitleAlignment specifies if the title and subtitle are centered
-pub type TitleAlignment {
-  Centered
-  Standard
-}
+// --- Configuration ---
 
-pub const default_title_alignment: TitleAlignment = Standard
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for an AppBar
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
-  Config(centered: TitleAlignment, for: Option(String), size: Size)
+  Config(centered: Centered, for: Option(String), size: AppBarSize)
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
-  Config(centered: default_title_alignment, for: None, size: default_size)
+  Config(centered: IsNotCentered, for: None, size: app_bar_size.Small)
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new AppBar with default values
-/// 
+/// from_config creates a new AppBar from the given configuration.
+///
+pub fn from_config(config: Config) -> AppBar {
+  AppBar(centered: config.centered, for: config.for, size: config.size)
+}
+
+/// new creates a new AppBar with the default configuration.
+///
 pub fn new() -> AppBar {
   from_config(default_config())
 }
 
-/// from_config creates a new AppBar from a Config record
-/// 
-pub fn from_config(c: Config) -> AppBar {
-  AppBar(centered: c.centered, for: c.for, size: c.size)
+// --- Setters ---
+
+/// centered sets the value of centered for this AppBar.
+///
+pub fn centered(record: AppBar, centered: Centered) -> AppBar {
+  AppBar(..record, centered: centered)
 }
 
-// --- SETTERS ---
-
-/// centered sets the title centered
-/// 
-pub fn centered(a: AppBar, centered: TitleAlignment) -> AppBar {
-  AppBar(..a, centered: centered)
+/// for sets the value of for for this AppBar.
+///
+pub fn for(record: AppBar, for: Option(String)) -> AppBar {
+  AppBar(..record, for: for)
 }
 
-/// for sets the for attribute
-/// 
-pub fn for(a: AppBar, for: Option(String)) -> AppBar {
-  AppBar(..a, for: for)
+/// size sets the value of size for this AppBar.
+///
+pub fn size(record: AppBar, size: AppBarSize) -> AppBar {
+  AppBar(..record, size: size)
 }
 
-/// size sets the size attribute
-/// 
-pub fn size(a: AppBar, size: Size) -> AppBar {
-  AppBar(..a, size: config.clamp_to_restricted_size(size, default_size))
-}
+// --- Renderers ---
 
-// --- RENDERING ---
-
-/// render creates an M3E App Bar component from an AppBar
-/// 
+/// render creates a Lustre Element for a AppBar
+///
 pub fn render(
-  a: AppBar,
+  model: AppBar,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -114,19 +122,12 @@ pub fn render(
     "m3e-app-bar",
     list.flatten([
       [
-        helpers.boolean_attribute("centered", a.centered == Centered),
-        attribute.attribute(
+        attr.boolean("centered", model.centered == IsCentered),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.with_default(
           "size",
-          config.size_to_string(config.clamp_to_restricted_size(
-            a.size,
-            default_size,
-          )),
-        ),
-        helpers.option_attribute(
-          a.for,
-          fn(_) { "for" },
-          function.identity,
-          None,
+          app_bar_size.to_string(model.size),
+          app_bar_size.to_string(default_size),
         ),
       ],
       attributes,
@@ -136,26 +137,25 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a AppBar Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' attribute for a named Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Leading -> attribute.attribute("slot", "leading")
-    LeadingIcon -> attribute.attribute("slot", "leading-icon")
     Subtitle -> attribute.attribute("slot", "subtitle")
     Title -> attribute.attribute("slot", "title")
     Trailing -> attribute.attribute("slot", "trailing")
+    LeadingIcon -> attribute.attribute("slot", "leading-icon")
     TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

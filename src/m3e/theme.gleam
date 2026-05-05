@@ -1,261 +1,202 @@
-//// theme provides Lustre support for the [M3E Theme component](https://matraic.github.io/m3e/#/components/theme.html)
+//// Theme is a non-visual element responsible for application-level theming.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
 import gleam/list
-import gleam/string
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
+import m3e/color_scheme.{type ColorScheme}
+import m3e/contrast_level.{type ContrastLevel}
+import m3e/motion_scheme.{type MotionScheme}
 
 // --- Types ---
 
-pub const default_color = "#6750A4"
-
-/// Contrast is the contrast level in which to generate a color palette
-/// 
-pub type Contrast {
-  High
-  Medium
-  StandardContrast
-}
-
-/// Default Contrast
-///
-pub const default_contrast = StandardContrast
-
-/// Density controls layout compactness across density-aware components within a theme
-///
-pub type Density =
-  Int
-
-/// Smallest defined density
-///
-pub const smallest_density = -3
-
-/// Largest defined density
-///
-pub const largest_density = 1
-
-/// Default Density
-///
-pub const default_density = 0
-
-/// Focus defines whether strong focus is enabled
-///
-pub type Focus {
-  Strong
-  Normal
-}
-
-pub const default_focus = Normal
-
-/// Motion defines how components animate across the system
-///
-pub type Motion {
-  Expressive
-  Standard
-}
-
-/// Default Motion
-pub const default_motion = Standard
-
-/// Scheme specifies the color scheme
-///
-pub type Scheme {
-  Auto
-  Dark
-  Light
-}
-
-/// Default Scheme
-///
-pub const default_scheme = Auto
-
-/// Theme is the basis for an m3e-theme component
+/// Theme is a View Model for this component
 ///
 /// ## Fields:
-/// - color: The hex color from which to derive dynamic color palettes
-/// - contrast: The contrast level of the theme
-/// - density: The density scale (0, -1, -2)
-/// - motion: The motion of the theme
-/// - scheme: The color scheme of the theme
-/// - strong_focus: Whether to enable strong focus indicators
+///
+/// - color: The hex color from which to derive dynamic color palettes.
+/// - contrast: The contrast level of the theme.
+/// - density: The density scale (0, -1, -2).
+/// - scheme: The color scheme of the theme.
+/// - strong_focus: Whether to enable strong focus indicators.
+/// - motion: The motion scheme.
 ///
 pub opaque type Theme {
   Theme(
     color: String,
-    contrast: Contrast,
-    density: Density,
-    motion: Motion,
-    scheme: Scheme,
-    strong_focus: Focus,
+    contrast: ContrastLevel,
+    density: Float,
+    scheme: ColorScheme,
+    strong_focus: StrongFocus,
+    motion: MotionScheme,
   )
 }
 
-// --- CONFIGURATION ---
+/// StrongFocus is whether to enable strong focus indicators.
+///
+pub type StrongFocus {
+  IsStrongFocus
+  IsNotStrongFocus
+}
 
-/// Config holds the configuration for a Theme
+// --- Defaults ---
+
+pub const default_color: String = "#6750A4"
+
+pub const default_contrast: ContrastLevel = contrast_level.Standard
+
+pub const default_density: Float = 0.0
+
+pub const default_scheme: ColorScheme = color_scheme.Auto
+
+pub const default_strong_focus: StrongFocus = IsNotStrongFocus
+
+pub const default_motion: MotionScheme = motion_scheme.Standard
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    contrast: Contrast,
-    density: Density,
-    motion: Motion,
-    scheme: Scheme,
-    strong_focus: Focus,
+    color: String,
+    contrast: ContrastLevel,
+    density: Float,
+    scheme: ColorScheme,
+    strong_focus: StrongFocus,
+    motion: MotionScheme,
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    contrast: default_contrast,
-    density: default_density,
-    motion: default_motion,
-    scheme: default_scheme,
-    strong_focus: default_focus,
+    color: "#6750A4",
+    contrast: contrast_level.Standard,
+    density: 0.0,
+    scheme: color_scheme.Auto,
+    strong_focus: IsNotStrongFocus,
+    motion: motion_scheme.Standard,
   )
 }
 
-// -- CONSTRUCTORS --
+// --- Constructors ---
 
-/// new constructs a Theme using default values
+/// from_config creates a new Theme from the given configuration.
 ///
-pub fn new(color: String) -> Theme {
-  from_config(default_config(), color)
-}
-
-/// from_config constructs a Theme from a Config
-///
-pub fn from_config(config: Config, color: String) -> Theme {
+pub fn from_config(config: Config) -> Theme {
   Theme(
-    color: color,
+    color: config.color,
     contrast: config.contrast,
     density: config.density,
-    motion: config.motion,
     scheme: config.scheme,
     strong_focus: config.strong_focus,
+    motion: config.motion,
   )
 }
 
-// --- SETTERS ---
-
-/// color sets the `color` field
+/// new creates a new Theme with the default configuration.
 ///
-pub fn color(t: Theme, hex_color: String) -> Theme {
-  case string.is_empty(hex_color) {
-    False -> Theme(..t, color: hex_color)
-    True -> t
-  }
+pub fn new() -> Theme {
+  from_config(default_config())
 }
 
-/// contrast sets the `contrast` field
-/// 
-pub fn contrast(t: Theme, contrast: Contrast) -> Theme {
-  Theme(..t, contrast: contrast)
+// --- Setters ---
+
+/// color sets the value of color for this Theme.
+///
+pub fn color(record: Theme, color: String) -> Theme {
+  Theme(..record, color: color)
 }
 
-/// density sets the `density` field
+/// contrast sets the value of contrast for this Theme.
 ///
-pub fn density(t: Theme, density: Density) -> Theme {
-  Theme(..t, density: density_validate(density))
+pub fn contrast(record: Theme, contrast: ContrastLevel) -> Theme {
+  Theme(..record, contrast: contrast)
 }
 
-/// motion sets the `motion` field
+/// density sets the value of density for this Theme.
 ///
-pub fn motion(t: Theme, motion: Motion) -> Theme {
-  Theme(..t, motion: motion)
+pub fn density(record: Theme, density: Float) -> Theme {
+  Theme(..record, density: density)
 }
 
-/// scheme sets the `scheme` field
+/// scheme sets the value of scheme for this Theme.
 ///
-pub fn scheme(t: Theme, scheme: Scheme) -> Theme {
-  Theme(..t, scheme: scheme)
+pub fn scheme(record: Theme, scheme: ColorScheme) -> Theme {
+  Theme(..record, scheme: scheme)
 }
 
-/// strong_focus sets the `strong_focus` field
+/// strong_focus sets the value of strong_focus for this Theme.
 ///
-pub fn strong_focus(t: Theme, strong_focus: Focus) -> Theme {
-  Theme(..t, strong_focus: strong_focus)
+pub fn strong_focus(record: Theme, strong_focus: StrongFocus) -> Theme {
+  Theme(..record, strong_focus: strong_focus)
 }
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a Theme
+/// motion sets the value of motion for this Theme.
 ///
-/// ## Parameters:
-/// - t: a Theme
-/// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
-/// 
+pub fn motion(record: Theme, motion: MotionScheme) -> Theme {
+  Theme(..record, motion: motion)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Theme
+///
 pub fn render(
-  t: Theme,
+  model: Theme,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-theme",
-    list.append(
+    list.flatten([
       [
-        attribute.attribute("color", t.color),
-        attribute.attribute("contrast", contrast_to_string(t.contrast)),
-        attribute.attribute("density", int.to_string(t.density)),
-        attribute.attribute("motion", motion_to_string(t.motion)),
-        attribute.attribute("scheme", scheme_to_string(t.scheme)),
-        helpers.boolean_attribute("strong-focus", t.strong_focus == Strong),
+        attr.with_default("color", model.color, default_color),
+        attr.with_default(
+          "contrast",
+          contrast_level.to_string(model.contrast),
+          contrast_level.to_string(default_contrast),
+        ),
+        attr.with_default(
+          "density",
+          float.to_string(model.density),
+          float.to_string(default_density),
+        ),
+        attr.with_default(
+          "scheme",
+          color_scheme.to_string(model.scheme),
+          color_scheme.to_string(default_scheme),
+        ),
+        attr.boolean("strong-focus", model.strong_focus == IsStrongFocus),
+        attr.with_default(
+          "motion",
+          motion_scheme.to_string(model.motion),
+          motion_scheme.to_string(default_motion),
+        ),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
+/// render_config creates a Lustre Element from a Theme Config
 ///
 pub fn render_config(
-  config: Config,
-  color: String,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config, color), attributes, children)
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn contrast_to_string(c: Contrast) -> String {
-  case c {
-    High -> "high"
-    Medium -> "medium"
-    StandardContrast -> "standard"
-  }
-}
-
-/// density_validate ensures a number is within the valid density range
-///
-fn density_validate(d: Density) -> Density {
-  helpers.clamp_with_default(
-    d,
-    smallest_density,
-    largest_density,
-    default_density,
-  )
-}
-
-fn motion_to_string(m: Motion) -> String {
-  case m {
-    Expressive -> "expressive"
-    Standard -> "standard"
-  }
-}
-
-fn scheme_to_string(s: Scheme) -> String {
-  case s {
-    Auto -> "auto"
-    Dark -> "dark"
-    Light -> "light"
-  }
+  render(from_config(c), attributes, children)
 }

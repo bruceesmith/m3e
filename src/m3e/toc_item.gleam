@@ -1,58 +1,121 @@
-//// toc provides Lustre support for the [M3E Toc Item component](https://matraic.github.io/m3e/#/components/toc.html)
+//// TocItem is an item in a table of contents.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import m3e/helpers
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/state.{type Interaction}
+import m3e/attr
 
 // --- Types ---
 
-/// TocItem is an item in a table of contents
-/// 
+/// TocItem is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: A value indicating whether the element is disabled
+///
+/// - disabled: A value indicating whether the element is disabled.
+/// - selected: Whether the element is selected.
 ///
 pub opaque type TocItem {
-  TocItem(disabled: Interaction)
+  TocItem(disabled: Disabled, selected: Selected)
 }
 
-// --- CONFIGURATION ---
+/// Disabled is a value indicating whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-// --- CONSTRUCTORS ---
+/// Selected is whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
 
-/// new creates a new TocItem 
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_selected: Selected = IsNotSelected
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(disabled: Disabled, selected: Selected)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(disabled: IsNotDisabled, selected: IsNotSelected)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new TocItem from the given configuration.
+///
+pub fn from_config(config: Config) -> TocItem {
+  TocItem(disabled: config.disabled, selected: config.selected)
+}
+
+/// new creates a new TocItem with the default configuration.
 ///
 pub fn new() -> TocItem {
-  TocItem(disabled: state.default_interaction)
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// disabled sets the disabled field
+/// disabled sets the value of disabled for this TocItem.
 ///
-pub fn disabled(_: TocItem, disabled: Interaction) -> TocItem {
-  TocItem(disabled: disabled)
+pub fn disabled(record: TocItem, disabled: Disabled) -> TocItem {
+  TocItem(..record, disabled: disabled)
 }
 
-// --- RENDERING ---
+/// selected sets the value of selected for this TocItem.
+///
+pub fn selected(record: TocItem, selected: Selected) -> TocItem {
+  TocItem(..record, selected: selected)
+}
 
-/// render creates a Lustre Element(msg) from a TocItem
+// --- Renderers ---
+
+/// render creates a Lustre Element for a TocItem
 ///
 pub fn render(
-  t: TocItem,
+  model: TocItem,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-toc-item",
-    list.append(
-      [helpers.boolean_attribute("disabled", t.disabled == state.Disabled)],
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("selected", model.selected == IsSelected),
+      ],
       attributes,
-    ),
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
-// --- PRIVATE HELPER FUNCTIONS ---
+
+/// render_config creates a Lustre Element from a TocItem Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

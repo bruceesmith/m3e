@@ -1,145 +1,176 @@
-//// option provides Lustre support for the [M3E Option component](https://matraic.github.io/m3e/#/components/option.html)
+//// Option is an option that can be selected.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option as GleamOption, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/text_highlight_mode.{type TextHighlightMode}
 
-import m3e/helpers
-import m3e/state.{
-  type Interaction, type SelectionState, Disabled, Selected, Unselected,
-}
+// --- Types ---
 
-// --- TYPES ---
-
-/// Option holds all information to create an Option
+/// Option is a View Model for this component
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - disable_highlight: Whether text highlighting is disabled
-/// - highlight_mode: The mode in which to highlight a term
-/// - selected: Whether the element is selected
-/// - term: The search term to highlight
-/// - value: A string representing the value of the option
-/// 
+///
+/// - disabled: Whether the element is disabled.
+/// - disable_highlight: Whether text highlighting is disabled.
+/// - highlight_mode: The mode in which to highlight a term.
+/// - selected: Whether the element is selected.
+/// - term: The search term to highlight.
+/// - value: A string representing the value of the option.
+///
 pub opaque type Option {
   Option(
-    disabled: Interaction,
-    disable_highlight: Highlighting,
+    disabled: Disabled,
+    disable_highlight: DisableHighlight,
     highlight_mode: TextHighlightMode,
-    selected: SelectionState,
+    selected: Selected,
     term: String,
-    value: GleamOption(String),
+    value: String,
   )
 }
 
-/// Highlighting specifies if text highlighting is active
-pub type Highlighting {
-  HighlightEnabled
-  HighlightDisabled
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-/// TextHighlightMode is the mode in which to highlight a term
-/// 
-pub type TextHighlightMode {
-  Contains
-  StartsWith
-  EndsWith
+/// DisableHighlight is whether text highlighting is disabled.
+///
+pub type DisableHighlight {
+  IsDisableHighlight
+  IsNotDisableHighlight
 }
 
-// --- CONFIGURATION ---
+/// Selected is whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
 
-/// Config holds the configuration for an Option
-/// 
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disable_highlight: DisableHighlight = IsNotDisableHighlight
+
+pub const default_highlight_mode: TextHighlightMode = text_highlight_mode.Contains
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_term: String = ""
+
+pub const default_value: String = ""
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: Interaction,
-    disable_highlight: Highlighting,
+    disabled: Disabled,
+    disable_highlight: DisableHighlight,
     highlight_mode: TextHighlightMode,
-    selected: SelectionState,
+    selected: Selected,
     term: String,
-    value: GleamOption(String),
+    value: String,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    disable_highlight: HighlightEnabled,
-    highlight_mode: Contains,
-    selected: Unselected,
-    value: None,
+    disabled: IsNotDisabled,
+    disable_highlight: IsNotDisableHighlight,
+    highlight_mode: text_highlight_mode.Contains,
+    selected: IsNotSelected,
     term: "",
+    value: "",
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Option with default values
+/// from_config creates a new Option from the given configuration.
+///
+pub fn from_config(config: Config) -> Option {
+  Option(
+    disabled: config.disabled,
+    disable_highlight: config.disable_highlight,
+    highlight_mode: config.highlight_mode,
+    selected: config.selected,
+    term: config.term,
+    value: config.value,
+  )
+}
+
+/// new creates a new Option with the default configuration.
 ///
 pub fn new() -> Option {
   from_config(default_config())
 }
 
-/// from_config creates an Option from a Config record
-/// 
-pub fn from_config(c: Config) -> Option {
-  Option(
-    disabled: c.disabled,
-    disable_highlight: c.disable_highlight,
-    highlight_mode: c.highlight_mode,
-    selected: c.selected,
-    term: c.term,
-    value: c.value,
-  )
+// --- Setters ---
+
+/// disabled sets the value of disabled for this Option.
+///
+pub fn disabled(record: Option, disabled: Disabled) -> Option {
+  Option(..record, disabled: disabled)
 }
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
-/// 
-pub fn disabled(o: Option, disabled: Interaction) -> Option {
-  Option(..o, disabled: disabled)
+/// disable_highlight sets the value of disable_highlight for this Option.
+///
+pub fn disable_highlight(
+  record: Option,
+  disable_highlight: DisableHighlight,
+) -> Option {
+  Option(..record, disable_highlight: disable_highlight)
 }
 
-/// disable_highlight sets the disable_highlight field
-/// 
-pub fn disable_highlight(o: Option, disable_highlight: Highlighting) -> Option {
-  Option(..o, disable_highlight: disable_highlight)
+/// highlight_mode sets the value of highlight_mode for this Option.
+///
+pub fn highlight_mode(
+  record: Option,
+  highlight_mode: TextHighlightMode,
+) -> Option {
+  Option(..record, highlight_mode: highlight_mode)
 }
 
-/// highlight_mode sets the highlight_mode field
-pub fn highlight_mode(o: Option, mode: TextHighlightMode) -> Option {
-  Option(..o, highlight_mode: mode)
+/// selected sets the value of selected for this Option.
+///
+pub fn selected(record: Option, selected: Selected) -> Option {
+  Option(..record, selected: selected)
 }
 
-/// term sets the highlight term field
-pub fn term(o: Option, term: String) -> Option {
-  Option(..o, term: term)
+/// term sets the value of term for this Option.
+///
+pub fn term(record: Option, term: String) -> Option {
+  Option(..record, term: term)
 }
 
-/// selected sets the selected field
-/// 
-pub fn selected(o: Option, selected: SelectionState) -> Option {
-  Option(..o, selected: selected)
+/// value sets the value of value for this Option.
+///
+pub fn value(record: Option, value: String) -> Option {
+  Option(..record, value: value)
 }
 
-/// value sets the value field
-/// 
-pub fn value(o: Option, value: GleamOption(String)) -> Option {
-  Option(..o, value: value)
-}
+// --- Renderers ---
 
-// --- RENDERING ---
-
-/// render creates an M3E Option component from an Option
+/// render creates a Lustre Element for a Option
 ///
 pub fn render(
-  o: Option,
+  model: Option,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -147,26 +178,19 @@ pub fn render(
     "m3e-option",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", o.disabled == Disabled),
-        helpers.boolean_attribute("selected", o.selected == Selected),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disable-highlight",
-          o.disable_highlight == HighlightDisabled,
+          model.disable_highlight == IsDisableHighlight,
         ),
-        case o.term {
-          "" -> attribute.none()
-          _ -> attribute.attribute("term", o.term)
-        },
-        attribute.attribute(
+        attr.with_default(
           "highlight-mode",
-          highlight_mode_to_string(o.highlight_mode),
+          text_highlight_mode.to_string(model.highlight_mode),
+          text_highlight_mode.to_string(default_highlight_mode),
         ),
-        helpers.option_attribute(
-          o.value,
-          fn(_) { "value" },
-          function.identity,
-          None,
-        ),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.with_default("term", model.term, default_term),
+        attr.with_default("value", model.value, default_value),
       ],
       attributes,
     ])
@@ -175,20 +199,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Option Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
-}
-
-fn highlight_mode_to_string(mode: TextHighlightMode) -> String {
-  case mode {
-    Contains -> "contains"
-    StartsWith -> "starts-with"
-    EndsWith -> "ends-with"
-  }
+  render(from_config(c), attributes, children)
 }

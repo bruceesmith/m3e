@@ -1,136 +1,160 @@
-//// selection_list provides Lustre support for the [M3E Selection List component](https://matraic.github.io/m3e/#/components/list.html)
+//// SelectionList is a list of selectable options.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import m3e/helpers
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{type SelectionMode, Multi}
-import m3e/list_variant.{type Variant, Standard}
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
+import m3e/list_variant.{type ListVariant}
 
 // --- Types ---
 
-/// IndicatorVisibility specifies if the selection indicator is visible or hidden
-pub type IndicatorVisibility {
-  Visible
-  Hidden
-}
-
-pub const default_indicator_visibility: IndicatorVisibility = Visible
-
-/// SelectionList provides a container for managing selectable list items with single or multi-select capabilities
-/// 
+/// SelectionList is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is enabled or disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - multi: Whether multiple items can be selected
-/// - variant: The appearance variant of the list
+///
+/// - hide_selection_indicator: Whether to hide the selection indicator.
+/// - multi: Whether multiple items can be selected.
+/// - variant: The appearance variant of the list.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - disabled: Whether the element is disabled.
 ///
 pub opaque type SelectionList {
   SelectionList(
-    disabled: Interaction,
-    hide_selection_indicator: IndicatorVisibility,
-    multi: SelectionMode,
-    variant: Variant,
+    hide_selection_indicator: HideSelectionIndicator,
+    multi: Multi,
+    variant: ListVariant,
+    name: String,
+    disabled: Disabled,
   )
 }
 
-// --- CONFIGURATION ---
-
-/// Config is the configuration of a SelectionList
+/// HideSelectionIndicator is whether to hide the selection indicator.
 ///
-/// ## Fields:
-/// - disabled: Whether the element is enabled or disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - multi: Whether multiple items can be selected
-/// - variant: The appearance variant of the list
+pub type HideSelectionIndicator {
+  IsHideSelectionIndicator
+  IsNotHideSelectionIndicator
+}
+
+/// Multi is whether multiple items can be selected.
+///
+pub type Multi {
+  IsMulti
+  IsNotMulti
+}
+
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_hide_selection_indicator: HideSelectionIndicator = IsNotHideSelectionIndicator
+
+pub const default_multi: Multi = IsNotMulti
+
+pub const default_variant: ListVariant = list_variant.Standard
+
+pub const default_name: String = ""
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    disabled: Interaction,
-    hide_selection_indicator: IndicatorVisibility,
-    multi: SelectionMode,
-    variant: Variant,
+    hide_selection_indicator: HideSelectionIndicator,
+    multi: Multi,
+    variant: ListVariant,
+    name: String,
+    disabled: Disabled,
   )
 }
 
-pub const default_variant: Variant = Standard
-
-/// default_config creates a Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    hide_selection_indicator: default_indicator_visibility,
-    multi: config.default_selection_mode,
-    variant: default_variant,
+    hide_selection_indicator: IsNotHideSelectionIndicator,
+    multi: IsNotMulti,
+    variant: list_variant.Standard,
+    name: "",
+    disabled: IsNotDisabled,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a SelectionList from a Config
-///
-/// ## Parameters:
-/// - config: a Config
+/// from_config creates a new SelectionList from the given configuration.
 ///
 pub fn from_config(config: Config) -> SelectionList {
   SelectionList(
-    disabled: config.disabled,
     hide_selection_indicator: config.hide_selection_indicator,
     multi: config.multi,
     variant: config.variant,
+    name: config.name,
+    disabled: config.disabled,
   )
 }
 
-/// new creates a SelectionList with default values
+/// new creates a new SelectionList with the default configuration.
 ///
 pub fn new() -> SelectionList {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// disabled sets the `disabled` field
-///
-pub fn disabled(sl: SelectionList, disabled: Interaction) -> SelectionList {
-  SelectionList(..sl, disabled: disabled)
-}
-
-/// hide_selection_indicator sets the `hide_selection_indicator` field
+/// hide_selection_indicator sets the value of hide_selection_indicator for this SelectionList.
 ///
 pub fn hide_selection_indicator(
-  sl: SelectionList,
-  hide_selection_indicator: IndicatorVisibility,
+  record: SelectionList,
+  hide_selection_indicator: HideSelectionIndicator,
 ) -> SelectionList {
-  SelectionList(..sl, hide_selection_indicator: hide_selection_indicator)
+  SelectionList(..record, hide_selection_indicator: hide_selection_indicator)
 }
 
-/// multi sets the `multi` field
+/// multi sets the value of multi for this SelectionList.
 ///
-pub fn multi(sl: SelectionList, multi: SelectionMode) -> SelectionList {
-  SelectionList(..sl, multi: multi)
+pub fn multi(record: SelectionList, multi: Multi) -> SelectionList {
+  SelectionList(..record, multi: multi)
 }
 
-/// variant sets the `variant` field
+/// variant sets the value of variant for this SelectionList.
 ///
-pub fn variant(sl: SelectionList, variant: Variant) -> SelectionList {
-  SelectionList(..sl, variant: variant)
+pub fn variant(record: SelectionList, variant: ListVariant) -> SelectionList {
+  SelectionList(..record, variant: variant)
 }
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a SelectionList
+/// name sets the value of name for this SelectionList.
 ///
-/// ## Parameters:
-/// - sl: a SelectionList
-/// - attributes: a list of additional Attributes
-/// - children: the main content
+pub fn name(record: SelectionList, name: String) -> SelectionList {
+  SelectionList(..record, name: name)
+}
+
+/// disabled sets the value of disabled for this SelectionList.
+///
+pub fn disabled(record: SelectionList, disabled: Disabled) -> SelectionList {
+  SelectionList(..record, disabled: disabled)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a SelectionList
 ///
 pub fn render(
-  sl: SelectionList,
+  model: SelectionList,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -138,18 +162,18 @@ pub fn render(
     "m3e-selection-list",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", sl.disabled == Disabled),
-        helpers.boolean_attribute(
+        attr.boolean(
           "hide-selection-indicator",
-          sl.hide_selection_indicator == Hidden,
+          model.hide_selection_indicator == IsHideSelectionIndicator,
         ),
-      ],
-      [helpers.boolean_attribute("multi", sl.multi == Multi)],
-      [
-        attribute.attribute(
+        attr.boolean("multi", model.multi == IsMulti),
+        attr.with_default(
           "variant",
-          list_variant.variant_to_string(sl.variant),
+          list_variant.to_string(model.variant),
+          list_variant.to_string(default_variant),
         ),
+        attr.with_default("name", model.name, default_name),
+        attr.boolean("disabled", model.disabled == IsDisabled),
       ],
       attributes,
     ])
@@ -158,16 +182,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-/// ## Parameters:
-/// - config: a Config
+/// render_config creates a Lustre Element from a SelectionList Config
 ///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
-// --- PRIVATE INTERNAL HELPERS ---

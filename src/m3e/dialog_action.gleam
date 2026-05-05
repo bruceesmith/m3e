@@ -1,36 +1,71 @@
-//// dialog_action provides Lustre support for the M3E Dialog Action component
+//// DialogAction is an element, nested within a clickable element, used to close a parenting dialog.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
 
-/// DialogAction holds the return value for a dialog action
-/// 
+// --- Types ---
+
+/// DialogAction is a View Model for this component
+///
 /// ## Fields:
-/// - return_value: The value to return from the dialog
-/// 
+///
+/// - return_value: The value to return from the dialog.
+///
 pub opaque type DialogAction {
   DialogAction(return_value: String)
 }
 
-/// new creates a DialogAction
-/// 
-/// ## Parameters:
-/// - return_value: The value to return from the dialog
-/// 
+// --- Defaults ---
+
+pub const default_return_value: String = ""
+
+// --- Constructors ---
+
+/// new creates a new DialogAction with the default configuration.
+///
 pub fn new(return_value: String) -> DialogAction {
-  DialogAction(return_value)
+  DialogAction(return_value: return_value)
 }
 
-/// render creates a Lustre Element from a DialogAction
+// --- Setters ---
+
+/// return_value sets the value of return_value for this DialogAction.
+///
+pub fn return_value(_: DialogAction, return_value: String) -> DialogAction {
+  DialogAction(return_value: return_value)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a DialogAction
 ///
 pub fn render(
-  d: DialogAction,
+  model: DialogAction,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-dialog-action",
-    [attribute.attribute("return-value", d.return_value), ..attributes],
+    list.flatten([
+      [
+        attr.with_default(
+          "return-value",
+          model.return_value,
+          default_return_value,
+        ),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }

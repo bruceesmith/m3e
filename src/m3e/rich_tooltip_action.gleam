@@ -1,94 +1,80 @@
-//// rich_tooltip_action provides Lustre support for the M3E Rich Tooltip Action component
-//// https://matraic.github.io/m3e/#/components/tooltip.html
-
-//  * @attr disable-restore-focus - Whether to focus should not be restored to the trigger when activated.
+//// RichTooltipAction is an element, nested within a clickable element, used to dismiss a parenting rich tooltip.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
 
 // --- Types ---
 
-/// RichTooltip is an element, nested within a clickable element, used to dismiss a parenting rich tooltip
+/// RichTooltipAction is a View Model for this component
 ///
 /// ## Fields:
-/// - disable_restore_focus: Whether to focus should not be restored to the trigger when activated
 ///
-pub opaque type RichTooltip {
-  RichTooltip(disable_restore_focus: Bool)
+/// - disable_restore_focus: Whether to focus should not be restored to the trigger when activated.
+///
+pub opaque type RichTooltipAction {
+  RichTooltipAction(disable_restore_focus: DisableRestoreFocus)
 }
 
-// --- Configuration ---
-
-/// Config is the configuration of a RichTooltip
+/// DisableRestoreFocus is whether to focus should not be restored to the trigger when activated.
 ///
-pub type Config {
-  Config(disable_restore_focus: Bool)
+pub type DisableRestoreFocus {
+  IsDisableRestoreFocus
+  IsNotDisableRestoreFocus
 }
 
-/// default_config creates a Config with default values
-///
-pub fn default_config() -> Config {
-  Config(disable_restore_focus: False)
-}
+// --- Defaults ---
+
+pub const default_disable_restore_focus: DisableRestoreFocus = IsNotDisableRestoreFocus
 
 // --- Constructors ---
 
-/// from_config creates a RichTooltip from a Config
+/// new creates a new RichTooltipAction with the default configuration.
 ///
-pub fn from_config(config: Config) -> RichTooltip {
-  RichTooltip(disable_restore_focus: config.disable_restore_focus)
-}
-
-/// new creates a RichTooltip with default values
-/// 
-pub fn new() -> RichTooltip {
-  RichTooltip(disable_restore_focus: False)
+pub fn new(disable_restore_focus: DisableRestoreFocus) -> RichTooltipAction {
+  RichTooltipAction(disable_restore_focus: disable_restore_focus)
 }
 
 // --- Setters ---
 
-/// disable_restore_focus sets the `disable_restore_focus` field
+/// disable_restore_focus sets the value of disable_restore_focus for this RichTooltipAction.
 ///
 pub fn disable_restore_focus(
-  _: RichTooltip,
-  disable_restore_focus: Bool,
-) -> RichTooltip {
-  RichTooltip(disable_restore_focus: disable_restore_focus)
+  _: RichTooltipAction,
+  disable_restore_focus: DisableRestoreFocus,
+) -> RichTooltipAction {
+  RichTooltipAction(disable_restore_focus: disable_restore_focus)
 }
 
-// --- Rendering ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a RichTooltip
+/// render creates a Lustre Element for a RichTooltipAction
 ///
 pub fn render(
-  r: RichTooltip,
+  model: RichTooltipAction,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
-    "m3e-rich-tooltip",
-    list.append(
+    "m3e-rich-tooltip-action",
+    list.flatten([
       [
-        helpers.boolean_attribute("disable-restore-focus", r.disable_restore_focus),
+        attr.boolean(
+          "disable-restore-focus",
+          model.disable_restore_focus == IsDisableRestoreFocus,
+        ),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
-
-/// render_config creates a Lustre Element directly from a Config
-///
-pub fn render_config(
-  c: Config,
-  attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
-) -> Element(msg) {
-  render(from_config(c), attributes, children)
-}
-// --- PRIVATE INTERNAL HELPERS --- 

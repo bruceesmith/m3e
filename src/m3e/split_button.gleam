@@ -1,173 +1,135 @@
-//// split_button provides Lustre support for the [M3E Split Button component](https://matraic.github.io/m3e/#/components/split-button.html)
+//// SplitButton is a button used to show an action with a menu of related actions.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{type Size}
+import m3e/attr
+import m3e/button_size.{type ButtonSize}
+import m3e/split_button_variant.{type SplitButtonVariant}
 
 // --- Types ---
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// SplitButton is a View Model for this component
+///
+/// ## Fields:
+///
+/// - variant: The appearance variant of the button.
+/// - size: The size of the button.
+///
+pub opaque type SplitButton {
+  SplitButton(variant: SplitButtonVariant, size: ButtonSize)
+}
+
+// --- Defaults ---
+
+pub const default_variant: SplitButtonVariant = split_button_variant.Filled
+
+pub const default_size: ButtonSize = button_size.Small
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   LeadingButton
-  // The leading button used to perform the primary action 
+  // The leading button used to perform the primary action.
   TrailingButton
-  // The trailing icon button to open a menu of related actions
+  // The trailing icon button used to open a menu of related actions.
 }
 
-/// SplitButton provides a primary action alongside a menu of related actions, uniting two buttons in a single expressive surface
-/// 
-/// ## Fields:
-/// - leading: the leading part of the split button
-/// - size: The size of the button
-/// - trailing: the trailing part of the split button
-/// - variant: The appearance variant of the button
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
 ///
-pub opaque type SplitButton(msg) {
-  SplitButton(
-    leading: Element(msg),
-    size: Size,
-    trailing: Element(msg),
-    variant: Variant,
-  )
+pub type Config {
+  Config(variant: SplitButtonVariant, size: ButtonSize)
 }
 
-/// Variant is the appearance variant of the Split Button
-/// 
-pub type Variant {
-  Elevated
-  Filled
-  Outlined
-  Tonal
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(variant: split_button_variant.Filled, size: button_size.Small)
 }
 
-pub const default_variant = Filled
+// --- Constructors ---
 
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a Split Button
-/// 
-pub type Config(msg) {
-  Config(
-    leading: Element(msg),
-    size: Size,
-    trailing: Element(msg),
-    variant: Variant,
-  )
+/// from_config creates a new SplitButton from the given configuration.
+///
+pub fn from_config(config: Config) -> SplitButton {
+  SplitButton(variant: config.variant, size: config.size)
 }
 
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config(
-  leading: Element(msg),
-  trailing: Element(msg),
-) -> Config(msg) {
-  Config(
-    leading: leading,
-    size: config.default_size,
-    trailing: trailing,
-    variant: default_variant,
-  )
+/// new creates a new SplitButton with the default configuration.
+///
+pub fn new() -> SplitButton {
+  from_config(default_config())
 }
 
-// --- CONSTRUCTORS ---
+// --- Setters ---
 
-/// new creates a new SplitButton
-/// 
-pub fn new(leading: Element(msg), trailing: Element(msg)) -> SplitButton(msg) {
-  from_config(default_config(leading, trailing))
+/// variant sets the value of variant for this SplitButton.
+///
+pub fn variant(record: SplitButton, variant: SplitButtonVariant) -> SplitButton {
+  SplitButton(..record, variant: variant)
 }
 
-/// from_config creates a SplitButton from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> SplitButton(msg) {
-  SplitButton(
-    leading: c.leading,
-    size: c.size,
-    trailing: c.trailing,
-    variant: c.variant,
-  )
+/// size sets the value of size for this SplitButton.
+///
+pub fn size(record: SplitButton, size: ButtonSize) -> SplitButton {
+  SplitButton(..record, size: size)
 }
 
-// --- SETTERS ---
+// --- Renderers ---
 
-/// leading sets the leading field
-/// 
-pub fn leading(s: SplitButton(msg), leading: Element(msg)) -> SplitButton(msg) {
-  SplitButton(..s, leading: leading)
-}
-
-/// size sets the size field
-/// 
-pub fn size(s: SplitButton(msg), size: Size) -> SplitButton(msg) {
-  SplitButton(..s, size: size)
-}
-
-/// trailing sets the trailing field
-/// 
-pub fn trailing(s: SplitButton(msg), trailing: Element(msg)) -> SplitButton(msg) {
-  SplitButton(..s, trailing: trailing)
-}
-
-/// variant sets the variant field
-/// 
-pub fn variant(s: SplitButton(msg), variant: Variant) -> SplitButton(msg) {
-  SplitButton(..s, variant: variant)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a Split Button
-/// 
-/// ## Parameters:
-/// - s: a SplitButton
-/// - attributes: additional attributes
+/// render creates a Lustre Element for a SplitButton
 ///
 pub fn render(
-  s: SplitButton(msg),
+  model: SplitButton,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-split-button",
     list.flatten([
       [
-        attribute.attribute("size", config.size_to_string(s.size)),
-        attribute.attribute("variant", variant_to_string(s.variant)),
+        attr.with_default(
+          "variant",
+          split_button_variant.to_string(model.variant),
+          split_button_variant.to_string(default_variant),
+        ),
+        attr.with_default(
+          "size",
+          button_size.to_string(model.size),
+          button_size.to_string(default_size),
+        ),
       ],
       attributes,
-    ]),
-    [s.leading, s.trailing],
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a SplitButton Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     LeadingButton -> attribute.attribute("slot", "leading-button")
     TrailingButton -> attribute.attribute("slot", "trailing-button")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Elevated -> "elevated"
-    Filled -> "filled"
-    Outlined -> "outlined"
-    Tonal -> "tonal"
   }
 }

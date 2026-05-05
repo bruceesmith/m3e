@@ -1,173 +1,199 @@
-//// linear_progress_indicator provides Lustre support for the [M3E Linear Progress Indicator component](https://matraic.github.io/m3e/#/components/progress-indicator.html)
+//// LinearProgressIndicator is a horizontal bar for indicating progress and activity.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/float
-import gleam/int
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/progress_indicator.{type Variant}
+import m3e/attr
+import m3e/linear_progress_mode.{type LinearProgressMode}
+import m3e/progress_indicator_variant.{type ProgressIndicatorVariant}
 
 // --- Types ---
 
-/// LinearProgressIndicator provides accessible, animated progress indicators for tracking
-/// the completion of tasks or processes
-/// 
+/// LinearProgressIndicator is a View Model for this component
+///
 /// ## Fields:
+///
 /// - buffer_value: A fractional value, between 0 and `max`, indicating buffer progress.
 /// - max: The maximum progress value.
 /// - mode: The mode of the progress bar.
 /// - value: A fractional value, between 0 and `max`, indicating progress.
 /// - variant: The appearance of the indicator.
+///
 pub opaque type LinearProgressIndicator {
   LinearProgressIndicator(
     buffer_value: Float,
-    max: Int,
-    mode: Mode,
+    max: Float,
+    mode: LinearProgressMode,
     value: Float,
-    variant: Variant,
+    variant: ProgressIndicatorVariant,
   )
 }
 
-/// Mode is the mode of the progress bar
-/// Mode = "determinate" | "indeterminate" | "buffer" | "query"
-/// 
-pub type Mode {
-  Buffer
-  Determinate
-  Indeterminate
-  Query
-}
+// --- Defaults ---
 
-pub const default_mode = Determinate
+pub const default_buffer_value: Float = 0.0
 
-// --- CONFIGURATION ---
+pub const default_max: Float = 100.0
 
-///  Config holds the configuration of a LinearProgressIndicator
-/// 
+pub const default_mode: LinearProgressMode = linear_progress_mode.Determinate
+
+pub const default_value: Float = 0.0
+
+pub const default_variant: ProgressIndicatorVariant = progress_indicator_variant.Flat
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
     buffer_value: Float,
-    max: Int,
-    mode: Mode,
+    max: Float,
+    mode: LinearProgressMode,
     value: Float,
-    variant: Variant,
+    variant: ProgressIndicatorVariant,
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
     buffer_value: 0.0,
-    max: 1,
-    mode: default_mode,
+    max: 100.0,
+    mode: linear_progress_mode.Determinate,
     value: 0.0,
-    variant: progress_indicator.default_variant,
+    variant: progress_indicator_variant.Flat,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a LinearProgressIndicator from a Config record
+/// from_config creates a new LinearProgressIndicator from the given configuration.
 ///
-pub fn from_config(c: Config) -> LinearProgressIndicator {
+pub fn from_config(config: Config) -> LinearProgressIndicator {
   LinearProgressIndicator(
-    buffer_value: c.buffer_value,
-    max: c.max,
-    mode: c.mode,
-    value: c.value,
-    variant: c.variant,
+    buffer_value: config.buffer_value,
+    max: config.max,
+    mode: config.mode,
+    value: config.value,
+    variant: config.variant,
   )
 }
 
-/// new creates a new LinearProgressIndicator
+/// new creates a new LinearProgressIndicator with the default configuration.
 ///
 pub fn new() -> LinearProgressIndicator {
   from_config(default_config())
 }
 
-// --- SETTERS ---  
+// --- Setters ---
 
-/// buffer_value sets the `buffer_value` field
+/// buffer_value sets the value of buffer_value for this LinearProgressIndicator.
 ///
 pub fn buffer_value(
-  lpi: LinearProgressIndicator,
+  record: LinearProgressIndicator,
   buffer_value: Float,
 ) -> LinearProgressIndicator {
-  LinearProgressIndicator(..lpi, buffer_value: buffer_value)
+  LinearProgressIndicator(..record, buffer_value: buffer_value)
 }
 
-/// max sets the `max` field
+/// max sets the value of max for this LinearProgressIndicator.
 ///
-pub fn max(lpi: LinearProgressIndicator, max: Int) -> LinearProgressIndicator {
-  LinearProgressIndicator(..lpi, max: max)
+pub fn max(
+  record: LinearProgressIndicator,
+  max: Float,
+) -> LinearProgressIndicator {
+  LinearProgressIndicator(..record, max: max)
 }
 
-/// mode sets the `mode` field
+/// mode sets the value of mode for this LinearProgressIndicator.
 ///
-pub fn mode(lpi: LinearProgressIndicator, mode: Mode) -> LinearProgressIndicator {
-  LinearProgressIndicator(..lpi, mode: mode)
+pub fn mode(
+  record: LinearProgressIndicator,
+  mode: LinearProgressMode,
+) -> LinearProgressIndicator {
+  LinearProgressIndicator(..record, mode: mode)
 }
 
-/// value sets the `value` field
+/// value sets the value of value for this LinearProgressIndicator.
 ///
 pub fn value(
-  lpi: LinearProgressIndicator,
+  record: LinearProgressIndicator,
   value: Float,
 ) -> LinearProgressIndicator {
-  LinearProgressIndicator(..lpi, value: value)
+  LinearProgressIndicator(..record, value: value)
 }
 
-/// variant sets the `variant` field
+/// variant sets the value of variant for this LinearProgressIndicator.
 ///
 pub fn variant(
-  lpi: LinearProgressIndicator,
-  variant: Variant,
+  record: LinearProgressIndicator,
+  variant: ProgressIndicatorVariant,
 ) -> LinearProgressIndicator {
-  LinearProgressIndicator(..lpi, variant: variant)
+  LinearProgressIndicator(..record, variant: variant)
 }
 
-// --- RENDERING ---    
+// --- Renderers ---
 
-/// render creates a Lustre Element from a LinearProgressIndicator
-///
-/// ## Parameters:
-/// - lpi: a LinearProgressIndicator
-/// - attributes: a list of additional Attributes
+/// render creates a Lustre Element for a LinearProgressIndicator
 ///
 pub fn render(
-  lpi: LinearProgressIndicator,
+  model: LinearProgressIndicator,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-linear-progress-indicator",
-    list.append(
+    list.flatten([
       [
-        attribute.attribute("buffer-value", float.to_string(lpi.buffer_value)),
-        attribute.attribute("max", int.to_string(lpi.max)),
-        helpers.boolean_attribute("indeterminate", lpi.mode == Indeterminate),
-        attribute.attribute("value", float.to_string(lpi.value)),
-        attribute.attribute(
+        attr.with_default(
+          "buffer-value",
+          float.to_string(model.buffer_value),
+          float.to_string(default_buffer_value),
+        ),
+        attr.with_default(
+          "max",
+          float.to_string(model.max),
+          float.to_string(default_max),
+        ),
+        attr.with_default(
+          "mode",
+          linear_progress_mode.to_string(model.mode),
+          linear_progress_mode.to_string(default_mode),
+        ),
+        attr.with_default(
+          "value",
+          float.to_string(model.value),
+          float.to_string(default_value),
+        ),
+        attr.with_default(
           "variant",
-          progress_indicator.variant_to_string(lpi.variant),
+          progress_indicator_variant.to_string(model.variant),
+          progress_indicator_variant.to_string(default_variant),
         ),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a LinearProgressIndicator Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes)
+  render(from_config(c), attributes, children)
 }
-// --- PRIVATE INTERNAL HELPERS ---

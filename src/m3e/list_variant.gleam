@@ -1,20 +1,19 @@
-//// list_variant provides Lustre support for the [M3E List Variant type component](https://matraic.github.io/m3e/#/components/list.html)
+//// ListVariant
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    On: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-// --- Types ---
-
-/// Variant specifies the possible appearance variants of a list
-///
-pub type Variant {
+pub type ListVariant {
   Standard
   Segmented
 }
 
-pub const default_variant: Variant = Standard
-
-/// variant_to_string converts a Variant to a string
-/// 
-pub fn variant_to_string(v: Variant) -> String {
-  case v {
+pub fn to_string(level: ListVariant) -> String {
+  case level {
     Standard -> "standard"
     Segmented -> "segmented"
   }

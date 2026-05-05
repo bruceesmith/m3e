@@ -1,59 +1,43 @@
-//// tab_panel provides Lustre support for the [M3E Tab Panel component](https://matraic.github.io/m3e/#/components/tabs.html)
+//// TabPanel is a panel presented for a tab.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-// --- TYPES ---
+// --- Types ---
 
-/// TabPanel provides Lustre support for the [M3E TabPanel component](https://matraic.github.io/m3e/#/components/tab-panel.html)
+/// TabPanel is a View Model for this component
 ///
-/// ## Fields:
-/// - id: The identifier of the panel
-/// 
 pub opaque type TabPanel {
-  TabPanel(id: String)
+  TabPanel
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new TabPanel
-/// 
-pub fn new(id: String) -> TabPanel {
-  TabPanel(id: id)
+// --- Constructors ---
+
+/// new creates a new TabPanel with the default configuration.
+///
+pub fn new() -> TabPanel {
+  TabPanel
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// id sets the id field
-/// 
-pub fn id(_tp: TabPanel, id: String) -> TabPanel {
-  TabPanel(id: id)
-}
+// --- Renderers ---
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a TabPanel
-/// 
-/// ## Parameters:
-/// - tp: a TabPanel
-/// - attributes: additional attributes
-/// - children: additional children
+/// render creates a Lustre Element for a TabPanel
 ///
 pub fn render(
-  tp: TabPanel,
+  _: TabPanel,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element(
-    "m3e-tab-panel",
-    list.flatten([
-      [
-        attribute.attribute("id", tp.id),
-      ],
-      attributes,
-    ])
-      |> list.filter(fn(a) { a != attribute.none() }),
-    children,
-  )
+  element.element("m3e-tab-panel", attributes, children)
 }

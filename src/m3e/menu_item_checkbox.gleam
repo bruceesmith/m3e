@@ -1,78 +1,139 @@
-//// menu_item_checkbox provides Lustre support for the [M3E Menu Item Checkbox component](https://matraic.github.io/m3e/#/components/menu.html)
+//// MenuItemCheckbox is an item of a menu which supports a checkable state.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
 
 // --- Types ---
 
-/// MenuItemCheckbox is an item of a menu which supports a checkable state
-/// 
+/// MenuItemCheckbox is a View Model for this component
+///
 /// ## Fields:
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
+///
+/// - disabled: Whether the element is disabled.
+/// - checked: Whether the element is checked.
 ///
 pub opaque type MenuItemCheckbox {
-  MenuItemCheckbox(checked: Bool, disabled: Bool)
+  MenuItemCheckbox(disabled: Disabled, checked: Checked)
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Checked is whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_checked: Checked = IsNotChecked
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the items's label 
+  // Renders an icon before the items's label.
   TrailingIcon
-  // Renders an icon after the item's label 
+  // Renders an icon after the item's label.
 }
 
-// --- CONSTRUCTORS ---
+// --- Configuration ---
 
-/// new creates a new MenuItemCheckbox
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(disabled: Disabled, checked: Checked)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(disabled: IsNotDisabled, checked: IsNotChecked)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new MenuItemCheckbox from the given configuration.
+///
+pub fn from_config(config: Config) -> MenuItemCheckbox {
+  MenuItemCheckbox(disabled: config.disabled, checked: config.checked)
+}
+
+/// new creates a new MenuItemCheckbox with the default configuration.
 ///
 pub fn new() -> MenuItemCheckbox {
-  MenuItemCheckbox(checked: False, disabled: False)
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// checked sets the checked field
+/// disabled sets the value of disabled for this MenuItemCheckbox.
 ///
-pub fn checked(m: MenuItemCheckbox, checked: Bool) -> MenuItemCheckbox {
-  MenuItemCheckbox(..m, checked: checked)
+pub fn disabled(
+  record: MenuItemCheckbox,
+  disabled: Disabled,
+) -> MenuItemCheckbox {
+  MenuItemCheckbox(..record, disabled: disabled)
 }
 
-/// disabled sets the disabled field
+/// checked sets the value of checked for this MenuItemCheckbox.
 ///
-pub fn disabled(m: MenuItemCheckbox, disabled: Bool) -> MenuItemCheckbox {
-  MenuItemCheckbox(..m, disabled: disabled)
+pub fn checked(record: MenuItemCheckbox, checked: Checked) -> MenuItemCheckbox {
+  MenuItemCheckbox(..record, checked: checked)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a MenuItemCheckbox
+/// render creates a Lustre Element for a MenuItemCheckbox
 ///
 pub fn render(
-  m: MenuItemCheckbox,
+  model: MenuItemCheckbox,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-menu-item-checkbox",
-    [
-      helpers.boolean_attribute("checked", m.checked),
-      helpers.boolean_attribute("disabled", m.disabled),
-      ..attributes
-    ]
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("checked", model.checked == IsChecked),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// render_config creates a Lustre Element from a MenuItemCheckbox Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")

@@ -1,282 +1,299 @@
-//// paginator provides Lustre support for the [M3E Paginator component](https://matraic.github.io/m3e/#/components/paginator.html)
+//// Paginator is provides navigation for paged information, typically used with a table.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
 import gleam/list
-import gleam/string
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/form_field_variant.{type FormFieldVariant}
+import m3e/number_string
 
-import m3e/form_field.{type Variant, Filled, Outlined}
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+// --- Types ---
 
-// --- TYPES ---
-
-/// FirstLastButtonsVisibility specifies if first/last buttons are visible or hidden
-pub type FirstLastButtonsVisibility {
-  Shown
-  Omitted
-}
-
-pub const default_first_last_buttons_visibility = Omitted
-
-/// PageSize captures the semantics of the page-size attribute
-/// 
-pub type PageSize {
-  PageSize(Int)
-  PageSizeAll
-}
-
-pub const default_page_size = 50
-
-pub const default_page_sizes = [
-  PageSize(5),
-  PageSize(10),
-  PageSize(25),
-  PageSize(50),
-  PageSize(100),
-]
-
-/// PageSizeVisibility specifies if the page size selector is visible or hidden
-pub type PageSizeVisibility {
-  Visible
-  Hidden
-}
-
-pub const default_page_size_visibility = Visible
-
-/// Paginator provides Lustre support for the [M3E Paginator component](https://matraic.github.io/m3e/#/components/paginator.html)
-/// 
+/// Paginator is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - first_page_label: The accessible label given to the button used to move to the first page
-/// - hide_page_size: Whether to hide page size selection
-/// - items_per_page_label: The label for the page size selector
-/// - last_page_label: The accessible label given to the button used to move to the last page
-/// - length: The length of the total number of items which are being paginated
-/// - next_page_label: The accessible label given to the button used to move to the next page
-/// - page_index: The zero-based page index of the displayed list of items
-/// - page_size: The number of items to display in a page
-/// - page_sizes: A comma separated list of available page sizes
-/// - page_size_variant: The appearance variant of the page size field
-/// - previous_page_label: The accessible label given to the button used to move to the previous page
-/// - show_first_last_buttons: Whether to show first/last buttons
+///
+/// - disabled: Whether the element is disabled.
+/// - first_page_label: The accessible label given to the button used to move to the first page.
+/// - hide_page_size: Whether to hide page size selection.
+/// - items_per_page_label: The label for the page size selector.
+/// - last_page_label: The accessible label given to the button used to move to the last page.
+/// - length: The length of the total number of items which are being paginated.
+/// - next_page_label: The accessible label given to the button used to move to the next page.
+/// - page_index: The zero-based page index of the displayed list of items.
+/// - page_size: The number of items to display in a page.
+/// - page_sizes: A comma separated list of available page sizes.
+/// - page_size_variant: The appearance variant of the page size field.
+/// - previous_page_label: The accessible label given to the button used to move to the previous page.
+/// - show_first_last_buttons: Whether to show first/last buttons.
 ///
 pub opaque type Paginator {
   Paginator(
-    disabled: Interaction,
+    disabled: Disabled,
     first_page_label: String,
-    hide_page_size: PageSizeVisibility,
+    hide_page_size: HidePageSize,
     items_per_page_label: String,
     last_page_label: String,
-    length: Int,
+    length: Float,
     next_page_label: String,
-    page_index: Int,
-    page_size: PageSize,
-    page_sizes: List(PageSize),
-    page_size_variant: Variant,
+    page_index: Float,
+    page_size: number_string.NumberString,
+    page_sizes: String,
+    page_size_variant: FormFieldVariant,
     previous_page_label: String,
-    show_first_last_buttons: FirstLastButtonsVisibility,
+    show_first_last_buttons: ShowFirstLastButtons,
   )
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// HidePageSize is whether to hide page size selection.
+///
+pub type HidePageSize {
+  IsHidePageSize
+  IsNotHidePageSize
+}
+
+/// ShowFirstLastButtons is whether to show first/last buttons.
+///
+pub type ShowFirstLastButtons {
+  IsShowFirstLastButtons
+  IsNotShowFirstLastButtons
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_first_page_label: String = "First page"
+
+pub const default_hide_page_size: HidePageSize = IsNotHidePageSize
+
+pub const default_items_per_page_label: String = "Items per page:"
+
+pub const default_last_page_label: String = "Last page"
+
+pub const default_length: Float = 0.0
+
+pub const default_next_page_label: String = "Next page"
+
+pub const default_page_index: Float = 0.0
+
+pub const default_page_size: number_string.NumberString = number_string.NumberVal(
+  50.0,
+)
+
+pub const default_page_sizes: String = "5,10,25,50,100"
+
+pub const default_page_size_variant: FormFieldVariant = form_field_variant.Outlined
+
+pub const default_previous_page_label: String = "Previous page"
+
+pub const default_show_first_last_buttons: ShowFirstLastButtons = IsNotShowFirstLastButtons
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   FirstPageIcon
-  // Slot for a custom first-page icon 
-  LastPageIcon
-  // Slot for a custom last-page icon 
-  NextPageIcon
-  // Slot for a custom next-page icon
+  // Slot for a custom first-page icon.
   PreviousPageIcon
-  // Slot for a custom previous-page icon 
+  // Slot for a custom previous-page icon.
+  NextPageIcon
+  // Slot for a custom next-page icon.
+  LastPageIcon
+  // Slot for a custom last-page icon.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config holds the configuration for a Paginator
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: Interaction,
+    disabled: Disabled,
     first_page_label: String,
-    hide_page_size: PageSizeVisibility,
+    hide_page_size: HidePageSize,
     items_per_page_label: String,
     last_page_label: String,
-    length: Int,
+    length: Float,
     next_page_label: String,
-    page_index: Int,
-    page_size: PageSize,
-    page_sizes: List(PageSize),
-    page_size_variant: Variant,
+    page_index: Float,
+    page_size: number_string.NumberString,
+    page_sizes: String,
+    page_size_variant: FormFieldVariant,
     previous_page_label: String,
-    show_first_last_buttons: FirstLastButtonsVisibility,
+    show_first_last_buttons: ShowFirstLastButtons,
   )
 }
 
-pub const default_first_page_label = "First page"
-
-pub const default_items_per_page_label = "Items per page"
-
-pub const default_last_page_label = "Last page"
-
-pub const default_next_page_label = "Next page"
-
-pub const default_previous_page_label = "Previous page"
-
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
+    disabled: IsNotDisabled,
     first_page_label: "First page",
-    hide_page_size: default_page_size_visibility,
-    items_per_page_label: "Items per page",
+    hide_page_size: IsNotHidePageSize,
+    items_per_page_label: "Items per page:",
     last_page_label: "Last page",
-    length: 0,
+    length: 0.0,
     next_page_label: "Next page",
-    page_index: 0,
-    page_size: PageSize(default_page_size),
-    page_sizes: default_page_sizes,
-    page_size_variant: form_field.default_variant,
+    page_index: 0.0,
+    page_size: number_string.NumberVal(50.0),
+    page_sizes: "5,10,25,50,100",
+    page_size_variant: form_field_variant.Outlined,
     previous_page_label: "Previous page",
-    show_first_last_buttons: Omitted,
+    show_first_last_buttons: IsNotShowFirstLastButtons,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a Paginator with default values
-/// 
+/// from_config creates a new Paginator from the given configuration.
+///
+pub fn from_config(config: Config) -> Paginator {
+  Paginator(
+    disabled: config.disabled,
+    first_page_label: config.first_page_label,
+    hide_page_size: config.hide_page_size,
+    items_per_page_label: config.items_per_page_label,
+    last_page_label: config.last_page_label,
+    length: config.length,
+    next_page_label: config.next_page_label,
+    page_index: config.page_index,
+    page_size: config.page_size,
+    page_sizes: config.page_sizes,
+    page_size_variant: config.page_size_variant,
+    previous_page_label: config.previous_page_label,
+    show_first_last_buttons: config.show_first_last_buttons,
+  )
+}
+
+/// new creates a new Paginator with the default configuration.
+///
 pub fn new() -> Paginator {
   from_config(default_config())
 }
 
-/// from_config creates a Paginator from a Config record
-/// 
-pub fn from_config(c: Config) -> Paginator {
-  Paginator(
-    disabled: c.disabled,
-    first_page_label: c.first_page_label,
-    hide_page_size: c.hide_page_size,
-    items_per_page_label: c.items_per_page_label,
-    last_page_label: c.last_page_label,
-    length: c.length,
-    next_page_label: c.next_page_label,
-    page_index: c.page_index,
-    page_size: c.page_size,
-    page_sizes: c.page_sizes,
-    page_size_variant: c.page_size_variant,
-    previous_page_label: c.previous_page_label,
-    show_first_last_buttons: c.show_first_last_buttons,
-  )
+// --- Setters ---
+
+/// disabled sets the value of disabled for this Paginator.
+///
+pub fn disabled(record: Paginator, disabled: Disabled) -> Paginator {
+  Paginator(..record, disabled: disabled)
 }
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
-/// 
-pub fn disabled(p: Paginator, disabled: Interaction) -> Paginator {
-  Paginator(..p, disabled: disabled)
-}
-
-/// first_page_label sets the first_page_label field
-/// 
-pub fn first_page_label(p: Paginator, first_page_label: String) -> Paginator {
-  Paginator(..p, first_page_label: first_page_label)
-}
-
-/// hide_page_size sets the hide_page_size field
-/// 
-pub fn hide_page_size(
-  p: Paginator,
-  hide_page_size: PageSizeVisibility,
+/// first_page_label sets the value of first_page_label for this Paginator.
+///
+pub fn first_page_label(
+  record: Paginator,
+  first_page_label: String,
 ) -> Paginator {
-  Paginator(..p, hide_page_size: hide_page_size)
+  Paginator(..record, first_page_label: first_page_label)
 }
 
-/// items_per_page_label sets the items_per_page_label field
-/// 
+/// hide_page_size sets the value of hide_page_size for this Paginator.
+///
+pub fn hide_page_size(
+  record: Paginator,
+  hide_page_size: HidePageSize,
+) -> Paginator {
+  Paginator(..record, hide_page_size: hide_page_size)
+}
+
+/// items_per_page_label sets the value of items_per_page_label for this Paginator.
+///
 pub fn items_per_page_label(
-  p: Paginator,
+  record: Paginator,
   items_per_page_label: String,
 ) -> Paginator {
-  Paginator(..p, items_per_page_label: items_per_page_label)
+  Paginator(..record, items_per_page_label: items_per_page_label)
 }
 
-/// last_page_label sets the last_page_label field
-/// 
-pub fn last_page_label(p: Paginator, last_page_label: String) -> Paginator {
-  Paginator(..p, last_page_label: last_page_label)
-}
-
-/// length sets the length field
-/// 
-pub fn length(p: Paginator, length: Int) -> Paginator {
-  Paginator(..p, length: length)
-}
-
-/// next_page_label sets the next_page_label field
-/// 
-pub fn next_page_label(p: Paginator, next_page_label: String) -> Paginator {
-  Paginator(..p, next_page_label: next_page_label)
-}
-
-/// page_index sets the page_index field
-/// 
-pub fn page_index(p: Paginator, page_index: Int) -> Paginator {
-  Paginator(..p, page_index: page_index)
-}
-
-/// page_size sets the page_size field
-/// 
-pub fn page_size(p: Paginator, page_size: PageSize) -> Paginator {
-  Paginator(..p, page_size: page_size)
-}
-
-/// page_sizes sets the page_sizes field
-/// 
-pub fn page_sizes(p: Paginator, page_sizes: List(PageSize)) -> Paginator {
-  Paginator(..p, page_sizes: page_sizes)
-}
-
-/// page_size_variant sets the page_size_variant field
+/// last_page_label sets the value of last_page_label for this Paginator.
 ///
-pub fn page_size_variant(p: Paginator, page_size_variant: Variant) -> Paginator {
-  Paginator(..p, page_size_variant: page_size_variant)
+pub fn last_page_label(record: Paginator, last_page_label: String) -> Paginator {
+  Paginator(..record, last_page_label: last_page_label)
 }
 
-/// previous_page_label sets the previous_page_label field
-/// 
+/// length sets the value of length for this Paginator.
+///
+pub fn length(record: Paginator, length: Float) -> Paginator {
+  Paginator(..record, length: length)
+}
+
+/// next_page_label sets the value of next_page_label for this Paginator.
+///
+pub fn next_page_label(record: Paginator, next_page_label: String) -> Paginator {
+  Paginator(..record, next_page_label: next_page_label)
+}
+
+/// page_index sets the value of page_index for this Paginator.
+///
+pub fn page_index(record: Paginator, page_index: Float) -> Paginator {
+  Paginator(..record, page_index: page_index)
+}
+
+/// page_size sets the value of page_size for this Paginator.
+///
+pub fn page_size(
+  record: Paginator,
+  page_size: number_string.NumberString,
+) -> Paginator {
+  Paginator(..record, page_size: page_size)
+}
+
+/// page_sizes sets the value of page_sizes for this Paginator.
+///
+pub fn page_sizes(record: Paginator, page_sizes: String) -> Paginator {
+  Paginator(..record, page_sizes: page_sizes)
+}
+
+/// page_size_variant sets the value of page_size_variant for this Paginator.
+///
+pub fn page_size_variant(
+  record: Paginator,
+  page_size_variant: FormFieldVariant,
+) -> Paginator {
+  Paginator(..record, page_size_variant: page_size_variant)
+}
+
+/// previous_page_label sets the value of previous_page_label for this Paginator.
+///
 pub fn previous_page_label(
-  p: Paginator,
+  record: Paginator,
   previous_page_label: String,
 ) -> Paginator {
-  Paginator(..p, previous_page_label: previous_page_label)
+  Paginator(..record, previous_page_label: previous_page_label)
 }
 
-/// show_first_last_buttons sets the show_first_last_buttons field
-/// 
+/// show_first_last_buttons sets the value of show_first_last_buttons for this Paginator.
+///
 pub fn show_first_last_buttons(
-  p: Paginator,
-  show_first_last_buttons: FirstLastButtonsVisibility,
+  record: Paginator,
+  show_first_last_buttons: ShowFirstLastButtons,
 ) -> Paginator {
-  Paginator(..p, show_first_last_buttons: show_first_last_buttons)
+  Paginator(..record, show_first_last_buttons: show_first_last_buttons)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a Paginator
-/// 
-/// ## Parameters:
-/// - p: a Paginator
-/// - attributes: a list of additional attributes
-/// - children: a list of child Elements
+/// render creates a Lustre Element for a Paginator
 ///
 pub fn render(
-  p: Paginator,
+  model: Paginator,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -284,27 +301,57 @@ pub fn render(
     "m3e-paginator",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", p.disabled == Disabled),
-        attribute.attribute("first-page-label", p.first_page_label),
-        helpers.boolean_attribute("hide-page-size", p.hide_page_size == Hidden),
-        attribute.attribute("items-per-page-label", p.items_per_page_label),
-        attribute.attribute("last-page-label", p.last_page_label),
-        attribute.attribute("length", int.to_string(p.length)),
-        attribute.attribute("next-page-label", p.next_page_label),
-        attribute.attribute("page-index", int.to_string(p.page_index)),
-        attribute.attribute("page-size", page_size_to_string(p.page_size)),
-        attribute.attribute(
-          "page-sizes",
-          string.join(list.map(p.page_sizes, page_size_to_string), ","),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default(
+          "first-page-label",
+          model.first_page_label,
+          default_first_page_label,
         ),
-        attribute.attribute(
+        attr.boolean("hide-page-size", model.hide_page_size == IsHidePageSize),
+        attr.with_default(
+          "items-per-page-label",
+          model.items_per_page_label,
+          default_items_per_page_label,
+        ),
+        attr.with_default(
+          "last-page-label",
+          model.last_page_label,
+          default_last_page_label,
+        ),
+        attr.with_default(
+          "length",
+          float.to_string(model.length),
+          float.to_string(default_length),
+        ),
+        attr.with_default(
+          "next-page-label",
+          model.next_page_label,
+          default_next_page_label,
+        ),
+        attr.with_default(
+          "page-index",
+          float.to_string(model.page_index),
+          float.to_string(default_page_index),
+        ),
+        attr.with_default(
+          "page-size",
+          number_string.to_string(model.page_size),
+          number_string.to_string(default_page_size),
+        ),
+        attr.with_default("page-sizes", model.page_sizes, default_page_sizes),
+        attr.with_default(
           "page-size-variant",
-          variant_to_string(p.page_size_variant),
+          form_field_variant.to_string(model.page_size_variant),
+          form_field_variant.to_string(default_page_size_variant),
         ),
-        attribute.attribute("previous-page-label", p.previous_page_label),
-        helpers.boolean_attribute(
+        attr.with_default(
+          "previous-page-label",
+          model.previous_page_label,
+          default_previous_page_label,
+        ),
+        attr.boolean(
           "show-first-last-buttons",
-          p.show_first_last_buttons == Shown,
+          model.show_first_last_buttons == IsShowFirstLastButtons,
         ),
       ],
       attributes,
@@ -314,41 +361,23 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Paginator Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     FirstPageIcon -> attribute.attribute("slot", "first-page-icon")
-    LastPageIcon -> attribute.attribute("slot", "last-page-icon")
-    NextPageIcon -> attribute.attribute("slot", "next-page-icon")
     PreviousPageIcon -> attribute.attribute("slot", "previous-page-icon")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn page_size_to_string(p: PageSize) -> String {
-  case p {
-    PageSize(i) -> int.to_string(i)
-    PageSizeAll -> "all"
-  }
-}
-
-/// variant_to_string converts a Variant to a string
-/// 
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Filled -> "filled"
-    Outlined -> "outlined"
+    NextPageIcon -> attribute.attribute("slot", "next-page-icon")
+    LastPageIcon -> attribute.attribute("slot", "last-page-icon")
   }
 }

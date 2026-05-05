@@ -1,103 +1,130 @@
-//// textarea_autosize provides Lustre support for the [M3E Textarea Autosize component](https://matraic.github.io/m3e/#/components/textarea-autosize.html)
+//// TextareaAutosize is a non-visual element used to automatically resize a `textarea` to fit its content.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
+import gleam/function
 import gleam/list
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled, Enabled}
+import m3e/attr
 
 // --- Types ---
 
-pub const default_interaction = Enabled
-
-/// TextareaAutosize provides Lustre support for the [M3E Textarea Autosize component](https://matraic.github.io/m3e/#/components/textarea-autosize.html)
-/// 
+/// TextareaAutosize is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether auto-sizing is disabled
-/// - for: The identifier of the interactive control to which this element is attached
-/// - max_rows: The maximum amount of rows in the `textarea`
-/// - min_rows: The minimum amount of rows in the `textarea`
+///
+/// - disabled: Whether auto-sizing is disabled.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - max_rows: The maximum amount of rows in the `textarea`.
+/// - min_rows: The minimum amount of rows in the `textarea`.
 ///
 pub opaque type TextareaAutosize {
   TextareaAutosize(
-    disabled: Interaction,
-    for: String,
-    max_rows: Int,
-    min_rows: Int,
+    disabled: Disabled,
+    for: Option(String),
+    max_rows: Float,
+    min_rows: Float,
   )
 }
 
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a TextareaAutosize
-/// 
-pub type Config {
-  Config(disabled: Interaction, max_rows: Int, min_rows: Int)
+/// Disabled is whether auto-sizing is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-/// default_config creates a new Config with default values
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_for: Option(String) = None
+
+pub const default_max_rows: Float = 0.0
+
+pub const default_min_rows: Float = 0.0
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    disabled: Disabled,
+    for: Option(String),
+    max_rows: Float,
+    min_rows: Float,
+  )
+}
+
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(disabled: default_interaction, max_rows: 0, min_rows: 0)
+  Config(disabled: IsNotDisabled, for: None, max_rows: 0.0, min_rows: 0.0)
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new TextareaAutosize ,
-/// 
-pub fn new(for: String) -> TextareaAutosize {
-  from_config(default_config(), for)
-}
-
-/// from_config creates a TextareaAutosize from a Config
+/// from_config creates a new TextareaAutosize from the given configuration.
 ///
-pub fn from_config(config: Config, for: String) -> TextareaAutosize {
+pub fn from_config(config: Config) -> TextareaAutosize {
   TextareaAutosize(
-    for: for,
     disabled: config.disabled,
-    min_rows: config.min_rows,
+    for: config.for,
     max_rows: config.max_rows,
+    min_rows: config.min_rows,
   )
 }
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
-/// 
-pub fn disabled(ta: TextareaAutosize, disabled: Interaction) -> TextareaAutosize {
-  TextareaAutosize(..ta, disabled: disabled)
-}
-
-/// for sets the for field
-/// 
-pub fn for(ta: TextareaAutosize, for: String) -> TextareaAutosize {
-  TextareaAutosize(..ta, for: for)
-}
-
-/// max_rows sets the max_rows field
+/// new creates a new TextareaAutosize with the default configuration.
 ///
-pub fn max_rows(ta: TextareaAutosize, max_rows: Int) -> TextareaAutosize {
-  TextareaAutosize(..ta, max_rows: max_rows)
+pub fn new() -> TextareaAutosize {
+  from_config(default_config())
 }
 
-/// min_rows sets the min_rows field
+// --- Setters ---
+
+/// disabled sets the value of disabled for this TextareaAutosize.
 ///
-pub fn min_rows(ta: TextareaAutosize, min_rows: Int) -> TextareaAutosize {
-  TextareaAutosize(..ta, min_rows: min_rows)
+pub fn disabled(
+  record: TextareaAutosize,
+  disabled: Disabled,
+) -> TextareaAutosize {
+  TextareaAutosize(..record, disabled: disabled)
 }
 
-/// render creates a Lustre Element(msg) from a TextareaAutosize
+/// for sets the value of for for this TextareaAutosize.
 ///
-/// ## Parameters:
-/// - ta: a TextareaAutosize
-/// - attributes: additional attributes
-/// - children: additional children
+pub fn for(record: TextareaAutosize, for: Option(String)) -> TextareaAutosize {
+  TextareaAutosize(..record, for: for)
+}
+
+/// max_rows sets the value of max_rows for this TextareaAutosize.
+///
+pub fn max_rows(record: TextareaAutosize, max_rows: Float) -> TextareaAutosize {
+  TextareaAutosize(..record, max_rows: max_rows)
+}
+
+/// min_rows sets the value of min_rows for this TextareaAutosize.
+///
+pub fn min_rows(record: TextareaAutosize, min_rows: Float) -> TextareaAutosize {
+  TextareaAutosize(..record, min_rows: min_rows)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a TextareaAutosize
 ///
 pub fn render(
-  ta: TextareaAutosize,
+  model: TextareaAutosize,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -105,10 +132,18 @@ pub fn render(
     "m3e-textarea-autosize",
     list.flatten([
       [
-        attribute.attribute("for", ta.for),
-        helpers.boolean_attribute("disabled", ta.disabled == Disabled),
-        attribute.attribute("max-rows", int.to_string(ta.max_rows)),
-        attribute.attribute("min-rows", int.to_string(ta.min_rows)),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.with_default(
+          "max-rows",
+          float.to_string(model.max_rows),
+          float.to_string(default_max_rows),
+        ),
+        attr.with_default(
+          "min-rows",
+          float.to_string(model.min_rows),
+          float.to_string(default_min_rows),
+        ),
       ],
       attributes,
     ])
@@ -117,13 +152,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a TextareaAutosize Config
+///
 pub fn render_config(
-  config: Config,
-  f: String,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config, f), attributes, children)
+  render(from_config(c), attributes, children)
 }

@@ -1,95 +1,181 @@
-//// list_action provides Lustre support for the [M3E List Action component](https://matraic.github.io/m3e/#/components/list.html)
+//// ListAction is an item in a list that performs an action.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
-import gleam/option.{Some}
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/link.{type Link}
+import m3e/attr
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
-/// ListAction represents an interactive list item that performs a user-initiated action
-/// 
+/// ListAction is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - link: attributes of the link button
-/// 
+///
+/// - disabled: Whether the element is disabled.
+/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - href: The URL to which the link button points.
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - target: The target of the link button.
+///
 pub opaque type ListAction {
-  ListAction(disabled: Bool, link: Link)
+  ListAction(
+    disabled: Disabled,
+    download: Option(String),
+    href: String,
+    rel: String,
+    target: Option(LinkTarget),
+  )
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_download: Option(String) = None
+
+pub const default_href: String = ""
+
+pub const default_rel: String = ""
+
+pub const default_target: Option(LinkTarget) = None
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Leading
-  // Renders the leading content of the list item 
+  // Renders the leading content of the list item.
   Overline
-  // Renders the overline of the list item 
+  // Renders the overline of the list item.
   SupportingText
-  // Renders the supporting text of the list item 
+  // Renders the supporting text of the list item.
   Trailing
-  // Renders the trailing content of the list item 
+  // Renders the trailing content of the list item.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config is the configuration of a ListAction
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
-  Config(disabled: Bool, link: Link)
+  Config(
+    disabled: Disabled,
+    download: Option(String),
+    href: String,
+    rel: String,
+    target: Option(LinkTarget),
+  )
 }
 
-/// default_config creates a Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
-  Config(disabled: False, link: link.new(""))
+  Config(
+    disabled: IsNotDisabled,
+    download: None,
+    href: "",
+    rel: "",
+    target: None,
+  )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a ListAction from a Config
-/// 
+/// from_config creates a new ListAction from the given configuration.
+///
 pub fn from_config(config: Config) -> ListAction {
-  ListAction(disabled: config.disabled, link: config.link)
+  ListAction(
+    disabled: config.disabled,
+    download: config.download,
+    href: config.href,
+    rel: config.rel,
+    target: config.target,
+  )
 }
 
-/// new creates a ListAction with default values
-/// 
+/// new creates a new ListAction with the default configuration.
+///
 pub fn new() -> ListAction {
-  ListAction(disabled: False, link: link.new(""))
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// disabled sets the `disabled` field
-/// 
-pub fn disabled(la: ListAction, disabled: Bool) -> ListAction {
-  ListAction(..la, disabled: disabled)
+/// disabled sets the value of disabled for this ListAction.
+///
+pub fn disabled(record: ListAction, disabled: Disabled) -> ListAction {
+  ListAction(..record, disabled: disabled)
 }
 
-/// link sets the `link` field
-/// 
-pub fn link(la: ListAction, link: Link) -> ListAction {
-  ListAction(..la, link: link)
+/// download sets the value of download for this ListAction.
+///
+pub fn download(record: ListAction, download: Option(String)) -> ListAction {
+  ListAction(..record, download: download)
 }
 
-// --- RENDERING ---  
+/// href sets the value of href for this ListAction.
+///
+pub fn href(record: ListAction, href: String) -> ListAction {
+  ListAction(..record, href: href)
+}
 
-/// render creates a Lustre Element from a ListAction
-/// 
+/// rel sets the value of rel for this ListAction.
+///
+pub fn rel(record: ListAction, rel: String) -> ListAction {
+  ListAction(..record, rel: rel)
+}
+
+/// target sets the value of target for this ListAction.
+///
+pub fn target(record: ListAction, target: Option(LinkTarget)) -> ListAction {
+  ListAction(..record, target: target)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ListAction
+///
 pub fn render(
-  la: ListAction,
+  model: ListAction,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-list-action",
     list.flatten([
-      [helpers.boolean_attribute("disabled", la.disabled)],
-      link.attributes(Some(la.link)),
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("href", model.href, default_href),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -97,23 +183,18 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-/// ## Parameters:
-/// - config: a Config
-/// - attributes: a list of additional Attributes
-/// - children: the main content
+/// render_config creates a Lustre Element from a ListAction Config
 ///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Leading -> attribute.attribute("slot", "leading")
@@ -122,4 +203,3 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     Trailing -> attribute.attribute("slot", "trailing")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

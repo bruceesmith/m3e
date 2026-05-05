@@ -1,96 +1,107 @@
-//// rich_tooltip provides Lustre support for the M3E Rich Tooltip component
-//// https://matraic.github.io/m3e/#/components/tooltip.html
+//// RichTooltip is provides contextual details for a control, such as explaining the value or purpose of a feature.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
+import gleam/function
 import gleam/list
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
+import m3e/rich_tooltip_position.{type RichTooltipPosition}
+import m3e/tooltip_touch_gestures.{type TooltipTouchGestures}
 
 // --- Types ---
 
-/// Position is the possible positions for a rich tooltip
-///
-pub type Position {
-  Above
-  AboveAfter
-  AboveBefore
-  After
-  Before
-  Below
-  BelowBefore
-  BelowAfter
-}
-
-pub const default_position: Position = Below
-
-/// RichTooltip is an element, nested within a clickable element, used to dismiss a parenting rich tooltip
+/// RichTooltip is a View Model for this component
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - for: The identifier of the interactive control to which this element is attached
-/// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
-/// - position: The position of the tooltip
-/// - show_delay: The amount of time, in milliseconds, before showing the tooltip
+///
+/// - disabled: Whether the element is disabled.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip.
+/// - position: The position of the tooltip.
+/// - show_delay: The amount of time, in milliseconds, before showing the tooltip.
+/// - touch_gestures: The mode in which to handle touch gestures.
 ///
 pub opaque type RichTooltip {
   RichTooltip(
-    disabled: Interaction,
-    for: String,
-    hide_delay: Int,
-    position: Position,
-    show_delay: Int,
+    disabled: Disabled,
+    for: Option(String),
+    hide_delay: Float,
+    position: RichTooltipPosition,
+    show_delay: Float,
+    touch_gestures: TooltipTouchGestures,
   )
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_for: Option(String) = None
+
+pub const default_hide_delay: Float = 200.0
+
+pub const default_position: RichTooltipPosition = rich_tooltip_position.BelowAfter
+
+pub const default_show_delay: Float = 0.0
+
+pub const default_touch_gestures: TooltipTouchGestures = tooltip_touch_gestures.Auto
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
-  Actions
-  // Optional action elements displayed at the bottom of the tooltip 
   Subhead
-  // Optional subhead text displayed above the supporting content 
+  // Optional subhead text displayed above the supporting content.
+  Actions
+  // Optional action elements displayed at the bottom of the tooltip.
 }
 
 // --- Configuration ---
 
-/// Config is the configuration of a RichTooltip
-/// 
-/// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - for: The identifier of the interactive control to which this element is attached
-/// - hide_delay: The amount of time, in milliseconds, before hiding the tooltip
-/// - position: The position of the tooltip
-/// - show_delay: The amount of time, in milliseconds, before showing the tooltip
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    disabled: Interaction,
-    for: String,
-    hide_delay: Int,
-    position: Position,
-    show_delay: Int,
+    disabled: Disabled,
+    for: Option(String),
+    hide_delay: Float,
+    position: RichTooltipPosition,
+    show_delay: Float,
+    touch_gestures: TooltipTouchGestures,
   )
 }
 
-/// default_config creates a Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    for: "",
-    hide_delay: 1500,
-    position: default_position,
-    show_delay: 0,
+    disabled: IsNotDisabled,
+    for: None,
+    hide_delay: 200.0,
+    position: rich_tooltip_position.BelowAfter,
+    show_delay: 0.0,
+    touch_gestures: tooltip_touch_gestures.Auto,
   )
 }
 
 // --- Constructors ---
 
-/// from_config creates a RichTooltip from a Config
+/// from_config creates a new RichTooltip from the given configuration.
 ///
 pub fn from_config(config: Config) -> RichTooltip {
   RichTooltip(
@@ -99,53 +110,66 @@ pub fn from_config(config: Config) -> RichTooltip {
     hide_delay: config.hide_delay,
     position: config.position,
     show_delay: config.show_delay,
+    touch_gestures: config.touch_gestures,
   )
 }
 
-/// new creates a RichTooltip with default values
-/// 
+/// new creates a new RichTooltip with the default configuration.
+///
 pub fn new() -> RichTooltip {
   from_config(default_config())
 }
 
 // --- Setters ---
 
-/// disabled sets the `disabled` field
+/// disabled sets the value of disabled for this RichTooltip.
 ///
-pub fn disabled(r: RichTooltip, disabled: Interaction) -> RichTooltip {
-  RichTooltip(..r, disabled: disabled)
+pub fn disabled(record: RichTooltip, disabled: Disabled) -> RichTooltip {
+  RichTooltip(..record, disabled: disabled)
 }
 
-/// for sets the `for` field
+/// for sets the value of for for this RichTooltip.
 ///
-pub fn for(r: RichTooltip, for: String) -> RichTooltip {
-  RichTooltip(..r, for: for)
+pub fn for(record: RichTooltip, for: Option(String)) -> RichTooltip {
+  RichTooltip(..record, for: for)
 }
 
-/// hide_delay sets the `hide_delay` field
+/// hide_delay sets the value of hide_delay for this RichTooltip.
 ///
-pub fn hide_delay(r: RichTooltip, hide_delay: Int) -> RichTooltip {
-  RichTooltip(..r, hide_delay: hide_delay)
+pub fn hide_delay(record: RichTooltip, hide_delay: Float) -> RichTooltip {
+  RichTooltip(..record, hide_delay: hide_delay)
 }
 
-/// position sets the `position` field
+/// position sets the value of position for this RichTooltip.
 ///
-pub fn position(r: RichTooltip, position: Position) -> RichTooltip {
-  RichTooltip(..r, position: position)
+pub fn position(
+  record: RichTooltip,
+  position: RichTooltipPosition,
+) -> RichTooltip {
+  RichTooltip(..record, position: position)
 }
 
-/// show_delay sets the `show_delay` field
+/// show_delay sets the value of show_delay for this RichTooltip.
 ///
-pub fn show_delay(r: RichTooltip, show_delay: Int) -> RichTooltip {
-  RichTooltip(..r, show_delay: show_delay)
+pub fn show_delay(record: RichTooltip, show_delay: Float) -> RichTooltip {
+  RichTooltip(..record, show_delay: show_delay)
 }
 
-// --- Rendering ---
+/// touch_gestures sets the value of touch_gestures for this RichTooltip.
+///
+pub fn touch_gestures(
+  record: RichTooltip,
+  touch_gestures: TooltipTouchGestures,
+) -> RichTooltip {
+  RichTooltip(..record, touch_gestures: touch_gestures)
+}
 
-/// render creates a Lustre Element from a RichTooltip
+// --- Renderers ---
+
+/// render creates a Lustre Element for a RichTooltip
 ///
 pub fn render(
-  r: RichTooltip,
+  model: RichTooltip,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -153,11 +177,28 @@ pub fn render(
     "m3e-rich-tooltip",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", r.disabled == Disabled),
-        attribute.attribute("for", r.for),
-        attribute.attribute("hide-delay", int.to_string(r.hide_delay)),
-        attribute.attribute("position", position_to_string(r.position)),
-        attribute.attribute("show-delay", int.to_string(r.show_delay)),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.with_default(
+          "hide-delay",
+          float.to_string(model.hide_delay),
+          float.to_string(default_hide_delay),
+        ),
+        attr.with_default(
+          "position",
+          rich_tooltip_position.to_string(model.position),
+          rich_tooltip_position.to_string(default_position),
+        ),
+        attr.with_default(
+          "show-delay",
+          float.to_string(model.show_delay),
+          float.to_string(default_show_delay),
+        ),
+        attr.with_default(
+          "touch-gestures",
+          tooltip_touch_gestures.to_string(model.touch_gestures),
+          tooltip_touch_gestures.to_string(default_touch_gestures),
+        ),
       ],
       attributes,
     ])
@@ -166,7 +207,7 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
+/// render_config creates a Lustre Element from a RichTooltip Config
 ///
 pub fn render_config(
   c: Config,
@@ -176,26 +217,11 @@ pub fn render_config(
   render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute.attribute("slot", "actions")
     Subhead -> attribute.attribute("slot", "subhead")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn position_to_string(p: Position) -> String {
-  case p {
-    AboveAfter -> "above-after"
-    AboveBefore -> "above-before"
-    BelowBefore -> "below-before"
-    BelowAfter -> "below-after"
-    Before -> "before"
-    After -> "after"
-    Above -> "above"
-    Below -> "below"
+    Actions -> attribute.attribute("slot", "actions")
   }
 }

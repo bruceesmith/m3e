@@ -1,172 +1,171 @@
-//// heading provides Lustre support for the [M3E Heading component](https://matraic.github.io/m3e/#/components/heading.html)
+//// Heading is a heading to a page or section.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
 import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{type Size}
-import m3e/helpers
+import m3e/attr
+import m3e/heading_level.{type HeadingLevel}
+import m3e/heading_size.{type HeadingSize}
+import m3e/heading_variant.{type HeadingVariant}
 
 // --- Types ---
 
-/// Emphasis specifies if the heading is emphasized
-/// 
-pub type Emphasis {
-  Emphasized
-  Standard
-}
-
-pub const default_emphasized = Standard
-
-/// Heading is the basis for constructing an HTML m3e-heading component
-/// 
+/// Heading is a View Model for this component
+///
 /// ## Fields:
-/// - emphasized: Whether the heading uses an emphasized typescale
-/// - level: The accessibility level of the heading
-/// - size: The size of the heading
-/// - variant: The appearance variant of the heading
-/// - text: The heading text
-/// 
+///
+/// - emphasized: Whether the heading uses an emphasized typescale.
+/// - level: The accessibility level of the heading.
+/// - size: The size of the heading.
+/// - variant: The appearance variant of the heading.
+///
 pub opaque type Heading {
   Heading(
-    emphasized: Emphasis,
-    level: Int,
-    size: Size,
-    variant: Variant,
-    text: String,
+    emphasized: Emphasized,
+    level: Option(HeadingLevel),
+    size: HeadingSize,
+    variant: HeadingVariant,
   )
 }
 
-pub const default_size: Size = config.Medium
-
-/// Variant is the appearance of the heading
-/// 
-pub type Variant {
-  Display
-  Headline
-  Label
-  Title
+/// Emphasized is whether the heading uses an emphasized typescale.
+///
+pub type Emphasized {
+  IsEmphasized
+  IsNotEmphasized
 }
 
-pub const default_variant = Display
+// --- Defaults ---
 
-// --- CONFIGURATION ---
+pub const default_emphasized: Emphasized = IsNotEmphasized
 
-/// Config holds the configuration for a Heading
-/// 
+pub const default_level: Option(HeadingLevel) = None
+
+pub const default_size: HeadingSize = heading_size.Medium
+
+pub const default_variant: HeadingVariant = heading_variant.Display
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    emphasized: Emphasis,
-    level: Int,
-    size: Size,
-    variant: Variant,
-    text: String,
+    emphasized: Emphasized,
+    level: Option(HeadingLevel),
+    size: HeadingSize,
+    variant: HeadingVariant,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    emphasized: default_emphasized,
-    level: 1,
-    size: default_size,
-    variant: default_variant,
-    text: "",
+    emphasized: IsNotEmphasized,
+    level: None,
+    size: heading_size.Medium,
+    variant: heading_variant.Display,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a Heading using default values
-/// 
-/// ## Parameters:
-/// - text: The text content of the heading
+/// from_config creates a new Heading from the given configuration.
 ///
-pub fn new(text: String) -> Heading {
-  from_config(Config(..default_config(), text: text))
-}
-
-/// from_config creates a Heading from a Config record
-/// 
-pub fn from_config(c: Config) -> Heading {
+pub fn from_config(config: Config) -> Heading {
   Heading(
-    emphasized: c.emphasized,
-    level: helpers.clamp_with_default(c.level, 1, 6, 1),
-    size: c.size,
-    variant: c.variant,
-    text: c.text,
+    emphasized: config.emphasized,
+    level: config.level,
+    size: config.size,
+    variant: config.variant,
   )
 }
 
-// --- SETTERS ---
-
-/// emphasized sets the `emphasized` field of a Heading
-/// 
-pub fn emphasized(h: Heading, emphasized: Emphasis) -> Heading {
-  Heading(..h, emphasized: emphasized)
-}
-
-/// level sets the `level` field of a Heading
+/// new creates a new Heading with the default configuration.
 ///
-pub fn level(h: Heading, level: Int) -> Heading {
-  Heading(..h, level: helpers.clamp_with_default(level, 1, 6, 1))
+pub fn new() -> Heading {
+  from_config(default_config())
 }
 
-/// size sets the `size` field of a Heading
-/// 
-pub fn size(h: Heading, size: Size) -> Heading {
-  Heading(..h, size: config.clamp_to_restricted_size(size, default_size))
+// --- Setters ---
+
+/// emphasized sets the value of emphasized for this Heading.
+///
+pub fn emphasized(record: Heading, emphasized: Emphasized) -> Heading {
+  Heading(..record, emphasized: emphasized)
 }
 
-/// variant sets the `variant` field of a Heading
-/// 
-pub fn variant(h: Heading, variant: Variant) -> Heading {
-  Heading(..h, variant: variant)
+/// level sets the value of level for this Heading.
+///
+pub fn level(record: Heading, level: Option(HeadingLevel)) -> Heading {
+  Heading(..record, level: level)
 }
 
-// --- RENDERING ---
+/// size sets the value of size for this Heading.
+///
+pub fn size(record: Heading, size: HeadingSize) -> Heading {
+  Heading(..record, size: size)
+}
 
-/// render creates a Lustre Element from a Heading
-/// 
-pub fn render(h: Heading, attributes: List(Attribute(msg))) -> Element(msg) {
+/// variant sets the value of variant for this Heading.
+///
+pub fn variant(record: Heading, variant: HeadingVariant) -> Heading {
+  Heading(..record, variant: variant)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Heading
+///
+pub fn render(
+  model: Heading,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-heading",
-    [
-      helpers.boolean_attribute("emphasized", h.emphasized == Emphasized),
-      attribute.attribute("level", int.to_string(h.level)),
-      attribute.attribute(
-        "size",
-        config.size_to_string(config.clamp_to_restricted_size(
-          h.size,
-          default_size,
-        )),
-      ),
-      attribute.attribute("variant", variant_to_string(h.variant)),
-      ..attributes
-    ]
+    list.flatten([
+      [
+        attr.boolean("emphasized", model.emphasized == IsEmphasized),
+        attr.option(
+          model.level,
+          fn(_) { "level" },
+          heading_level.to_string,
+          default_level,
+        ),
+        attr.with_default(
+          "size",
+          heading_size.to_string(model.size),
+          heading_size.to_string(default_size),
+        ),
+        attr.with_default(
+          "variant",
+          heading_variant.to_string(model.variant),
+          heading_variant.to_string(default_variant),
+        ),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [element.text(h.text)],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Heading Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes)
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Display -> "display"
-    Headline -> "headline"
-    Label -> "label"
-    Title -> "title"
-  }
+  render(from_config(c), attributes, children)
 }

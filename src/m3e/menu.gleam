@@ -1,184 +1,132 @@
-//// menu provides Lustre support for the [M3E Menu component](https://matraic.github.io/m3e/#/components/menu.html)
+//// Menu is presents a list of choices on a temporary surface.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/option.{type Option, None, Some}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/menu_position_x.{type MenuPositionX}
+import m3e/menu_position_y.{type MenuPositionY}
+import m3e/menu_variant.{type MenuVariant}
 
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+// --- Types ---
 
-// --- TYPES ---
-
-/// AnimationState specifies if a menu uses animations or is instant
-pub type AnimationState {
-  Animated
-  Instant
-}
-
-pub const default_animation_state: AnimationState = Animated
-
-/// Menu presents a list of choices on a temporary surface
-/// 
+/// Menu is a View Model for this component
+///
 /// ## Fields:
-/// - anchor: The id of the element to which the menu is anchored
-/// - disabled: Whether the element is enabled or disabled
-/// - position_x: The position of the menu, on the x-axis
-/// - position_y: The position of the menu, on the y-axis
-/// - quick: Whether to skip opening and closing animations
-/// - state: Whether the menu is open or closed
-/// - variant: The appearance variant of the menu
-/// 
+///
+/// - position_x: The position of the menu, on the x-axis.
+/// - position_y: The position of the menu, on the y-axis.
+/// - variant: The appearance variant of the menu.
+/// - submenu: A value indicating whether the menu is a submenu.
+///
 pub opaque type Menu {
   Menu(
-    anchor: Option(String),
-    disabled: Interaction,
-    position_x: PositionX,
-    position_y: PositionY,
-    quick: AnimationState,
-    state: MenuState,
-    variant: Variant,
+    position_x: MenuPositionX,
+    position_y: MenuPositionY,
+    variant: MenuVariant,
+    submenu: Submenu,
   )
 }
 
-/// MenuState specifies if a menu is open or closed
-pub type MenuState {
-  Open
-  Closed
+/// Submenu is a value indicating whether the menu is a submenu.
+///
+pub type Submenu {
+  IsSubmenu
+  IsNotSubmenu
 }
 
-pub const default_menu_state: MenuState = Closed
+// --- Defaults ---
 
-/// PositionX is the position of the menu, on the x-axis
-/// 
-pub type PositionX {
-  After
-  Before
-}
+pub const default_position_x: MenuPositionX = menu_position_x.After
 
-pub const default_position_x = After
+pub const default_position_y: MenuPositionY = menu_position_y.Below
 
-/// PositionY is the position of the menu, on the y-axis
-/// 
-pub type PositionY {
-  Above
-  Below
-}
+pub const default_variant: MenuVariant = menu_variant.Standard
 
-pub const default_position_y = Below
+pub const default_submenu: Submenu = IsNotSubmenu
 
-/// Variant is the appearance variant of the menu
-/// 
-pub type Variant {
-  Standard
-  Vibrant
-}
+// --- Configuration ---
 
-pub const default_variant = Standard
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a Menu
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    anchor: Option(String),
-    disabled: Interaction,
-    position_x: PositionX,
-    position_y: PositionY,
-    quick: AnimationState,
-    state: MenuState,
-    variant: Variant,
+    position_x: MenuPositionX,
+    position_y: MenuPositionY,
+    variant: MenuVariant,
+    submenu: Submenu,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    anchor: None,
-    disabled: state.default_interaction,
-    position_x: default_position_x,
-    position_y: default_position_y,
-    quick: default_animation_state,
-    state: default_menu_state,
-    variant: default_variant,
+    position_x: menu_position_x.After,
+    position_y: menu_position_y.Below,
+    variant: menu_variant.Standard,
+    submenu: IsNotSubmenu,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Menu
-/// 
+/// from_config creates a new Menu from the given configuration.
+///
+pub fn from_config(config: Config) -> Menu {
+  Menu(
+    position_x: config.position_x,
+    position_y: config.position_y,
+    variant: config.variant,
+    submenu: config.submenu,
+  )
+}
+
+/// new creates a new Menu with the default configuration.
+///
 pub fn new() -> Menu {
   from_config(default_config())
 }
 
-/// from_config creates a Menu from a Config record
-/// 
-pub fn from_config(c: Config) -> Menu {
-  Menu(
-    anchor: c.anchor,
-    disabled: c.disabled,
-    position_x: c.position_x,
-    position_y: c.position_y,
-    quick: c.quick,
-    state: c.state,
-    variant: c.variant,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// anchor sets the anchor field
+/// position_x sets the value of position_x for this Menu.
 ///
-pub fn anchor(m: Menu, id: String) -> Menu {
-  Menu(..m, anchor: Some(id))
+pub fn position_x(record: Menu, position_x: MenuPositionX) -> Menu {
+  Menu(..record, position_x: position_x)
 }
 
-/// disabled sets the disabled field
-/// 
-pub fn disabled(m: Menu, i: Interaction) -> Menu {
-  Menu(..m, disabled: i)
+/// position_y sets the value of position_y for this Menu.
+///
+pub fn position_y(record: Menu, position_y: MenuPositionY) -> Menu {
+  Menu(..record, position_y: position_y)
 }
 
-/// open sets the state field
-/// 
-pub fn open(m: Menu, s: MenuState) -> Menu {
-  Menu(..m, state: s)
+/// variant sets the value of variant for this Menu.
+///
+pub fn variant(record: Menu, variant: MenuVariant) -> Menu {
+  Menu(..record, variant: variant)
 }
 
-/// position_x sets the position_x field
-/// 
-pub fn position_x(m: Menu, position_x: PositionX) -> Menu {
-  Menu(..m, position_x: position_x)
+/// submenu sets the value of submenu for this Menu.
+///
+pub fn submenu(record: Menu, submenu: Submenu) -> Menu {
+  Menu(..record, submenu: submenu)
 }
 
-/// position_y sets the position_y field
-/// 
-pub fn position_y(m: Menu, position_y: PositionY) -> Menu {
-  Menu(..m, position_y: position_y)
-}
+// --- Renderers ---
 
-/// quick sets the quick field
-/// 
-pub fn quick(m: Menu, s: AnimationState) -> Menu {
-  Menu(..m, quick: s)
-}
-
-/// variant sets the variant field
-/// 
-pub fn variant(m: Menu, variant: Variant) -> Menu {
-  Menu(..m, variant: variant)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a Menu
+/// render creates a Lustre Element for a Menu
 ///
 pub fn render(
-  m: Menu,
+  model: Menu,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -186,18 +134,22 @@ pub fn render(
     "m3e-menu",
     list.flatten([
       [
-        helpers.option_attribute(
-          m.anchor,
-          fn(_) { "anchor" },
-          fn(s) { s },
-          None,
+        attr.with_default(
+          "position-x",
+          menu_position_x.to_string(model.position_x),
+          menu_position_x.to_string(default_position_x),
         ),
-        helpers.boolean_attribute("disabled", m.disabled == Disabled),
-        helpers.boolean_attribute("open", m.state == Open),
-        attribute.attribute("position-x", position_x_to_string(m.position_x)),
-        attribute.attribute("position-y", position_y_to_string(m.position_y)),
-        helpers.boolean_attribute("quick", m.quick == Instant),
-        attribute.attribute("variant", variant_to_string(m.variant)),
+        attr.with_default(
+          "position-y",
+          menu_position_y.to_string(model.position_y),
+          menu_position_y.to_string(default_position_y),
+        ),
+        attr.with_default(
+          "variant",
+          menu_variant.to_string(model.variant),
+          menu_variant.to_string(default_variant),
+        ),
+        attr.boolean("submenu", model.submenu == IsSubmenu),
       ],
       attributes,
     ])
@@ -206,35 +158,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Menu Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn position_x_to_string(position_x: PositionX) -> String {
-  case position_x {
-    After -> "after"
-    Before -> "before"
-  }
-}
-
-fn position_y_to_string(position_y: PositionY) -> String {
-  case position_y {
-    Above -> "above"
-    Below -> "below"
-  }
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Standard -> "standard"
-    Vibrant -> "vibrant"
-  }
+  render(from_config(c), attributes, children)
 }

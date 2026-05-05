@@ -1,105 +1,128 @@
-//// expandable_list_item provides Lustre support for the [M3E Expandable List Item component](https://matraic.github.io/m3e/#/components/list.html)
+//// ExpandableListItem is an item in a list that can be expanded to show more items.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
 
 // --- Types ---
 
-/// ExpandableListItem provides a hierarchical navigation structure that allows users to expand and collapse content sections
-/// 
+/// ExpandableListItem is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - open: Whether the item is expanded
+///
+/// - disabled: Whether the element is disabled.
+/// - open: Whether the item is expanded.
 ///
 pub opaque type ExpandableListItem {
-  ExpandableListItem(disabled: Bool, open: Bool)
+  ExpandableListItem(disabled: Disabled, open: Open)
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Open is whether the item is expanded.
+///
+pub type Open {
+  IsOpen
+  IsNotOpen
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_open: Open = IsNotOpen
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
-  Items
-  // Container for child list items displayed when expanded 
   Leading
-  // Renders the leading content of the list item 
+  // Renders the leading content of the list item.
   Overline
-  // Renders the overline of the list item 
+  // Renders the overline of the list item.
   SupportingText
-  // Renders the supporting text of the list item 
+  // Renders the supporting text of the list item.
   ToggleIcon
-  // Renders a custom icon for the expand/collapse toggle 
+  // Renders a custom icon for the expand/collapse toggle.
+  Items
+  // Container for child list items displayed when expanded.
   Trailing
-  // This component does not expose the base trailing slot   
+  // This component does not expose the base trailing slot.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config is the configuration of an ExpandableListItem
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(disabled: Bool, open: Bool)
+  Config(disabled: Disabled, open: Open)
 }
 
-/// default_config creates a Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(disabled: False, open: False)
+  Config(disabled: IsNotDisabled, open: IsNotOpen)
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates an ExpandableListItem from a Config
-///
-/// ## Parameters:
-/// - config: a Config
+/// from_config creates a new ExpandableListItem from the given configuration.
 ///
 pub fn from_config(config: Config) -> ExpandableListItem {
   ExpandableListItem(disabled: config.disabled, open: config.open)
 }
 
-/// new creates an ExpandableListItem with default values
+/// new creates a new ExpandableListItem with the default configuration.
 ///
 pub fn new() -> ExpandableListItem {
-  ExpandableListItem(disabled: False, open: False)
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// disabled sets the `disabled` field
+/// disabled sets the value of disabled for this ExpandableListItem.
 ///
-pub fn disabled(e: ExpandableListItem, disabled: Bool) -> ExpandableListItem {
-  ExpandableListItem(..e, disabled: disabled)
+pub fn disabled(
+  record: ExpandableListItem,
+  disabled: Disabled,
+) -> ExpandableListItem {
+  ExpandableListItem(..record, disabled: disabled)
 }
 
-/// open sets the `open` field
+/// open sets the value of open for this ExpandableListItem.
 ///
-pub fn open(e: ExpandableListItem, open: Bool) -> ExpandableListItem {
-  ExpandableListItem(..e, open: open)
+pub fn open(record: ExpandableListItem, open: Open) -> ExpandableListItem {
+  ExpandableListItem(..record, open: open)
 }
 
-// --- RENDERING ---    
+// --- Renderers ---
 
-/// render creates a Lustre Element from an ExpandableListItem
-///
-/// ## Parameters:
-/// - e: an ExpandableListItem
-/// - attributes: a list of additional Attributes
-/// - children: the main content
+/// render creates a Lustre Element for a ExpandableListItem
 ///
 pub fn render(
-  e: ExpandableListItem,
+  model: ExpandableListItem,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-expandable-list-item",
     list.flatten([
-      [helpers.boolean_attribute("disabled", e.disabled)],
-      [helpers.boolean_attribute("open", e.open)],
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("open", model.open == IsOpen),
+      ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -107,26 +130,25 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a ExpandableListItem Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Items -> attribute.attribute("slot", "items")
     Leading -> attribute.attribute("slot", "leading")
     Overline -> attribute.attribute("slot", "overline")
     SupportingText -> attribute.attribute("slot", "supporting-text")
     ToggleIcon -> attribute.attribute("slot", "toggle-icon")
+    Items -> attribute.attribute("slot", "items")
     Trailing -> attribute.attribute("slot", "trailing")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

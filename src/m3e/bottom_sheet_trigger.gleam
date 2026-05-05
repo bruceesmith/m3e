@@ -1,130 +1,149 @@
-//// bottom_sheet_trigger provides Lustre support for the [M3E Bottom Sheet Trigger component](https://matraic.github.io/m3e/#/components/bottom-sheet.html)
+//// BottomSheetTrigger is an element, nested within a clickable element, used to trigger a bottom sheet.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
+import gleam/function
 import gleam/list
-import gleam/option.{type Option, None, Some}
-
-import lustre/attribute
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
 
 // --- Types ---
 
-/// BottomSheetTrigger is an element, nested within a clickable element, used to trigger a bottom sheet
-/// 
+/// BottomSheetTrigger is a View Model for this component
+///
 /// ## Fields:
+///
 /// - detent: The zero‑based index of the detent the sheet should open to.
-/// - for: the ID of the associated BottomSheet.
-/// - label: the label of the trigger
-/// - secondary: Marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership
+/// - secondary: Marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership.
+/// - for: The identifier of the interactive control to which this element is attached.
+///
 pub opaque type BottomSheetTrigger {
   BottomSheetTrigger(
-    detent: Option(Int),
-    for: String,
-    label: String,
-    secondary: TriggerRole,
+    detent: Option(Float),
+    secondary: Secondary,
+    for: Option(String),
   )
 }
 
-/// TriggerRole specifies if a trigger is primary or secondary for accessibility
-pub type TriggerRole {
-  Primary
-  Secondary
+/// Secondary is marks this trigger as a secondary trigger for accessibility. Secondary triggers do not receive ARIA ownership.
+///
+pub type Secondary {
+  IsSecondary
+  IsNotSecondary
 }
 
-pub const default_trigger_role: TriggerRole = Primary
+// --- Defaults ---
 
-// --- CONFIGURATION ---
+pub const default_detent: Option(Float) = None
 
-/// Config holds the configuration for a BottomSheetTrigger
-/// 
+pub const default_secondary: Secondary = IsNotSecondary
+
+pub const default_for: Option(String) = None
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
-  Config(
-    detent: Option(Int),
-    for: String,
-    label: String,
-    secondary: TriggerRole,
+  Config(detent: Option(Float), secondary: Secondary, for: Option(String))
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(detent: None, secondary: IsNotSecondary, for: None)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new BottomSheetTrigger from the given configuration.
+///
+pub fn from_config(config: Config) -> BottomSheetTrigger {
+  BottomSheetTrigger(
+    detent: config.detent,
+    secondary: config.secondary,
+    for: config.for,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config {
-  Config(detent: None, for: "", label: "", secondary: default_trigger_role)
-}
-
-// --- CONSTRUCTORS ---
-
-/// new creates a new BottomSheetTrigger with default values
+/// new creates a new BottomSheetTrigger with the default configuration.
 ///
 pub fn new() -> BottomSheetTrigger {
   from_config(default_config())
 }
 
-/// from_config creates a BottomSheetTrigger from a Config record
-/// 
-pub fn from_config(c: Config) -> BottomSheetTrigger {
-  BottomSheetTrigger(
-    detent: c.detent,
-    for: c.for,
-    label: c.label,
-    secondary: c.secondary,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// detent sets the detent field of a BottomSheetTrigger
-/// 
-pub fn detent(b: BottomSheetTrigger, detent: Option(Int)) -> BottomSheetTrigger {
-  BottomSheetTrigger(..b, detent: detent)
-}
-
-/// for sets the for field of a BottomSheetTrigger
-/// 
-pub fn for(b: BottomSheetTrigger, for: String) -> BottomSheetTrigger {
-  BottomSheetTrigger(..b, for: for)
-}
-
-/// label sets the label field of a BottomSheetTrigger
-/// 
-pub fn label(b: BottomSheetTrigger, label: String) -> BottomSheetTrigger {
-  BottomSheetTrigger(..b, label: label)
-}
-
-/// secondary sets the secondary field of a BottomSheetTrigger
-/// 
-pub fn secondary(
-  b: BottomSheetTrigger,
-  secondary: TriggerRole,
-) -> BottomSheetTrigger {
-  BottomSheetTrigger(..b, secondary: secondary)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a BottomSheetTrigger
+/// detent sets the value of detent for this BottomSheetTrigger.
 ///
-pub fn render(b: BottomSheetTrigger) -> Element(msg) {
+pub fn detent(
+  record: BottomSheetTrigger,
+  detent: Option(Float),
+) -> BottomSheetTrigger {
+  BottomSheetTrigger(..record, detent: detent)
+}
+
+/// secondary sets the value of secondary for this BottomSheetTrigger.
+///
+pub fn secondary(
+  record: BottomSheetTrigger,
+  secondary: Secondary,
+) -> BottomSheetTrigger {
+  BottomSheetTrigger(..record, secondary: secondary)
+}
+
+/// for sets the value of for for this BottomSheetTrigger.
+///
+pub fn for(
+  record: BottomSheetTrigger,
+  for: Option(String),
+) -> BottomSheetTrigger {
+  BottomSheetTrigger(..record, for: for)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a BottomSheetTrigger
+///
+pub fn render(
+  model: BottomSheetTrigger,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-bottom-sheet-trigger",
-    [
-      case b.detent {
-        Some(d) -> attribute.attribute("detent", int.to_string(d))
-        None -> attribute.none()
-      },
-      attribute.attribute("for", b.for),
-      helpers.boolean_attribute("secondary", b.secondary == Secondary),
-    ]
+    list.flatten([
+      [
+        attr.option(
+          model.detent,
+          fn(_) { "detent" },
+          float.to_string,
+          default_detent,
+        ),
+        attr.boolean("secondary", model.secondary == IsSecondary),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [element.text(b.label)],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-pub fn render_config(config: Config) -> Element(msg) {
-  render(from_config(config))
+/// render_config creates a Lustre Element from a BottomSheetTrigger Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
 }
-// --- PRIVATE INTERNAL HELPERS ---

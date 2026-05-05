@@ -1,250 +1,311 @@
-//// icon_button provides Lustre support for the [M3E Icon Button component](https://matraic.github.io/m3e/#/components/icon-button.html)
+//// IconButton is an icon button users interact with to perform a supplementary action.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{type Size}
-import m3e/form_submission.{type FormSubmission}
-import m3e/helpers
-import m3e/link.{type Link}
-import m3e/state
+import m3e/attr
+import m3e/form_submitter_type.{type FormSubmitterType}
+import m3e/icon_button_shape.{type IconButtonShape}
+import m3e/icon_button_size.{type IconButtonSize}
+import m3e/icon_button_variant.{type IconButtonVariant}
+import m3e/icon_button_width.{type IconButtonWidth}
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
-/// IconButton(msg) is an icon button users interact with to perform a supplementary action
-/// 
+/// IconButton is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - disabled_interactive: Whether the element is disabled and interactive
-/// - form_submission: Whether the element is involved in a form submission
-/// - link: Whether the element is a link
-/// - purpose: A slot value defined by a parent element
-/// - selected: Whether the toggle button is selected
-/// - shape: The shape of the button
-/// - size: The size of the button
-/// - toggle: Whether the button will toggle between selected and unselected states
-/// - variant: The appearance variant of the button
-/// - width: The width of the button
-/// 
-pub opaque type IconButton(msg) {
+///
+/// - disabled: Whether the element is disabled.
+/// - disabled_interactive: Whether the element is disabled and interactive.
+/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - href: The URL to which the link button points.
+/// - name: The name of the element, submitted as a pair with the element's `value` as part of form data, when the element is used to submit a form.
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - selected: Whether the toggle button is selected.
+/// - shape: The shape of the button.
+/// - size: The size of the button.
+/// - target: The target of the link button.
+/// - toggle: Whether the button will toggle between selected and unselected states.
+/// - type_: The type of the element.
+/// - value: The value associated with the element's name when it's submitted with form data.
+/// - variant: The appearance variant of the button.
+/// - width: The width of the button.
+///
+pub opaque type IconButton {
   IconButton(
-    disabled: state.Interaction,
-    disabled_interactive: state.Interaction,
-    form_submission: Option(FormSubmission),
-    link: Option(Link),
-    purpose: Option(Attribute(msg)),
-    selected: state.SelectionState,
-    shape: Shape,
-    size: Size,
-    toggle: ToggleMode,
-    variant: Variant,
-    width: Width,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    href: String,
+    name: String,
+    rel: String,
+    selected: Selected,
+    shape: IconButtonShape,
+    size: IconButtonSize,
+    target: Option(LinkTarget),
+    toggle: Toggle,
+    type_: FormSubmitterType,
+    value: String,
+    variant: IconButtonVariant,
+    width: IconButtonWidth,
   )
 }
 
-/// Shape
+/// Disabled is whether the element is disabled.
 ///
-pub type Shape {
-  Rounded
-  Square
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-pub const default_shape = Rounded
+/// DisabledInteractive is whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Selected is whether the toggle button is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+/// Toggle is whether the button will toggle between selected and unselected states.
+///
+pub type Toggle {
+  IsToggle
+  IsNotToggle
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_download: Option(String) = None
+
+pub const default_href: String = ""
+
+pub const default_name: String = ""
+
+pub const default_rel: String = ""
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_shape: IconButtonShape = icon_button_shape.Rounded
+
+pub const default_size: IconButtonSize = icon_button_size.Small
+
+pub const default_target: Option(LinkTarget) = None
+
+pub const default_toggle: Toggle = IsNotToggle
+
+pub const default_type_: FormSubmitterType = form_submitter_type.Button
+
+pub const default_value: String = ""
+
+pub const default_variant: IconButtonVariant = icon_button_variant.Standard
+
+pub const default_width: IconButtonWidth = icon_button_width.Default
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Selected
-  // Renders an icon, when selected
+  // Renders an icon, when selected.
 }
 
-/// ToggleMode specifies if the button will toggle between states
-/// 
-pub type ToggleMode {
-  Toggle
-  NotToggle
-}
+// --- Configuration ---
 
-pub const default_toggle: ToggleMode = NotToggle
-
-/// Variant is the appearance variant of the button
-/// 
-pub type Variant {
-  Filled
-  Tonal
-  Outlined
-  Standard
-}
-
-pub const default_variant = Standard
-
-/// Width is the width of the button
-/// 
-pub type Width {
-  Default
-  Narrow
-  Wide
-}
-
-pub const default_width = Default
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for an IconButton
-/// 
-pub type Config(msg) {
+/// Config is a public record for configuring this component.
+///
+pub type Config {
   Config(
-    disabled: state.Interaction,
-    disabled_interactive: state.Interaction,
-    form_submission: Option(FormSubmission),
-    link: Option(Link),
-    purpose: Option(Attribute(msg)),
-    selected: state.SelectionState,
-    shape: Shape,
-    size: Size,
-    toggle: ToggleMode,
-    variant: Variant,
-    width: Width,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    href: String,
+    name: String,
+    rel: String,
+    selected: Selected,
+    shape: IconButtonShape,
+    size: IconButtonSize,
+    target: Option(LinkTarget),
+    toggle: Toggle,
+    type_: FormSubmitterType,
+    value: String,
+    variant: IconButtonVariant,
+    width: IconButtonWidth,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config(msg) {
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    disabled_interactive: state.default_interaction,
-    form_submission: None,
-    link: None,
-    purpose: None,
-    selected: state.default_selection_state,
-    shape: default_shape,
-    size: config.default_size,
-    toggle: default_toggle,
-    variant: default_variant,
-    width: default_width,
+    disabled: IsNotDisabled,
+    disabled_interactive: IsNotDisabledInteractive,
+    download: None,
+    href: "",
+    name: "",
+    rel: "",
+    selected: IsNotSelected,
+    shape: icon_button_shape.Rounded,
+    size: icon_button_size.Small,
+    target: None,
+    toggle: IsNotToggle,
+    type_: form_submitter_type.Button,
+    value: "",
+    variant: icon_button_variant.Standard,
+    width: icon_button_width.Default,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates an icon button with default values
-/// 
-pub fn new() -> IconButton(msg) {
+/// from_config creates a new IconButton from the given configuration.
+///
+pub fn from_config(config: Config) -> IconButton {
+  IconButton(
+    disabled: config.disabled,
+    disabled_interactive: config.disabled_interactive,
+    download: config.download,
+    href: config.href,
+    name: config.name,
+    rel: config.rel,
+    selected: config.selected,
+    shape: config.shape,
+    size: config.size,
+    target: config.target,
+    toggle: config.toggle,
+    type_: config.type_,
+    value: config.value,
+    variant: config.variant,
+    width: config.width,
+  )
+}
+
+/// new creates a new IconButton with the default configuration.
+///
+pub fn new() -> IconButton {
   from_config(default_config())
 }
 
-/// from_config creates an IconButton from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> IconButton(msg) {
-  IconButton(
-    disabled: c.disabled,
-    disabled_interactive: c.disabled_interactive,
-    form_submission: c.form_submission,
-    link: c.link,
-    purpose: c.purpose,
-    selected: c.selected,
-    shape: c.shape,
-    size: c.size,
-    toggle: c.toggle,
-    variant: c.variant,
-    width: c.width,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field
-/// 
-pub fn disabled(
-  i: IconButton(msg),
-  disabled: state.Interaction,
-) -> IconButton(msg) {
-  IconButton(..i, disabled: disabled)
-}
-
-/// disabled sets the `disabled` field
-/// 
-pub fn disabled_interactive(
-  i: IconButton(msg),
-  disabled_interactive: state.Interaction,
-) -> IconButton(msg) {
-  IconButton(..i, disabled_interactive: disabled_interactive)
-}
-
-/// form sets the form_submission field
-/// 
-pub fn form(i: IconButton(msg), form: Option(FormSubmission)) -> IconButton(msg) {
-  IconButton(..i, form_submission: form)
-}
-
-// link sets the link field
-/// 
-pub fn link(i: IconButton(msg), link: Option(Link)) -> IconButton(msg) {
-  IconButton(..i, link: link)
-}
-
-/// purpose sets the purpose field
-/// 
-pub fn purpose(
-  i: IconButton(msg),
-  purpose: Option(Attribute(msg)),
-) -> IconButton(msg) {
-  IconButton(..i, purpose: purpose)
-}
-
-/// selected sets the `selected` field
-/// 
-pub fn selected(
-  i: IconButton(msg),
-  selected: state.SelectionState,
-) -> IconButton(msg) {
-  IconButton(..i, selected: selected)
-}
-
-/// shape sets the shape field
-/// 
-pub fn shape(i: IconButton(msg), shape: Shape) -> IconButton(msg) {
-  IconButton(..i, shape: shape)
-}
-
-/// size sets the size field
-/// 
-pub fn size(i: IconButton(msg), size: Size) -> IconButton(msg) {
-  IconButton(..i, size: size)
-}
-
-/// toggle sets the `toggle` field
-/// 
-pub fn toggle(i: IconButton(msg), toggle: ToggleMode) -> IconButton(msg) {
-  IconButton(..i, toggle: toggle)
-}
-
-/// variant sets the variant field
-/// 
-pub fn variant(i: IconButton(msg), variant: Variant) -> IconButton(msg) {
-  IconButton(..i, variant: variant)
-}
-
-/// width sets the width field
-/// 
-pub fn width(i: IconButton(msg), width: Width) -> IconButton(msg) {
-  IconButton(..i, width: width)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element from an IconButton(msg)
+/// disabled sets the value of disabled for this IconButton.
 ///
-/// ## Parameters:
-/// - i: an IconButton(msg)
-/// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
+pub fn disabled(record: IconButton, disabled: Disabled) -> IconButton {
+  IconButton(..record, disabled: disabled)
+}
+
+/// disabled_interactive sets the value of disabled_interactive for this IconButton.
+///
+pub fn disabled_interactive(
+  record: IconButton,
+  disabled_interactive: DisabledInteractive,
+) -> IconButton {
+  IconButton(..record, disabled_interactive: disabled_interactive)
+}
+
+/// download sets the value of download for this IconButton.
+///
+pub fn download(record: IconButton, download: Option(String)) -> IconButton {
+  IconButton(..record, download: download)
+}
+
+/// href sets the value of href for this IconButton.
+///
+pub fn href(record: IconButton, href: String) -> IconButton {
+  IconButton(..record, href: href)
+}
+
+/// name sets the value of name for this IconButton.
+///
+pub fn name(record: IconButton, name: String) -> IconButton {
+  IconButton(..record, name: name)
+}
+
+/// rel sets the value of rel for this IconButton.
+///
+pub fn rel(record: IconButton, rel: String) -> IconButton {
+  IconButton(..record, rel: rel)
+}
+
+/// selected sets the value of selected for this IconButton.
+///
+pub fn selected(record: IconButton, selected: Selected) -> IconButton {
+  IconButton(..record, selected: selected)
+}
+
+/// shape sets the value of shape for this IconButton.
+///
+pub fn shape(record: IconButton, shape: IconButtonShape) -> IconButton {
+  IconButton(..record, shape: shape)
+}
+
+/// size sets the value of size for this IconButton.
+///
+pub fn size(record: IconButton, size: IconButtonSize) -> IconButton {
+  IconButton(..record, size: size)
+}
+
+/// target sets the value of target for this IconButton.
+///
+pub fn target(record: IconButton, target: Option(LinkTarget)) -> IconButton {
+  IconButton(..record, target: target)
+}
+
+/// toggle sets the value of toggle for this IconButton.
+///
+pub fn toggle(record: IconButton, toggle: Toggle) -> IconButton {
+  IconButton(..record, toggle: toggle)
+}
+
+/// type_ sets the value of type_ for this IconButton.
+///
+pub fn type_(record: IconButton, type_: FormSubmitterType) -> IconButton {
+  IconButton(..record, type_: type_)
+}
+
+/// value sets the value of value for this IconButton.
+///
+pub fn value(record: IconButton, value: String) -> IconButton {
+  IconButton(..record, value: value)
+}
+
+/// variant sets the value of variant for this IconButton.
+///
+pub fn variant(record: IconButton, variant: IconButtonVariant) -> IconButton {
+  IconButton(..record, variant: variant)
+}
+
+/// width sets the value of width for this IconButton.
+///
+pub fn width(record: IconButton, width: IconButtonWidth) -> IconButton {
+  IconButton(..record, width: width)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a IconButton
 ///
 pub fn render(
-  i: IconButton(msg),
+  model: IconButton,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -252,24 +313,55 @@ pub fn render(
     "m3e-icon-button",
     list.flatten([
       [
-        attribute.disabled(i.disabled == state.Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disabled-interactive",
-          i.disabled_interactive == state.Disabled,
+          model.disabled_interactive == IsDisabledInteractive,
         ),
-        case i.purpose {
-          Some(p) -> p
-          None -> attribute.none()
-        },
-        attribute.selected(i.selected == state.Selected),
-        attribute.attribute("shape", shape_to_string(i.shape)),
-        attribute.attribute("size", config.size_to_string(i.size)),
-        helpers.boolean_attribute("toggle", i.toggle == Toggle),
-        attribute.attribute("variant", variant_to_string(i.variant)),
-        attribute.attribute("width", width_to_string(i.width)),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("href", model.href, default_href),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.with_default(
+          "shape",
+          icon_button_shape.to_string(model.shape),
+          icon_button_shape.to_string(default_shape),
+        ),
+        attr.with_default(
+          "size",
+          icon_button_size.to_string(model.size),
+          icon_button_size.to_string(default_size),
+        ),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
+        attr.boolean("toggle", model.toggle == IsToggle),
+        attr.with_default(
+          "type",
+          form_submitter_type.to_string(model.type_),
+          form_submitter_type.to_string(default_type_),
+        ),
+        attr.with_default("value", model.value, default_value),
+        attr.with_default(
+          "variant",
+          icon_button_variant.to_string(model.variant),
+          icon_button_variant.to_string(default_variant),
+        ),
+        attr.with_default(
+          "width",
+          icon_button_width.to_string(model.width),
+          icon_button_width.to_string(default_width),
+        ),
       ],
-      form_submission.button_attributes(i.form_submission),
-      link.attributes(i.link),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -277,52 +369,20 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a IconButton Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Selected -> attribute.attribute("slot", "selected")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-/// shape_to_string converts a Shape to a string
-/// 
-fn shape_to_string(s: Shape) -> String {
-  case s {
-    Rounded -> "rounded"
-    Square -> "square"
-  }
-}
-
-/// variant_to_string converts a Variant to a string
-/// 
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Filled -> "filled"
-    Tonal -> "tonal"
-    Outlined -> "outlined"
-    Standard -> "standard"
-  }
-}
-
-/// width_to_string converts a Width to a string
-/// 
-fn width_to_string(w: Width) -> String {
-  case w {
-    Default -> "default"
-    Narrow -> "narrow"
-    Wide -> "wide"
   }
 }

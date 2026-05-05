@@ -1,131 +1,169 @@
-//// filter_chip provides Lustre support for the [M3E Filter Chip components](https://matraic.github.io/m3e/#/components/chips.html)
+//// FilterChip is a chip users interact with to select/deselect options.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/string
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/chip.{type Variant}
-import m3e/helpers
-import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
+import m3e/attr
+import m3e/chip_variant.{type ChipVariant}
 
 // --- Types ---
 
-/// FilterChip is a chip users interact with to select/deselect options
+/// FilterChip is a View Model for this component
 ///
 /// ## Fields:
-/// - disabled: A value indicating whether the element is disabled
-/// - disabled_interactive: A value indicating whether the element is disabled and interactive
-/// - selected: A value indicating whether the element is selected
-/// - value: A string representing the value of the chip
-/// - variant: The appearance variant of the chip
 ///
-pub opaque type FilterChip(msg) {
+/// - disabled: A value indicating whether the element is disabled.
+/// - disabled_interactive: A value indicating whether the element is disabled and interactive.
+/// - selected: A value indicating whether the element is selected.
+/// - value: A string representing the value of the chip.
+/// - variant: The appearance variant of the chip.
+///
+pub opaque type FilterChip {
   FilterChip(
-    disabled: Interaction,
-    disabled_interactive: Interaction,
-    selected: SelectionState,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    selected: Selected,
     value: String,
-    variant: Variant,
+    variant: ChipVariant,
   )
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is a value indicating whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// DisabledInteractive is a value indicating whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
+
+/// Selected is a value indicating whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_value: String = ""
+
+pub const default_variant: ChipVariant = chip_variant.Outlined
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the chip's label 
+  // Renders an icon before the chip's label.
   TrailingIcon
-  // Renders an icon after the chip's label 
+  // Renders an icon after the chip's label.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config holds the configuration for a FilterChip
-/// 
-pub type Config(msg) {
-  Config(
-    disabled: Interaction,
-    disabled_interactive: Interaction,
-    selected: SelectionState,
-    value: String,
-    variant: Variant,
-  )
-}
-
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config(msg) {
-  Config(
-    disabled: state.default_interaction,
-    disabled_interactive: state.default_interaction,
-    selected: state.default_selection_state,
-    value: "",
-    variant: chip.default_variant,
-  )
-}
-
-// --- CONSTRUCTORS ---
-
-/// from_config creates a FilterChip from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> FilterChip(msg) {
-  FilterChip(
-    disabled: c.disabled,
-    disabled_interactive: c.disabled_interactive,
-    selected: c.selected,
-    value: c.value,
-    variant: c.variant,
-  )
-}
-
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field
+/// Config is a public record for configuring this component.
 ///
-pub fn disabled(c: FilterChip(msg), disabled: Interaction) -> FilterChip(msg) {
-  FilterChip(..c, disabled: disabled)
+pub type Config {
+  Config(
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    selected: Selected,
+    value: String,
+    variant: ChipVariant,
+  )
 }
 
-/// disabled_interactive sets the `disabled_interactive` field
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    disabled: IsNotDisabled,
+    disabled_interactive: IsNotDisabledInteractive,
+    selected: IsNotSelected,
+    value: "",
+    variant: chip_variant.Outlined,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new FilterChip from the given configuration.
+///
+pub fn from_config(config: Config) -> FilterChip {
+  FilterChip(
+    disabled: config.disabled,
+    disabled_interactive: config.disabled_interactive,
+    selected: config.selected,
+    value: config.value,
+    variant: config.variant,
+  )
+}
+
+/// new creates a new FilterChip with the default configuration.
+///
+pub fn new() -> FilterChip {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// disabled sets the value of disabled for this FilterChip.
+///
+pub fn disabled(record: FilterChip, disabled: Disabled) -> FilterChip {
+  FilterChip(..record, disabled: disabled)
+}
+
+/// disabled_interactive sets the value of disabled_interactive for this FilterChip.
 ///
 pub fn disabled_interactive(
-  c: FilterChip(msg),
-  disabled_interactive: Interaction,
-) -> FilterChip(msg) {
-  FilterChip(..c, disabled_interactive: disabled_interactive)
+  record: FilterChip,
+  disabled_interactive: DisabledInteractive,
+) -> FilterChip {
+  FilterChip(..record, disabled_interactive: disabled_interactive)
 }
 
-/// selected sets the `selected` field
+/// selected sets the value of selected for this FilterChip.
 ///
-pub fn selected(c: FilterChip(msg), selected: SelectionState) -> FilterChip(msg) {
-  FilterChip(..c, selected: selected)
+pub fn selected(record: FilterChip, selected: Selected) -> FilterChip {
+  FilterChip(..record, selected: selected)
 }
 
-/// value sets the `value` field
+/// value sets the value of value for this FilterChip.
 ///
-pub fn value(c: FilterChip(msg), value: String) -> FilterChip(msg) {
-  FilterChip(..c, value: value)
+pub fn value(record: FilterChip, value: String) -> FilterChip {
+  FilterChip(..record, value: value)
 }
 
-/// variant sets the `variant` field
+/// variant sets the value of variant for this FilterChip.
 ///
-pub fn variant(c: FilterChip(msg), v: Variant) -> FilterChip(msg) {
-  FilterChip(..c, variant: v)
+pub fn variant(record: FilterChip, variant: ChipVariant) -> FilterChip {
+  FilterChip(..record, variant: variant)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a FilterChip
-///
-/// ## Parameters:
-/// - c: a FilterChip
-/// - attributes: any extra attributes, e.g. an event
-/// - children: a list of child elements
+/// render creates a Lustre Element for a FilterChip
 ///
 pub fn render(
-  c: FilterChip(msg),
+  model: FilterChip,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -133,18 +171,18 @@ pub fn render(
     "m3e-filter-chip",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", c.disabled == Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disabled-interactive",
-          c.disabled_interactive == Disabled,
+          model.disabled_interactive == IsDisabledInteractive,
         ),
-        helpers.boolean_attribute("selected", c.selected == Selected),
-        case string.length(c.value) {
-          0 -> attribute.none()
-          _ -> attribute.attribute("value", c.value)
-        },
-
-        attribute.attribute("variant", chip.variant_to_string(c.variant)),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.with_default("value", model.value, default_value),
+        attr.with_default(
+          "variant",
+          chip_variant.to_string(model.variant),
+          chip_variant.to_string(default_variant),
+        ),
       ],
       attributes,
     ])
@@ -153,22 +191,21 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a FilterChip Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")
     TrailingIcon -> attribute.attribute("slot", "trailing-icon")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

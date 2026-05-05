@@ -1,171 +1,184 @@
-//// slider provides Lustre support for the [M3E Slider component](https://matraic.github.io/m3e/#/components/slider.html)
+//// Slider is allows for the selection of numeric values from a range.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/float
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{type Size}
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
+import m3e/slider_size.{type SliderSize}
 
 // --- Types ---
 
-/// Discrete specifies if a slider is discrete or continuous
-pub type Discrete {
-  Discrete
-  Continuous
-}
-
-pub const default_discrete: Discrete = Continuous
-
-pub const default_max = 100.0
-
-pub const default_size: Size = config.ExtraSmall
-
-pub const default_step = 1.0
-
-pub const default_min = 0.0
-
-/// Slider provides Lustre support for the [M3E Slider component](https://matraic.github.io/m3e/#/components/slider.html)
-/// 
+/// Slider is a View Model for this component
+///
 /// ## Fields:
-/// - discrete: Whether to show tick marks
-/// - disabled: Whether the element is disabled
-/// - labelled: Whether to show value labels when activated
-/// - max: The maximum allowable value
-/// - min: The minimum allowable value
-/// - size: The size of the slider
-/// - step: The value at which the thumb will snap
+///
+/// - disabled: Whether the element is disabled.
+/// - discrete: Whether to show tick marks.
+/// - labelled: Whether to show value labels when activated.
+/// - max: The maximum allowable value.
+/// - min: The minimum allowable value.
+/// - step: The value at which the thumb will snap.
+/// - size: The size of the slider.
 ///
 pub opaque type Slider {
   Slider(
+    disabled: Disabled,
     discrete: Discrete,
-    disabled: Interaction,
-    labelled: ValueLabels,
+    labelled: Labelled,
     max: Float,
     min: Float,
-    size: Size,
     step: Float,
+    size: SliderSize,
   )
 }
 
-/// ValueLabels specifies if a slider shows value labels
-pub type ValueLabels {
-  ShowLabels
-  HideLabels
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-pub const default_value_labels: ValueLabels = HideLabels
+/// Discrete is whether to show tick marks.
+///
+pub type Discrete {
+  IsDiscrete
+  IsNotDiscrete
+}
 
-// --- CONFIGURATION ---
+/// Labelled is whether to show value labels when activated.
+///
+pub type Labelled {
+  IsLabelled
+  IsNotLabelled
+}
 
-/// Config holds the configuration for a Slider
-/// 
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_discrete: Discrete = IsNotDiscrete
+
+pub const default_labelled: Labelled = IsNotLabelled
+
+pub const default_max: Float = 100.0
+
+pub const default_min: Float = 0.0
+
+pub const default_step: Float = 1.0
+
+pub const default_size: SliderSize = slider_size.ExtraSmall
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
+    disabled: Disabled,
     discrete: Discrete,
-    disabled: Interaction,
-    labelled: ValueLabels,
+    labelled: Labelled,
     max: Float,
     min: Float,
-    size: Size,
     step: Float,
+    size: SliderSize,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    discrete: default_discrete,
-    disabled: state.default_interaction,
-    labelled: default_value_labels,
-    max: default_max,
-    min: default_min,
-    size: default_size,
-    step: default_step,
+    disabled: IsNotDisabled,
+    discrete: IsNotDiscrete,
+    labelled: IsNotLabelled,
+    max: 100.0,
+    min: 0.0,
+    step: 1.0,
+    size: slider_size.ExtraSmall,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Slider
+/// from_config creates a new Slider from the given configuration.
+///
+pub fn from_config(config: Config) -> Slider {
+  Slider(
+    disabled: config.disabled,
+    discrete: config.discrete,
+    labelled: config.labelled,
+    max: config.max,
+    min: config.min,
+    step: config.step,
+    size: config.size,
+  )
+}
+
+/// new creates a new Slider with the default configuration.
 ///
 pub fn new() -> Slider {
   from_config(default_config())
 }
 
-/// from_config creates a Slider from a Config record
-/// 
-pub fn from_config(c: Config) -> Slider {
-  Slider(
-    discrete: c.discrete,
-    disabled: c.disabled,
-    labelled: c.labelled,
-    max: c.max,
-    min: c.min,
-    size: c.size,
-    step: c.step,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// discrete sets the discrete field
+/// disabled sets the value of disabled for this Slider.
 ///
-pub fn discrete(s: Slider, d: Discrete) -> Slider {
-  Slider(..s, discrete: d)
+pub fn disabled(record: Slider, disabled: Disabled) -> Slider {
+  Slider(..record, disabled: disabled)
 }
 
-/// disabled sets the disabled field
-/// 
-pub fn disabled(s: Slider, i: Interaction) -> Slider {
-  Slider(..s, disabled: i)
-}
-
-/// labelled sets the labelled field
+/// discrete sets the value of discrete for this Slider.
 ///
-pub fn labelled(s: Slider, l: ValueLabels) -> Slider {
-  Slider(..s, labelled: l)
+pub fn discrete(record: Slider, discrete: Discrete) -> Slider {
+  Slider(..record, discrete: discrete)
 }
 
-/// max sets the max field
+/// labelled sets the value of labelled for this Slider.
 ///
-pub fn max(s: Slider, max: Float) -> Slider {
-  Slider(..s, max: max)
+pub fn labelled(record: Slider, labelled: Labelled) -> Slider {
+  Slider(..record, labelled: labelled)
 }
 
-/// min sets the min field
+/// max sets the value of max for this Slider.
 ///
-pub fn min(s: Slider, min: Float) -> Slider {
-  Slider(..s, min: min)
+pub fn max(record: Slider, max: Float) -> Slider {
+  Slider(..record, max: max)
 }
 
-/// size sets the size field
+/// min sets the value of min for this Slider.
 ///
-pub fn size(s: Slider, size: Size) -> Slider {
-  Slider(..s, size: size)
+pub fn min(record: Slider, min: Float) -> Slider {
+  Slider(..record, min: min)
 }
 
-/// step sets the step field
+/// step sets the value of step for this Slider.
 ///
-pub fn step(s: Slider, step: Float) -> Slider {
-  Slider(..s, step: step)
+pub fn step(record: Slider, step: Float) -> Slider {
+  Slider(..record, step: step)
 }
 
-// --- RENDERING ---
+/// size sets the value of size for this Slider.
+///
+pub fn size(record: Slider, size: SliderSize) -> Slider {
+  Slider(..record, size: size)
+}
 
-/// render creates a Lustre Element(msg) from a Slider
-/// 
-/// ## Parameters:
-/// - s: a Slider
-/// - attributes: additional attributes
-/// - children: additional children
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Slider
 ///
 pub fn render(
-  s: Slider,
+  model: Slider,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -173,13 +186,29 @@ pub fn render(
     "m3e-slider",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.disabled == Disabled),
-        helpers.boolean_attribute("discrete", s.discrete == Discrete),
-        helpers.boolean_attribute("labelled", s.labelled == ShowLabels),
-        attribute.attribute("max", float.to_string(s.max)),
-        attribute.attribute("min", float.to_string(s.min)),
-        attribute.attribute("size", config.size_to_string(s.size)),
-        attribute.attribute("step", float.to_string(s.step)),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("discrete", model.discrete == IsDiscrete),
+        attr.boolean("labelled", model.labelled == IsLabelled),
+        attr.with_default(
+          "max",
+          float.to_string(model.max),
+          float.to_string(default_max),
+        ),
+        attr.with_default(
+          "min",
+          float.to_string(model.min),
+          float.to_string(default_min),
+        ),
+        attr.with_default(
+          "step",
+          float.to_string(model.step),
+          float.to_string(default_step),
+        ),
+        attr.with_default(
+          "size",
+          slider_size.to_string(model.size),
+          slider_size.to_string(default_size),
+        ),
       ],
       attributes,
     ])
@@ -188,12 +217,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Slider Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }

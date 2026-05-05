@@ -1,79 +1,136 @@
-//// menu_item_radio provides Lustre support for the [M3E Menu Item Radio component](https://matraic.github.io/m3e/#/components/menu.html)
+//// MenuItemRadio is an item of a menu which supports a mutually exclusive checkable state.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type CheckedState, Checked}
+import m3e/attr
 
 // --- Types ---
 
-/// MenuItemRadio is an item of a menu which supports a mutually exclusive checkable state
-/// 
+/// MenuItemRadio is a View Model for this component
+///
 /// ## Fields:
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
-/// 
+///
+/// - disabled: Whether the element is disabled.
+/// - checked: Whether the element is checked.
+///
 pub opaque type MenuItemRadio {
-  MenuItemRadio(checked: CheckedState, disabled: Bool)
+  MenuItemRadio(disabled: Disabled, checked: Checked)
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Checked is whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_checked: Checked = IsNotChecked
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the items's label 
+  // Renders an icon before the items's label.
   TrailingIcon
-  // Renders an icon after the item's label 
+  // Renders an icon after the item's label.
 }
 
-// --- CONSTRUCTORS ---
+// --- Configuration ---
 
-/// new creates a new MenuItemRadio
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(disabled: Disabled, checked: Checked)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(disabled: IsNotDisabled, checked: IsNotChecked)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new MenuItemRadio from the given configuration.
+///
+pub fn from_config(config: Config) -> MenuItemRadio {
+  MenuItemRadio(disabled: config.disabled, checked: config.checked)
+}
+
+/// new creates a new MenuItemRadio with the default configuration.
 ///
 pub fn new() -> MenuItemRadio {
-  MenuItemRadio(checked: state.default_checked_state, disabled: False)
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// checked sets the checked field
+/// disabled sets the value of disabled for this MenuItemRadio.
 ///
-pub fn checked(m: MenuItemRadio, checked: CheckedState) -> MenuItemRadio {
-  MenuItemRadio(..m, checked: checked)
+pub fn disabled(record: MenuItemRadio, disabled: Disabled) -> MenuItemRadio {
+  MenuItemRadio(..record, disabled: disabled)
 }
 
-/// disabled sets the disabled field
+/// checked sets the value of checked for this MenuItemRadio.
 ///
-pub fn disabled(m: MenuItemRadio, disabled: Bool) -> MenuItemRadio {
-  MenuItemRadio(..m, disabled: disabled)
+pub fn checked(record: MenuItemRadio, checked: Checked) -> MenuItemRadio {
+  MenuItemRadio(..record, checked: checked)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a MenuItemRadio
+/// render creates a Lustre Element for a MenuItemRadio
 ///
 pub fn render(
-  m: MenuItemRadio,
+  model: MenuItemRadio,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-menu-item-radio",
-    [
-      helpers.boolean_attribute("checked", m.checked == Checked),
-      helpers.boolean_attribute("disabled", m.disabled),
-      ..attributes
-    ]
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("checked", model.checked == IsChecked),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// render_config creates a Lustre Element from a MenuItemRadio Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")

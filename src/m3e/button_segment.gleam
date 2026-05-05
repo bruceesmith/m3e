@@ -1,94 +1,137 @@
-//// button_segment provides Lustre support for the [M3E Button Segment component](https://matraic.github.io/m3e/#/components/segmented-button.html)
+//// ButtonSegment is a option that can be selected within a segmented button.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, type SelectionState, Disabled, Selected}
+import m3e/attr
 
 // --- Types ---
 
-/// ButtonSegment provides Lustre support for the [M3E Button Segment component](https://matraic.github.io/m3e/#/components/segmented-button.html)
+/// ButtonSegment is a View Model for this component
 ///
 /// ## Fields:
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
-/// - value: A string representing the value of the segment
+///
+/// - checked: Whether the element is checked.
+/// - disabled: Whether the element is disabled.
+/// - value: A string representing the value of the segment.
 ///
 pub opaque type ButtonSegment {
-  ButtonSegment(
-    checked: SelectionState,
-    disabled: Interaction,
-    value: Option(String),
-  )
+  ButtonSegment(checked: Checked, disabled: Disabled, value: String)
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Checked is whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
+}
+
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_checked: Checked = IsNotChecked
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_value: String = "on"
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the option's label 
+  // Renders an icon before the option's label.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config allows for a declarative configuration of the ButtonSegment
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(checked: SelectionState, disabled: Interaction, value: Option(String))
+  Config(checked: Checked, disabled: Disabled, value: String)
 }
 
-/// default_config returns a default Config
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(
-    checked: state.default_selection_state,
-    disabled: state.default_interaction,
-    value: None,
+  Config(checked: IsNotChecked, disabled: IsNotDisabled, value: "on")
+}
+
+// --- Constructors ---
+
+/// from_config creates a new ButtonSegment from the given configuration.
+///
+pub fn from_config(config: Config) -> ButtonSegment {
+  ButtonSegment(
+    checked: config.checked,
+    disabled: config.disabled,
+    value: config.value,
   )
 }
 
-// --- CONSTRUCTORS ---
-
-/// from_config creates a ButtonSegment from a Config
-///
-pub fn from_config(c: Config) -> ButtonSegment {
-  ButtonSegment(checked: c.checked, disabled: c.disabled, value: c.value)
-}
-
-/// new creates a new ButtonSegment
+/// new creates a new ButtonSegment with the default configuration.
 ///
 pub fn new() -> ButtonSegment {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// checked sets the checked field
+/// checked sets the value of checked for this ButtonSegment.
 ///
-pub fn checked(b: ButtonSegment, checked: SelectionState) -> ButtonSegment {
-  ButtonSegment(..b, checked: checked)
+pub fn checked(record: ButtonSegment, checked: Checked) -> ButtonSegment {
+  ButtonSegment(..record, checked: checked)
 }
 
-/// disabled sets the disabled field
+/// disabled sets the value of disabled for this ButtonSegment.
 ///
-pub fn disabled(b: ButtonSegment, disabled: Interaction) -> ButtonSegment {
-  ButtonSegment(..b, disabled: disabled)
+pub fn disabled(record: ButtonSegment, disabled: Disabled) -> ButtonSegment {
+  ButtonSegment(..record, disabled: disabled)
 }
 
-/// value sets the value field
+/// value sets the value of value for this ButtonSegment.
 ///
-pub fn value(b: ButtonSegment, value: Option(String)) -> ButtonSegment {
-  ButtonSegment(..b, value: value)
+pub fn value(record: ButtonSegment, value: String) -> ButtonSegment {
+  ButtonSegment(..record, value: value)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render_config creates a Lustre Element from a Config
+/// render creates a Lustre Element for a ButtonSegment
+///
+pub fn render(
+  model: ButtonSegment,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-button-segment",
+    list.flatten([
+      [
+        attr.boolean("checked", model.checked == IsChecked),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default("value", model.value, default_value),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a ButtonSegment Config
 ///
 pub fn render_config(
   c: Config,
@@ -98,35 +141,8 @@ pub fn render_config(
   render(from_config(c), attributes, children)
 }
 
-/// render creates a Lustre Element(msg) from a ButtonSegment
+/// slot returns a Lustre Attribute(msg) for the given slot name
 ///
-/// ## Parameters:
-/// - b: a ButtonSegment
-/// - attributes: additional attributes
-/// - children: additional children
-///
-pub fn render(
-  b: ButtonSegment,
-  attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
-) -> Element(msg) {
-  element.element(
-    "m3e-button-segment",
-    list.flatten([
-      [
-        helpers.boolean_attribute("checked", b.checked == Selected),
-        helpers.boolean_attribute("disabled", b.disabled == Disabled),
-        helpers.option_attribute(b.value, fn(_) { "value" }, function.identity, None),
-      ],
-      attributes,
-    ])
-      |> list.filter(fn(a) { a != attribute.none() }),
-    children,
-  )
-}
-
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")

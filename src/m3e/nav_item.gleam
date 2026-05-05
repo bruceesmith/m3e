@@ -1,139 +1,211 @@
-//// nav_item provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
+//// NavItem is an item, placed in a navigation bar or rail, used to navigate to destinations in an application.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/layout.{type Orientation, Vertical}
-import m3e/link.{type Link}
-import m3e/state.{type SelectionState, Disabled, Selected}
+import m3e/attr
+import m3e/link_target.{type LinkTarget}
+import m3e/nav_item_orientation.{type NavItemOrientation}
 
 // --- Types ---
 
-/// NavItem provides Lustre support for the [M3E Nav Item component](https://matraic.github.io/m3e/#/components/nav-bar.html)
-/// 
+/// NavItem is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: A value indicating whether the element is disabled
-/// - disabled_interactive: A value indicating whether the element is disabled and interactive
-/// - link: all the attributes of an HTML link
+///
+/// - disabled: A value indicating whether the element is disabled.
+/// - disabled_interactive: A value indicating whether the element is disabled and interactive.
+/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - href: The URL to which the link button points.
 /// - orientation: The layout orientation of the item.
-/// - selected: A value indicating whether the element is selected
-/// 
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - selected: A value indicating whether the element is selected.
+/// - target: The target of the link button.
+///
 pub opaque type NavItem {
   NavItem(
-    disabled: state.Interaction,
-    disabled_interactive: state.Interaction,
-    link: Option(Link),
-    orientation: Orientation,
-    selected: SelectionState,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    href: String,
+    orientation: NavItemOrientation,
+    rel: String,
+    selected: Selected,
+    target: Option(LinkTarget),
   )
 }
 
-pub const default_orientation: Orientation = Vertical
+/// Disabled is a value indicating whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// DisabledInteractive is a value indicating whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
+
+/// Selected is a value indicating whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_download: Option(String) = None
+
+pub const default_href: String = ""
+
+pub const default_orientation: NavItemOrientation = nav_item_orientation.Vertical
+
+pub const default_rel: String = ""
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_target: Option(LinkTarget) = None
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders the icon of the item 
+  // Renders the icon of the item.
   SelectedIcon
-  // Renders the icon of the item when selected
+  // Renders the icon of the item when selected.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config holds the configuration for a NavItem
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: state.Interaction,
-    disabled_interactive: state.Interaction,
-    link: Option(Link),
-    orientation: Orientation,
-    selected: SelectionState,
+    disabled: Disabled,
+    disabled_interactive: DisabledInteractive,
+    download: Option(String),
+    href: String,
+    orientation: NavItemOrientation,
+    rel: String,
+    selected: Selected,
+    target: Option(LinkTarget),
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    disabled_interactive: state.default_interaction,
-    link: None,
-    orientation: default_orientation,
-    selected: state.default_selection_state,
+    disabled: IsNotDisabled,
+    disabled_interactive: IsNotDisabledInteractive,
+    download: None,
+    href: "",
+    orientation: nav_item_orientation.Vertical,
+    rel: "",
+    selected: IsNotSelected,
+    target: None,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new NavItem
-/// 
+/// from_config creates a new NavItem from the given configuration.
+///
+pub fn from_config(config: Config) -> NavItem {
+  NavItem(
+    disabled: config.disabled,
+    disabled_interactive: config.disabled_interactive,
+    download: config.download,
+    href: config.href,
+    orientation: config.orientation,
+    rel: config.rel,
+    selected: config.selected,
+    target: config.target,
+  )
+}
+
+/// new creates a new NavItem with the default configuration.
+///
 pub fn new() -> NavItem {
   from_config(default_config())
 }
 
-/// from_config creates a NavItem from a Config record
-/// 
-pub fn from_config(c: Config) -> NavItem {
-  NavItem(
-    disabled: c.disabled,
-    disabled_interactive: c.disabled_interactive,
-    link: c.link,
-    orientation: c.orientation,
-    selected: c.selected,
-  )
+// --- Setters ---
+
+/// disabled sets the value of disabled for this NavItem.
+///
+pub fn disabled(record: NavItem, disabled: Disabled) -> NavItem {
+  NavItem(..record, disabled: disabled)
 }
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
-/// 
-pub fn disabled(item: NavItem, disabled: state.Interaction) -> NavItem {
-  NavItem(..item, disabled: disabled)
-}
-
-/// disabled_interactive sets the focusability field
-/// 
+/// disabled_interactive sets the value of disabled_interactive for this NavItem.
+///
 pub fn disabled_interactive(
-  item: NavItem,
-  disabled_interactive: state.Interaction,
+  record: NavItem,
+  disabled_interactive: DisabledInteractive,
 ) -> NavItem {
-  NavItem(..item, disabled_interactive: disabled_interactive)
+  NavItem(..record, disabled_interactive: disabled_interactive)
 }
 
-/// link sets the link field
-/// 
-pub fn link(item: NavItem, link: Option(Link)) -> NavItem {
-  NavItem(..item, link: link)
+/// download sets the value of download for this NavItem.
+///
+pub fn download(record: NavItem, download: Option(String)) -> NavItem {
+  NavItem(..record, download: download)
 }
 
-/// orientation sets the orientation field
-/// 
-pub fn orientation(item: NavItem, orientation: Orientation) -> NavItem {
-  NavItem(..item, orientation: orientation)
+/// href sets the value of href for this NavItem.
+///
+pub fn href(record: NavItem, href: String) -> NavItem {
+  NavItem(..record, href: href)
 }
 
-/// selected sets the selected field
-/// 
-pub fn selected(item: NavItem, selected: SelectionState) -> NavItem {
-  NavItem(..item, selected: selected)
+/// orientation sets the value of orientation for this NavItem.
+///
+pub fn orientation(record: NavItem, orientation: NavItemOrientation) -> NavItem {
+  NavItem(..record, orientation: orientation)
 }
 
-// --- RENDERING ---
+/// rel sets the value of rel for this NavItem.
+///
+pub fn rel(record: NavItem, rel: String) -> NavItem {
+  NavItem(..record, rel: rel)
+}
 
-/// render creates a Lustre Element(msg) from a NavItem
-/// 
-/// ## Parameters:
-/// - item: a NavItem
-/// - attributes: additional attributes
-/// 
+/// selected sets the value of selected for this NavItem.
+///
+pub fn selected(record: NavItem, selected: Selected) -> NavItem {
+  NavItem(..record, selected: selected)
+}
+
+/// target sets the value of target for this NavItem.
+///
+pub fn target(record: NavItem, target: Option(LinkTarget)) -> NavItem {
+  NavItem(..record, target: target)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a NavItem
+///
 pub fn render(
-  item: NavItem,
+  model: NavItem,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -141,18 +213,32 @@ pub fn render(
     "m3e-nav-item",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", item.disabled == Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "disabled-interactive",
-          item.disabled_interactive == Disabled,
+          model.disabled_interactive == IsDisabledInteractive,
         ),
-        helpers.boolean_attribute("selected", item.selected == Selected),
-        attribute.attribute(
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("href", model.href, default_href),
+        attr.with_default(
           "orientation",
-          layout.orientation_to_string(item.orientation),
+          nav_item_orientation.to_string(model.orientation),
+          nav_item_orientation.to_string(default_orientation),
+        ),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
         ),
       ],
-      link.attributes(item.link),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -160,22 +246,21 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a NavItem Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")
     SelectedIcon -> attribute.attribute("slot", "selected-icon")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

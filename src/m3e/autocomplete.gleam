@@ -1,353 +1,389 @@
-//// autocomplete provides Lustre support for the [M3E Autocomplete component](https://matraic.github.io/m3e/#/components/autocomplete.html)
-///// panel_class sets the panel_class field of an Autocomplete
+//// Autocomplete is enhances a text input with suggested options.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
 ////
 
 import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{
-  type SelectionIndicator, HideSelectionIndicator, ShowSelectionIndicator,
-}
-import m3e/helpers
-import m3e/option as m3eoption
-import m3e/state.{type Requirement, Optional, Required}
+import m3e/attr
+import m3e/autocomplete_filter_mode.{type AutocompleteFilterMode}
 
 // --- Types ---
 
-/// Activation specifies if the first option should be automatically activated
-/// 
-pub type Activation {
-  AutoActivate
-  ManualActivate
-}
-
-pub const default_activation: Activation = ManualActivate
-
-/// Autocomplete enhances an input field with a panel of suggested options
+/// Autocomplete is a View Model for this component
 ///
 /// ## Fields:
-/// - auto_activate: Whether the first option should be automatically activated
-/// - case_sensitive: Whether filtering is case sensitive
-/// - filter: Mode in which to filter options
-/// - for: The identifier of the interactive control to which this element is attached
-/// - hide_loading: Whether to hide the menu when loading options
-/// - hide_no_data: Whether to hide the menu when there are no options to show
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - loading: Whether options are being loaded
-/// - loading_label: The text announced and presented when loading options
-/// - no_data_label: The text announced and presented when no options are available for the current term
-/// - panel_class: Class or list of classes to be applied to the autocomplete's overlay panel
-/// - required: Whether the user is required to make a selection when interacting with the autocomplete
-/// - results_label: The text announced when available options change for the current term
+///
+/// - auto_activate: Whether the first option should be automatically activated.
+/// - case_sensitive: Whether filtering is case sensitive.
+/// - filter: Mode in which to filter options.
+/// - hide_selection_indicator: Whether to hide the selection indicator.
+/// - hide_loading: Whether to hide the menu when loading options.
+/// - hide_no_data: Whether to hide the menu when there are no options to show.
+/// - loading: Whether options are being loaded.
+/// - loading_label: The text announced and presented when loading options.
+/// - no_data_label: The text announced and presented when no options are available for the current term.
+/// - panel_class: Class or list of classes to be applied to the autocomplete's overlay panel.
+/// - required: Whether the user is required to make a selection when interacting with the autocomplete.
+/// - results_label: The text announced when available options change for the current term.
+/// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type Autocomplete {
   Autocomplete(
-    auto_activate: Activation,
-    case_sensitive: CaseSensitivity,
-    filter: FilterMode,
-    for: String,
-    hide_loading: LoadingVisibility,
-    hide_no_data: EmptyMenuVisibility,
-    hide_selection_indicator: SelectionIndicator,
-    loading: LoadingStatus,
+    auto_activate: AutoActivate,
+    case_sensitive: CaseSensitive,
+    filter: AutocompleteFilterMode,
+    hide_selection_indicator: HideSelectionIndicator,
+    hide_loading: HideLoading,
+    hide_no_data: HideNoData,
+    loading: Loading,
     loading_label: String,
     no_data_label: String,
-    panel_class: Option(String),
-    required: Requirement,
+    panel_class: String,
+    required: Required,
     results_label: String,
+    for: Option(String),
   )
 }
 
-/// CaseSensitivity specifies if the filtering should be case sensitive
-pub type CaseSensitivity {
-  CaseSensitive
-  CaseInsensitive
+/// AutoActivate is whether the first option should be automatically activated.
+///
+pub type AutoActivate {
+  IsAutoActivate
+  IsNotAutoActivate
 }
 
-pub const default_case_sensitivity: CaseSensitivity = CaseInsensitive
-
-/// EmptyMenuVisibility specifies if the menu should be hidden when there are no options to show
-pub type EmptyMenuVisibility {
-  ShowEmptyMenu
-  HideEmptyMenu
+/// CaseSensitive is whether filtering is case sensitive.
+///
+pub type CaseSensitive {
+  IsCaseSensitive
+  IsNotCaseSensitive
 }
 
-pub const default_empty_menu_visibility: EmptyMenuVisibility = ShowEmptyMenu
-
-/// LoadingVisibility specifies if the loading indicator should be hidden or shown
-pub type LoadingVisibility {
-  ShowLoadingIndicator
-  HideLoadingIndicator
+/// HideSelectionIndicator is whether to hide the selection indicator.
+///
+pub type HideSelectionIndicator {
+  IsHideSelectionIndicator
+  IsNotHideSelectionIndicator
 }
 
-pub const default_loading_visibility: LoadingVisibility = ShowLoadingIndicator
+/// HideLoading is whether to hide the menu when loading options.
+///
+pub type HideLoading {
+  IsHideLoading
+  IsNotHideLoading
+}
 
-/// LoadingStatus specifies if the component is currently fetching or processing data
-pub type LoadingStatus {
+/// HideNoData is whether to hide the menu when there are no options to show.
+///
+pub type HideNoData {
+  IsHideNoData
+  IsNotHideNoData
+}
+
+/// Loading is whether options are being loaded.
+///
+pub type Loading {
   IsLoading
-  NotLoading
+  IsNotLoading
 }
 
-pub const default_loading_status: LoadingStatus = NotLoading
-
-// type AutocompleteFilterMode = "contains" | "starts-with" | "ends-with" | "none"
-
-/// FilterMode specifies how to filter options
-/// 
-pub type FilterMode {
-  Contains
-  StartsWith
-  EndsWith
-  NonFilter
+/// Required is whether the user is required to make a selection when interacting with the autocomplete.
+///
+pub type Required {
+  IsRequired
+  IsNotRequired
 }
 
-pub const default_filter_mode: FilterMode = Contains
+// --- Defaults ---
 
-pub const default_loading_label = "Loading..."
+pub const default_auto_activate: AutoActivate = IsNotAutoActivate
 
-pub const default_no_data_label = "No options"
+pub const default_case_sensitive: CaseSensitive = IsNotCaseSensitive
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+pub const default_filter: AutocompleteFilterMode = autocomplete_filter_mode.Contains
+
+pub const default_hide_selection_indicator: HideSelectionIndicator = IsNotHideSelectionIndicator
+
+pub const default_hide_loading: HideLoading = IsNotHideLoading
+
+pub const default_hide_no_data: HideNoData = IsNotHideNoData
+
+pub const default_loading: Loading = IsNotLoading
+
+pub const default_loading_label: String = "Loading..."
+
+pub const default_no_data_label: String = "No options"
+
+pub const default_panel_class: String = ""
+
+pub const default_required: Required = IsNotRequired
+
+pub const default_results_label: String = ""
+
+pub const default_for: Option(String) = None
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Loading
-  // Renders content when loading options
+  // Renders content when loading options.
   NoData
-  // Renders content when there are no options to show
+  // Renders content when there are no options to show.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config holds the configuration for an Autocomplete
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    auto_activate: Activation,
-    filter: FilterMode,
-    for: String,
-    hide_loading: LoadingVisibility,
-    case_sensitive: CaseSensitivity,
-    hide_no_data: EmptyMenuVisibility,
-    hide_selection_indicator: SelectionIndicator,
-    loading: LoadingStatus,
+    auto_activate: AutoActivate,
+    case_sensitive: CaseSensitive,
+    filter: AutocompleteFilterMode,
+    hide_selection_indicator: HideSelectionIndicator,
+    hide_loading: HideLoading,
+    hide_no_data: HideNoData,
+    loading: Loading,
     loading_label: String,
     no_data_label: String,
-    panel_class: Option(String),
-    required: Requirement,
+    panel_class: String,
+    required: Required,
     results_label: String,
+    for: Option(String),
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    auto_activate: ManualActivate,
-    filter: default_filter_mode,
-    for: "",
-    hide_loading: default_loading_visibility,
-    case_sensitive: default_case_sensitivity,
-    hide_no_data: default_empty_menu_visibility,
-    hide_selection_indicator: ShowSelectionIndicator,
-    loading: default_loading_status,
-    loading_label: default_loading_label,
-    panel_class: None,
-    no_data_label: default_no_data_label,
-    required: Optional,
+    auto_activate: IsNotAutoActivate,
+    case_sensitive: IsNotCaseSensitive,
+    filter: autocomplete_filter_mode.Contains,
+    hide_selection_indicator: IsNotHideSelectionIndicator,
+    hide_loading: IsNotHideLoading,
+    hide_no_data: IsNotHideNoData,
+    loading: IsNotLoading,
+    loading_label: "Loading...",
+    no_data_label: "No options",
+    panel_class: "",
+    required: IsNotRequired,
     results_label: "",
+    for: None,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Autocomplete
+/// from_config creates a new Autocomplete from the given configuration.
 ///
-pub fn new(for: String) -> Autocomplete {
-  from_config(default_config())
-  |> for_(for)
-}
-
-/// from_config creates an Autocomplete from a Config record
-///
-pub fn from_config(c: Config) -> Autocomplete {
+pub fn from_config(config: Config) -> Autocomplete {
   Autocomplete(
-    auto_activate: c.auto_activate,
-    filter: c.filter,
-    for: c.for,
-    hide_loading: c.hide_loading,
-    case_sensitive: c.case_sensitive,
-    hide_no_data: c.hide_no_data,
-    hide_selection_indicator: c.hide_selection_indicator,
-    loading: c.loading,
-    loading_label: c.loading_label,
-    no_data_label: c.no_data_label,
-    panel_class: c.panel_class,
-    required: c.required,
-    results_label: c.results_label,
+    auto_activate: config.auto_activate,
+    case_sensitive: config.case_sensitive,
+    filter: config.filter,
+    hide_selection_indicator: config.hide_selection_indicator,
+    hide_loading: config.hide_loading,
+    hide_no_data: config.hide_no_data,
+    loading: config.loading,
+    loading_label: config.loading_label,
+    no_data_label: config.no_data_label,
+    panel_class: config.panel_class,
+    required: config.required,
+    results_label: config.results_label,
+    for: config.for,
   )
 }
 
-// --- SETTERS ---
-
-/// auto_activate sets the auto_activate field of an Autocomplete
-/// 
-pub fn auto_activate(a: Autocomplete, activation: Activation) -> Autocomplete {
-  Autocomplete(..a, auto_activate: activation)
-}
-
-/// filter sets the filter field of an Autocomplete
+/// new creates a new Autocomplete with the default configuration.
 ///
-pub fn filter(a: Autocomplete, filter: FilterMode) -> Autocomplete {
-  Autocomplete(..a, filter: filter)
+pub fn new() -> Autocomplete {
+  from_config(default_config())
 }
 
-/// for sets the for field of an Autocomplete
+// --- Setters ---
+
+/// auto_activate sets the value of auto_activate for this Autocomplete.
 ///
-pub fn for_(a: Autocomplete, for: String) -> Autocomplete {
-  Autocomplete(..a, for: for)
+pub fn auto_activate(
+  record: Autocomplete,
+  auto_activate: AutoActivate,
+) -> Autocomplete {
+  Autocomplete(..record, auto_activate: auto_activate)
 }
 
-/// case_sensitive sets the case_sensitive field of an Autocomplete
+/// case_sensitive sets the value of case_sensitive for this Autocomplete.
+///
 pub fn case_sensitive(
-  a: Autocomplete,
-  sensitivity: CaseSensitivity,
+  record: Autocomplete,
+  case_sensitive: CaseSensitive,
 ) -> Autocomplete {
-  Autocomplete(..a, case_sensitive: sensitivity)
+  Autocomplete(..record, case_sensitive: case_sensitive)
 }
 
-/// hide_loading sets the hide_loading field of an Autocomplete
-pub fn hide_loading(
-  a: Autocomplete,
-  visibility: LoadingVisibility,
+/// filter sets the value of filter for this Autocomplete.
+///
+pub fn filter(
+  record: Autocomplete,
+  filter: AutocompleteFilterMode,
 ) -> Autocomplete {
-  Autocomplete(..a, hide_loading: visibility)
+  Autocomplete(..record, filter: filter)
 }
 
-/// loading sets the loading state of an Autocomplete
-pub fn loading(a: Autocomplete, status: LoadingStatus) -> Autocomplete {
-  Autocomplete(..a, loading: status)
-}
-
-/// hide_no_data sets the hide_no_data field of an Autocomplete
-pub fn hide_no_data(
-  a: Autocomplete,
-  visibility: EmptyMenuVisibility,
-) -> Autocomplete {
-  Autocomplete(..a, hide_no_data: visibility)
-}
-
-/// hide_selection_indicator sets the hide_selection_indicator field of an Autocomplete
+/// hide_selection_indicator sets the value of hide_selection_indicator for this Autocomplete.
 ///
 pub fn hide_selection_indicator(
-  a: Autocomplete,
-  indicator: SelectionIndicator,
+  record: Autocomplete,
+  hide_selection_indicator: HideSelectionIndicator,
 ) -> Autocomplete {
-  Autocomplete(..a, hide_selection_indicator: indicator)
+  Autocomplete(..record, hide_selection_indicator: hide_selection_indicator)
 }
 
-/// loading_label sets the loading_label field of an Autocomplete
+/// hide_loading sets the value of hide_loading for this Autocomplete.
 ///
-pub fn loading_label(a: Autocomplete, loading_label: String) -> Autocomplete {
-  Autocomplete(..a, loading_label: loading_label)
+pub fn hide_loading(
+  record: Autocomplete,
+  hide_loading: HideLoading,
+) -> Autocomplete {
+  Autocomplete(..record, hide_loading: hide_loading)
 }
 
-/// no_data_label sets the no_data_label field of an Autocomplete
+/// hide_no_data sets the value of hide_no_data for this Autocomplete.
 ///
-pub fn no_data_label(a: Autocomplete, no_data_label: String) -> Autocomplete {
-  Autocomplete(..a, no_data_label: no_data_label)
+pub fn hide_no_data(
+  record: Autocomplete,
+  hide_no_data: HideNoData,
+) -> Autocomplete {
+  Autocomplete(..record, hide_no_data: hide_no_data)
 }
 
-/// panel_class sets the panel_class field of an Autocomplete
+/// loading sets the value of loading for this Autocomplete.
 ///
-pub fn panel_class(a: Autocomplete, panel_class: Option(String)) -> Autocomplete {
-  Autocomplete(..a, panel_class: panel_class)
+pub fn loading(record: Autocomplete, loading: Loading) -> Autocomplete {
+  Autocomplete(..record, loading: loading)
 }
 
-/// required sets the required field of an Autocomplete
+/// loading_label sets the value of loading_label for this Autocomplete.
 ///
-pub fn required(a: Autocomplete, required: Requirement) -> Autocomplete {
-  Autocomplete(..a, required: required)
+pub fn loading_label(
+  record: Autocomplete,
+  loading_label: String,
+) -> Autocomplete {
+  Autocomplete(..record, loading_label: loading_label)
 }
 
-/// results_label sets the results_label field of an Autocomplete
+/// no_data_label sets the value of no_data_label for this Autocomplete.
 ///
-pub fn results_label(a: Autocomplete, results_label: String) -> Autocomplete {
-  Autocomplete(..a, results_label: results_label)
+pub fn no_data_label(
+  record: Autocomplete,
+  no_data_label: String,
+) -> Autocomplete {
+  Autocomplete(..record, no_data_label: no_data_label)
 }
 
-// --- RENDERING ---
-
-/// render creates an M3E Autocomplete component from an Autocomplete
+/// panel_class sets the value of panel_class for this Autocomplete.
 ///
-pub fn render(a: Autocomplete, children: List(m3eoption.Option)) -> Element(msg) {
+pub fn panel_class(record: Autocomplete, panel_class: String) -> Autocomplete {
+  Autocomplete(..record, panel_class: panel_class)
+}
+
+/// required sets the value of required for this Autocomplete.
+///
+pub fn required(record: Autocomplete, required: Required) -> Autocomplete {
+  Autocomplete(..record, required: required)
+}
+
+/// results_label sets the value of results_label for this Autocomplete.
+///
+pub fn results_label(
+  record: Autocomplete,
+  results_label: String,
+) -> Autocomplete {
+  Autocomplete(..record, results_label: results_label)
+}
+
+/// for sets the value of for for this Autocomplete.
+///
+pub fn for(record: Autocomplete, for: Option(String)) -> Autocomplete {
+  Autocomplete(..record, for: for)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Autocomplete
+///
+pub fn render(
+  model: Autocomplete,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-autocomplete",
-    [
-      helpers.boolean_attribute(
-        "auto-activate",
-        a.auto_activate == AutoActivate,
-      ),
-      attribute.attribute("filter", filter_mode_to_string(a.filter)),
-      attribute.attribute("for", a.for),
-      helpers.boolean_attribute(
-        "case-sensitive",
-        a.case_sensitive == CaseSensitive,
-      ),
-      helpers.boolean_attribute("hide-no-data", a.hide_no_data == HideEmptyMenu),
-      helpers.boolean_attribute(
-        "hide-selection-indicator",
-        a.hide_selection_indicator == HideSelectionIndicator,
-      ),
-      helpers.boolean_attribute(
-        "hide-loading",
-        a.hide_loading == HideLoadingIndicator,
-      ),
-      helpers.boolean_attribute("loading", a.loading == IsLoading),
-      attribute.attribute("loading-label", a.loading_label),
-      attribute.attribute("no-data-label", a.no_data_label),
-      helpers.option_attribute(
-        a.panel_class,
-        fn(_) { "panel-class" },
-        function.identity,
-        None,
-      ),
-      helpers.boolean_attribute("required", a.required == Required),
-      attribute.attribute("results-label", a.results_label),
-    ]
+    list.flatten([
+      [
+        attr.boolean("auto-activate", model.auto_activate == IsAutoActivate),
+        attr.boolean("case-sensitive", model.case_sensitive == IsCaseSensitive),
+        attr.with_default(
+          "filter",
+          autocomplete_filter_mode.to_string(model.filter),
+          autocomplete_filter_mode.to_string(default_filter),
+        ),
+        attr.boolean(
+          "hide-selection-indicator",
+          model.hide_selection_indicator == IsHideSelectionIndicator,
+        ),
+        attr.boolean("hide-loading", model.hide_loading == IsHideLoading),
+        attr.boolean("hide-no-data", model.hide_no_data == IsHideNoData),
+        attr.boolean("loading", model.loading == IsLoading),
+        attr.with_default(
+          "loading-label",
+          model.loading_label,
+          default_loading_label,
+        ),
+        attr.with_default(
+          "no-data-label",
+          model.no_data_label,
+          default_no_data_label,
+        ),
+        attr.with_default("panel-class", model.panel_class, default_panel_class),
+        attr.boolean("required", model.required == IsRequired),
+        attr.with_default(
+          "results-label",
+          model.results_label,
+          default_results_label,
+        ),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    list.map(children, fn(o) { m3eoption.render(o, [], []) }),
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Autocomplete Config
+///
 pub fn render_config(
-  config: Config,
-  children: List(m3eoption.Option),
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Loading -> attribute.attribute("slot", "loading")
-    NoData -> attribute.attribute("slot", "nodata")
-  }
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn filter_mode_to_string(m: FilterMode) -> String {
-  case m {
-    Contains -> "contains"
-    StartsWith -> "starts-with"
-    EndsWith -> "ends-with"
-    NonFilter -> "none"
+    NoData -> attribute.attribute("slot", "no-data")
   }
 }

@@ -1,27 +1,38 @@
-//// menu_item_group provides Lustre support for the [M3E Menu Item Group component](https://matraic.github.io/m3e/#/components/menu.html)
+//// MenuItemGroup is groups related items (such a radios) in a menu.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
 
-/// MenuIteMGroup groups related items (such a radios) in a menu
-/// 
+/// MenuItemGroup is a View Model for this component
+///
 pub opaque type MenuItemGroup {
   MenuItemGroup
 }
 
-// -- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new MenuItemGroup
-/// 
+// --- Constructors ---
+
+/// new creates a new MenuItemGroup with the default configuration.
+///
 pub fn new() -> MenuItemGroup {
   MenuItemGroup
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element from a MenuItemGroup
+// --- Renderers ---
+
+/// render creates a Lustre Element for a MenuItemGroup
 ///
 pub fn render(
   _: MenuItemGroup,

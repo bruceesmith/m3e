@@ -1,161 +1,183 @@
-//// expansion_panel provides Lustre support for the M3E Expansion Header component 
+//// ExpansionHeader is a button used to toggle the expanded state of an expansion panel.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import m3e/helpers
-
+import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/expansion_toggle_direction.{type ExpansionToggleDirection}
+import m3e/expansion_toggle_position.{type ExpansionTogglePosition}
 
 // --- Types ---
 
-/// Direction is the direction of the expansion toggle
-/// 
-pub type Direction {
-  Horizontal
-  Vertical
-}
-
-pub const default_direction: Direction = Vertical
-
-/// ExpansionHeader is a button used to toggle the expanded state of an expansion panel
+/// ExpansionHeader is a View Model for this component
 ///
 /// ## Fields:
-/// - hide_toggle: Whether to hide the expansion toggle
-/// - toggle_direction: The direction of the expansion toggle
-/// - toggle_position: The position of the expansion toggle
+///
+/// - hide_toggle: Whether to hide the expansion toggle.
+/// - toggle_direction: The direction of the expansion toggle.
+/// - toggle_position: The position of the expansion toggle.
+/// - disabled: Whether the element is disabled.
 ///
 pub opaque type ExpansionHeader {
   ExpansionHeader(
-    hide_toggle: ToggleVisibility,
-    toggle_direction: Direction,
-    toggle_position: Position,
+    hide_toggle: HideToggle,
+    toggle_direction: ExpansionToggleDirection,
+    toggle_position: ExpansionTogglePosition,
+    disabled: Disabled,
   )
 }
 
-/// The position of the expansion toggle
-/// 
-pub type Position {
-  After
-  Before
+/// HideToggle is whether to hide the expansion toggle.
+///
+pub type HideToggle {
+  IsHideToggle
+  IsNotHideToggle
 }
 
-pub const default_position: Position = After
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+// --- Defaults ---
+
+pub const default_hide_toggle: HideToggle = IsNotHideToggle
+
+pub const default_toggle_direction: ExpansionToggleDirection = expansion_toggle_direction.Vertical
+
+pub const default_toggle_position: ExpansionTogglePosition = expansion_toggle_position.After
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   ToggleIcon
-  // Renders the icon of the expansion toggle 
+  // Renders the icon of the expansion toggle.
 }
 
-/// Whether to hide the expansion toggle
-/// 
-pub type ToggleVisibility {
-  ShowToggle
-  // Shows the expansion toggle 
-  HideToggle
-  // Hides the expansion toggle 
-}
+// --- Configuration ---
 
-pub const default_toggle_visibility: ToggleVisibility = ShowToggle
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for an ExpansionHeader
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    hide_toggle: ToggleVisibility,
-    toggle_direction: Direction,
-    toggle_position: Position,
+    hide_toggle: HideToggle,
+    toggle_direction: ExpansionToggleDirection,
+    toggle_position: ExpansionTogglePosition,
+    disabled: Disabled,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    hide_toggle: default_toggle_visibility,
-    toggle_direction: default_direction,
-    toggle_position: default_position,
+    hide_toggle: IsNotHideToggle,
+    toggle_direction: expansion_toggle_direction.Vertical,
+    toggle_position: expansion_toggle_position.After,
+    disabled: IsNotDisabled,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates an ExpansionHeader from a Config record
-/// 
-pub fn from_config(c: Config) -> ExpansionHeader {
+/// from_config creates a new ExpansionHeader from the given configuration.
+///
+pub fn from_config(config: Config) -> ExpansionHeader {
   ExpansionHeader(
-    hide_toggle: c.hide_toggle,
-    toggle_direction: c.toggle_direction,
-    toggle_position: c.toggle_position,
+    hide_toggle: config.hide_toggle,
+    toggle_direction: config.toggle_direction,
+    toggle_position: config.toggle_position,
+    disabled: config.disabled,
   )
 }
 
-/// new creates a new ExpansionHeader
-/// 
+/// new creates a new ExpansionHeader with the default configuration.
+///
 pub fn new() -> ExpansionHeader {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// hide_toggle sets the `hide_toggle` field
+/// hide_toggle sets the value of hide_toggle for this ExpansionHeader.
 ///
 pub fn hide_toggle(
-  p: ExpansionHeader,
-  visibility: ToggleVisibility,
+  record: ExpansionHeader,
+  hide_toggle: HideToggle,
 ) -> ExpansionHeader {
-  ExpansionHeader(..p, hide_toggle: visibility)
+  ExpansionHeader(..record, hide_toggle: hide_toggle)
 }
 
-/// toggle_direction sets the `toggle_direction` field
+/// toggle_direction sets the value of toggle_direction for this ExpansionHeader.
 ///
 pub fn toggle_direction(
-  p: ExpansionHeader,
-  toggle_direction: Direction,
+  record: ExpansionHeader,
+  toggle_direction: ExpansionToggleDirection,
 ) -> ExpansionHeader {
-  ExpansionHeader(..p, toggle_direction: toggle_direction)
+  ExpansionHeader(..record, toggle_direction: toggle_direction)
 }
 
-/// toggle_position sets the `toggle_position` field
+/// toggle_position sets the value of toggle_position for this ExpansionHeader.
 ///
 pub fn toggle_position(
-  p: ExpansionHeader,
-  toggle_position: Position,
+  record: ExpansionHeader,
+  toggle_position: ExpansionTogglePosition,
 ) -> ExpansionHeader {
-  ExpansionHeader(..p, toggle_position: toggle_position)
+  ExpansionHeader(..record, toggle_position: toggle_position)
 }
 
-// --- RENDERING ---
+/// disabled sets the value of disabled for this ExpansionHeader.
+///
+pub fn disabled(record: ExpansionHeader, disabled: Disabled) -> ExpansionHeader {
+  ExpansionHeader(..record, disabled: disabled)
+}
 
-/// render creates a Lustre Element from an ExpansionHeader
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ExpansionHeader
 ///
 pub fn render(
-  p: ExpansionHeader,
+  model: ExpansionHeader,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-expansion-header",
-    [
-      helpers.boolean_attribute("hide-toggle", p.hide_toggle == HideToggle),
-      attribute.attribute(
-        "toggle-direction",
-        direction_to_string(p.toggle_direction),
-      ),
-      attribute.attribute(
-        "toggle-position",
-        position_to_string(p.toggle_position),
-      ),
-      ..attributes
-    ],
+    list.flatten([
+      [
+        attr.boolean("hide-toggle", model.hide_toggle == IsHideToggle),
+        attr.with_default(
+          "toggle-direction",
+          expansion_toggle_direction.to_string(model.toggle_direction),
+          expansion_toggle_direction.to_string(default_toggle_direction),
+        ),
+        attr.with_default(
+          "toggle-position",
+          expansion_toggle_position.to_string(model.toggle_position),
+          expansion_toggle_position.to_string(default_toggle_position),
+        ),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a ExpansionHeader Config
+///
 pub fn render_config(
   c: Config,
   attributes: List(Attribute(msg)),
@@ -164,26 +186,10 @@ pub fn render_config(
   render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     ToggleIcon -> attribute.attribute("slot", "toggle-icon")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn direction_to_string(d: Direction) -> String {
-  case d {
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
-  }
-}
-
-fn position_to_string(p: Position) -> String {
-  case p {
-    After -> "after"
-    Before -> "before"
   }
 }

@@ -1,160 +1,203 @@
-//// checkbox provides Lustre support for the [M3E Checkbox component](https://matraic.github.io/m3e/#/components/checkbox.html)
+//// Checkbox is a checkbox that allows a user to select one or more options from a limited number of choices.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/option.{type Option, None}
-
-import lustre/attribute
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/form_submission.{type FormSubmission}
-import m3e/helpers
-import m3e/state.{
-  type CheckedState, type Interaction, type Requirement, Checked, Disabled,
-  Optional, Required,
-}
+import m3e/attr
 
 // --- Types ---
 
-/// Checkbox holds all the values necessary to construct am M3E Checkbox
+/// Checkbox is a View Model for this component
 ///
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
-/// - form_submission: handles this element's role in form submission
-/// - indeterminate: Whether the element's checked state is indeterminate
-/// - required: Whether the element is required
+/// ## Fields:
+///
+/// - checked: Whether the element is checked.
+/// - disabled: Whether the element is disabled.
+/// - indeterminate: Whether the element's checked state is indeterminate.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - required: Whether the element is required.
+/// - value: A string representing the value of the checkbox.
 ///
 pub opaque type Checkbox {
   Checkbox(
-    checked: CheckedState,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
-    indeterminate: Mode,
-    required: Requirement,
+    checked: Checked,
+    disabled: Disabled,
+    indeterminate: Indeterminate,
+    name: String,
+    required: Required,
+    value: String,
   )
 }
 
-pub const default_value = "on"
-
-pub type Mode {
-  Determinate
-  Indeterminate
+/// Checked is whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
 }
 
-pub const default_mode = Determinate
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-// --- CONFIGURATION ---
+/// Indeterminate is whether the element's checked state is indeterminate.
+///
+pub type Indeterminate {
+  IsIndeterminate
+  IsNotIndeterminate
+}
 
-/// Config holds the configuration for a Checkbox
-/// 
+/// Required is whether the element is required.
+///
+pub type Required {
+  IsRequired
+  IsNotRequired
+}
+
+// --- Defaults ---
+
+pub const default_checked: Checked = IsNotChecked
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_indeterminate: Indeterminate = IsNotIndeterminate
+
+pub const default_name: String = ""
+
+pub const default_required: Required = IsNotRequired
+
+pub const default_value: String = "on"
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    checked: CheckedState,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
-    indeterminate: Mode,
-    required: Requirement,
+    checked: Checked,
+    disabled: Disabled,
+    indeterminate: Indeterminate,
+    name: String,
+    required: Required,
+    value: String,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    checked: state.default_checked_state,
-    disabled: state.default_interaction,
-    form_submission: None,
-    indeterminate: default_mode,
-    required: Optional,
+    checked: IsNotChecked,
+    disabled: IsNotDisabled,
+    indeterminate: IsNotIndeterminate,
+    name: "",
+    required: IsNotRequired,
+    value: "on",
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Checkbox with default values
+/// from_config creates a new Checkbox from the given configuration.
+///
+pub fn from_config(config: Config) -> Checkbox {
+  Checkbox(
+    checked: config.checked,
+    disabled: config.disabled,
+    indeterminate: config.indeterminate,
+    name: config.name,
+    required: config.required,
+    value: config.value,
+  )
+}
+
+/// new creates a new Checkbox with the default configuration.
 ///
 pub fn new() -> Checkbox {
   from_config(default_config())
 }
 
-/// from_config creates a Checkbox from a Config record
-/// 
-pub fn from_config(c: Config) -> Checkbox {
-  Checkbox(
-    checked: c.checked,
-    disabled: c.disabled,
-    form_submission: c.form_submission,
-    indeterminate: c.indeterminate,
-    required: c.required,
-  )
+// --- Setters ---
+
+/// checked sets the value of checked for this Checkbox.
+///
+pub fn checked(record: Checkbox, checked: Checked) -> Checkbox {
+  Checkbox(..record, checked: checked)
 }
 
-// --- SETTERS ---
-
-/// checked sets the `checked` field
+/// disabled sets the value of disabled for this Checkbox.
 ///
-pub fn checked(checkbox: Checkbox, state: CheckedState) -> Checkbox {
-  Checkbox(..checkbox, checked: state)
+pub fn disabled(record: Checkbox, disabled: Disabled) -> Checkbox {
+  Checkbox(..record, disabled: disabled)
 }
 
-/// disabled sets the `disabled` field
+/// indeterminate sets the value of indeterminate for this Checkbox.
 ///
-pub fn disabled(checkbox: Checkbox, disabled: Interaction) -> Checkbox {
-  Checkbox(..checkbox, disabled: disabled)
+pub fn indeterminate(record: Checkbox, indeterminate: Indeterminate) -> Checkbox {
+  Checkbox(..record, indeterminate: indeterminate)
 }
 
-/// form sets up a Checkbox to participate in an HTML form
-/// 
-/// Pass None to name & value to clear the form controls
+/// name sets the value of name for this Checkbox.
 ///
-/// ## Parameters:
-/// - checkbox: a Checkbox
-/// - form_submission: a FormSubmission
-///
-pub fn form(
-  checkbox: Checkbox,
-  form_submission: Option(FormSubmission),
-) -> Checkbox {
-  Checkbox(..checkbox, form_submission: form_submission)
+pub fn name(record: Checkbox, name: String) -> Checkbox {
+  Checkbox(..record, name: name)
 }
 
-/// indeterminate sets the `indeterminate` field
+/// required sets the value of required for this Checkbox.
 ///
-pub fn indeterminate(checkbox: Checkbox, mode: Mode) -> Checkbox {
-  Checkbox(..checkbox, indeterminate: mode)
+pub fn required(record: Checkbox, required: Required) -> Checkbox {
+  Checkbox(..record, required: required)
 }
 
-/// required sets the `required` field
+/// value sets the value of value for this Checkbox.
 ///
-pub fn required(checkbox: Checkbox, required: Requirement) -> Checkbox {
-  Checkbox(..checkbox, required: required)
+pub fn value(record: Checkbox, value: String) -> Checkbox {
+  Checkbox(..record, value: value)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates an HTML m3e-checkbox component from a Checkbox
+/// render creates a Lustre Element for a Checkbox
 ///
-pub fn render(checkbox: Checkbox) -> Element(msg) {
+pub fn render(
+  model: Checkbox,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-checkbox",
     list.flatten([
       [
-        helpers.boolean_attribute("checked", checkbox.checked == Checked),
-        helpers.boolean_attribute("disabled", checkbox.disabled == Disabled),
-        helpers.boolean_attribute(
-          "indeterminate",
-          checkbox.indeterminate == Indeterminate,
-        ),
-        helpers.boolean_attribute("required", checkbox.required == Required),
+        attr.boolean("checked", model.checked == IsChecked),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("indeterminate", model.indeterminate == IsIndeterminate),
+        attr.with_default("name", model.name, default_name),
+        attr.boolean("required", model.required == IsRequired),
+        attr.with_default("value", model.value, default_value),
       ],
-      form_submission.attributes(checkbox.form_submission),
+      attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-pub fn render_config(config: Config) -> Element(msg) {
-  render(from_config(config))
+/// render_config creates a Lustre Element from a Checkbox Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
 }

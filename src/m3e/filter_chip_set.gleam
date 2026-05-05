@@ -1,163 +1,196 @@
-//// filter_chip_set provides Lustre support for the [M3E Chip Set component](https://matraic.github.io/m3e/#/components/chip-set.html)
+//// FilterChipSet is a container that organizes filter chips into a cohesive group, enabling selection and
+//// //// deselection of values used to refine content or trigger contextual behavior.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/config.{
-  type SelectionIndicator, type SelectionMode, HideSelectionIndicator, Multi,
-  ShowSelectionIndicator,
-}
-import m3e/helpers
-import m3e/layout.{type Orientation, Vertical}
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
 
 // --- Types ---
 
-/// FilterChipset contains all the information for a FilterChipSet
-/// 
+/// FilterChipSet is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - hide_selection_indicator: Whether to hide the selection indicator
-/// - multi: Whether multiple chips can be selected
-/// - name: The name that identifies the element when submitting the associated form
-/// - vertical: Whether the element is oriented vertically
+///
+/// - disabled: Whether the element is disabled.
+/// - hide_selection_indicator: Whether to hide the selection indicator.
+/// - multi: Whether multiple chips can be selected.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - vertical: Whether the element is oriented vertically.
 ///
 pub opaque type FilterChipSet {
   FilterChipSet(
-    disabled: Interaction,
-    hide_selection_indicator: SelectionIndicator,
-    multi: SelectionMode,
-    name: Option(String),
-    vertical: Orientation,
+    disabled: Disabled,
+    hide_selection_indicator: HideSelectionIndicator,
+    multi: Multi,
+    name: String,
+    vertical: Vertical,
   )
 }
 
-// --- CONFIGURATION ---
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Config holds the configuration for a FilterChipSet
-///  
+/// HideSelectionIndicator is whether to hide the selection indicator.
+///
+pub type HideSelectionIndicator {
+  IsHideSelectionIndicator
+  IsNotHideSelectionIndicator
+}
+
+/// Multi is whether multiple chips can be selected.
+///
+pub type Multi {
+  IsMulti
+  IsNotMulti
+}
+
+/// Vertical is whether the element is oriented vertically.
+///
+pub type Vertical {
+  IsVertical
+  IsNotVertical
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_hide_selection_indicator: HideSelectionIndicator = IsNotHideSelectionIndicator
+
+pub const default_multi: Multi = IsNotMulti
+
+pub const default_name: String = ""
+
+pub const default_vertical: Vertical = IsNotVertical
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: Interaction,
-    hide_selection_indicator: SelectionIndicator,
-    multi: SelectionMode,
-    name: Option(String),
-    vertical: Orientation,
+    disabled: Disabled,
+    hide_selection_indicator: HideSelectionIndicator,
+    multi: Multi,
+    name: String,
+    vertical: Vertical,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    hide_selection_indicator: ShowSelectionIndicator,
-    multi: config.default_selection_mode,
-    name: None,
-    vertical: layout.default_orientation,
+    disabled: IsNotDisabled,
+    hide_selection_indicator: IsNotHideSelectionIndicator,
+    multi: IsNotMulti,
+    name: "",
+    vertical: IsNotVertical,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new FilterChipSet with default values
+/// from_config creates a new FilterChipSet from the given configuration.
+///
+pub fn from_config(config: Config) -> FilterChipSet {
+  FilterChipSet(
+    disabled: config.disabled,
+    hide_selection_indicator: config.hide_selection_indicator,
+    multi: config.multi,
+    name: config.name,
+    vertical: config.vertical,
+  )
+}
+
+/// new creates a new FilterChipSet with the default configuration.
 ///
 pub fn new() -> FilterChipSet {
   from_config(default_config())
 }
 
-/// from_config creates a FilterChipSet from a Config record
-/// 
-pub fn from_config(c: Config) -> FilterChipSet {
-  FilterChipSet(
-    disabled: c.disabled,
-    hide_selection_indicator: c.hide_selection_indicator,
-    multi: c.multi,
-    name: c.name,
-    vertical: c.vertical,
-  )
-}
+// --- Setters ---
 
-// --- SETTERS ---
-
-/// disabled sets the `disabled` field
+/// disabled sets the value of disabled for this FilterChipSet.
 ///
-pub fn disabled(c: FilterChipSet, disabled: Interaction) -> FilterChipSet {
-  FilterChipSet(..c, disabled: disabled)
+pub fn disabled(record: FilterChipSet, disabled: Disabled) -> FilterChipSet {
+  FilterChipSet(..record, disabled: disabled)
 }
 
-/// hide_selection_indicator sets the `hide_selection_indicator` field
+/// hide_selection_indicator sets the value of hide_selection_indicator for this FilterChipSet.
 ///
 pub fn hide_selection_indicator(
-  c: FilterChipSet,
-  indicator: SelectionIndicator,
+  record: FilterChipSet,
+  hide_selection_indicator: HideSelectionIndicator,
 ) -> FilterChipSet {
-  FilterChipSet(..c, hide_selection_indicator: indicator)
+  FilterChipSet(..record, hide_selection_indicator: hide_selection_indicator)
 }
 
-/// multi sets the `multi` field
+/// multi sets the value of multi for this FilterChipSet.
 ///
-pub fn multi(c: FilterChipSet, mode: SelectionMode) -> FilterChipSet {
-  FilterChipSet(..c, multi: mode)
+pub fn multi(record: FilterChipSet, multi: Multi) -> FilterChipSet {
+  FilterChipSet(..record, multi: multi)
 }
 
-/// name sets the `name` field
+/// name sets the value of name for this FilterChipSet.
 ///
-pub fn name(c: FilterChipSet, name: Option(String)) -> FilterChipSet {
-  FilterChipSet(..c, name: name)
+pub fn name(record: FilterChipSet, name: String) -> FilterChipSet {
+  FilterChipSet(..record, name: name)
 }
 
-/// vertical sets the `vertical` field
+/// vertical sets the value of vertical for this FilterChipSet.
 ///
-pub fn vertical(s: FilterChipSet, vertical: Orientation) -> FilterChipSet {
-  FilterChipSet(..s, vertical: vertical)
+pub fn vertical(record: FilterChipSet, vertical: Vertical) -> FilterChipSet {
+  FilterChipSet(..record, vertical: vertical)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a FilterChipSet
+/// render creates a Lustre Element for a FilterChipSet
 ///
 pub fn render(
-  s: FilterChipSet,
+  model: FilterChipSet,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-filter-chip-set",
-    list.append(
+    list.flatten([
       [
-        helpers.boolean_attribute("disabled", s.disabled == Disabled),
-        helpers.boolean_attribute(
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean(
           "hide-selection-indicator",
-          s.hide_selection_indicator == HideSelectionIndicator,
+          model.hide_selection_indicator == IsHideSelectionIndicator,
         ),
-        helpers.boolean_attribute("multi", s.multi == Multi),
-        helpers.option_attribute(
-          s.name,
-          fn(_) { "name" },
-          function.identity,
-          None,
-        ),
-        helpers.boolean_attribute("vertical", s.vertical == Vertical),
+        attr.boolean("multi", model.multi == IsMulti),
+        attr.with_default("name", model.name, default_name),
+        attr.boolean("vertical", model.vertical == IsVertical),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a FilterChipSet Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
-// --- PRIVATE INTERNAL HELPERS ---

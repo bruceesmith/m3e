@@ -1,46 +1,74 @@
-//// shape provides Lustre support for the [M3E Shape component](https://matraic.github.io/m3e/#/components/shape.html)
+//// Shape is a shape used to add emphasis and decorative flair.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/shape_name.{type ShapeName}
 
-// ---Types ---
+// --- Types ---
 
-/// Shape provides Lustre support for the [M3E Shape component](https://matraic.github.io/m3e/#/components/shape.html)
-/// 
+/// Shape is a View Model for this component
+///
 /// ## Fields:
-/// - name: The name of the shape
+///
+/// - name: The name of the shape.
 ///
 pub opaque type Shape {
-  Shape(name: String)
+  Shape(name: Option(ShapeName))
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new Shape
+pub const default_name: Option(ShapeName) = None
+
+// --- Constructors ---
+
+/// new creates a new Shape with the default configuration.
 ///
-pub fn new(name: String) -> Shape {
+pub fn new(name: Option(ShapeName)) -> Shape {
   Shape(name: name)
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// name sets the name field
-/// 
-pub fn name(_: Shape, name: String) -> Shape {
+/// name sets the value of name for this Shape.
+///
+pub fn name(_: Shape, name: Option(ShapeName)) -> Shape {
   Shape(name: name)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element(msg) from a Shape
-/// 
-pub fn render(s: Shape, attributes: List(Attribute(msg))) -> Element(msg) {
+/// render creates a Lustre Element for a Shape
+///
+pub fn render(
+  model: Shape,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-shape",
-    [attribute.attribute("name", s.name), ..attributes]
+    list.flatten([
+      [
+        attr.option(
+          model.name,
+          fn(_) { "name" },
+          shape_name.to_string,
+          default_name,
+        ),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }

@@ -1,21 +1,42 @@
-//// datepicker provides Lustre support for the [M3E Datepicker component](https://matraic.github.io/m3e/#/components/datepicker.html)
+//// Datepicker is presents a date picker on a temporary surface.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import m3e/calendar.{type Calendar}
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
+import m3e/calendar_view.{type CalendarView}
+import m3e/date.{type Date}
+import m3e/datepicker_variant.{type DatepickerVariant}
 
 // --- Types ---
 
-/// Datepicker provides a date‑selection experience consistent with Material 3 guidance for layout, motion, and accessibility
+/// Datepicker is a View Model for this component
 ///
 /// ## Fields:
+///
 /// - variant: The appearance variant of the picker.
 /// - clearable: Whether the user can clear the selected date and close the picker.
-/// - calendar: The calendar of the date picker.
+/// - date: The selected date.
+/// - max_date: The maximum date that can be selected.
+/// - min_date: The minimum date that can be selected.
+/// - range_end: End of a date range.
+/// - range_start: Start of a date range.
+/// - start_at: A date specifying the period (month or year) to start the calendar in.
+/// - start_view: The initial view used to select a date.
+/// - previous_month_label: The accessible label given to the button used to move to the previous month.
+/// - next_month_label: The accessible label given to the button used to move to the next month.
+/// - previous_year_label: The accessible label given to the button used to move to the previous year.
+/// - next_year_label: The accessible label given to the button used to move to the next year.
+/// - previous_multi_year_label: The accessible label given to the button used to move to the previous 24 years.
+/// - next_multi_year_label: The accessible label given to the button used to move to the next 24 years.
 /// - clear_label: The label given to the button used clear the selected date and close the picker.
 /// - confirm_label: The label given to the button used apply the selected date and close the picker.
 /// - dismiss_label: The label given to the button used discard the selected date and close the picker.
@@ -23,9 +44,21 @@ import m3e/helpers
 ///
 pub opaque type Datepicker {
   Datepicker(
-    variant: Variant,
-    clearable: Bool,
-    calendar: Calendar,
+    variant: DatepickerVariant,
+    clearable: Clearable,
+    date: Option(Date),
+    max_date: Option(Date),
+    min_date: Option(Date),
+    range_end: Option(Date),
+    range_start: Option(Date),
+    start_at: Option(Date),
+    start_view: CalendarView,
+    previous_month_label: String,
+    next_month_label: String,
+    previous_year_label: String,
+    next_year_label: String,
+    previous_multi_year_label: String,
+    next_multi_year_label: String,
     clear_label: String,
     confirm_label: String,
     dismiss_label: String,
@@ -33,30 +66,74 @@ pub opaque type Datepicker {
   )
 }
 
-pub const default_clear_label = "Clear"
-
-pub const default_confirm_label = "OK"
-
-pub const default_dismiss_label = "Cancel"
-
-pub const default_label = "Select date"
-
-/// The appearance variant of the picker.
-pub type Variant {
-  Auto
-  Docked
-  Modal
+/// Clearable is whether the user can clear the selected date and close the picker.
+///
+pub type Clearable {
+  IsClearable
+  IsNotClearable
 }
 
-// --- CONFIGURATION ---
+// --- Defaults ---
 
-/// Configuration for the datepicker.
+pub const default_variant: DatepickerVariant = datepicker_variant.Docked
+
+pub const default_clearable: Clearable = IsNotClearable
+
+pub const default_date: Option(Date) = None
+
+pub const default_max_date: Option(Date) = None
+
+pub const default_min_date: Option(Date) = None
+
+pub const default_range_end: Option(Date) = None
+
+pub const default_range_start: Option(Date) = None
+
+pub const default_start_at: Option(Date) = None
+
+pub const default_start_view: CalendarView = calendar_view.Month
+
+pub const default_previous_month_label: String = "Previous month"
+
+pub const default_next_month_label: String = "Next month"
+
+pub const default_previous_year_label: String = "Previous year"
+
+pub const default_next_year_label: String = "Next year"
+
+pub const default_previous_multi_year_label: String = "Previous 24 years"
+
+pub const default_next_multi_year_label: String = "Next 24 years"
+
+pub const default_clear_label: String = "Clear"
+
+pub const default_confirm_label: String = "OK"
+
+pub const default_dismiss_label: String = "Cancel"
+
+pub const default_label: String = "Select date"
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    variant: Variant,
-    clearable: Bool,
-    calendar: Calendar,
+    variant: DatepickerVariant,
+    clearable: Clearable,
+    date: Option(Date),
+    max_date: Option(Date),
+    min_date: Option(Date),
+    range_end: Option(Date),
+    range_start: Option(Date),
+    start_at: Option(Date),
+    start_view: CalendarView,
+    previous_month_label: String,
+    next_month_label: String,
+    previous_year_label: String,
+    next_year_label: String,
+    previous_multi_year_label: String,
+    next_multi_year_label: String,
     clear_label: String,
     confirm_label: String,
     dismiss_label: String,
@@ -64,29 +141,53 @@ pub type Config {
   )
 }
 
-/// default_config returns the default configuration for the datepicker.
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    variant: Auto,
-    clearable: False,
-    calendar: calendar.new(),
-    clear_label: default_clear_label,
-    confirm_label: default_confirm_label,
-    dismiss_label: default_dismiss_label,
-    label: default_label,
+    variant: datepicker_variant.Docked,
+    clearable: IsNotClearable,
+    date: None,
+    max_date: None,
+    min_date: None,
+    range_end: None,
+    range_start: None,
+    start_at: None,
+    start_view: calendar_view.Month,
+    previous_month_label: "Previous month",
+    next_month_label: "Next month",
+    previous_year_label: "Previous year",
+    next_year_label: "Next year",
+    previous_multi_year_label: "Previous 24 years",
+    next_multi_year_label: "Next 24 years",
+    clear_label: "Clear",
+    confirm_label: "OK",
+    dismiss_label: "Cancel",
+    label: "Select date",
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config returns a new datepicker with the given configuration.
+/// from_config creates a new Datepicker from the given configuration.
 ///
 pub fn from_config(config: Config) -> Datepicker {
   Datepicker(
     variant: config.variant,
     clearable: config.clearable,
-    calendar: config.calendar,
+    date: config.date,
+    max_date: config.max_date,
+    min_date: config.min_date,
+    range_end: config.range_end,
+    range_start: config.range_start,
+    start_at: config.start_at,
+    start_view: config.start_view,
+    previous_month_label: config.previous_month_label,
+    next_month_label: config.next_month_label,
+    previous_year_label: config.previous_year_label,
+    next_year_label: config.next_year_label,
+    previous_multi_year_label: config.previous_multi_year_label,
+    next_multi_year_label: config.next_multi_year_label,
     clear_label: config.clear_label,
     confirm_label: config.confirm_label,
     dismiss_label: config.dismiss_label,
@@ -94,107 +195,257 @@ pub fn from_config(config: Config) -> Datepicker {
   )
 }
 
-/// new returns a new datepicker with the given configuration.
+/// new creates a new Datepicker with the default configuration.
 ///
 pub fn new() -> Datepicker {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// variant sets the `variant` field
+/// variant sets the value of variant for this Datepicker.
 ///
-pub fn variant(c: Datepicker, variant: Variant) -> Datepicker {
-  Datepicker(..c, variant: variant)
+pub fn variant(record: Datepicker, variant: DatepickerVariant) -> Datepicker {
+  Datepicker(..record, variant: variant)
 }
 
-/// clearable sets the `clearable` field
+/// clearable sets the value of clearable for this Datepicker.
 ///
-pub fn clearable(c: Datepicker, clearable: Bool) -> Datepicker {
-  Datepicker(..c, clearable: clearable)
+pub fn clearable(record: Datepicker, clearable: Clearable) -> Datepicker {
+  Datepicker(..record, clearable: clearable)
 }
 
-/// clear_label sets the `clear_label` field
+/// date sets the value of date for this Datepicker.
 ///
-pub fn clear_label(c: Datepicker, clear_label: String) -> Datepicker {
-  Datepicker(..c, clear_label: clear_label)
+pub fn date(record: Datepicker, date: Option(Date)) -> Datepicker {
+  Datepicker(..record, date: date)
 }
 
-/// confirm_label sets the `confirm_label` field
+/// max_date sets the value of max_date for this Datepicker.
 ///
-pub fn confirm_label(c: Datepicker, confirm_label: String) -> Datepicker {
-  Datepicker(..c, confirm_label: confirm_label)
+pub fn max_date(record: Datepicker, max_date: Option(Date)) -> Datepicker {
+  Datepicker(..record, max_date: max_date)
 }
 
-/// dismiss_label sets the `dismiss_label` field
+/// min_date sets the value of min_date for this Datepicker.
 ///
-pub fn dismiss_label(c: Datepicker, dismiss_label: String) -> Datepicker {
-  Datepicker(..c, dismiss_label: dismiss_label)
+pub fn min_date(record: Datepicker, min_date: Option(Date)) -> Datepicker {
+  Datepicker(..record, min_date: min_date)
 }
 
-/// label sets the `label` field
+/// range_end sets the value of range_end for this Datepicker.
 ///
-pub fn label(c: Datepicker, label: String) -> Datepicker {
-  Datepicker(..c, label: label)
+pub fn range_end(record: Datepicker, range_end: Option(Date)) -> Datepicker {
+  Datepicker(..record, range_end: range_end)
 }
 
-/// calendar sets the `calendar` field
+/// range_start sets the value of range_start for this Datepicker.
 ///
-pub fn calendar(c: Datepicker, calendar: Calendar) -> Datepicker {
-  Datepicker(..c, calendar: calendar)
+pub fn range_start(record: Datepicker, range_start: Option(Date)) -> Datepicker {
+  Datepicker(..record, range_start: range_start)
 }
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a Calendar
+/// start_at sets the value of start_at for this Datepicker.
 ///
-pub fn render(c: Datepicker, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn start_at(record: Datepicker, start_at: Option(Date)) -> Datepicker {
+  Datepicker(..record, start_at: start_at)
+}
+
+/// start_view sets the value of start_view for this Datepicker.
+///
+pub fn start_view(record: Datepicker, start_view: CalendarView) -> Datepicker {
+  Datepicker(..record, start_view: start_view)
+}
+
+/// previous_month_label sets the value of previous_month_label for this Datepicker.
+///
+pub fn previous_month_label(
+  record: Datepicker,
+  previous_month_label: String,
+) -> Datepicker {
+  Datepicker(..record, previous_month_label: previous_month_label)
+}
+
+/// next_month_label sets the value of next_month_label for this Datepicker.
+///
+pub fn next_month_label(
+  record: Datepicker,
+  next_month_label: String,
+) -> Datepicker {
+  Datepicker(..record, next_month_label: next_month_label)
+}
+
+/// previous_year_label sets the value of previous_year_label for this Datepicker.
+///
+pub fn previous_year_label(
+  record: Datepicker,
+  previous_year_label: String,
+) -> Datepicker {
+  Datepicker(..record, previous_year_label: previous_year_label)
+}
+
+/// next_year_label sets the value of next_year_label for this Datepicker.
+///
+pub fn next_year_label(
+  record: Datepicker,
+  next_year_label: String,
+) -> Datepicker {
+  Datepicker(..record, next_year_label: next_year_label)
+}
+
+/// previous_multi_year_label sets the value of previous_multi_year_label for this Datepicker.
+///
+pub fn previous_multi_year_label(
+  record: Datepicker,
+  previous_multi_year_label: String,
+) -> Datepicker {
+  Datepicker(..record, previous_multi_year_label: previous_multi_year_label)
+}
+
+/// next_multi_year_label sets the value of next_multi_year_label for this Datepicker.
+///
+pub fn next_multi_year_label(
+  record: Datepicker,
+  next_multi_year_label: String,
+) -> Datepicker {
+  Datepicker(..record, next_multi_year_label: next_multi_year_label)
+}
+
+/// clear_label sets the value of clear_label for this Datepicker.
+///
+pub fn clear_label(record: Datepicker, clear_label: String) -> Datepicker {
+  Datepicker(..record, clear_label: clear_label)
+}
+
+/// confirm_label sets the value of confirm_label for this Datepicker.
+///
+pub fn confirm_label(record: Datepicker, confirm_label: String) -> Datepicker {
+  Datepicker(..record, confirm_label: confirm_label)
+}
+
+/// dismiss_label sets the value of dismiss_label for this Datepicker.
+///
+pub fn dismiss_label(record: Datepicker, dismiss_label: String) -> Datepicker {
+  Datepicker(..record, dismiss_label: dismiss_label)
+}
+
+/// label sets the value of label for this Datepicker.
+///
+pub fn label(record: Datepicker, label: String) -> Datepicker {
+  Datepicker(..record, label: label)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Datepicker
+///
+pub fn render(
+  model: Datepicker,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-datepicker",
     list.flatten([
       [
-        attribute.attribute("variant", variant_to_string(c.variant)),
-        helpers.boolean_attribute("clearable", c.clearable),
-        helpers.attribute_with_default(
-          "clear-label",
-          c.clear_label,
-          default_clear_label,
+        attr.with_default(
+          "variant",
+          datepicker_variant.to_string(model.variant),
+          datepicker_variant.to_string(default_variant),
         ),
-        helpers.attribute_with_default(
+        attr.boolean("clearable", model.clearable == IsClearable),
+        attr.option(model.date, fn(_) { "date" }, date.to_string, default_date),
+        attr.option(
+          model.max_date,
+          fn(_) { "max-date" },
+          date.to_string,
+          default_max_date,
+        ),
+        attr.option(
+          model.min_date,
+          fn(_) { "min-date" },
+          date.to_string,
+          default_min_date,
+        ),
+        attr.option(
+          model.range_end,
+          fn(_) { "range-end" },
+          date.to_string,
+          default_range_end,
+        ),
+        attr.option(
+          model.range_start,
+          fn(_) { "range-start" },
+          date.to_string,
+          default_range_start,
+        ),
+        attr.option(
+          model.start_at,
+          fn(_) { "start-at" },
+          date.to_string,
+          default_start_at,
+        ),
+        attr.with_default(
+          "start-view",
+          calendar_view.to_string(model.start_view),
+          calendar_view.to_string(default_start_view),
+        ),
+        attr.with_default(
+          "previous-month-label",
+          model.previous_month_label,
+          default_previous_month_label,
+        ),
+        attr.with_default(
+          "next-month-label",
+          model.next_month_label,
+          default_next_month_label,
+        ),
+        attr.with_default(
+          "previous-year-label",
+          model.previous_year_label,
+          default_previous_year_label,
+        ),
+        attr.with_default(
+          "next-year-label",
+          model.next_year_label,
+          default_next_year_label,
+        ),
+        attr.with_default(
+          "previous-multi-year-label",
+          model.previous_multi_year_label,
+          default_previous_multi_year_label,
+        ),
+        attr.with_default(
+          "next-multi-year-label",
+          model.next_multi_year_label,
+          default_next_multi_year_label,
+        ),
+        attr.with_default("clear-label", model.clear_label, default_clear_label),
+        attr.with_default(
           "confirm-label",
-          c.confirm_label,
+          model.confirm_label,
           default_confirm_label,
         ),
-        helpers.attribute_with_default(
+        attr.with_default(
           "dismiss-label",
-          c.dismiss_label,
+          model.dismiss_label,
           default_dismiss_label,
         ),
-        helpers.attribute_with_default("label", c.label, default_label),
+        attr.with_default("label", model.label, default_label),
       ],
-      calendar.attributes(c.calendar),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
-/// render_config creates a Lustre Element(msg) from a Config
+/// render_config creates a Lustre Element from a Datepicker Config
 ///
 pub fn render_config(
   c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(c), attributes)
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Auto -> "auto"
-    Docked -> "docked"
-    Modal -> "modal"
-  }
+  render(from_config(c), attributes, children)
 }

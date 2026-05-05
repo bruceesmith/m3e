@@ -1,175 +1,180 @@
-//// switch provides Lustre support for the [M3E Switch component](https://matraic.github.io/m3e/#/components/switch.html)
+//// Switch is an on/off control that can be toggled by clicking.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/option.{type Option, None, Some}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/switch_icons.{type SwitchIcons}
 
-import m3e/form_submission.{type FormSubmission}
-import m3e/helpers
-import m3e/state.{type CheckedState, type Interaction, Checked, Disabled}
+// --- Types ---
 
-// --- TYPES ---
-
-pub type Icons {
-  Both
-  Neither
-  Selected
-}
-
-pub const default_icons: Icons = Neither
-
-/// Switch is a configuration type representing an M3E Switch
-/// 
+/// Switch is a View Model for this component
+///
 /// ## Fields:
-/// - id: id of the switch,
-/// - label: label on the switch
-/// - icons: The icons to present
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
-/// - form_submission: handles this element's role in form submission
-/// 
+///
+/// - checked: Whether the element is checked.
+/// - disabled: Whether the element is disabled.
+/// - icons: The icons to present.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - value: A string representing the value of the switch.
+///
 pub opaque type Switch {
   Switch(
-    id: String,
-    label: Option(String),
-    icons: Icons,
-    checked: CheckedState,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
+    checked: Checked,
+    disabled: Disabled,
+    icons: SwitchIcons,
+    name: String,
+    value: String,
   )
 }
 
-// --- CONFIGURATION ---
+/// Checked is whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
+}
 
-/// Config holds the configuration for a Switch
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_checked: Checked = IsNotChecked
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_icons: SwitchIcons = switch_icons.None
+
+pub const default_name: String = ""
+
+pub const default_value: String = "on"
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    label: Option(String),
-    icons: Icons,
-    checked: CheckedState,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
+    checked: Checked,
+    disabled: Disabled,
+    icons: SwitchIcons,
+    name: String,
+    value: String,
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    label: None,
-    icons: default_icons,
-    checked: state.default_checked_state,
-    disabled: state.default_interaction,
-    form_submission: None,
+    checked: IsNotChecked,
+    disabled: IsNotDisabled,
+    icons: switch_icons.None,
+    name: "",
+    value: "on",
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a Switch with default values
-///
-pub fn new(id: String) -> Switch {
-  Switch(..from_config(default_config()), id: id)
-}
-
-/// from_config creates a Switch from a Config
+/// from_config creates a new Switch from the given configuration.
 ///
 pub fn from_config(config: Config) -> Switch {
   Switch(
-    id: "",
-    label: config.label,
-    icons: config.icons,
     checked: config.checked,
     disabled: config.disabled,
-    form_submission: config.form_submission,
+    icons: config.icons,
+    name: config.name,
+    value: config.value,
   )
 }
 
-// --- SETTERS ---
-
-/// checked sets the checked field
+/// new creates a new Switch with the default configuration.
 ///
-pub fn checked(s: Switch, checked: CheckedState) -> Switch {
-  Switch(..s, checked: checked)
+pub fn new() -> Switch {
+  from_config(default_config())
 }
 
-/// disabled sets the disabled field
+// --- Setters ---
+
+/// checked sets the value of checked for this Switch.
 ///
-pub fn disabled(s: Switch, disabled: Interaction) -> Switch {
-  Switch(..s, disabled: disabled)
+pub fn checked(record: Switch, checked: Checked) -> Switch {
+  Switch(..record, checked: checked)
 }
 
-/// label sets the label field
+/// disabled sets the value of disabled for this Switch.
 ///
-pub fn label(s: Switch, label: Option(String)) -> Switch {
-  Switch(..s, label: label)
+pub fn disabled(record: Switch, disabled: Disabled) -> Switch {
+  Switch(..record, disabled: disabled)
 }
 
-/// form sets theform_submission field when the switch is used in a form
+/// icons sets the value of icons for this Switch.
 ///
-/// Pass None to name & value to clear the form controls
-///
-pub fn form(s: Switch, form_submission: Option(FormSubmission)) -> Switch {
-  Switch(..s, form_submission: form_submission)
+pub fn icons(record: Switch, icons: SwitchIcons) -> Switch {
+  Switch(..record, icons: icons)
 }
 
-/// icon sets the icons field
+/// name sets the value of name for this Switch.
 ///
-pub fn icon(s: Switch, icons: Icons) -> Switch {
-  Switch(..s, icons: icons)
+pub fn name(record: Switch, name: String) -> Switch {
+  Switch(..record, name: name)
 }
 
-// --- RENDERING ---
-
-/// render creates a list of Lustre Elements from a Switch
+/// value sets the value of value for this Switch.
 ///
-pub fn render(s: Switch, attributes: List(Attribute(msg))) -> List(Element(msg)) {
-  let switch_element =
-    element.element(
-      "m3e-switch",
-      list.flatten([
-        [
-          attribute.attribute("id", s.id),
-          attribute.attribute("icons", icons_to_string(s.icons)),
-          helpers.boolean_attribute("checked", s.checked == Checked),
-          helpers.boolean_attribute("disabled", s.disabled == Disabled),
-        ],
-        form_submission.attributes(s.form_submission),
-        attributes,
-      ])
-        |> list.filter(fn(a) { a != attribute.none() }),
-      [],
-    )
-
-  case s.label {
-    Some(label) -> [
-      switch_element,
-      element.element("label", [attribute.attribute("for", s.id)], [
-        element.text(label),
-      ]),
-    ]
-    None -> [switch_element]
-  }
+pub fn value(record: Switch, value: String) -> Switch {
+  Switch(..record, value: value)
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
-pub fn render_config(
-  config: Config,
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Switch
+///
+pub fn render(
+  model: Switch,
   attributes: List(Attribute(msg)),
-) -> List(Element(msg)) {
-  render(from_config(config), attributes)
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-switch",
+    list.flatten([
+      [
+        attr.boolean("checked", model.checked == IsChecked),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default(
+          "icons",
+          switch_icons.to_string(model.icons),
+          switch_icons.to_string(default_icons),
+        ),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default("value", model.value, default_value),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
 }
 
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn icons_to_string(i: Icons) -> String {
-  case i {
-    Both -> "both"
-    Neither -> "none"
-    Selected -> "selected"
-  }
+/// render_config creates a Lustre Element from a Switch Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
 }

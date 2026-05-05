@@ -1,242 +1,263 @@
-//// step provides Lustre support for the [M3E Step component](https://matraic.github.io/m3e/#/components/stepper.html)
+//// Step is a step in a wizard-like workflow.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
+import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled, Enabled}
+import m3e/attr
 
 // --- Types ---
 
-/// Whether the step has been completed
-pub type Completed {
-  Completed
-  NotCompleted
-}
-
-pub const default_completed: Completed = NotCompleted
-
-/// Whether the step is editable and users can return to it after completion
-pub type Editable {
-  Editable
-  NotEditable
-}
-
-pub const default_editable: Editable = NotEditable
-
-/// Whether the step is optional
-pub type Optional {
-  Optional
-  NotOptional
-}
-
-pub const default_optional: Optional = NotOptional
-
-/// Whether the element is selected
-pub type Selected {
-  Selected
-  NotSelected
-}
-
-pub const default_selected: Selected = NotSelected
-
-/// Slot gives type-safe names to each of the defined HTML named slots
-///
-pub type Slot {
-  DoneIcon
-  // Renders the icon of a completed step
-  EditIcon
-  // Renders the icon of a completed editable step
-  Error
-  // Renders the error message for an invalid step
-  ErrorIcon
-  // Renders icon of an invalid step
-  Hint
-  // Renders the hint text of the step
-  Icon
-  // Renders the icon of the step
-}
-
-/// Step provides Lustre support for the [M3E Step component
+/// Step is a View Model for this component
 ///
 /// ## Fields:
-/// - completed: Whether the step has been completed
-/// - disabled: Whether the element is disabled
-/// - editable: Whether the step is editable and users can return to it after completion
-/// - for: The identifier of the interactive control to which this element is attached
-/// - optional: Whether the step is optional
-/// - selected: Whether the element is selected
-/// - text: The text to display in the step
+///
+/// - completed: Whether the step has been completed.
+/// - disabled: Whether the element is disabled.
+/// - editable: Whether the step is editable and users can return to it after completion.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - optional: Whether the step is optional.
+/// - selected: Whether the element is selected.
+/// - invalid: Whether the step has an error.
 ///
 pub opaque type Step {
   Step(
-    completed: Bool,
-    disabled: Bool,
-    editable: Bool,
-    for: String,
-    optional: Bool,
-    selected: Bool,
-    text: String,
+    completed: Completed,
+    disabled: Disabled,
+    editable: Editable,
+    for: Option(String),
+    optional: Optional,
+    selected: Selected,
+    invalid: Invalid,
   )
 }
 
-// -- CONFIGURATION ---
+/// Completed is whether the step has been completed.
+///
+pub type Completed {
+  IsCompleted
+  IsNotCompleted
+}
 
-/// Config is a record that contains all of the configurable options for a Step
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Editable is whether the step is editable and users can return to it after completion.
+///
+pub type Editable {
+  IsEditable
+  IsNotEditable
+}
+
+/// Optional is whether the step is optional.
+///
+pub type Optional {
+  IsOptional
+  IsNotOptional
+}
+
+/// Selected is whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+/// Invalid is whether the step has an error.
+///
+pub type Invalid {
+  IsInvalid
+  IsNotInvalid
+}
+
+// --- Defaults ---
+
+pub const default_completed: Completed = IsNotCompleted
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_editable: Editable = IsNotEditable
+
+pub const default_for: Option(String) = None
+
+pub const default_optional: Optional = IsNotOptional
+
+pub const default_selected: Selected = IsNotSelected
+
+pub const default_invalid: Invalid = IsNotInvalid
+
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  Icon
+  // Renders the icon of the step.
+  DoneIcon
+  // Renders the icon of a completed step.
+  EditIcon
+  // Renders the icon of a completed editable step.
+  ErrorIcon
+  // Renders icon of an invalid step.
+  Hint
+  // Renders the hint text of the step.
+  Error
+  // Renders the error message for an invalid step.
+}
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
     completed: Completed,
-    disabled: Interaction,
+    disabled: Disabled,
     editable: Editable,
-    for: String,
+    for: Option(String),
     optional: Optional,
     selected: Selected,
-    text: String,
+    invalid: Invalid,
   )
 }
 
-/// default_config creates a default Config for a Step
+/// default_config is the default configuration for this component.
 ///
-pub fn default_config(for: String) -> Config {
+pub fn default_config() -> Config {
   Config(
-    default_completed,
-    state.default_interaction,
-    default_editable,
-    for,
-    default_optional,
-    default_selected,
-    "",
+    completed: IsNotCompleted,
+    disabled: IsNotDisabled,
+    editable: IsNotEditable,
+    for: None,
+    optional: IsNotOptional,
+    selected: IsNotSelected,
+    invalid: IsNotInvalid,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Step
-///
-pub fn new(for: String) -> Step {
-  Step(False, False, False, for, False, False, "")
-}
-
-/// from_config creates a new Step from a Config
+/// from_config creates a new Step from the given configuration.
 ///
 pub fn from_config(config: Config) -> Step {
   Step(
-    completed: config.completed == Completed,
-    disabled: config.disabled == Disabled,
-    editable: config.editable == Editable,
+    completed: config.completed,
+    disabled: config.disabled,
+    editable: config.editable,
     for: config.for,
-    optional: config.optional == Optional,
-    selected: config.selected == Selected,
-    text: config.text,
+    optional: config.optional,
+    selected: config.selected,
+    invalid: config.invalid,
   )
 }
 
-// --- SETTERS ---
-
-/// completed sets the completed field
+/// new creates a new Step with the default configuration.
 ///
-pub fn completed(s: Step, completed: Bool) -> Step {
-  Step(..s, completed: completed)
+pub fn new() -> Step {
+  from_config(default_config())
 }
 
-/// disabled sets the disabled field
+// --- Setters ---
+
+/// completed sets the value of completed for this Step.
 ///
-pub fn disabled(s: Step, disabled: Bool) -> Step {
-  Step(..s, disabled: disabled)
+pub fn completed(record: Step, completed: Completed) -> Step {
+  Step(..record, completed: completed)
 }
 
-/// editable sets the editable field
+/// disabled sets the value of disabled for this Step.
 ///
-pub fn editable(s: Step, editable: Bool) -> Step {
-  Step(..s, editable: editable)
+pub fn disabled(record: Step, disabled: Disabled) -> Step {
+  Step(..record, disabled: disabled)
 }
 
-/// for sets the for field
+/// editable sets the value of editable for this Step.
 ///
-pub fn for_(s: Step, for: String) -> Step {
-  Step(..s, for: for)
+pub fn editable(record: Step, editable: Editable) -> Step {
+  Step(..record, editable: editable)
 }
 
-/// optional sets the optional field
+/// for sets the value of for for this Step.
 ///
-pub fn optional(s: Step, optional: Bool) -> Step {
-  Step(..s, optional: optional)
+pub fn for(record: Step, for: Option(String)) -> Step {
+  Step(..record, for: for)
 }
 
-/// selected sets the selected field
+/// optional sets the value of optional for this Step.
 ///
-pub fn selected(s: Step, selected: Bool) -> Step {
-  Step(..s, selected: selected)
+pub fn optional(record: Step, optional: Optional) -> Step {
+  Step(..record, optional: optional)
 }
 
-/// text sets the text field
+/// selected sets the value of selected for this Step.
 ///
-pub fn text(s: Step, text: String) -> Step {
-  Step(..s, text: text)
+pub fn selected(record: Step, selected: Selected) -> Step {
+  Step(..record, selected: selected)
 }
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a Step
+/// invalid sets the value of invalid for this Step.
 ///
-pub fn render(s: Step, children: List(Element(msg))) -> Element(msg) {
-  let config =
-    Config(
-      completed: case s.completed {
-        True -> Completed
-        False -> NotCompleted
-      },
-      disabled: case s.disabled {
-        True -> Disabled
-        False -> Enabled
-      },
-      editable: case s.editable {
-        True -> Editable
-        False -> NotEditable
-      },
-      for: s.for,
-      optional: case s.optional {
-        True -> Optional
-        False -> NotOptional
-      },
-      selected: case s.selected {
-        True -> Selected
-        False -> NotSelected
-      },
-      text: s.text,
-    )
-  render_config(config, children)
+pub fn invalid(record: Step, invalid: Invalid) -> Step {
+  Step(..record, invalid: invalid)
 }
 
-/// render_config creates a Lustre Element(msg) from a Config
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Step
 ///
-pub fn render_config(
-  config: Config,
+pub fn render(
+  model: Step,
+  attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-step",
-    [
-      helpers.boolean_attribute("completed", config.completed == Completed),
-      helpers.boolean_attribute("disabled", config.disabled == Disabled),
-      helpers.boolean_attribute("editable", config.editable == Editable),
-      attribute.attribute("for", config.for),
-      helpers.boolean_attribute("optional", config.optional == Optional),
-      helpers.boolean_attribute("selected", config.selected == Selected),
-    ],
-    [element.text(config.text), ..children],
+    list.flatten([
+      [
+        attr.boolean("completed", model.completed == IsCompleted),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("editable", model.editable == IsEditable),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.boolean("optional", model.optional == IsOptional),
+        attr.boolean("selected", model.selected == IsSelected),
+        attr.boolean("invalid", model.invalid == IsInvalid),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
   )
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// render_config creates a Lustre Element from a Step Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
 ///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
+    Icon -> attribute.attribute("slot", "icon")
     DoneIcon -> attribute.attribute("slot", "done-icon")
     EditIcon -> attribute.attribute("slot", "edit-icon")
-    Error -> attribute.attribute("slot", "error")
     ErrorIcon -> attribute.attribute("slot", "error-icon")
     Hint -> attribute.attribute("slot", "hint")
-    Icon -> attribute.attribute("slot", "icon")
+    Error -> attribute.attribute("slot", "error")
   }
 }

@@ -1,178 +1,291 @@
-//// card provides Lustre support for the [M3E Card component](https://matraic.github.io/m3e/#/components/card.html)
+//// Card is a content container for text, images (or other media), and actions in the context of a single subject.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/layout.{type Orientation}
-import m3e/link.{type Link}
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
+import m3e/card_orientation.{type CardOrientation}
+import m3e/card_variant.{type CardVariant}
+import m3e/form_submitter_type.{type FormSubmitterType}
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
-/// Actionability specifies if a card is interactive
-pub type Actionability {
-  Actionable
-  Static
-}
-
-pub const default_actionability: Actionability = Static
-
-/// Card is a flexible, expressive container for presenting a unified subject
-/// 
+/// Card is a View Model for this component
+///
 /// ## Fields:
-/// - actionable: Whether the card is "actionable" and will respond to use interaction
-/// - disabled: Whether the element is enabled or disabled
-/// - inline: Whether to present the card inline with surrounding content
-/// - link: Whether the card is a link
-/// - orientation: The orientation of the card
-/// - variant: The appearance variant of the card
-/// 
+///
+/// - actionable: Whether the card is "actionable" and will respond to use interaction.
+/// - inline: Whether to present the card inline with surrounding content.
+/// - orientation: The orientation of the card.
+/// - variant: The appearance variant of the card.
+/// - href: The URL to which the link button points.
+/// - target: The target of the link button.
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - download: A value indicating whether the `target` of the link button will be downloaded,
+///     optionally specifying the new name of the file.
+/// - name: The name of the element, submitted as a pair with the element's `value`
+///     as part of form data, when the element is used to submit a form.
+/// - value: The value associated with the element's name when it's submitted with form data.
+/// - type_: The type of the element.
+/// - disabled_interactive: Whether the element is disabled and interactive.
+/// - disabled: Whether the element is disabled.
+///
 pub opaque type Card {
   Card(
-    actionable: Actionability,
-    disabled: Interaction,
-    inline: Layout,
-    link: Option(Link),
-    orientation: Orientation,
-    variant: Variant,
+    actionable: Actionable,
+    inline: Inline,
+    orientation: CardOrientation,
+    variant: CardVariant,
+    href: String,
+    target: Option(LinkTarget),
+    rel: String,
+    download: Option(String),
+    name: String,
+    value: String,
+    type_: FormSubmitterType,
+    disabled_interactive: DisabledInteractive,
+    disabled: Disabled,
   )
 }
 
-/// Layout specifies if a card is rendered inline or as a block
-pub type Layout {
-  Inline
-  Block
+/// Actionable is whether the card is "actionable" and will respond to use interaction.
+///
+pub type Actionable {
+  IsActionable
+  IsNotActionable
 }
 
-pub const default_inline: Layout = Block
+/// Inline is whether to present the card inline with surrounding content.
+///
+pub type Inline {
+  IsInline
+  IsNotInline
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// DisabledInteractive is whether the element is disabled and interactive.
+///
+pub type DisabledInteractive {
+  IsDisabledInteractive
+  IsNotDisabledInteractive
+}
+
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_actionable: Actionable = IsNotActionable
+
+pub const default_inline: Inline = IsNotInline
+
+pub const default_orientation: CardOrientation = card_orientation.Vertical
+
+pub const default_variant: CardVariant = card_variant.Filled
+
+pub const default_href: String = ""
+
+pub const default_target: Option(LinkTarget) = None
+
+pub const default_rel: String = ""
+
+pub const default_download: Option(String) = None
+
+pub const default_name: String = ""
+
+pub const default_value: String = ""
+
+pub const default_type_: FormSubmitterType = form_submitter_type.Button
+
+pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
-  Actions
-  // Renders the actions of the card 
-  Content
-  // Renders the content of the card with padding 
-  Footer
-  // Renders the footer of the card 
   Header
-  // Renders the header of the card 
+  // Renders the header of the card.
+  Content
+  // Renders the content of the card with padding.
+  Actions
+  // Renders the actions of the card.
+  Footer
+  // Renders the footer of the card.
 }
 
-/// Variant is the appearance variant of the card
-/// 
-pub type Variant {
-  Elevated
-  Filled
-  Outlined
-}
+// --- Configuration ---
 
-/// Default variant
-/// 
-pub const default_variant = Filled
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a Card
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    actionable: Actionability,
-    disabled: Interaction,
-    inline: Layout,
-    link: Option(Link),
-    orientation: Orientation,
-    variant: Variant,
+    actionable: Actionable,
+    inline: Inline,
+    orientation: CardOrientation,
+    variant: CardVariant,
+    href: String,
+    target: Option(LinkTarget),
+    rel: String,
+    download: Option(String),
+    name: String,
+    value: String,
+    type_: FormSubmitterType,
+    disabled_interactive: DisabledInteractive,
+    disabled: Disabled,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    actionable: default_actionability,
-    disabled: state.default_interaction,
-    inline: default_inline,
-    link: None,
-    orientation: layout.default_orientation,
-    variant: default_variant,
+    actionable: IsNotActionable,
+    inline: IsNotInline,
+    orientation: card_orientation.Vertical,
+    variant: card_variant.Filled,
+    href: "",
+    target: None,
+    rel: "",
+    download: None,
+    name: "",
+    value: "",
+    type_: form_submitter_type.Button,
+    disabled_interactive: IsNotDisabledInteractive,
+    disabled: IsNotDisabled,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a Card with default values
-/// 
+/// from_config creates a new Card from the given configuration.
+///
+pub fn from_config(config: Config) -> Card {
+  Card(
+    actionable: config.actionable,
+    inline: config.inline,
+    orientation: config.orientation,
+    variant: config.variant,
+    href: config.href,
+    target: config.target,
+    rel: config.rel,
+    download: config.download,
+    name: config.name,
+    value: config.value,
+    type_: config.type_,
+    disabled_interactive: config.disabled_interactive,
+    disabled: config.disabled,
+  )
+}
+
+/// new creates a new Card with the default configuration.
+///
 pub fn new() -> Card {
   from_config(default_config())
 }
 
-/// from_config creates a Card from a Config record
-/// 
-pub fn from_config(c: Config) -> Card {
-  Card(
-    actionable: c.actionable,
-    disabled: c.disabled,
-    inline: c.inline,
-    link: c.link,
-    orientation: c.orientation,
-    variant: c.variant,
-  )
+// --- Setters ---
+
+/// actionable sets the value of actionable for this Card.
+///
+pub fn actionable(record: Card, actionable: Actionable) -> Card {
+  Card(..record, actionable: actionable)
 }
 
-// --- SETTERS ---
-
-/// actionable sets the `actionable` field of a Card
-/// 
-pub fn actionable(c: Card, a: Actionability) -> Card {
-  Card(..c, actionable: a)
+/// inline sets the value of inline for this Card.
+///
+pub fn inline(record: Card, inline: Inline) -> Card {
+  Card(..record, inline: inline)
 }
 
-/// disabled sets the `disabled` field of a Card
-/// 
-pub fn disabled(c: Card, i: Interaction) -> Card {
-  Card(..c, disabled: i)
+/// orientation sets the value of orientation for this Card.
+///
+pub fn orientation(record: Card, orientation: CardOrientation) -> Card {
+  Card(..record, orientation: orientation)
 }
 
-/// inline sets the `inline` field of a Card
-/// 
-pub fn inline(c: Card, l: Layout) -> Card {
-  Card(..c, inline: l)
+/// variant sets the value of variant for this Card.
+///
+pub fn variant(record: Card, variant: CardVariant) -> Card {
+  Card(..record, variant: variant)
 }
 
-/// link sets the `link` field of a Card
-/// 
-pub fn link(c: Card, link: Option(Link)) -> Card {
-  Card(..c, link: link)
+/// href sets the value of href for this Card.
+///
+pub fn href(record: Card, href: String) -> Card {
+  Card(..record, href: href)
 }
 
-/// orientation sets the `orientation` field of a Card
-/// 
-pub fn orientation(c: Card, o: Orientation) -> Card {
-  Card(..c, orientation: o)
+/// target sets the value of target for this Card.
+///
+pub fn target(record: Card, target: Option(LinkTarget)) -> Card {
+  Card(..record, target: target)
 }
 
-/// variant sets the `variant` field of a Card
-/// 
-pub fn variant(c: Card, v: Variant) -> Card {
-  Card(..c, variant: v)
+/// rel sets the value of rel for this Card.
+///
+pub fn rel(record: Card, rel: String) -> Card {
+  Card(..record, rel: rel)
 }
 
-// --- RENDERING ---
+/// download sets the value of download for this Card.
+///
+pub fn download(record: Card, download: Option(String)) -> Card {
+  Card(..record, download: download)
+}
 
-/// render creates a Lustre Element from a Card
-/// 
-/// ## Parameters:
-/// - c: a Card
-/// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
-/// 
+/// name sets the value of name for this Card.
+///
+pub fn name(record: Card, name: String) -> Card {
+  Card(..record, name: name)
+}
+
+/// value sets the value of value for this Card.
+///
+pub fn value(record: Card, value: String) -> Card {
+  Card(..record, value: value)
+}
+
+/// type_ sets the value of type_ for this Card.
+///
+pub fn type_(record: Card, type_: FormSubmitterType) -> Card {
+  Card(..record, type_: type_)
+}
+
+/// disabled_interactive sets the value of disabled_interactive for this Card.
+///
+pub fn disabled_interactive(
+  record: Card,
+  disabled_interactive: DisabledInteractive,
+) -> Card {
+  Card(..record, disabled_interactive: disabled_interactive)
+}
+
+/// disabled sets the value of disabled for this Card.
+///
+pub fn disabled(record: Card, disabled: Disabled) -> Card {
+  Card(..record, disabled: disabled)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Card
+///
 pub fn render(
-  c: Card,
+  model: Card,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -180,16 +293,45 @@ pub fn render(
     "m3e-card",
     list.flatten([
       [
-        helpers.boolean_attribute("actionable", c.actionable == Actionable),
-        helpers.boolean_attribute("disabled", c.disabled == Disabled),
-        helpers.boolean_attribute("inline", c.inline == Inline),
-        attribute.attribute(
+        attr.boolean("actionable", model.actionable == IsActionable),
+        attr.boolean("inline", model.inline == IsInline),
+        attr.with_default(
           "orientation",
-          layout.orientation_to_string(c.orientation),
+          card_orientation.to_string(model.orientation),
+          card_orientation.to_string(default_orientation),
         ),
-        attribute.attribute("variant", variant_to_string(c.variant)),
+        attr.with_default(
+          "variant",
+          card_variant.to_string(model.variant),
+          card_variant.to_string(default_variant),
+        ),
+        attr.with_default("href", model.href, default_href),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default("value", model.value, default_value),
+        attr.with_default(
+          "type",
+          form_submitter_type.to_string(model.type_),
+          form_submitter_type.to_string(default_type_),
+        ),
+        attr.boolean(
+          "disabled-interactive",
+          model.disabled_interactive == IsDisabledInteractive,
+        ),
+        attr.boolean("disabled", model.disabled == IsDisabled),
       ],
-      link.attributes(c.link),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -197,33 +339,23 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Card Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute.attribute("slot", "actions")
-    Content -> attribute.attribute("slot", "content")
-    Footer -> attribute.attribute("slot", "footer")
     Header -> attribute.attribute("slot", "header")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn variant_to_string(v: Variant) -> String {
-  case v {
-    Elevated -> "elevated"
-    Filled -> "filled"
-    Outlined -> "outlined"
+    Content -> attribute.attribute("slot", "content")
+    Actions -> attribute.attribute("slot", "actions")
+    Footer -> attribute.attribute("slot", "footer")
   }
 }

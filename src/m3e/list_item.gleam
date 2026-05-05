@@ -1,37 +1,62 @@
-//// list_item provides Lustre support for the [M3E List Item component](https://matraic.github.io/m3e/#/components/list.html)
+//// ListItem is an item in a list.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
 // --- Types ---
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// ListItem is a View Model for this component
+///
+pub opaque type ListItem {
+  ListItem
+}
+
+// --- Defaults ---
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Leading
-  // Renders the leading content of the list item 
+  // Renders the leading content of the list item.
   Overline
-  // Renders the overline of the list item 
+  // Renders the overline of the list item.
   SupportingText
-  // Renders the supporting text of the list item
+  // Renders the supporting text of the list item.
   Trailing
-  // Renders the trailing content of the list item 
+  // Renders the trailing content of the list item.
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-// --- SETTERS ---
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element from a ListItem
+/// new creates a new ListItem with the default configuration.
 ///
-pub fn render(children: List(Element(msg))) -> Element(msg) {
-  element.element("m3e-list-item", [], children)
+pub fn new() -> ListItem {
+  ListItem
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+// --- Setters ---
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ListItem
+///
+pub fn render(
+  _: ListItem,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element("m3e-list-item", attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Leading -> attribute.attribute("slot", "leading")
@@ -40,4 +65,3 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     Trailing -> attribute.attribute("slot", "trailing")
   }
 }
-// --- PRIVATE INTERNAL HELPERS ---

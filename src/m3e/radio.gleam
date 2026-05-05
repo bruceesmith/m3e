@@ -1,117 +1,149 @@
-//// radio provides Lustre support for the [M3E Radio component](https://matraic.github.io/m3e/#/components/radio-group.html)
+//// Radio is a radio button that allows a user to select one option from a set of options.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/form_submission.{type FormSubmission}
-import m3e/helpers
-import m3e/state.{
-  type CheckedState, type Interaction, type Requirement, Checked, Disabled,
-  Required,
-}
+import m3e/attr
 
 // --- Types ---
 
-/// Radio provides Lustre support for the [M3E Radio component](https://matraic.github.io/m3e/#/components/radio.html)
-/// 
+/// Radio is a View Model for this component
+///
 /// ## Fields:
-/// - checked: Whether the element is checked
-/// - disabled: Whether the element is disabled
-/// - form_submission: handles this button's role in form submission
-/// - required: Whether the element is required
+///
+/// - checked: Whether the element is checked.
+/// - disabled: Whether the element is disabled.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - required: Whether the element is required.
+/// - value: A string representing the value of the radio.
 ///
 pub opaque type Radio {
   Radio(
-    checked: CheckedState,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
-    required: Requirement,
+    checked: Checked,
+    disabled: Disabled,
+    name: String,
+    required: String,
+    value: String,
   )
 }
 
-// --- CONFIGURATION ---
+/// Checked is whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
+}
 
-/// Config holds the configuration for a Radio
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_checked: Checked = IsNotChecked
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_name: String = ""
+
+pub const default_required: String = ""
+
+pub const default_value: String = "on"
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    checked: CheckedState,
-    disabled: Interaction,
-    form_submission: Option(FormSubmission),
-    required: Requirement,
+    checked: Checked,
+    disabled: Disabled,
+    name: String,
+    required: String,
+    value: String,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    checked: state.default_checked_state,
-    disabled: state.default_interaction,
-    form_submission: None,
-    required: state.default_requirement,
+    checked: IsNotChecked,
+    disabled: IsNotDisabled,
+    name: "",
+    required: "",
+    value: "on",
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Radio with default values
-/// 
+/// from_config creates a new Radio from the given configuration.
+///
+pub fn from_config(config: Config) -> Radio {
+  Radio(
+    checked: config.checked,
+    disabled: config.disabled,
+    name: config.name,
+    required: config.required,
+    value: config.value,
+  )
+}
+
+/// new creates a new Radio with the default configuration.
+///
 pub fn new() -> Radio {
   from_config(default_config())
 }
 
-/// from_config creates a Radio from a Config record
-/// 
-pub fn from_config(c: Config) -> Radio {
-  Radio(
-    checked: c.checked,
-    disabled: c.disabled,
-    form_submission: c.form_submission,
-    required: c.required,
-  )
+// --- Setters ---
+
+/// checked sets the value of checked for this Radio.
+///
+pub fn checked(record: Radio, checked: Checked) -> Radio {
+  Radio(..record, checked: checked)
 }
 
-// --- SETTERS ---
-
-/// checked sets the checked field
-/// 
-pub fn checked(r: Radio, state: CheckedState) -> Radio {
-  Radio(..r, checked: state)
+/// disabled sets the value of disabled for this Radio.
+///
+pub fn disabled(record: Radio, disabled: Disabled) -> Radio {
+  Radio(..record, disabled: disabled)
 }
 
-/// disabled sets the disabled field
-/// 
-pub fn disabled(r: Radio, disabled: Interaction) -> Radio {
-  Radio(..r, disabled: disabled)
+/// name sets the value of name for this Radio.
+///
+pub fn name(record: Radio, name: String) -> Radio {
+  Radio(..record, name: name)
 }
 
-/// form_submission sets up a Radio to participate in an HTML form
-/// 
-pub fn form(r: Radio, fs: Option(FormSubmission)) -> Radio {
-  Radio(..r, form_submission: fs)
+/// required sets the value of required for this Radio.
+///
+pub fn required(record: Radio, required: String) -> Radio {
+  Radio(..record, required: required)
 }
 
-/// required sets the required field
-/// 
-pub fn required(r: Radio, required: Requirement) -> Radio {
-  Radio(..r, required: required)
+/// value sets the value of value for this Radio.
+///
+pub fn value(record: Radio, value: String) -> Radio {
+  Radio(..record, value: value)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element(msg) from a Radio
-/// 
-/// ## Parameters:
-/// - r: a Radio
-/// - attributes: additional attributes
-/// - children: additional children
-/// 
+/// render creates a Lustre Element for a Radio
+///
 pub fn render(
-  r: Radio,
+  model: Radio,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -119,11 +151,12 @@ pub fn render(
     "m3e-radio",
     list.flatten([
       [
-        helpers.boolean_attribute("checked", r.checked == Checked),
-        helpers.boolean_attribute("disabled", r.disabled == Disabled),
-        helpers.boolean_attribute("required", r.required == Required),
+        attr.boolean("checked", model.checked == IsChecked),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default("required", model.required, default_required),
+        attr.with_default("value", model.value, default_value),
       ],
-      form_submission.attributes(r.form_submission),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -131,12 +164,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Radio Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }

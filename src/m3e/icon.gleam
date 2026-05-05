@@ -1,275 +1,202 @@
-//// icon provides Lustre support for the [M3E Icon component](https://matraic.github.io/m3e/#/components/icon.html)
+//// Icon is a small symbol used to easily identify an action or category.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/int
+import gleam/float
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
+import m3e/icon_grade.{type IconGrade}
+import m3e/icon_variant.{type IconVariant}
+import m3e/icon_weight.{type IconWeight}
 
 // --- Types ---
 
-/// Fill specifies if the icon is filled or not
-/// 
-pub type Fill {
-  Filled
-  NotFilled
-}
-
-pub const default_fill: Fill = NotFilled
-
-/// The Grade of the variable font icon
-/// [Refer](https://m3.material.io/styles/icons/applying-icons)
-///
-pub type Grade {
-  Low
-  Medium
-  High
-}
-
-/// Default grade
-pub const default_grade = Medium
-
-/// Icon is the basis for a m3e-icon element that uses Material Symbols
+/// Icon is a View Model for this component
 ///
 /// ## Fields:
-/// - name: The name of the icon
-/// - filled: Whether the icon is filled
-/// - grade: The grade of the icon
-/// - optical_size: A value from 20 to 48 indicating the optical size of the icon
-/// - purpose: the role of the icon
-/// - variant:  The appearance variant of the icon
-/// - weight: A value from 100 to 700 indicating the weight of the icon
 ///
-pub opaque type Icon(msg) {
+/// - filled: Whether the icon is filled.
+/// - grade: The grade of the icon.
+/// - optical_size: A value from 20 to 48 indicating the optical size of the icon.
+/// - name: The name of the icon.
+/// - variant: The appearance variant of the icon.
+/// - weight: A value from 100 to 700 indicating the weight of the icon.
+///
+pub opaque type Icon {
   Icon(
+    filled: Filled,
+    grade: IconGrade,
+    optical_size: Float,
     name: String,
-    filled: Fill,
-    grade: Grade,
-    optical_size: OpticalSize,
-    purpose: Attribute(msg),
-    variant: Variant,
-    weight: Weight,
+    variant: IconVariant,
+    weight: IconWeight,
   )
 }
 
-/// The Optical Size of the variable font icon
-/// [Refer](https://m3.material.io/styles/icons/applying-icons)
+/// Filled is whether the icon is filled.
 ///
-pub type OpticalSize =
-  Int
-
-/// The smallest optical size of the icon
-pub const smallest_optical_size = 20
-
-/// The largest optical size
-pub const largest_optical_size = 48
-
-/// The default optical size of the icon
-pub const default_optical_size = 24
-
-/// The Variant of the icon
-/// 
-pub type Variant {
-  Outlined
-  Rounded
-  Sharp
+pub type Filled {
+  IsFilled
+  IsNotFilled
 }
 
-/// Default variant
-pub const default_variant = Outlined
+// --- Defaults ---
 
-/// The Weight of the variable font icon
-/// [Refer](https://m3.material.io/styles/icons/applying-icons)
+pub const default_filled: Filled = IsNotFilled
+
+pub const default_grade: IconGrade = icon_grade.Medium
+
+pub const default_optical_size: Float = 24.0
+
+pub const default_name: String = ""
+
+pub const default_variant: IconVariant = icon_variant.Outlined
+
+pub const default_weight: IconWeight = icon_weight.FourZeroZero
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
 ///
-pub type Weight =
-  Int
-
-/// The smallest weight of the icon
-pub const smallest_weight = 100
-
-/// The largest weight of the icon
-pub const largest_weight = 700
-
-/// The default weight of the icon
-pub const default_weight = 400
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for an Icon
-/// 
-pub type Config(msg) {
+pub type Config {
   Config(
+    filled: Filled,
+    grade: IconGrade,
+    optical_size: Float,
     name: String,
-    filled: Fill,
-    grade: Grade,
-    optical_size: OpticalSize,
-    purpose: Attribute(msg),
-    variant: Variant,
-    weight: Weight,
+    variant: IconVariant,
+    weight: IconWeight,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config(msg) {
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
   Config(
+    filled: IsNotFilled,
+    grade: icon_grade.Medium,
+    optical_size: 24.0,
     name: "",
-    filled: default_fill,
-    grade: default_grade,
-    optical_size: default_optical_size,
-    purpose: attribute.none(),
-    variant: default_variant,
-    weight: default_weight,
+    variant: icon_variant.Outlined,
+    weight: icon_weight.FourZeroZero,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new constructs an Icon for the named Material Symbol. All fields are set to defaults
+/// from_config creates a new Icon from the given configuration.
 ///
-/// ## Parameters:
-/// - name: the name of the Material Symbol used in this Icon
-///
-pub fn new(name: String) -> Icon(msg) {
-  from_config(Config(..default_config(), name: name))
-}
-
-/// from_config creates an Icon from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> Icon(msg) {
+pub fn from_config(config: Config) -> Icon {
   Icon(
-    name: c.name,
-    filled: c.filled,
-    grade: c.grade,
-    optical_size: optical_size_validate(c.optical_size),
-    purpose: c.purpose,
-    variant: c.variant,
-    weight: weight_validate(c.weight),
+    filled: config.filled,
+    grade: config.grade,
+    optical_size: config.optical_size,
+    name: config.name,
+    variant: config.variant,
+    weight: config.weight,
   )
 }
 
-// -- Rendering ---
-
-/// render creates an m3e-icon Lustre custom element from an Icon
+/// new creates a new Icon with the default configuration.
 ///
-/// ## Parameters:
-/// - i: the Icon on which the element is based
-/// - attributes: additional HTML attributes
-/// - children: child HTML elements
+pub fn new() -> Icon {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// filled sets the value of filled for this Icon.
+///
+pub fn filled(record: Icon, filled: Filled) -> Icon {
+  Icon(..record, filled: filled)
+}
+
+/// grade sets the value of grade for this Icon.
+///
+pub fn grade(record: Icon, grade: IconGrade) -> Icon {
+  Icon(..record, grade: grade)
+}
+
+/// optical_size sets the value of optical_size for this Icon.
+///
+pub fn optical_size(record: Icon, optical_size: Float) -> Icon {
+  Icon(..record, optical_size: optical_size)
+}
+
+/// name sets the value of name for this Icon.
+///
+pub fn name(record: Icon, name: String) -> Icon {
+  Icon(..record, name: name)
+}
+
+/// variant sets the value of variant for this Icon.
+///
+pub fn variant(record: Icon, variant: IconVariant) -> Icon {
+  Icon(..record, variant: variant)
+}
+
+/// weight sets the value of weight for this Icon.
+///
+pub fn weight(record: Icon, weight: IconWeight) -> Icon {
+  Icon(..record, weight: weight)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Icon
 ///
 pub fn render(
-  i: Icon(msg),
+  model: Icon,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-icon",
-    list.append(
+    list.flatten([
       [
-        attribute.name(i.name),
-        filled_attr(i.filled),
-        attribute.attribute("grade", grade_to_string(i.grade)),
-        attribute.attribute("optical-size", int.to_string(i.optical_size)),
-        i.purpose,
-        attribute.attribute("variant", variant_to_string(i.variant)),
-        attribute.attribute("weight", int.to_string(i.weight)),
+        attr.boolean("filled", model.filled == IsFilled),
+        attr.with_default(
+          "grade",
+          icon_grade.to_string(model.grade),
+          icon_grade.to_string(default_grade),
+        ),
+        attr.with_default(
+          "optical-size",
+          float.to_string(model.optical_size),
+          float.to_string(default_optical_size),
+        ),
+        attr.with_default("name", model.name, default_name),
+        attr.with_default(
+          "variant",
+          icon_variant.to_string(model.variant),
+          icon_variant.to_string(default_variant),
+        ),
+        attr.with_default(
+          "weight",
+          icon_weight.to_string(model.weight),
+          icon_weight.to_string(default_weight),
+        ),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Icon Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
-}
-
-// --- Setters ---
-
-/// filled sets the `filled` field
-///
-pub fn filled(i: Icon(msg), filled: Fill) -> Icon(msg) {
-  Icon(..i, filled: filled)
-}
-
-/// grade sets the `grade` field
-///
-pub fn grade(i: Icon(msg), g: Grade) -> Icon(msg) {
-  Icon(..i, grade: g)
-}
-
-/// optical_size checks and then sets the `optical_size` field
-///
-pub fn optical_size(i: Icon(msg), os: OpticalSize) -> Icon(msg) {
-  Icon(..i, optical_size: optical_size_validate(os))
-}
-
-/// purpose sets the `purpose` field
-///
-pub fn purpose(i: Icon(msg), p: Attribute(msg)) -> Icon(msg) {
-  Icon(..i, purpose: p)
-}
-
-/// variant sets the `variant` field
-///
-pub fn variant(i: Icon(msg), v: Variant) -> Icon(msg) {
-  Icon(..i, variant: v)
-}
-
-/// weight sets the `weight` field
-///
-pub fn weight(i: Icon(msg), w: Weight) -> Icon(msg) {
-  Icon(..i, weight: weight_validate(w))
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn filled_attr(f: Fill) -> Attribute(msg) {
-  case f {
-    // NotFilled -> attribute.attribute("filled", "0")
-    NotFilled -> attribute.none()
-    Filled -> attribute.attribute("filled", "1")
-  }
-}
-
-fn grade_to_string(grade: Grade) -> String {
-  case grade {
-    Low -> "low"
-    Medium -> "medium"
-    High -> "high"
-  }
-}
-
-fn optical_size_validate(os: OpticalSize) -> OpticalSize {
-  helpers.clamp_with_default(
-    os,
-    smallest_optical_size,
-    largest_optical_size,
-    default_optical_size,
-  )
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Outlined -> "outlined"
-    Rounded -> "rounded"
-    Sharp -> "sharp"
-  }
-}
-
-fn weight_validate(weight: Weight) -> Weight {
-  helpers.clamp_with_default(
-    weight,
-    smallest_weight,
-    largest_weight,
-    default_weight,
-  )
+  render(from_config(c), attributes, children)
 }

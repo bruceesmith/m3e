@@ -1,288 +1,222 @@
-//// expansion_panel provides Lustre support for the M3E Expansion Panel component
+//// ExpansionPanel is an expandable details-summary view.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import lustre/element/html
-
-import m3e/helpers
-import m3e/icon
-import m3e/state.{type Interaction, Disabled}
+import m3e/attr
+import m3e/expansion_toggle_direction.{type ExpansionToggleDirection}
+import m3e/expansion_toggle_position.{type ExpansionTogglePosition}
 
 // --- Types ---
 
-/// Direction is the direction of the expansion toggle
-/// 
-pub type Direction {
-  End
-  Start
-}
-
-pub const default_direction: Direction = End
-
-/// ExpansionPanel(msg) is a component that provides an expandable details-summary view
+/// ExpansionPanel is a View Model for this component
 ///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - hide_toggle: Whether to hide the expansion toggle
-/// - open: Whether the panel is expanded
-/// - toggle_direction: The direction of the expansion toggle
-/// - toggle_position: The position of the expansion toggle
-/// - header: The text displayed in the header
-/// - toggle_icon_name: The name of the icon to display
-/// - actions: Renders the actions bar of the panel
 ///
-pub opaque type ExpansionPanel(msg) {
+/// - disabled: Whether the element is disabled.
+/// - hide_toggle: Whether to hide the expansion toggle.
+/// - open: Whether the panel is expanded.
+/// - toggle_direction: The direction of the expansion toggle.
+/// - toggle_position: The position of the expansion toggle.
+///
+pub opaque type ExpansionPanel {
   ExpansionPanel(
-    disabled: Interaction,
-    hide_toggle: ToggleVisibility,
-    open: PanelState,
-    toggle_direction: Direction,
-    toggle_position: Position,
-    header: String,
-    toggle_icon_name: Option(String),
-    actions: Option(List(Element(msg))),
+    disabled: Disabled,
+    hide_toggle: HideToggle,
+    open: Open,
+    toggle_direction: ExpansionToggleDirection,
+    toggle_position: ExpansionTogglePosition,
   )
 }
 
-/// PanelState specifies if the panel is expanded or collapsed
-/// 
-pub type PanelState {
-  Open
-  Closed
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
 }
 
-pub const default_panel_state: PanelState = Closed
+/// HideToggle is whether to hide the expansion toggle.
+///
+pub type HideToggle {
+  IsHideToggle
+  IsNotHideToggle
+}
 
-/// Position is the position of the expansion toggle
-/// It has the same values as Direction
-/// 
-pub type Position =
-  Direction
+/// Open is whether the panel is expanded.
+///
+pub type Open {
+  IsOpen
+  IsNotOpen
+}
 
-pub const default_position = End
+// --- Defaults ---
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_hide_toggle: HideToggle = IsNotHideToggle
+
+pub const default_open: Open = IsNotOpen
+
+pub const default_toggle_direction: ExpansionToggleDirection = expansion_toggle_direction.Vertical
+
+pub const default_toggle_position: ExpansionTogglePosition = expansion_toggle_position.After
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Actions
-  // Renders the actions bar of the panel 
+  // Renders the actions bar of the panel.
   Header
-  // Renders the header content 
+  // Renders the header content.
   ToggleIcon
-  // Renders the expansion toggle icon 
+  // Renders the expansion toggle icon.
 }
 
-/// ToggleVisibility specifies if the expansion toggle is hidden or shown
-/// 
-pub type ToggleVisibility {
-  ShowToggle
-  HideToggle
-}
+// --- Configuration ---
 
-pub const default_toggle_visibility: ToggleVisibility = ShowToggle
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for an ExpansionPanel
-/// 
-pub type Config(msg) {
+/// Config is a public record for configuring this component.
+///
+pub type Config {
   Config(
-    disabled: Interaction,
-    hide_toggle: ToggleVisibility,
-    open: PanelState,
-    toggle_direction: Direction,
-    toggle_position: Position,
-    header: String,
-    toggle_icon_name: Option(String),
-    actions: Option(List(Element(msg))),
+    disabled: Disabled,
+    hide_toggle: HideToggle,
+    open: Open,
+    toggle_direction: ExpansionToggleDirection,
+    toggle_position: ExpansionTogglePosition,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config(msg) {
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    hide_toggle: default_toggle_visibility,
-    open: default_panel_state,
-    toggle_direction: default_direction,
-    toggle_position: default_position,
-    header: "",
-    toggle_icon_name: None,
-    actions: None,
+    disabled: IsNotDisabled,
+    hide_toggle: IsNotHideToggle,
+    open: IsNotOpen,
+    toggle_direction: expansion_toggle_direction.Vertical,
+    toggle_position: expansion_toggle_position.After,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new ExpansionPanel
+/// from_config creates a new ExpansionPanel from the given configuration.
 ///
-/// ## Parameters:
-/// - header: The text displayed in the header
-///
-pub fn new(header: String) -> ExpansionPanel(msg) {
-  from_config(Config(..default_config(), header: header))
-}
-
-/// from_config creates an ExpansionPanel from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> ExpansionPanel(msg) {
+pub fn from_config(config: Config) -> ExpansionPanel {
   ExpansionPanel(
-    disabled: c.disabled,
-    hide_toggle: c.hide_toggle,
-    open: c.open,
-    toggle_direction: c.toggle_direction,
-    toggle_position: c.toggle_position,
-    header: c.header,
-    toggle_icon_name: c.toggle_icon_name,
-    actions: c.actions,
+    disabled: config.disabled,
+    hide_toggle: config.hide_toggle,
+    open: config.open,
+    toggle_direction: config.toggle_direction,
+    toggle_position: config.toggle_position,
   )
 }
 
-// --- SETTERS ---
-
-/// actions sets the `actions` field
-/// 
-pub fn actions(
-  p: ExpansionPanel(msg),
-  actions: Option(List(Element(msg))),
-) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, actions: actions)
-}
-
-/// disabled sets the `disabled` field
+/// new creates a new ExpansionPanel with the default configuration.
 ///
-pub fn disabled(
-  p: ExpansionPanel(msg),
-  disabled: Interaction,
-) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, disabled: disabled)
+pub fn new() -> ExpansionPanel {
+  from_config(default_config())
 }
 
-/// header sets the `header` field
+// --- Setters ---
+
+/// disabled sets the value of disabled for this ExpansionPanel.
 ///
-pub fn header(p: ExpansionPanel(msg), header: String) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, header: header)
+pub fn disabled(record: ExpansionPanel, disabled: Disabled) -> ExpansionPanel {
+  ExpansionPanel(..record, disabled: disabled)
 }
 
-/// hide_toggle sets the `hide_toggle` field
+/// hide_toggle sets the value of hide_toggle for this ExpansionPanel.
 ///
 pub fn hide_toggle(
-  p: ExpansionPanel(msg),
-  visibility: ToggleVisibility,
-) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, hide_toggle: visibility)
+  record: ExpansionPanel,
+  hide_toggle: HideToggle,
+) -> ExpansionPanel {
+  ExpansionPanel(..record, hide_toggle: hide_toggle)
 }
 
-/// open sets the `open` field
+/// open sets the value of open for this ExpansionPanel.
 ///
-pub fn open(p: ExpansionPanel(msg), open: PanelState) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, open: open)
+pub fn open(record: ExpansionPanel, open: Open) -> ExpansionPanel {
+  ExpansionPanel(..record, open: open)
 }
 
-/// toggle_direction sets the `toggle_direction` field
+/// toggle_direction sets the value of toggle_direction for this ExpansionPanel.
 ///
 pub fn toggle_direction(
-  p: ExpansionPanel(msg),
-  toggle_direction: Direction,
-) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, toggle_direction: toggle_direction)
+  record: ExpansionPanel,
+  toggle_direction: ExpansionToggleDirection,
+) -> ExpansionPanel {
+  ExpansionPanel(..record, toggle_direction: toggle_direction)
 }
 
-/// toggle_icon_name sets the `toggle_icon_name` field
-///
-pub fn toggle_icon_name(
-  p: ExpansionPanel(msg),
-  toggle_icon_name: Option(String),
-) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, toggle_icon_name: toggle_icon_name)
-}
-
-/// toggle_position sets the `toggle_position` field
+/// toggle_position sets the value of toggle_position for this ExpansionPanel.
 ///
 pub fn toggle_position(
-  p: ExpansionPanel(msg),
-  toggle_position: Position,
-) -> ExpansionPanel(msg) {
-  ExpansionPanel(..p, toggle_position: toggle_position)
+  record: ExpansionPanel,
+  toggle_position: ExpansionTogglePosition,
+) -> ExpansionPanel {
+  ExpansionPanel(..record, toggle_position: toggle_position)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from an ExpansionPanel
+/// render creates a Lustre Element for a ExpansionPanel
 ///
 pub fn render(
-  p: ExpansionPanel(msg),
+  model: ExpansionPanel,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-expansion-panel",
-    [
-      helpers.boolean_attribute("disabled", p.disabled == Disabled),
-      helpers.boolean_attribute("hide-toggle", p.hide_toggle == HideToggle),
-      helpers.boolean_attribute("open", p.open == Open),
-      attribute.attribute(
-        "toggle-direction",
-        direction_to_string(p.toggle_direction),
-      ),
-      attribute.attribute(
-        "toggle-position",
-        position_to_string(p.toggle_position),
-      ),
-      ..attributes
-    ]
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("hide-toggle", model.hide_toggle == IsHideToggle),
+        attr.boolean("open", model.open == IsOpen),
+        attr.with_default(
+          "toggle-direction",
+          expansion_toggle_direction.to_string(model.toggle_direction),
+          expansion_toggle_direction.to_string(default_toggle_direction),
+        ),
+        attr.with_default(
+          "toggle-position",
+          expansion_toggle_position.to_string(model.toggle_position),
+          expansion_toggle_position.to_string(default_toggle_position),
+        ),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [
-      html.span([slot(Header)], [element.text(p.header)]),
-      case p.toggle_icon_name {
-        None -> element.none()
-        Some(name) ->
-          icon.new(name)
-          |> icon.purpose(slot(ToggleIcon))
-          |> icon.render([], [])
-      },
-      case p.actions {
-        None -> element.none()
-        Some(actions) -> element.element("div", [slot(Actions)], actions)
-      },
-      ..children
-    ]
-      |> list.filter(fn(a) { a != element.none() }),
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a ExpansionPanel Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Actions -> attribute.attribute("slot", "actions")
     Header -> attribute.attribute("slot", "header")
     ToggleIcon -> attribute.attribute("slot", "toggle-icon")
   }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn direction_to_string(d: Direction) -> String {
-  case d {
-    End -> "end"
-    Start -> "start"
-  }
-}
-
-fn position_to_string(d: Direction) -> String {
-  direction_to_string(d)
 }

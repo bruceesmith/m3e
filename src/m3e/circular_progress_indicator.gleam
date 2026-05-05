@@ -1,150 +1,180 @@
-//// circular_progress_indicator provides Lustre support for the [M3E Circular Progress Indicator component](https://matraic.github.io/m3e/#/components/progress-indicator.html)
+//// CircularProgressIndicator is a circular indicator of progress and activity.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/float
-import gleam/int
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/progress_indicator.{type Variant}
+import m3e/attr
+import m3e/progress_indicator_variant.{type ProgressIndicatorVariant}
 
 // --- Types ---
 
-/// CircularProgressIndicator provides accessible, animated progress indicators for tracking
-/// the completion of tasks or processes
-/// 
+/// CircularProgressIndicator is a View Model for this component
+///
 /// ## Fields:
+///
 /// - indeterminate: Whether to show something is happening without conveying progress.
 /// - max: The maximum progress value.
 /// - value: A fractional value, between 0 and `max`, indicating progress.
 /// - variant: The appearance of the indicator.
+///
 pub opaque type CircularProgressIndicator {
   CircularProgressIndicator(
-    indeterminate: Mode,
-    max: Int,
+    indeterminate: Indeterminate,
+    max: Float,
     value: Float,
-    variant: Variant,
+    variant: ProgressIndicatorVariant,
   )
 }
 
-/// Mode of an indicator
+/// Indeterminate is whether to show something is happening without conveying progress.
 ///
-pub type Mode {
-  Determinate
-  Indeterminate
+pub type Indeterminate {
+  IsIndeterminate
+  IsNotIndeterminate
 }
 
-pub const default_mode = Determinate
+// --- Defaults ---
 
-// --- CONFIGURATION ---
+pub const default_indeterminate: Indeterminate = IsNotIndeterminate
 
-///  Config holds the configuration of a CircularProgressIndicator
-/// 
+pub const default_max: Float = 100.0
+
+pub const default_value: Float = 0.0
+
+pub const default_variant: ProgressIndicatorVariant = progress_indicator_variant.Flat
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
-  Config(indeterminate: Mode, max: Int, value: Float, variant: Variant)
+  Config(
+    indeterminate: Indeterminate,
+    max: Float,
+    value: Float,
+    variant: ProgressIndicatorVariant,
+  )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    indeterminate: default_mode,
-    max: 1,
+    indeterminate: IsNotIndeterminate,
+    max: 100.0,
     value: 0.0,
-    variant: progress_indicator.default_variant,
+    variant: progress_indicator_variant.Flat,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a CircularProgressIndicator from a Config record
+/// from_config creates a new CircularProgressIndicator from the given configuration.
 ///
-pub fn from_config(c: Config) -> CircularProgressIndicator {
+pub fn from_config(config: Config) -> CircularProgressIndicator {
   CircularProgressIndicator(
-    indeterminate: c.indeterminate,
-    max: c.max,
-    value: c.value,
-    variant: c.variant,
+    indeterminate: config.indeterminate,
+    max: config.max,
+    value: config.value,
+    variant: config.variant,
   )
 }
 
-/// new creates a new CircularProgressIndicator
+/// new creates a new CircularProgressIndicator with the default configuration.
 ///
 pub fn new() -> CircularProgressIndicator {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// indeterminate sets the `indeterminate` field
+/// indeterminate sets the value of indeterminate for this CircularProgressIndicator.
 ///
 pub fn indeterminate(
-  cpi: CircularProgressIndicator,
-  indeterminate: Mode,
+  record: CircularProgressIndicator,
+  indeterminate: Indeterminate,
 ) -> CircularProgressIndicator {
-  CircularProgressIndicator(..cpi, indeterminate: indeterminate)
+  CircularProgressIndicator(..record, indeterminate: indeterminate)
 }
 
-/// max sets the `max` field
+/// max sets the value of max for this CircularProgressIndicator.
 ///
 pub fn max(
-  cpi: CircularProgressIndicator,
-  max: Int,
+  record: CircularProgressIndicator,
+  max: Float,
 ) -> CircularProgressIndicator {
-  CircularProgressIndicator(..cpi, max: max)
+  CircularProgressIndicator(..record, max: max)
 }
 
-/// value sets the `value` field
+/// value sets the value of value for this CircularProgressIndicator.
 ///
 pub fn value(
-  cpi: CircularProgressIndicator,
+  record: CircularProgressIndicator,
   value: Float,
 ) -> CircularProgressIndicator {
-  CircularProgressIndicator(..cpi, value: value)
+  CircularProgressIndicator(..record, value: value)
 }
 
-/// variant sets the `variant` field
+/// variant sets the value of variant for this CircularProgressIndicator.
 ///
 pub fn variant(
-  cpi: CircularProgressIndicator,
-  variant: Variant,
+  record: CircularProgressIndicator,
+  variant: ProgressIndicatorVariant,
 ) -> CircularProgressIndicator {
-  CircularProgressIndicator(..cpi, variant: variant)
+  CircularProgressIndicator(..record, variant: variant)
 }
 
-// --- RENDERING ---  
+// --- Renderers ---
 
-/// render creates a Lustre Element from a CircularProgressIndicator
-///
-/// ## Parameters:
-/// - cpi: a CircularProgressIndicator
-/// - attributes: a list of additional Attributes
+/// render creates a Lustre Element for a CircularProgressIndicator
 ///
 pub fn render(
-  cpi: CircularProgressIndicator,
+  model: CircularProgressIndicator,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-circular-progress-indicator",
-    list.append(
+    list.flatten([
       [
-        helpers.boolean_attribute(
-          "indeterminate",
-          cpi.indeterminate == Indeterminate,
+        attr.boolean("indeterminate", model.indeterminate == IsIndeterminate),
+        attr.with_default(
+          "max",
+          float.to_string(model.max),
+          float.to_string(default_max),
         ),
-        attribute.attribute("max", int.to_string(cpi.max)),
-        attribute.attribute("value", float.to_string(cpi.value)),
-        attribute.attribute(
+        attr.with_default(
+          "value",
+          float.to_string(model.value),
+          float.to_string(default_value),
+        ),
+        attr.with_default(
           "variant",
-          progress_indicator.variant_to_string(cpi.variant),
+          progress_indicator_variant.to_string(model.variant),
+          progress_indicator_variant.to_string(default_variant),
         ),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
-// --- PRIVATE INTERNAL HELPERS ---
+
+/// render_config creates a Lustre Element from a CircularProgressIndicator Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

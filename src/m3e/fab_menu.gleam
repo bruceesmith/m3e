@@ -1,64 +1,56 @@
-/// fab_menu provides Lustre support for the [M3E FAB Menu component](https://matraic.github.io/m3e/#/components/fab-menu.html)
-import gleam/list
+//// FabMenu is a menu, opened from a floating action button (FAB), used to display multiple related actions.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/fab_menu_variant.{type FabMenuVariant}
 
 // --- Types ---
 
-/// FabMenu ia a menu, opened from a floating action button (FAB), used to display multiple related actions
-/// 
+/// FabMenu is a View Model for this component
+///
 /// ## Fields:
-/// - id: the id of the menu, linked to the FabMenuTrigger
-/// - variant: The appearance variant of the menu
-/// 
+///
+/// - variant: The appearance variant of the menu.
+///
 pub opaque type FabMenu {
-  FabMenu(id: String, variant: Variant)
+  FabMenu(variant: FabMenuVariant)
 }
 
-/// Variant is the appearance variant of the menu
-/// 
-pub type Variant {
-  Primary
-  Secondary
-  Tertiary
-}
+// --- Defaults ---
 
-pub const default_variant = Primary
+pub const default_variant: FabMenuVariant = fab_menu_variant.Primary
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new FabMenu
-/// 
-pub fn new(id: String) -> FabMenu {
-  FabMenu(id: id, variant: default_variant)
-}
-
-// --- SETTERS ---
-
-/// id sets the id field
+/// new creates a new FabMenu with the default configuration.
 ///
-pub fn id(f: FabMenu, id: String) -> FabMenu {
-  FabMenu(..f, id: id)
+pub fn new(variant: FabMenuVariant) -> FabMenu {
+  FabMenu(variant: variant)
 }
 
-/// variant sets the variant field
+// --- Setters ---
+
+/// variant sets the value of variant for this FabMenu.
 ///
-pub fn variant(f: FabMenu, variant: Variant) -> FabMenu {
-  FabMenu(..f, variant: variant)
+pub fn variant(_: FabMenu, variant: FabMenuVariant) -> FabMenu {
+  FabMenu(variant: variant)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a FabMenu
-///
-/// ## Parameters:
-/// - f: a FabMenu
-/// - attributes: a list of additional Attributes
-/// - children: a list of child Elements
+/// render creates a Lustre Element for a FabMenu
 ///
 pub fn render(
-  f: FabMenu,
+  model: FabMenu,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -66,22 +58,15 @@ pub fn render(
     "m3e-fab-menu",
     list.flatten([
       [
-        attribute.attribute("id", f.id),
-        attribute.attribute("variant", variant_to_string(f.variant)),
+        attr.with_default(
+          "variant",
+          fab_menu_variant.to_string(model.variant),
+          fab_menu_variant.to_string(default_variant),
+        ),
       ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Primary -> "primary"
-    Secondary -> "secondary"
-    Tertiary -> "tertiary"
-  }
 }

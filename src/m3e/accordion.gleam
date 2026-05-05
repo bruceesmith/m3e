@@ -1,51 +1,74 @@
-//// accordion provides Lustre support for the [M3E Accordion component](https://matraic.github.io/m3e/#/components/expansion-panel.html)
+//// Accordion is combines multiple expansion panels in to an accordion.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import m3e/helpers
+import m3e/attr
 
-// --- TYPES ---
+// --- Types ---
 
-/// Accordion is a container for Expansion Panels
+/// Accordion is a View Model for this component
 ///
 /// ## Fields:
-/// - multi: Whether multiple expansion panels can be open at the same time
+///
+/// - multi: Whether multiple expansion panels can be open at the same time.
 ///
 pub opaque type Accordion {
-  Accordion(multi: Bool)
+  Accordion(multi: Multi)
 }
 
-// --- CONSTRUCTORS ---
-
-/// new creates a new Accordion
+/// Multi is whether multiple expansion panels can be open at the same time.
 ///
-pub fn new() -> Accordion {
-  Accordion(multi: False)
+pub type Multi {
+  IsMulti
+  IsNotMulti
 }
 
-// --- SETTERS ---
+// --- Defaults ---
 
-/// multi sets the `multi` field
+pub const default_multi: Multi = IsNotMulti
+
+// --- Constructors ---
+
+/// new creates a new Accordion with the default configuration.
 ///
-pub fn multi(_: Accordion, multi: Bool) -> Accordion {
+pub fn new(multi: Multi) -> Accordion {
   Accordion(multi: multi)
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element from an Accordion
+/// multi sets the value of multi for this Accordion.
+///
+pub fn multi(_: Accordion, multi: Multi) -> Accordion {
+  Accordion(multi: multi)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Accordion
 ///
 pub fn render(
-  a: Accordion,
+  model: Accordion,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-accordion",
-    [helpers.boolean_attribute("multi", a.multi), ..attributes]
+    list.flatten([
+      [
+        attr.boolean("multi", model.multi == IsMulti),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
-// --- PRIVATE INTERNAL HELPERS ---

@@ -1,110 +1,93 @@
-//// stepper provides Lustre support for the [M3E Stepper component](https://matraic.github.io/m3e/#/components/stepper.html)
+//// Stepper is provides a wizard-like workflow by dividing content into logical steps.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
+import m3e/step_header_position.{type StepHeaderPosition}
+import m3e/step_label_position.{type StepLabelPosition}
+import m3e/stepper_orientation.{type StepperOrientation}
 
 // --- Types ---
 
-/// HeaderPosition is the position of the step header, when oriented horizontally.
-/// 
-pub type HeaderPosition {
-  Above
-  Below
-}
-
-pub const default_header_position = Above
-
-/// LabelPosition is the position of the step labels, when oriented horizontally.
-/// 
-pub type LabelPosition {
-  LabelBelow
-  LabelEnd
-}
-
-pub const default_label_position = LabelEnd
-
-/// LinearValidity determines whether the validity of previous steps should be checked or not
-/// 
-pub type LinearValidity {
-  Check
-  DontCheck
-}
-
-pub const default_linear_validity = DontCheck
-
-/// Orientation is the orientation of the stepper.
-/// 
-pub type Orientation {
-  Auto
-  Horizontal
-  Vertical
-}
-
-pub const default_orientation = Horizontal
-
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
-pub type Slot {
-  Panel
-  // Renders a panel 
-  Step
-  // Renders a step 
-}
-
-/// Stepper provides Lustre support for the [M3E Stepper component
-/// 
+/// Stepper is a View Model for this component
+///
 /// ## Fields:
-/// - header_position: The position of the step header, when oriented horizontally
+///
+/// - header_position: The position of the step header, when oriented horizontally.
 /// - label_position: The position of the step labels, when oriented horizontally.
 /// - linear: Whether the validity of previous steps should be checked or not.
 /// - orientation: The orientation of the stepper.
-/// 
+///
 pub opaque type Stepper {
   Stepper(
-    header_position: HeaderPosition,
-    label_position: LabelPosition,
-    linear: LinearValidity,
-    orientation: Orientation,
+    header_position: StepHeaderPosition,
+    label_position: StepLabelPosition,
+    linear: Linear,
+    orientation: StepperOrientation,
   )
 }
 
-// -- CONFIGURATION --
+/// Linear is whether the validity of previous steps should be checked or not.
+///
+pub type Linear {
+  IsLinear
+  IsNotLinear
+}
 
-/// Config holds the configuration for a Stepper
-/// 
+// --- Defaults ---
+
+pub const default_header_position: StepHeaderPosition = step_header_position.Above
+
+pub const default_label_position: StepLabelPosition = step_label_position.End
+
+pub const default_linear: Linear = IsNotLinear
+
+pub const default_orientation: StepperOrientation = stepper_orientation.Horizontal
+
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  Step
+  // Renders a step.
+  Panel
+  // Renders a panel.
+}
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    header_position: HeaderPosition,
-    label_position: LabelPosition,
-    linear: LinearValidity,
-    orientation: Orientation,
+    header_position: StepHeaderPosition,
+    label_position: StepLabelPosition,
+    linear: Linear,
+    orientation: StepperOrientation,
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    header_position: default_header_position,
-    label_position: default_label_position,
-    linear: default_linear_validity,
-    orientation: default_orientation,
+    header_position: step_header_position.Above,
+    label_position: step_label_position.End,
+    linear: IsNotLinear,
+    orientation: stepper_orientation.Horizontal,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Stepper
-/// 
-pub fn new() -> Stepper {
-  from_config(default_config())
-}
-
-/// from_config creates a Stepper from a Config
+/// from_config creates a new Stepper from the given configuration.
 ///
 pub fn from_config(config: Config) -> Stepper {
   Stepper(
@@ -115,44 +98,50 @@ pub fn from_config(config: Config) -> Stepper {
   )
 }
 
-// --- SETTERS ---
+/// new creates a new Stepper with the default configuration.
+///
+pub fn new() -> Stepper {
+  from_config(default_config())
+}
 
-/// header_position sets the header_position field of a Stepper
+// --- Setters ---
+
+/// header_position sets the value of header_position for this Stepper.
 ///
 pub fn header_position(
-  stepper: Stepper,
-  header_position: HeaderPosition,
+  record: Stepper,
+  header_position: StepHeaderPosition,
 ) -> Stepper {
-  Stepper(..stepper, header_position: header_position)
+  Stepper(..record, header_position: header_position)
 }
 
-/// label_position sets the label_position field of a Stepper
+/// label_position sets the value of label_position for this Stepper.
 ///
 pub fn label_position(
-  stepper: Stepper,
-  label_position: LabelPosition,
+  record: Stepper,
+  label_position: StepLabelPosition,
 ) -> Stepper {
-  Stepper(..stepper, label_position: label_position)
+  Stepper(..record, label_position: label_position)
 }
 
-/// linear sets the linear field of a Stepper
+/// linear sets the value of linear for this Stepper.
 ///
-pub fn linear(stepper: Stepper, linear: LinearValidity) -> Stepper {
-  Stepper(..stepper, linear: linear)
+pub fn linear(record: Stepper, linear: Linear) -> Stepper {
+  Stepper(..record, linear: linear)
 }
 
-/// orientation sets the orientation field of a Stepper
+/// orientation sets the value of orientation for this Stepper.
 ///
-pub fn orientation(stepper: Stepper, orientation: Orientation) -> Stepper {
-  Stepper(..stepper, orientation: orientation)
+pub fn orientation(record: Stepper, orientation: StepperOrientation) -> Stepper {
+  Stepper(..record, orientation: orientation)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element(msg) from a Stepper
+/// render creates a Lustre Element for a Stepper
 ///
 pub fn render(
-  stepper: Stepper,
+  model: Stepper,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -160,18 +149,21 @@ pub fn render(
     "m3e-stepper",
     list.flatten([
       [
-        attribute.attribute(
+        attr.with_default(
           "header-position",
-          head_position_to_string(stepper.header_position),
+          step_header_position.to_string(model.header_position),
+          step_header_position.to_string(default_header_position),
         ),
-        attribute.attribute(
+        attr.with_default(
           "label-position",
-          label_position_to_string(stepper.label_position),
+          step_label_position.to_string(model.label_position),
+          step_label_position.to_string(default_label_position),
         ),
-        helpers.boolean_attribute("linear", stepper.linear == Check),
-        attribute.attribute(
+        attr.boolean("linear", model.linear == IsLinear),
+        attr.with_default(
           "orientation",
-          orientation_to_string(stepper.orientation),
+          stepper_orientation.to_string(model.orientation),
+          stepper_orientation.to_string(default_orientation),
         ),
       ],
       attributes,
@@ -181,47 +173,21 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Stepper Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-// --- ATTRIBUTES ---
-
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Panel -> attribute.attribute("slot", "panel")
     Step -> attribute.attribute("slot", "step")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn head_position_to_string(header_position: HeaderPosition) -> String {
-  case header_position {
-    Above -> "above"
-    Below -> "below"
-  }
-}
-
-fn label_position_to_string(label_position: LabelPosition) -> String {
-  case label_position {
-    LabelBelow -> "below"
-    LabelEnd -> "end"
-  }
-}
-
-fn orientation_to_string(orientation: Orientation) -> String {
-  case orientation {
-    Auto -> "auto"
-    Horizontal -> "horizontal"
-    Vertical -> "vertical"
+    Panel -> attribute.attribute("slot", "panel")
   }
 }

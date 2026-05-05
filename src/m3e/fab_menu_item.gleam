@@ -1,70 +1,175 @@
-/// fab_menu_item provides Lustre support for the [M3E FAB Menu Item component](https://matraic.github.io/m3e/#/components/fab-menu.html)
+//// FabMenuItem is an item of a floating action button (FAB) menu.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/link.{type Link}
+import m3e/attr
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
-/// FabMenuItem is an item of a floating action button (FAB) menu
-/// 
+/// FabMenuItem is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - link: Whether the Item acts as a Link
-/// 
+///
+/// - disabled: Whether the element is disabled.
+/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - href: The URL to which the link button points.
+/// - rel: The relationship between the `target` of the link button and the document.
+/// - target: The target of the link button.
+///
 pub opaque type FabMenuItem {
-  FabMenuItem(disabled: Bool, link: Option(Link))
+  FabMenuItem(
+    disabled: Disabled,
+    download: Option(String),
+    href: String,
+    rel: String,
+    target: Option(LinkTarget),
+  )
 }
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_download: Option(String) = None
+
+pub const default_href: String = ""
+
+pub const default_rel: String = ""
+
+pub const default_target: Option(LinkTarget) = None
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the items's label 
+  // Renders an icon before the items's label.
 }
 
-// --- CONSTRUCTORS ---
+// --- Configuration ---
 
-/// new creates a new FabMenuItem
-/// 
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    disabled: Disabled,
+    download: Option(String),
+    href: String,
+    rel: String,
+    target: Option(LinkTarget),
+  )
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    disabled: IsNotDisabled,
+    download: None,
+    href: "",
+    rel: "",
+    target: None,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new FabMenuItem from the given configuration.
+///
+pub fn from_config(config: Config) -> FabMenuItem {
+  FabMenuItem(
+    disabled: config.disabled,
+    download: config.download,
+    href: config.href,
+    rel: config.rel,
+    target: config.target,
+  )
+}
+
+/// new creates a new FabMenuItem with the default configuration.
+///
 pub fn new() -> FabMenuItem {
-  FabMenuItem(disabled: False, link: None)
+  from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// disabled sets the disabled field
+/// disabled sets the value of disabled for this FabMenuItem.
 ///
-pub fn disabled(f: FabMenuItem, disabled: Bool) -> FabMenuItem {
-  FabMenuItem(..f, disabled: disabled)
+pub fn disabled(record: FabMenuItem, disabled: Disabled) -> FabMenuItem {
+  FabMenuItem(..record, disabled: disabled)
 }
 
-/// link sets the link field
+/// download sets the value of download for this FabMenuItem.
 ///
-pub fn link(f: FabMenuItem, link: Option(Link)) -> FabMenuItem {
-  FabMenuItem(..f, link: link)
+pub fn download(record: FabMenuItem, download: Option(String)) -> FabMenuItem {
+  FabMenuItem(..record, download: download)
 }
 
-// --- RENDERING ---
+/// href sets the value of href for this FabMenuItem.
+///
+pub fn href(record: FabMenuItem, href: String) -> FabMenuItem {
+  FabMenuItem(..record, href: href)
+}
 
-/// render creates a Lustre Element from a FabMenuItem
+/// rel sets the value of rel for this FabMenuItem.
+///
+pub fn rel(record: FabMenuItem, rel: String) -> FabMenuItem {
+  FabMenuItem(..record, rel: rel)
+}
+
+/// target sets the value of target for this FabMenuItem.
+///
+pub fn target(record: FabMenuItem, target: Option(LinkTarget)) -> FabMenuItem {
+  FabMenuItem(..record, target: target)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a FabMenuItem
 ///
 pub fn render(
-  f: FabMenuItem,
+  model: FabMenuItem,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
-    "m3e-fab-menu-item",
+    "m3e-menu-item",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", f.disabled),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("href", model.href, default_href),
+        attr.with_default("rel", model.rel, default_rel),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
       ],
-      link.attributes(f.link),
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
@@ -72,8 +177,18 @@ pub fn render(
   )
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// render_config creates a Lustre Element from a FabMenuItem Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")

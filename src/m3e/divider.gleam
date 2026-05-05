@@ -1,131 +1,175 @@
-//// divider provides Lustre support for the [M3E Divider component](https://matraic.github.io/m3e/#/components/divider.html)
-///// inset_end sets the `inset_end` field
+//// Divider is a thin line that separates content in lists or other containers.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
 ////
 
 import gleam/list
-import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/layout.{type Orientation}
+import m3e/attr
 
 // --- Types ---
 
-/// Divider holds all the values necessary to construct am M3E Divider
+/// Divider is a View Model for this component
 ///
 /// ## Fields:
-/// - inset: Whether the divider is indented with equal padding on both sides
-/// - inset_start: Whether the divider is indented with padding on the leading side
-/// - inset_end: Whether the divider is indented with padding on the trailing side
-/// - vertical: Whether the divider is vertically aligned with adjacent content
+///
+/// - inset: Whether the divider is indented with equal padding on both sides.
+/// - inset_start: Whether the divider is indented with padding on the leading side.
+/// - inset_end: Whether the divider is indented with padding on the trailing side.
+/// - vertical: Whether the divider is vertically aligned with adjacent content.
 ///
 pub opaque type Divider {
   Divider(
-    inset: Option(Inset),
-    inset_start: Indentation,
-    inset_end: Indentation,
-    vertical: Orientation,
+    inset: Inset,
+    inset_start: InsetStart,
+    inset_end: InsetEnd,
+    vertical: Vertical,
   )
 }
 
-/// Inset determines if one or both ends of the divder are inset
+/// Inset is whether the divider is indented with equal padding on both sides.
 ///
 pub type Inset {
-  Both
-  End
-  Start
+  IsInset
+  IsNotInset
 }
 
-pub const default_inset: Option(Inset) = None
-
-pub type Indentation {
-  Indented
-  NotIndented
-}
-
-pub const default_indentation: Indentation = NotIndented
-
-//
-// --- CONFIGURATION ---
-
-// --- CONSTRUCTORS ---
-
-/// new creates a new Divider
+/// InsetStart is whether the divider is indented with padding on the leading side.
 ///
-pub fn new() -> Divider {
-  Divider(
-    inset: default_inset,
-    inset_start: default_indentation,
-    inset_end: default_indentation,
-    vertical: layout.default_orientation,
+pub type InsetStart {
+  IsInsetStart
+  IsNotInsetStart
+}
+
+/// InsetEnd is whether the divider is indented with padding on the trailing side.
+///
+pub type InsetEnd {
+  IsInsetEnd
+  IsNotInsetEnd
+}
+
+/// Vertical is whether the divider is vertically aligned with adjacent content.
+///
+pub type Vertical {
+  IsVertical
+  IsNotVertical
+}
+
+// --- Defaults ---
+
+pub const default_inset: Inset = IsNotInset
+
+pub const default_inset_start: InsetStart = IsNotInsetStart
+
+pub const default_inset_end: InsetEnd = IsNotInsetEnd
+
+pub const default_vertical: Vertical = IsNotVertical
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    inset: Inset,
+    inset_start: InsetStart,
+    inset_end: InsetEnd,
+    vertical: Vertical,
   )
 }
 
-// --- SETTERS ---
-
-/// inset sets the `inset` field
+/// default_config is the default configuration for this component.
 ///
-pub fn inset(divider: Divider, inset: Option(Inset)) -> Divider {
-  Divider(..divider, inset: inset)
+pub fn default_config() -> Config {
+  Config(
+    inset: IsNotInset,
+    inset_start: IsNotInsetStart,
+    inset_end: IsNotInsetEnd,
+    vertical: IsNotVertical,
+  )
 }
 
-pub fn inset_end(divider: Divider, inset_end: Indentation) -> Divider {
-  Divider(..divider, inset_end: inset_end)
-}
+// --- Constructors ---
 
-/// inset_start sets the `inset_start` field
+/// from_config creates a new Divider from the given configuration.
 ///
-pub fn inset_start(divider: Divider, inset_start: Indentation) -> Divider {
-  Divider(..divider, inset_start: inset_start)
+pub fn from_config(config: Config) -> Divider {
+  Divider(
+    inset: config.inset,
+    inset_start: config.inset_start,
+    inset_end: config.inset_end,
+    vertical: config.vertical,
+  )
 }
 
-// vertical sets the `vertical` field
-pub fn vertical(divider: Divider, vertical: Orientation) -> Divider {
-  Divider(..divider, vertical: vertical)
+/// new creates a new Divider with the default configuration.
+///
+pub fn new() -> Divider {
+  from_config(default_config())
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates an HTML m3e-divider component
+/// inset sets the value of inset for this Divider.
+///
+pub fn inset(record: Divider, inset: Inset) -> Divider {
+  Divider(..record, inset: inset)
+}
+
+/// inset_start sets the value of inset_start for this Divider.
+///
+pub fn inset_start(record: Divider, inset_start: InsetStart) -> Divider {
+  Divider(..record, inset_start: inset_start)
+}
+
+/// inset_end sets the value of inset_end for this Divider.
+///
+pub fn inset_end(record: Divider, inset_end: InsetEnd) -> Divider {
+  Divider(..record, inset_end: inset_end)
+}
+
+/// vertical sets the value of vertical for this Divider.
+///
+pub fn vertical(record: Divider, vertical: Vertical) -> Divider {
+  Divider(..record, vertical: vertical)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Divider
 ///
 pub fn render(
-  divider: Divider,
+  model: Divider,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-divider",
-    list.append(
+    list.flatten([
       [
-        helpers.option_attribute(
-          divider.inset,
-          inset_to_string,
-          fn(_) { "" },
-          None,
-        ),
-        helpers.boolean_attribute(
-          "inset-start",
-          divider.inset_start == Indented,
-        ),
-        helpers.boolean_attribute("inset-end", divider.inset_end == Indented),
-        helpers.boolean_attribute(
-          "vertical",
-          divider.vertical == layout.Vertical,
-        ),
-      ]
-        |> list.filter(fn(a) { a != attribute.none() }),
+        attr.boolean("inset", model.inset == IsInset),
+        attr.boolean("inset-start", model.inset_start == IsInsetStart),
+        attr.boolean("inset-end", model.inset_end == IsInsetEnd),
+        attr.boolean("vertical", model.vertical == IsVertical),
+      ],
       attributes,
-    ),
-    [],
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
   )
 }
 
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn inset_to_string(inset: Inset) -> String {
-  case inset {
-    Both -> "inset"
-    End -> "inset-end"
-    Start -> "inset-start"
-  }
+/// render_config creates a Lustre Element from a Divider Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
 }

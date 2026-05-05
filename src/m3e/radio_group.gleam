@@ -1,109 +1,136 @@
-//// radio_group provides Lustre support for the [M3E Radio Group component](https://matraic.github.io/m3e/#/components/radio-group.html)
+//// RadioGroup is a container for a set of radio buttons.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option, None}
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, type Requirement, Disabled, Required}
+import m3e/attr
 
 // --- Types ---
 
-/// RadioGroup provides Lustre support for the [M3E Radio Group component](https://matraic.github.io/m3e/#/components/radio-group.html)
-/// 
+/// RadioGroup is a View Model for this component
+///
 /// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - id: The id of the element
-/// - name: The name that identifies the element when submitting the associated form
-/// - required: Whether the element is required
-/// 
+///
+/// - aria_invalid: 
+/// - disabled: Whether the element is disabled.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - required: Whether the element is required.
+///
 pub opaque type RadioGroup {
   RadioGroup(
-    disabled: Interaction,
-    id: Option(String),
-    name: Option(String),
-    required: Requirement,
+    aria_invalid: String,
+    disabled: Disabled,
+    name: String,
+    required: Required,
   )
 }
 
-// --- CONFIGURATION ---
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Config holds the configuration for a RadioGroup
-/// 
+/// Required is whether the element is required.
+///
+pub type Required {
+  IsRequired
+  IsNotRequired
+}
+
+// --- Defaults ---
+
+pub const default_aria_invalid: String = ""
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_name: String = ""
+
+pub const default_required: Required = IsNotRequired
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    disabled: Interaction,
-    id: Option(String),
-    name: Option(String),
-    required: Requirement,
+    aria_invalid: String,
+    disabled: Disabled,
+    name: String,
+    required: Required,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
+/// default_config is the default configuration for this component.
+///
 pub fn default_config() -> Config {
   Config(
-    disabled: state.default_interaction,
-    id: None,
-    name: None,
-    required: state.default_requirement,
+    aria_invalid: "",
+    disabled: IsNotDisabled,
+    name: "",
+    required: IsNotRequired,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new RadioGroup with default values
+/// from_config creates a new RadioGroup from the given configuration.
+///
+pub fn from_config(config: Config) -> RadioGroup {
+  RadioGroup(
+    aria_invalid: config.aria_invalid,
+    disabled: config.disabled,
+    name: config.name,
+    required: config.required,
+  )
+}
+
+/// new creates a new RadioGroup with the default configuration.
 ///
 pub fn new() -> RadioGroup {
   from_config(default_config())
 }
 
-/// from_config creates a RadioGroup from a Config record
-/// 
-pub fn from_config(c: Config) -> RadioGroup {
-  RadioGroup(disabled: c.disabled, id: c.id, name: c.name, required: c.required)
+// --- Setters ---
+
+/// aria_invalid sets the value of aria_invalid for this RadioGroup.
+///
+pub fn aria_invalid(record: RadioGroup, aria_invalid: String) -> RadioGroup {
+  RadioGroup(..record, aria_invalid: aria_invalid)
 }
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
+/// disabled sets the value of disabled for this RadioGroup.
 ///
-pub fn disabled(group: RadioGroup, disabled: Interaction) -> RadioGroup {
-  RadioGroup(..group, disabled: disabled)
+pub fn disabled(record: RadioGroup, disabled: Disabled) -> RadioGroup {
+  RadioGroup(..record, disabled: disabled)
 }
 
-/// id sets the id field
+/// name sets the value of name for this RadioGroup.
 ///
-pub fn id(group: RadioGroup, id: Option(String)) -> RadioGroup {
-  RadioGroup(..group, id: id)
+pub fn name(record: RadioGroup, name: String) -> RadioGroup {
+  RadioGroup(..record, name: name)
 }
 
-/// name sets the name field
+/// required sets the value of required for this RadioGroup.
 ///
-pub fn name(group: RadioGroup, name: Option(String)) -> RadioGroup {
-  RadioGroup(..group, name: name)
+pub fn required(record: RadioGroup, required: Required) -> RadioGroup {
+  RadioGroup(..record, required: required)
 }
 
-/// required sets the required field
-///
-pub fn required(group: RadioGroup, required: Requirement) -> RadioGroup {
-  RadioGroup(..group, required: required)
-}
+// --- Renderers ---
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a RadioGroup
-///
-/// ## Parameters:
-/// - group: a RadioGroup
-/// - attributes: additional attributes
-/// - children: additional children
+/// render creates a Lustre Element for a RadioGroup
 ///
 pub fn render(
-  group: RadioGroup,
+  model: RadioGroup,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -111,20 +138,14 @@ pub fn render(
     "m3e-radio-group",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", group.disabled == Disabled),
-        helpers.option_attribute(
-          group.id,
-          fn(_) { "id" },
-          function.identity,
-          None,
+        attr.with_default(
+          "aria-invalid",
+          model.aria_invalid,
+          default_aria_invalid,
         ),
-        helpers.option_attribute(
-          group.name,
-          fn(_) { "name" },
-          function.identity,
-          None,
-        ),
-        helpers.boolean_attribute("required", group.required == Required),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default("name", model.name, default_name),
+        attr.boolean("required", model.required == IsRequired),
       ],
       attributes,
     ])
@@ -133,12 +154,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a RadioGroup Config
+///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }

@@ -1,39 +1,69 @@
-//// menu_trigger provides Lustre support for the [M3E Menu Trigger component](https://matraic.github.io/m3e/#/components/menu.html)
+//// MenuTrigger is an element, nested within a clickable element, used to open a menu.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import lustre/attribute
+import gleam/function
+import gleam/list
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
 
 // --- Types ---
 
-/// MenuTrigger is an element, nested within a clickable element, used to open a menu
-/// 
+/// MenuTrigger is a View Model for this component
+///
 /// ## Fields:
-/// - for: the id of the associated m3e-menu element
-/// 
+///
+/// - for: The identifier of the interactive control to which this element is attached.
+///
 pub opaque type MenuTrigger {
-  MenuTrigger(for: String)
+  MenuTrigger(for: Option(String))
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new MenuTrigger
-/// 
-pub fn new(for: String) -> MenuTrigger {
+pub const default_for: Option(String) = None
+
+// --- Constructors ---
+
+/// new creates a new MenuTrigger with the default configuration.
+///
+pub fn new(for: Option(String)) -> MenuTrigger {
   MenuTrigger(for: for)
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// for sets the for field
+/// for sets the value of for for this MenuTrigger.
 ///
-pub fn for(_: MenuTrigger, for: String) -> MenuTrigger {
+pub fn for(_: MenuTrigger, for: Option(String)) -> MenuTrigger {
   MenuTrigger(for: for)
 }
 
-// --- RENDERERING ---
+// --- Renderers ---
 
-/// render creates a Lustre Element from a MenuTrigger
+/// render creates a Lustre Element for a MenuTrigger
 ///
-pub fn render(m: MenuTrigger) -> Element(msg) {
-  element.element("m3e-menu-trigger", [attribute.for(m.for)], [])
+pub fn render(
+  model: MenuTrigger,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-menu-trigger",
+    list.flatten([
+      [
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
 }

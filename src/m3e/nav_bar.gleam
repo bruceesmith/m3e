@@ -1,55 +1,56 @@
-//// nav_bar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
+//// NavBar is a horizontal bar, typically used on smaller devices, that allows a user to switch between 3-5 views.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/nav_bar_mode.{type NavBarMode}
 
 // --- Types ---
 
-/// Mode specifies the possible modes in which to present items in a navigation bar
-pub type Mode {
-  Auto
-  Compact
-  Expanded
-}
-
-/// NavBar provides Lustre support for the [M3E Nav Bar component](https://matraic.github.io/m3e/#/components/nav-bar.html)
-/// 
+/// NavBar is a View Model for this component
+///
 /// ## Fields:
-/// - mode: The mode in which items in the bar are presented
+///
+/// - mode: The mode in which items in the bar are presented.
 ///
 pub opaque type NavBar {
-  NavBar(mode: Mode)
+  NavBar(mode: NavBarMode)
 }
 
-// --- CONSTRUCTORS ---
+// --- Defaults ---
 
-/// new creates a new NavBar
-/// 
-pub fn new() -> NavBar {
-  NavBar(mode: Compact)
-}
+pub const default_mode: NavBarMode = nav_bar_mode.Compact
 
-// --- SETTERS ---
+// --- Constructors ---
 
-/// mode sets the mode field
-/// 
-pub fn mode(_: NavBar, mode: Mode) -> NavBar {
+/// new creates a new NavBar with the default configuration.
+///
+pub fn new(mode: NavBarMode) -> NavBar {
   NavBar(mode: mode)
 }
 
-// --- RENDERERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element(msg) from a NavBar
-/// 
-/// ## Parameters:
-/// - bar: a NavBar
-/// - attributes: additional attributes
-/// - children: additional children
+/// mode sets the value of mode for this NavBar.
+///
+pub fn mode(_: NavBar, mode: NavBarMode) -> NavBar {
+  NavBar(mode: mode)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a NavBar
 ///
 pub fn render(
-  bar: NavBar,
+  model: NavBar,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -57,21 +58,15 @@ pub fn render(
     "m3e-nav-bar",
     list.flatten([
       [
-        attribute.attribute("mode", mode_to_string(bar.mode)),
+        attr.with_default(
+          "mode",
+          nav_bar_mode.to_string(model.mode),
+          nav_bar_mode.to_string(default_mode),
+        ),
       ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-fn mode_to_string(mode: Mode) -> String {
-  case mode {
-    Auto -> "auto"
-    Compact -> "compact"
-    Expanded -> "expanded"
-  }
 }

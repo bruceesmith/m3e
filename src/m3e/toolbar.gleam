@@ -1,92 +1,90 @@
-//// toolbar provides Lustre support for the [M3E Toolbar component](https://matraic.github.io/m3e/#/components/toolbar.html)
+//// Toolbar is presents frequently used actions relevant to the current page.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/layout.{type Orientation, Vertical}
+import m3e/attr
+import m3e/toolbar_shape.{type ToolbarShape}
+import m3e/toolbar_variant.{type ToolbarVariant}
 
 // --- Types ---
 
-/// Elevation specifies the elevation of the element
-/// 
-pub type Elevation {
-  Raised
-  Lowered
-}
-
-pub const default_elevation: Elevation = Lowered
-
-/// Shape is the possible shape variants of a toolbar
-/// 
-pub type Shape {
-  Rounded
-  Square
-}
-
-pub const default_shape: Shape = Square
-
-/// Toolbar provides Lustre support for the [M3E Toolbar component](https://matraic.github.io/m3e/#/components/toolbar.html)
+/// Toolbar is a View Model for this component
 ///
 /// ## Fields:
-/// - elevated: Whether the toolbar is elevated
-/// - shape: The shape of the toolbar
-/// - variant: The appearance variant of the toolbar
-/// - vertical: Whether the element is oriented vertically
+///
+/// - elevated: Whether the toolbar is elevated.
+/// - shape: The shape of the toolbar.
+/// - variant: The appearance variant of the toolbar.
+/// - vertical: Whether the element is oriented vertically.
 ///
 pub opaque type Toolbar {
   Toolbar(
-    elevated: Elevation,
-    shape: Shape,
-    variant: Variant,
-    vertical: Orientation,
+    elevated: Elevated,
+    shape: ToolbarShape,
+    variant: ToolbarVariant,
+    vertical: Vertical,
   )
 }
 
-/// Variant is the possible appearance variants of a toolbar
-/// 
-pub type Variant {
-  Standard
-  Vibrant
+/// Elevated is whether the toolbar is elevated.
+///
+pub type Elevated {
+  IsElevated
+  IsNotElevated
 }
 
-pub const default_variant: Variant = Standard
+/// Vertical is whether the element is oriented vertically.
+///
+pub type Vertical {
+  IsVertical
+  IsNotVertical
+}
 
-// --- CONFIGURATION ---
+// --- Defaults ---
 
-/// Config holds the configuration for a Toolbar
-/// 
+pub const default_elevated: Elevated = IsNotElevated
+
+pub const default_shape: ToolbarShape = toolbar_shape.Square
+
+pub const default_variant: ToolbarVariant = toolbar_variant.Standard
+
+pub const default_vertical: Vertical = IsNotVertical
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    elevated: Elevation,
-    shape: Shape,
-    variant: Variant,
-    vertical: Orientation,
+    elevated: Elevated,
+    shape: ToolbarShape,
+    variant: ToolbarVariant,
+    vertical: Vertical,
   )
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    elevated: default_elevation,
-    shape: default_shape,
-    variant: default_variant,
-    vertical: layout.default_orientation,
+    elevated: IsNotElevated,
+    shape: toolbar_shape.Square,
+    variant: toolbar_variant.Standard,
+    vertical: IsNotVertical,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Toolbar
-/// 
-pub fn new() -> Toolbar {
-  from_config(default_config())
-}
-
-/// from_config creates a Toolbar from a Config
+/// from_config creates a new Toolbar from the given configuration.
 ///
 pub fn from_config(config: Config) -> Toolbar {
   Toolbar(
@@ -97,43 +95,44 @@ pub fn from_config(config: Config) -> Toolbar {
   )
 }
 
-// --- SETTERS ---
-
-/// elevated sets the elevated field
+/// new creates a new Toolbar with the default configuration.
 ///
-pub fn elevated(t: Toolbar, elevated: Elevation) -> Toolbar {
-  Toolbar(..t, elevated: elevated)
+pub fn new() -> Toolbar {
+  from_config(default_config())
 }
 
-/// shape sets the shape field
+// --- Setters ---
+
+/// elevated sets the value of elevated for this Toolbar.
 ///
-pub fn shape(t: Toolbar, shape: Shape) -> Toolbar {
-  Toolbar(..t, shape: shape)
+pub fn elevated(record: Toolbar, elevated: Elevated) -> Toolbar {
+  Toolbar(..record, elevated: elevated)
 }
 
-/// variant sets the variant field
+/// shape sets the value of shape for this Toolbar.
 ///
-pub fn variant(t: Toolbar, variant: Variant) -> Toolbar {
-  Toolbar(..t, variant: variant)
+pub fn shape(record: Toolbar, shape: ToolbarShape) -> Toolbar {
+  Toolbar(..record, shape: shape)
 }
 
-/// vertical sets the vertical field
+/// variant sets the value of variant for this Toolbar.
 ///
-pub fn vertical(t: Toolbar, vertical: Orientation) -> Toolbar {
-  Toolbar(..t, vertical: vertical)
+pub fn variant(record: Toolbar, variant: ToolbarVariant) -> Toolbar {
+  Toolbar(..record, variant: variant)
 }
 
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a Toolbar
+/// vertical sets the value of vertical for this Toolbar.
 ///
-/// ## Parameters:
-/// - t: a Toolbar
-/// - attributes: additional attributes
-/// - children: additional children
+pub fn vertical(record: Toolbar, vertical: Vertical) -> Toolbar {
+  Toolbar(..record, vertical: vertical)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Toolbar
 ///
 pub fn render(
-  t: Toolbar,
+  model: Toolbar,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -141,10 +140,18 @@ pub fn render(
     "m3e-toolbar",
     list.flatten([
       [
-        helpers.boolean_attribute("elevated", t.elevated == Raised),
-        attribute.attribute("shape", shape_to_string(t.shape)),
-        attribute.attribute("variant", variant_to_string(t.variant)),
-        helpers.boolean_attribute("vertical", t.vertical == Vertical),
+        attr.boolean("elevated", model.elevated == IsElevated),
+        attr.with_default(
+          "shape",
+          toolbar_shape.to_string(model.shape),
+          toolbar_shape.to_string(default_shape),
+        ),
+        attr.with_default(
+          "variant",
+          toolbar_variant.to_string(model.variant),
+          toolbar_variant.to_string(default_variant),
+        ),
+        attr.boolean("vertical", model.vertical == IsVertical),
       ],
       attributes,
     ])
@@ -153,28 +160,12 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
+/// render_config creates a Lustre Element from a Toolbar Config
 ///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
-}
-
-// --- PRIVATE INTERNAL HELPERS --- 
-
-fn shape_to_string(shape: Shape) -> String {
-  case shape {
-    Rounded -> "rounded"
-    Square -> "square"
-  }
-}
-
-fn variant_to_string(variant: Variant) -> String {
-  case variant {
-    Standard -> "standard"
-    Vibrant -> "vibrant"
-  }
+  render(from_config(c), attributes, children)
 }

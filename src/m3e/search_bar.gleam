@@ -1,94 +1,102 @@
-//// search_bar provides Lustre support for the M3E Search Bar component https://matraic.github.io/m3e/#/components/search.html
+//// SearchBar is a bar that provides a prominent entry point for search.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
+import m3e/attr
 
 // --- Types ---
 
-/// Clearing specifies whether the bar presents a button used to clear the search term.
-///
-pub type Clearing {
-  Clearable
-  NotClearable
-}
-
-pub const default_clearable = NotClearable
-
-/// SearchBar is a  bar that provides a prominent entry point for search
+/// SearchBar is a View Model for this component
 ///
 /// ## Fields:
+///
 /// - clearable: Whether the bar presents a button used to clear the search term.
 /// - clear_label: The accessible label given to the button used to clear the search term.
 ///
 pub opaque type SearchBar {
-  SearchBar(clearable: Clearing, clear_label: String)
+  SearchBar(clearable: Clearable, clear_label: String)
 }
 
-pub const default_clear_label = "Clear"
+/// Clearable is whether the bar presents a button used to clear the search term.
+///
+pub type Clearable {
+  IsClearable
+  IsNotClearable
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
+// --- Defaults ---
+
+pub const default_clearable: Clearable = IsNotClearable
+
+pub const default_clear_label: String = "Clear"
+
+/// Slots are used in child elements to insert content into this component
 ///
 pub type Slot {
   Leading
-  // Renders content before the input of the bar
+  // Renders content before the input of the bar.
   Input
-  // Renders the input of the bar
+  // Renders the input of the bar.
   Trailing
-  // Renders content after the input of the bar
+  // Renders content after the input of the bar.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config is the configuration for a SearchBar
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(clearable: Clearing, clear_label: String)
+  Config(clearable: Clearable, clear_label: String)
 }
 
-/// default_config returns the default configuration for a SearchBar
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(clearable: default_clearable, clear_label: default_clear_label)
+  Config(clearable: IsNotClearable, clear_label: "Clear")
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a SearchBar from a Config
+/// from_config creates a new SearchBar from the given configuration.
 ///
 pub fn from_config(config: Config) -> SearchBar {
   SearchBar(clearable: config.clearable, clear_label: config.clear_label)
 }
 
-/// new creates a new SearchBar with the default configuration
+/// new creates a new SearchBar with the default configuration.
 ///
 pub fn new() -> SearchBar {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// clearable sets whether the bar presents a button used to clear the search term.
+/// clearable sets the value of clearable for this SearchBar.
 ///
-pub fn clearable(sb: SearchBar, clearable: Clearing) -> SearchBar {
-  SearchBar(..sb, clearable: clearable)
+pub fn clearable(record: SearchBar, clearable: Clearable) -> SearchBar {
+  SearchBar(..record, clearable: clearable)
 }
 
-/// clear_label sets the accessible label given to the button used to clear the search term.
+/// clear_label sets the value of clear_label for this SearchBar.
 ///
-pub fn clear_label(sb: SearchBar, clear_label: String) -> SearchBar {
-  SearchBar(..sb, clear_label: clear_label)
+pub fn clear_label(record: SearchBar, clear_label: String) -> SearchBar {
+  SearchBar(..record, clear_label: clear_label)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render renders the search bar as a Lustre Element(msg).
+/// render creates a Lustre Element for a SearchBar
 ///
 pub fn render(
-  sb: SearchBar,
+  model: SearchBar,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -96,12 +104,8 @@ pub fn render(
     "m3e-search-bar",
     list.flatten([
       [
-        helpers.boolean_attribute("clearable", sb.clearable == Clearable),
-        helpers.attribute_with_default(
-          "clear-label",
-          sb.clear_label,
-          default_clear_label,
-        ),
+        attr.boolean("clearable", model.clearable == IsClearable),
+        attr.with_default("clear-label", model.clear_label, default_clear_label),
       ],
       attributes,
     ])
@@ -110,17 +114,17 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element(msg) from a Config
+/// render_config creates a Lustre Element from a SearchBar Config
 ///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// slot returns a Lustre Attribute(msg) for the given slot name
 ///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {

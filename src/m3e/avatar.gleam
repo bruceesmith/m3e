@@ -1,21 +1,43 @@
-//// avatar provides Lustre support for the [M3E Avatar component](https://matraic.github.io/m3e/#/components/avatar.html)
+//// Avatar is an image, icon or textual initials representing a user or other identity.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 
-/// Avatar is a reusable identity primitive that displays visual or textual representation with consistent sizing, shape, and typography
-/// 
+// --- Types ---
+
+/// Avatar is a View Model for this component
+///
 pub opaque type Avatar {
   Avatar
 }
 
-/// new creates a new Avatar
-/// 
+// --- Defaults ---
+
+// --- Constructors ---
+
+/// new creates a new Avatar with the default configuration.
+///
 pub fn new() -> Avatar {
   Avatar
 }
 
-/// render creates a Lustre Element from an Avatar
-/// 
-pub fn render(_: Avatar, children: List(Element(msg))) -> Element(msg) {
-  element.element("m3e-avatar", [], children)
+// --- Setters ---
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Avatar
+///
+pub fn render(
+  _: Avatar,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element("m3e-avatar", attributes, children)
 }

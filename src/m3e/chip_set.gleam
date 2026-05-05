@@ -1,88 +1,74 @@
-//// chip_set provides Lustre support for the [M3E Chip Set component](https://matraic.github.io/m3e/#/components/chip-set.html)
+//// ChipSet is a container used to organize chips into a cohesive unit.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/layout.{type Orientation, Vertical}
+import m3e/attr
 
 // --- Types ---
 
-/// Chipset contains all the information for a ChipSet
-/// 
+/// ChipSet is a View Model for this component
+///
 /// ## Fields:
-/// - vertical: Whether the element is oriented vertically
+///
+/// - vertical: Whether the element is oriented vertically.
 ///
 pub opaque type ChipSet {
-  ChipSet(vertical: Orientation)
+  ChipSet(vertical: Vertical)
 }
 
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a ChipSet
-///  
-pub type Config {
-  Config(vertical: Orientation)
-}
-
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config {
-  Config(vertical: layout.default_orientation)
-}
-
-// --- CONSTRUCTORS ---
-
-/// new creates a new ChipSet with default values
+/// Vertical is whether the element is oriented vertically.
 ///
-pub fn new() -> ChipSet {
-  from_config(default_config())
+pub type Vertical {
+  IsVertical
+  IsNotVertical
 }
 
-/// from_config creates a ChipSet from a Config record
-/// 
-pub fn from_config(c: Config) -> ChipSet {
-  ChipSet(vertical: c.vertical)
-}
+// --- Defaults ---
 
-// --- SETTERS ---
+pub const default_vertical: Vertical = IsNotVertical
 
-/// vertical sets the `vertical` field
+// --- Constructors ---
+
+/// new creates a new ChipSet with the default configuration.
 ///
-pub fn vertical(_: ChipSet, vertical: Orientation) -> ChipSet {
+pub fn new(vertical: Vertical) -> ChipSet {
   ChipSet(vertical: vertical)
 }
 
-// --- RENDERING ---
+// --- Setters ---
 
-/// render creates a Lustre Element from a ChipSet
+/// vertical sets the value of vertical for this ChipSet.
+///
+pub fn vertical(_: ChipSet, vertical: Vertical) -> ChipSet {
+  ChipSet(vertical: vertical)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ChipSet
 ///
 pub fn render(
-  s: ChipSet,
+  model: ChipSet,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-chip-set",
-    list.append(
+    list.flatten([
       [
-        helpers.boolean_attribute("vertical", s.vertical == Vertical),
+        attr.boolean("vertical", model.vertical == IsVertical),
       ],
       attributes,
-    )
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
-
-/// render_config creates a Lustre Element directly from a Config
-/// 
-pub fn render_config(
-  config: Config,
-  attributes: List(Attribute(msg)),
-  children: List(Element(msg)),
-) -> Element(msg) {
-  render(from_config(config), attributes, children)
-}
-// --- PRIVATE INTERNAL HELPERS ---

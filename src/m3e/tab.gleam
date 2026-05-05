@@ -1,102 +1,116 @@
-//// tab provides Lustre support for the [M3E Tab component](https://matraic.github.io/m3e/#/components/tabs.html)
+//// Tab is an interactive element that, when activated, presents an associated tab panel.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
+import gleam/function
 import gleam/list
-
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-
-import m3e/helpers
-import m3e/state.{type Interaction, Disabled, Enabled}
+import m3e/attr
 
 // --- Types ---
 
-pub const default_interaction = Enabled
-
-/// Whether the element is selected
-pub type Selected {
-  Selected
-  NotSelected
+/// Tab is a View Model for this component
+///
+/// ## Fields:
+///
+/// - disabled: Whether the element is disabled.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - selected: Whether the element is selected.
+///
+pub opaque type Tab {
+  Tab(disabled: Disabled, for: Option(String), selected: Selected)
 }
 
-pub const default_selected = NotSelected
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
+/// Selected is whether the element is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_for: Option(String) = None
+
+pub const default_selected: Selected = IsNotSelected
+
+/// Slots are used in child elements to insert content into this component
+///
 pub type Slot {
   Icon
-  // Renders an icon before the tab's label 
+  // Renders an icon before the tab's label.
 }
 
-/// Tab provides one view within a structured navigation surface
-/// 
-/// ## Fields:
-/// - disabled: Whether the element is disabled
-/// - for: The identifier of the interactive control to which this element is attached.
-/// - selected: Whether the element is selected
-/// 
-pub opaque type Tab {
-  Tab(disabled: Interaction, for: String, selected: Selected)
-}
+// --- Configuration ---
 
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a Tab
-/// 
+/// Config is a public record for configuring this component.
+///
 pub type Config {
-  Config(disabled: Interaction, for: String, selected: Selected)
+  Config(disabled: Disabled, for: Option(String), selected: Selected)
 }
 
-/// default_config creates a new Config with default values
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(disabled: default_interaction, for: "", selected: default_selected)
+  Config(disabled: IsNotDisabled, for: None, selected: IsNotSelected)
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// new creates a new Tab
-/// 
-pub fn new() -> Tab {
-  from_config(default_config())
-}
-
-/// from_config creates a Tab from a Config
+/// from_config creates a new Tab from the given configuration.
 ///
 pub fn from_config(config: Config) -> Tab {
   Tab(disabled: config.disabled, for: config.for, selected: config.selected)
 }
 
-// --- SETTERS ---
-
-/// disabled sets the disabled field
-/// 
-pub fn disabled(t: Tab, disabled: Interaction) -> Tab {
-  Tab(..t, disabled: disabled)
-}
-
-/// for sets the for field
-/// 
-pub fn for(t: Tab, for: String) -> Tab {
-  Tab(..t, for: for)
-}
-
-/// selected sets the selected field
-/// 
-pub fn selected(t: Tab, selected: Selected) -> Tab {
-  Tab(..t, selected: selected)
-}
-
-// --- RENDERING ---
-
-/// render creates a Lustre Element(msg) from a Tab
+/// new creates a new Tab with the default configuration.
 ///
-/// ## Parameters:
-/// - t: a Tab
-/// - attributes: additional attributes
-/// - children: additional children
+pub fn new() -> Tab {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// disabled sets the value of disabled for this Tab.
+///
+pub fn disabled(record: Tab, disabled: Disabled) -> Tab {
+  Tab(..record, disabled: disabled)
+}
+
+/// for sets the value of for for this Tab.
+///
+pub fn for(record: Tab, for: Option(String)) -> Tab {
+  Tab(..record, for: for)
+}
+
+/// selected sets the value of selected for this Tab.
+///
+pub fn selected(record: Tab, selected: Selected) -> Tab {
+  Tab(..record, selected: selected)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Tab
 ///
 pub fn render(
-  t: Tab,
+  model: Tab,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
@@ -104,9 +118,9 @@ pub fn render(
     "m3e-tab",
     list.flatten([
       [
-        helpers.boolean_attribute("disabled", t.disabled == Disabled),
-        attribute.attribute("for", t.for),
-        helpers.boolean_attribute("selected", t.selected == Selected),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.boolean("selected", model.selected == IsSelected),
       ],
       attributes,
     ])
@@ -115,23 +129,20 @@ pub fn render(
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
+/// render_config creates a Lustre Element from a Tab Config
 ///
 pub fn render_config(
-  config: Config,
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-// --- ATTRIBUTES ---
-
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
     Icon -> attribute.attribute("slot", "icon")
   }
 }
-// --- PRIVATE INTERNAL HELPERS --- 

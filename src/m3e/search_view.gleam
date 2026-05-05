@@ -1,58 +1,24 @@
-//// search_view provides Lustre support for the M3E Search View component https://matraic.github.io/m3e/#/components/search.html
+//// SearchView is a surface that presents suggestions and results for a search.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
 import gleam/list
-
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/attr
+import m3e/search_view_mode.{type SearchViewMode}
 
-import m3e/helpers
+// --- Types ---
 
-// --- TYPES ---
-
-/// Mode is the behavior mode of the search view
-///
-/// - `Auto`: The view expands to show results as the user types.
-/// - `Docked`: The view is always visible, but results are hidden until the user expands it.
-/// - `Fullscreen`: The view takes up the full screen and results are shown immediately.
-///
-pub type Mode {
-  Auto
-  Docked
-  Fullscreen
-}
-
-pub const default_mode = Docked
-
-/// Container specifies whether the view features a persistent, filled search container.
-///
-pub type Container {
-  Contained
-  Free
-}
-
-pub const default_contained = Free
-
-/// Expansion specifies whether the view is expanded to show results.
-///
-pub type Expansion {
-  Expanded
-  Collapsed
-}
-
-pub const default_open = Collapsed
-
-/// SearchIcon specifies whether to hide the search icon.
-///
-pub type SearchIcon {
-  Visible
-  Hidden
-}
-
-pub const default_search_icon = Visible
-
-/// SearchView is a surface that presents suggestions and results for a search
+/// SearchView is a View Model for this component
 ///
 /// ## Fields:
+///
 /// - contained: Whether the view features a persistent, filled search container.
 /// - mode: The behavior mode of the view.
 /// - open: Whether the view is expanded to show results.
@@ -62,65 +28,96 @@ pub const default_search_icon = Visible
 ///
 pub opaque type SearchView {
   SearchView(
-    contained: Container,
-    mode: Mode,
-    open: Expansion,
+    contained: Contained,
+    mode: SearchViewMode,
+    open: Open,
     clear_label: String,
     close_label: String,
-    hide_search_icon: SearchIcon,
+    hide_search_icon: HideSearchIcon,
   )
 }
 
-pub const default_clear_label = "Clear"
+/// Contained is whether the view features a persistent, filled search container.
+///
+pub type Contained {
+  IsContained
+  IsNotContained
+}
 
-pub const default_close_label = "Close"
+/// Open is whether the view is expanded to show results.
+///
+pub type Open {
+  IsOpen
+  IsNotOpen
+}
 
-/// Slot gives type-safe names to each of the defined HTML named slots
+/// HideSearchIcon is whether to hide the search icon.
+///
+pub type HideSearchIcon {
+  IsHideSearchIcon
+  IsNotHideSearchIcon
+}
+
+// --- Defaults ---
+
+pub const default_contained: Contained = IsNotContained
+
+pub const default_mode: SearchViewMode = search_view_mode.Docked
+
+pub const default_open: Open = IsNotOpen
+
+pub const default_clear_label: String = "Clear"
+
+pub const default_close_label: String = "Close"
+
+pub const default_hide_search_icon: HideSearchIcon = IsNotHideSearchIcon
+
+/// Slots are used in child elements to insert content into this component
 ///
 pub type Slot {
   Input
-  // Renders the input of the view
+  // Renders the input of the view.
   OpenLeading
-  // When open, renders content before the input of the view
+  // When open, renders content before the input of the view.
   OpenTrailing
-  // When open, renders content after the input of the view
+  // When open, renders content after the input of the view.
   ClosedLeading
-  // When closed, renders content before the input of the view
+  // When closed, renders content before the input of the view.
   ClosedTrailing
-  // When closed, renders content after the input of the view
+  // When closed, renders content after the input of the view.
 }
 
-// --- CONFIGURATION ---
+// --- Configuration ---
 
-/// Config is the configuration for a SearchView
+/// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    contained: Container,
-    mode: Mode,
-    open: Expansion,
+    contained: Contained,
+    mode: SearchViewMode,
+    open: Open,
     clear_label: String,
     close_label: String,
-    hide_search_icon: SearchIcon,
+    hide_search_icon: HideSearchIcon,
   )
 }
 
-/// default_config returns the default configuration for a SearchView
+/// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
   Config(
-    contained: default_contained,
-    mode: default_mode,
-    open: default_open,
-    clear_label: default_clear_label,
-    close_label: default_close_label,
-    hide_search_icon: default_search_icon,
+    contained: IsNotContained,
+    mode: search_view_mode.Docked,
+    open: IsNotOpen,
+    clear_label: "Clear",
+    close_label: "Close",
+    hide_search_icon: IsNotHideSearchIcon,
   )
 }
 
-// --- CONSTRUCTORS ---
+// --- Constructors ---
 
-/// from_config creates a SearchView from a Config
+/// from_config creates a new SearchView from the given configuration.
 ///
 pub fn from_config(config: Config) -> SearchView {
   SearchView(
@@ -133,102 +130,98 @@ pub fn from_config(config: Config) -> SearchView {
   )
 }
 
-/// new creates a new SearchView with the default configuration
+/// new creates a new SearchView with the default configuration.
 ///
 pub fn new() -> SearchView {
   from_config(default_config())
 }
 
-// --- SETTERS ---
+// --- Setters ---
 
-/// contained sets the `contained` field
+/// contained sets the value of contained for this SearchView.
 ///
-pub fn contained(view: SearchView, contained: Container) -> SearchView {
-  SearchView(..view, contained: contained)
+pub fn contained(record: SearchView, contained: Contained) -> SearchView {
+  SearchView(..record, contained: contained)
 }
 
-/// mode sets the `mode` field
+/// mode sets the value of mode for this SearchView.
 ///
-pub fn mode(view: SearchView, mode: Mode) -> SearchView {
-  SearchView(..view, mode: mode)
+pub fn mode(record: SearchView, mode: SearchViewMode) -> SearchView {
+  SearchView(..record, mode: mode)
 }
 
-/// open sets the `open` field
+/// open sets the value of open for this SearchView.
 ///
-pub fn open(view: SearchView, open: Expansion) -> SearchView {
-  SearchView(..view, open: open)
+pub fn open(record: SearchView, open: Open) -> SearchView {
+  SearchView(..record, open: open)
 }
 
-/// clear_label sets the `clear_label` field
+/// clear_label sets the value of clear_label for this SearchView.
 ///
-pub fn clear_label(view: SearchView, clear_label: String) -> SearchView {
-  SearchView(..view, clear_label: clear_label)
+pub fn clear_label(record: SearchView, clear_label: String) -> SearchView {
+  SearchView(..record, clear_label: clear_label)
 }
 
-/// close_label sets the `close_label` field
+/// close_label sets the value of close_label for this SearchView.
 ///
-pub fn close_label(view: SearchView, close_label: String) -> SearchView {
-  SearchView(..view, close_label: close_label)
+pub fn close_label(record: SearchView, close_label: String) -> SearchView {
+  SearchView(..record, close_label: close_label)
 }
 
-/// hide_search_icon sets the `hide_search_icon` field
+/// hide_search_icon sets the value of hide_search_icon for this SearchView.
 ///
 pub fn hide_search_icon(
-  view: SearchView,
-  hide_search_icon: SearchIcon,
+  record: SearchView,
+  hide_search_icon: HideSearchIcon,
 ) -> SearchView {
-  SearchView(..view, hide_search_icon: hide_search_icon)
+  SearchView(..record, hide_search_icon: hide_search_icon)
 }
 
-// --- RENDERING ---
+// --- Renderers ---
 
-/// render renders the SearchView as a Lustre Element(msg)
+/// render creates a Lustre Element for a SearchView
 ///
 pub fn render(
-  view: SearchView,
-  attrs: List(Attribute(msg)),
+  model: SearchView,
+  attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-search-view",
     list.flatten([
       [
-        helpers.boolean_attribute("contained", view.contained == Contained),
-        attribute.attribute("mode", mode_to_string(view.mode)),
-        helpers.boolean_attribute("open", view.open == Expanded),
-        helpers.attribute_with_default(
-          "clear-label",
-          view.clear_label,
-          default_clear_label,
+        attr.boolean("contained", model.contained == IsContained),
+        attr.with_default(
+          "mode",
+          search_view_mode.to_string(model.mode),
+          search_view_mode.to_string(default_mode),
         ),
-        helpers.attribute_with_default(
-          "close-label",
-          view.close_label,
-          default_close_label,
-        ),
-        helpers.boolean_attribute(
+        attr.boolean("open", model.open == IsOpen),
+        attr.with_default("clear-label", model.clear_label, default_clear_label),
+        attr.with_default("close-label", model.close_label, default_close_label),
+        attr.boolean(
           "hide-search-icon",
-          view.hide_search_icon == Hidden,
+          model.hide_search_icon == IsHideSearchIcon,
         ),
       ],
-      attrs,
+      attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
 }
 
-/// render_config creates a Lustre Element(msg) from a Config
+/// render_config creates a Lustre Element from a SearchView Config
 ///
 pub fn render_config(
-  config: Config,
-  attrs: List(Attribute(msg)),
+  c: Config,
+  attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attrs, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
+/// slot returns a Lustre Attribute(msg) for the given slot name
 ///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
@@ -237,17 +230,5 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     OpenTrailing -> attribute.attribute("slot", "open-trailing")
     ClosedLeading -> attribute.attribute("slot", "closed-leading")
     ClosedTrailing -> attribute.attribute("slot", "closed-trailing")
-  }
-}
-
-// --- PRIVATE HELPER FUNCTIONS ---
-
-/// mode_to_string converts a Mode to a string suitable for use in the view's class attribute
-///
-fn mode_to_string(mode: Mode) -> String {
-  case mode {
-    Auto -> "auto"
-    Docked -> "docked"
-    Fullscreen -> "fullscreen"
   }
 }

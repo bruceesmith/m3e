@@ -1,297 +1,224 @@
-//// dialog provides Lustre support for the [M3E Dialog component](https://matraic.github.io/m3e/#/components/dialog.html)
+//// Dialog is a dialog that provides important prompts in a user flow.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/function
 import gleam/list
-import gleam/option.{type Option, None, Some}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
-import lustre/element/html
-
-import m3e/config.{type Dismissibility, Dismissible}
-import m3e/helpers
-import m3e/icon
+import m3e/attr
 
 // --- Types ---
 
-/// AlertStatus specifies if the dialog is an alert
-/// 
-pub type AlertStatus {
-  Alert
-  Standard
-}
-
-pub const default_alert_status: AlertStatus = Standard
-
-/// CloseBehavior specifies if the dialog can be closed by clicking the backdrop or pressing ESC
-/// 
-pub type CloseBehavior {
-  CloseDisabled
-  CloseEnabled
-}
-
-pub const default_close_behavior: CloseBehavior = CloseEnabled
-
-/// Dialog component
-/// 
-/// ## Fields:
-/// - id: The unique identifier for the dialog
-/// - alert: Whether the dialog is an alert
-/// - close_label: The accessible label given to the button used to dismiss the dialog
-/// - no_focus_trap: Whether to disable focus trapping, which keeps keyboard `Tab` navigation within the dialog
-/// - disable_close: Whether users cannot click the backdrop or press escape to dismiss the dialog
-/// - dismissible: Whether a button is presented that can be used to close the dialog
-/// - header: The headline of the dialog
-/// - close_icon_name: The "close" icon of the dialog
-/// - actions: The actions of the dialog
-/// - open: Whether the dialog is open
-/// 
-pub opaque type Dialog(msg) {
-  Dialog(
-    id: String,
-    alert: AlertStatus,
-    close_label: Option(String),
-    no_focus_trap: FocusTrap,
-    disable_close: CloseBehavior,
-    dismissible: Dismissibility,
-    header: String,
-    close_icon_name: Option(String),
-    actions: List(Element(msg)),
-    open: State,
-  )
-}
-
-/// FocusTrap specifies if focus trapping is enabled
-/// 
-pub type FocusTrap {
-  TrapFocus
-  NoFocusTrap
-}
-
-pub const default_focus_trap: FocusTrap = TrapFocus
-
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
-pub type Slot {
-  Actions
-  // Renders the actions of the dialog 
-  CloseIcon
-  // Renders the icon of the button used to close the dialog 
-  Header
-  // Renders the header of the dialog 
-}
-
-/// State determines if the dialog is open or closed
-/// 
-pub type State {
-  Open
-  Closed
-}
-
-pub const default_state: State = Closed
-
-// --- CONFIGURATION ---
-
-/// Config holds the configuration for a Dialog
-/// 
-pub type Config(msg) {
-  Config(
-    id: String,
-    alert: AlertStatus,
-    close_label: Option(String),
-    no_focus_trap: FocusTrap,
-    disable_close: CloseBehavior,
-    dismissible: Dismissibility,
-    header: String,
-    close_icon_name: Option(String),
-    actions: List(Element(msg)),
-    open: State,
-  )
-}
-
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config() -> Config(msg) {
-  Config(
-    id: "",
-    alert: default_alert_status,
-    close_label: None,
-    no_focus_trap: default_focus_trap,
-    disable_close: default_close_behavior,
-    dismissible: config.default_dismissibility,
-    header: "",
-    close_icon_name: None,
-    actions: [],
-    open: default_state,
-  )
-}
-
-// --- CONSTRUCTORS ---
-
-/// new creates a Dialog with default values
-/// 
-/// ## Parameters:
-/// - id: The unique identifier for the dialog
-/// - header: The headline of the dialog
+/// Dialog is a View Model for this component
 ///
-pub fn new(id: String, header: String) -> Dialog(msg) {
-  from_config(Config(..default_config(), id: id, header: header))
-}
-
-/// from_config creates a Dialog from a Config record
-/// 
-pub fn from_config(c: Config(msg)) -> Dialog(msg) {
+/// ## Fields:
+///
+/// - alert: Whether the dialog is an alert.
+/// - close_label: The accessible label given to the button used to dismiss the dialog.
+/// - disable_close: Whether users cannot click the backdrop or press ESC to dismiss the dialog.
+/// - dismissible: Whether a button is presented that can be used to close the dialog.
+/// - no_focus_trap: Whether to disable focus trapping, which keeps keyboard `Tab` navigation within the dialog.
+/// - open: Whether the dialog is open.
+///
+pub opaque type Dialog {
   Dialog(
-    id: c.id,
-    alert: c.alert,
-    close_label: c.close_label,
-    no_focus_trap: c.no_focus_trap,
-    disable_close: c.disable_close,
-    dismissible: c.dismissible,
-    header: c.header,
-    close_icon_name: c.close_icon_name,
-    actions: c.actions,
-    open: c.open,
+    alert: Alert,
+    close_label: String,
+    disable_close: DisableClose,
+    dismissible: Dismissible,
+    no_focus_trap: NoFocusTrap,
+    open: String,
   )
 }
 
-// --- SETTERS ---
-
-/// actions sets the `actions` field
-/// 
-pub fn actions(d: Dialog(msg), actions: List(Element(msg))) -> Dialog(msg) {
-  Dialog(..d, actions: actions)
+/// Alert is whether the dialog is an alert.
+///
+pub type Alert {
+  IsAlert
+  IsNotAlert
 }
 
-/// alert sets the `alert` field
-/// 
-pub fn alert(d: Dialog(msg), alert: AlertStatus) -> Dialog(msg) {
-  Dialog(..d, alert: alert)
+/// DisableClose is whether users cannot click the backdrop or press ESC to dismiss the dialog.
+///
+pub type DisableClose {
+  IsDisableClose
+  IsNotDisableClose
 }
 
-/// close_icon_name sets the `close_icon_name` field
-/// 
-pub fn close_icon_name(
-  d: Dialog(msg),
-  close_icon_name: Option(String),
-) -> Dialog(msg) {
-  Dialog(..d, close_icon_name: close_icon_name)
+/// Dismissible is whether a button is presented that can be used to close the dialog.
+///
+pub type Dismissible {
+  IsDismissible
+  IsNotDismissible
 }
 
-/// close_label sets the `close_label` field
-/// 
-pub fn close_label(d: Dialog(msg), close_label: Option(String)) -> Dialog(msg) {
-  Dialog(..d, close_label: close_label)
+/// NoFocusTrap is whether to disable focus trapping, which keeps keyboard `Tab` navigation within the dialog.
+///
+pub type NoFocusTrap {
+  IsNoFocusTrap
+  IsNotNoFocusTrap
 }
 
-/// disable_close sets the `disable_close` field
-/// 
-pub fn disable_close(d: Dialog(msg), behavior: CloseBehavior) -> Dialog(msg) {
-  Dialog(..d, disable_close: behavior)
+// --- Defaults ---
+
+pub const default_alert: Alert = IsNotAlert
+
+pub const default_close_label: String = "Close"
+
+pub const default_disable_close: DisableClose = IsNotDisableClose
+
+pub const default_dismissible: Dismissible = IsNotDismissible
+
+pub const default_no_focus_trap: NoFocusTrap = IsNotNoFocusTrap
+
+pub const default_open: String = "false"
+
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  Header
+  // Renders the header of the dialog.
+  Actions
+  // Renders the actions of the dialog.
+  CloseIcon
+  // Renders the icon of the button used to close the dialog.
 }
 
-/// dismissible sets the `dismissible` field
-/// 
-pub fn dismissible(d: Dialog(msg), dismissible: Dismissibility) -> Dialog(msg) {
-  Dialog(..d, dismissible: dismissible)
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    alert: Alert,
+    close_label: String,
+    disable_close: DisableClose,
+    dismissible: Dismissible,
+    no_focus_trap: NoFocusTrap,
+    open: String,
+  )
 }
 
-/// header sets the `header` field
-/// 
-pub fn header(d: Dialog(msg), header: String) -> Dialog(msg) {
-  Dialog(..d, header: header)
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    alert: IsNotAlert,
+    close_label: "Close",
+    disable_close: IsNotDisableClose,
+    dismissible: IsNotDismissible,
+    no_focus_trap: IsNotNoFocusTrap,
+    open: "false",
+  )
 }
 
-/// id sets the `id` field
-/// 
-pub fn id(d: Dialog(msg), id: String) -> Dialog(msg) {
-  Dialog(..d, id: id)
+// --- Constructors ---
+
+/// from_config creates a new Dialog from the given configuration.
+///
+pub fn from_config(config: Config) -> Dialog {
+  Dialog(
+    alert: config.alert,
+    close_label: config.close_label,
+    disable_close: config.disable_close,
+    dismissible: config.dismissible,
+    no_focus_trap: config.no_focus_trap,
+    open: config.open,
+  )
 }
 
-/// no_focus_trap sets the `no_focus_trap` field
-/// 
-pub fn no_focus_trap(d: Dialog(msg), trap: FocusTrap) -> Dialog(msg) {
-  Dialog(..d, no_focus_trap: trap)
+/// new creates a new Dialog with the default configuration.
+///
+pub fn new() -> Dialog {
+  from_config(default_config())
 }
 
-/// open sets the `open` field
-/// 
-pub fn open(d: Dialog(msg), open: State) -> Dialog(msg) {
-  Dialog(..d, open: open)
+// --- Setters ---
+
+/// alert sets the value of alert for this Dialog.
+///
+pub fn alert(record: Dialog, alert: Alert) -> Dialog {
+  Dialog(..record, alert: alert)
 }
 
-// --- RENDERING ---
+/// close_label sets the value of close_label for this Dialog.
+///
+pub fn close_label(record: Dialog, close_label: String) -> Dialog {
+  Dialog(..record, close_label: close_label)
+}
 
-/// render creates a Lustre Element from a Dialog
-/// 
+/// disable_close sets the value of disable_close for this Dialog.
+///
+pub fn disable_close(record: Dialog, disable_close: DisableClose) -> Dialog {
+  Dialog(..record, disable_close: disable_close)
+}
+
+/// dismissible sets the value of dismissible for this Dialog.
+///
+pub fn dismissible(record: Dialog, dismissible: Dismissible) -> Dialog {
+  Dialog(..record, dismissible: dismissible)
+}
+
+/// no_focus_trap sets the value of no_focus_trap for this Dialog.
+///
+pub fn no_focus_trap(record: Dialog, no_focus_trap: NoFocusTrap) -> Dialog {
+  Dialog(..record, no_focus_trap: no_focus_trap)
+}
+
+/// open sets the value of open for this Dialog.
+///
+pub fn open(record: Dialog, open: String) -> Dialog {
+  Dialog(..record, open: open)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Dialog
+///
 pub fn render(
-  d: Dialog(msg),
+  model: Dialog,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-dialog",
-    [
-      attribute.id(d.id),
-      helpers.boolean_attribute("alert", d.alert == Alert),
-      helpers.option_attribute(
-        d.close_label,
-        fn(_) { "close-label" },
-        function.identity,
-        None,
-      ),
-      helpers.boolean_attribute("no-focus-trap", d.no_focus_trap == NoFocusTrap),
-      helpers.boolean_attribute(
-        "disable-close",
-        d.disable_close == CloseDisabled,
-      ),
-      helpers.boolean_attribute("dismissible", d.dismissible == Dismissible),
-      helpers.boolean_attribute("open", d.open == Open),
-      ..attributes
-    ]
+    list.flatten([
+      [
+        attr.boolean("alert", model.alert == IsAlert),
+        attr.with_default("close-label", model.close_label, default_close_label),
+        attr.boolean("disable-close", model.disable_close == IsDisableClose),
+        attr.boolean("dismissible", model.dismissible == IsDismissible),
+        attr.boolean("no-focus-trap", model.no_focus_trap == IsNoFocusTrap),
+        attr.with_default("open", model.open, default_open),
+      ],
+      attributes,
+    ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [
-      html.span([slot(Header)], [html.text(d.header)]),
-      close_icon_elt(d.close_icon_name),
-      actions_elt(d.actions),
-      ..children
-    ]
-      |> list.filter(fn(a) { a != element.none() }),
+    children,
   )
 }
 
-/// render_config creates a Lustre Element directly from a Config
-/// 
+/// render_config creates a Lustre Element from a Dialog Config
+///
 pub fn render_config(
-  config: Config(msg),
+  c: Config,
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(config), attributes, children)
+  render(from_config(c), attributes, children)
 }
 
-/// slot creates a Lustre 'slot' Attribute(msg) for a Slot
-/// 
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
+    Header -> attribute.attribute("slot", "header")
     Actions -> attribute.attribute("slot", "actions")
     CloseIcon -> attribute.attribute("slot", "close-icon")
-    Header -> attribute.attribute("slot", "header")
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-fn actions_elt(actions: List(Element(msg))) -> Element(msg) {
-  case actions {
-    [] -> element.none()
-    items -> html.div([slot(Actions)], items)
-  }
-}
-
-fn close_icon_elt(close_icon_name: Option(String)) -> Element(msg) {
-  case close_icon_name {
-    None -> element.none()
-    Some(s) ->
-      icon.new(s) |> icon.purpose(slot(CloseIcon)) |> icon.render([], [])
   }
 }

@@ -1,213 +1,174 @@
-//// snackbar provides Lustre support for the [M3E Snackbar component](https://matraic.github.io/m3e/#/components/snackbar.html)
+//// Snackbar is presents short updates about application processes at the bottom of the screen.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
 
-import gleam/option.{type Option, None, Some}
-import lustre/effect.{type Effect}
-
-import m3e/config.{type Dismissibility, Dismissible}
-
-pub const default_action_label = ""
-
-pub const default_close_label = "Close"
-
-pub const default_duration = 3000
+import gleam/float
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
 
 // --- Types ---
 
-/// Options represents the SnackbarOptions JavaScript object
-/// 
-/// ## Fields:
-/// - callback: the Msg that should be sent when the Action button is clicked
-/// - close_label: The accessible label given to the button used to dismiss the snackbar
-/// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar
-/// 
-type Options {
-  FullOptions(close_label: String, duration: Int, callback: fn() -> Nil)
-  ShortOptions(close_label: String, duration: Int)
-}
-
-/// Slot gives type-safe names to each of the defined HTML named slots
-/// 
-pub type Slot {
-  CloseIcon
-  // Renders the icon of the button used to close the snackbar 
-}
-
-/// Snackbar presents short updates about application processes at the bottom of the screen
+/// Snackbar is a View Model for this component
 ///
 /// ## Fields:
-/// - message: The text to display in the snackbar
-/// - action: The label of the snackbar's action
-/// - close_label: The accessible label given to the button used to dismiss the snackbar
-/// - dismissible: Whether a button is presented that can be used to close the snackbar
-/// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar
+///
+/// - action: The label of the snackbar's action.
+/// - close_label: The accessible label given to the button used to dismiss the snackbar.
+/// - dismissible: Whether a button is presented that can be used to close the snackbar.
+/// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar.
 ///
 pub opaque type Snackbar {
   Snackbar(
-    message: String,
-    action: Option(String),
-    close_label: Option(String),
-    dismissible: Dismissibility,
-    duration: Option(Int),
-  )
-}
-
-/// SnackbarAction describes the intent to open a snackbar with specific parameters.
-/// This allows the logic to be pure and easily testable.
-/// 
-pub type SnackbarAction(msg) {
-  Open(
-    message: String,
     action: String,
-    dismissable: Bool,
     close_label: String,
-    duration: Int,
-    callback: Option(msg),
+    dismissible: Dismissible,
+    duration: Float,
   )
 }
 
-// --- CONFIGURATION ---
+/// Dismissible is whether a button is presented that can be used to close the snackbar.
+///
+pub type Dismissible {
+  IsDismissible
+  IsNotDismissible
+}
 
-/// Config holds the configuration for a Snackbar
-/// 
+// --- Defaults ---
+
+pub const default_action: String = ""
+
+pub const default_close_label: String = "Close"
+
+pub const default_dismissible: Dismissible = IsNotDismissible
+
+pub const default_duration: Float = 3000.0
+
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  CloseIcon
+  // Renders the icon of the button used to close the snackbar.
+}
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
 pub type Config {
   Config(
-    message: String,
-    action: Option(String),
-    close_label: Option(String),
-    dismissible: Dismissibility,
-    duration: Option(Int),
+    action: String,
+    close_label: String,
+    dismissible: Dismissible,
+    duration: Float,
   )
 }
 
-/// default_config creates a new Config with default values
-/// 
-pub fn default_config(message: String) -> Config {
-  Config(
-    message: message,
-    action: None,
-    close_label: None,
-    dismissible: config.default_dismissibility,
-    duration: None,
-  )
-}
-
-// --- CONSTRUCTORS ---
-
-/// new creates a new Snackbar
-/// 
-pub fn new(message: String) -> Snackbar {
-  from_config(default_config(message))
-}
-
-/// from_config creates a Snackbar from a Config record
-/// 
-pub fn from_config(c: Config) -> Snackbar {
-  Snackbar(
-    message: c.message,
-    action: c.action,
-    close_label: c.close_label,
-    dismissible: c.dismissible,
-    duration: c.duration,
-  )
-}
-
-// --- SETTERS ---
-
-/// message sets the message field
-/// 
-pub fn message(s: Snackbar, message: String) -> Snackbar {
-  Snackbar(..s, message: message)
-}
-
-/// action sets the action field
-/// 
-pub fn action(s: Snackbar, action: Option(String)) -> Snackbar {
-  Snackbar(..s, action: action)
-}
-
-/// close_label sets the close_label field
-///  
-pub fn close_label(s: Snackbar, close_label: Option(String)) -> Snackbar {
-  Snackbar(..s, close_label: close_label)
-}
-
-/// dismissible sets the dismissible field
-/// 
-pub fn dismissible(s: Snackbar, d: Dismissibility) -> Snackbar {
-  Snackbar(..s, dismissible: d)
-}
-
-/// duration sets the duration field
-/// 
-pub fn duration(s: Snackbar, duration: Option(Int)) -> Snackbar {
-  Snackbar(..s, duration: duration)
-}
-
-// --- RENDERING ---
-
-/// open displays a Snackbar. Unlike render() functions in other M3E components,
-/// which are called from an application's view() function, the Snackbar's open()
-/// is called from an application's update() function.
-/// 
-/// ## Parameters:
-/// - s: a Snackbar
-/// - callback: the Msg that should be sent when the Action button is clicked
-/// 
-pub fn open(s: Snackbar, callback: Option(msg)) -> Effect(msg) {
-  s
-  |> to_action(callback)
-  |> to_effect
-}
-
-/// open_config displays a Snackbar directly from a Config
-/// 
-pub fn open_config(config: Config, callback: Option(msg)) -> Effect(msg) {
-  open(from_config(config), callback)
-}
-
-/// to_action describes a Snackbar. It is a pure function that returns a 
-/// SnackbarAction description.
-/// 
-/// ## Parameters:
-/// - s: a Snackbar
-/// - callback: the Msg that should be sent when the Action button is clicked
-/// 
-@internal
-pub fn to_action(s: Snackbar, callback: Option(msg)) -> SnackbarAction(msg) {
-  let action = option.unwrap(s.action, default_action_label)
-  let close_label = option.unwrap(s.close_label, default_close_label)
-  let duration = option.unwrap(s.duration, default_duration)
-
-  Open(
-    message: s.message,
-    action: action,
-    dismissable: s.dismissible == Dismissible,
-    close_label: close_label,
-    duration: duration,
-    callback: callback,
-  )
-}
-
-/// to_effect converts a SnackbarAction description into a Lustre Effect.
-/// 
-@internal
-pub fn to_effect(action: SnackbarAction(msg)) -> Effect(msg) {
-  case action {
-    Open(message, action, dismissable, close_label, duration, callback) ->
-      effect.from(fn(dispatch) {
-        open_snackbar(message, action, dismissable, case callback {
-          Some(cb) -> FullOptions(close_label, duration, fn() { dispatch(cb) })
-          None -> ShortOptions(close_label, duration)
-        })
-      })
-  }
-}
-
-// --- PRIVATE INTERNAL HELPERS ---
-
-/// Interfaces to the JavaScript M3eSnackbar.open() function. 
+/// default_config is the default configuration for this component.
 ///
-@external(javascript, "./app.ffi.mjs", "open_snackbar")
-fn open_snackbar(_: String, _: String, _: Bool, _: Options) -> Nil {
-  Nil
+pub fn default_config() -> Config {
+  Config(
+    action: "",
+    close_label: "Close",
+    dismissible: IsNotDismissible,
+    duration: 3000.0,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new Snackbar from the given configuration.
+///
+pub fn from_config(config: Config) -> Snackbar {
+  Snackbar(
+    action: config.action,
+    close_label: config.close_label,
+    dismissible: config.dismissible,
+    duration: config.duration,
+  )
+}
+
+/// new creates a new Snackbar with the default configuration.
+///
+pub fn new() -> Snackbar {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// action sets the value of action for this Snackbar.
+///
+pub fn action(record: Snackbar, action: String) -> Snackbar {
+  Snackbar(..record, action: action)
+}
+
+/// close_label sets the value of close_label for this Snackbar.
+///
+pub fn close_label(record: Snackbar, close_label: String) -> Snackbar {
+  Snackbar(..record, close_label: close_label)
+}
+
+/// dismissible sets the value of dismissible for this Snackbar.
+///
+pub fn dismissible(record: Snackbar, dismissible: Dismissible) -> Snackbar {
+  Snackbar(..record, dismissible: dismissible)
+}
+
+/// duration sets the value of duration for this Snackbar.
+///
+pub fn duration(record: Snackbar, duration: Float) -> Snackbar {
+  Snackbar(..record, duration: duration)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Snackbar
+///
+pub fn render(
+  model: Snackbar,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-snackbar",
+    list.flatten([
+      [
+        attr.with_default("action", model.action, default_action),
+        attr.with_default("close-label", model.close_label, default_close_label),
+        attr.boolean("dismissible", model.dismissible == IsDismissible),
+        attr.with_default(
+          "duration",
+          float.to_string(model.duration),
+          float.to_string(default_duration),
+        ),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a Snackbar Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    CloseIcon -> attribute.attribute("slot", "close-icon")
+  }
 }
