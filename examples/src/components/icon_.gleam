@@ -1,8 +1,8 @@
-import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
 import m3e/icon
+import m3e/icon_variant
 
 import layout
 import model
@@ -21,24 +21,27 @@ fn icon(model: model.Model) -> Element(Msg) {
 
 fn basic(_: model.Model) -> Element(Msg) {
   html.div([], [
-    icon.new("home") |> icon.render([], []),
+    icon.new() |> icon.name("home") |> icon.render([], []),
   ])
 }
 
 fn appearance(_: model.Model) -> Element(Msg) {
   html.div([layout.icon_style()], [
-    icon.new("home")
-      |> icon.variant(icon.Outlined)
+    icon.new()
+      |> icon.name("home")
+      |> icon.variant(icon_variant.Outlined)
       |> icon.render([], []),
     html.label([], [element.text("Outlined")]),
-    icon.new("lock")
-      |> icon.variant(icon.Rounded)
-      |> icon.filled(icon.Filled)
+    icon.new()
+      |> icon.name("lock")
+      |> icon.variant(icon_variant.Rounded)
+      |> icon.filled(icon.IsFilled)
       |> icon.render([], []),
     html.label([], [element.text("Rounded")]),
-    icon.new("lock")
-      |> icon.variant(icon.Sharp)
-      |> icon.filled(icon.Filled)
+    icon.new()
+      |> icon.name("lock")
+      |> icon.variant(icon_variant.Sharp)
+      |> icon.filled(icon.IsFilled)
       |> icon.render([], []),
     html.label([], [element.text("Sharp")]),
   ])

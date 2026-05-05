@@ -1,11 +1,9 @@
-import gleam/list
-import gleam/option.{Some}
-
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
-import m3e/state.{Checked, Disabled}
 import m3e/switch
+import m3e/switch_icons
 
 import layout
 import model
@@ -25,70 +23,65 @@ fn switch_(model: model.Model) -> Element(Msg) {
 }
 
 fn basic(_: model.Model) -> Element(Msg) {
-  html.div(
-    [],
-    switch.new("basic") |> switch.checked(Checked) |> switch.render([]),
-  )
+  html.div([], [
+    switch.new()
+    |> switch.checked(switch.IsChecked)
+    |> switch.render([], []),
+  ])
 }
 
 fn labels(_: model.Model) -> Element(Msg) {
-  html.div(
-    [layout.switch_style()],
-    list.flatten([
-      switch.render_config(
-        switch.Config(..switch.default_config(), label: Some("Switch 1")),
-        [],
-      ),
-      switch.render_config(
-        switch.Config(
-          ..switch.default_config(),
-          checked: Checked,
-          label: Some("Switch 2"),
-        ),
-        [],
-      ),
+  html.div([layout.switch_style()], [
+    html.label([layout.switch_style()], [
+      switch.render_config(switch.default_config(), [], []),
+      element.text("Switch 1"),
     ]),
-  )
+    switch.render_config(switch.default_config(), [attribute.id("switch2")], []),
+    html.label(
+      [
+        attribute.for("switch2"),
+      ],
+      [element.text("Switch 2")],
+    ),
+  ])
 }
 
 fn icons(_: model.Model) -> Element(Msg) {
-  html.div(
-    [layout.switch_style()],
-    list.flatten([
-      switch.new("icons-none")
-        |> switch.label(Some("None"))
-        |> switch.icon(switch.Neither)
-        |> switch.render([]),
+  html.div([layout.switch_style()], [
+    switch.new()
+      |> switch.icons(switch_icons.None)
+      |> switch.render([], []),
+    html.label([], [element.text("None")]),
 
-      switch.new("icons-selected")
-        |> switch.checked(Checked)
-        |> switch.label(Some("Selected"))
-        |> switch.icon(switch.Selected)
-        |> switch.render([]),
+    switch.new()
+      |> switch.checked(switch.IsChecked)
+      |> switch.icons(switch_icons.Selected)
+      |> switch.render([], []),
+    html.label([], [element.text("Selected")]),
 
-      switch.new("icons-both")
-        |> switch.label(Some("Both"))
-        |> switch.icon(switch.Both)
-        |> switch.render([]),
-    ]),
-  )
+    switch.new()
+      |> switch.icons(switch_icons.Both)
+      |> switch.render([], []),
+    html.label([], [element.text("Both")]),
+  ])
 }
 
 fn disabled(_: model.Model) -> Element(Msg) {
-  html.div(
-    [layout.switch_style()],
-    list.flatten([
-      switch.new("disabled-off")
-        |> switch.label(Some("Disabled Off"))
-        |> switch.disabled(Disabled)
-        |> switch.render([]),
-      switch.new("disabled-on")
-        |> switch.label(Some("Disabled On"))
-        |> switch.checked(Checked)
-        |> switch.disabled(Disabled)
-        |> switch.render([]),
+  html.div([layout.switch_style()], [
+    html.label([layout.switch_style()], [
+      switch.new()
+        |> switch.disabled(switch.IsDisabled)
+        |> switch.render([], []),
+      element.text("Disabled Switch 1"),
     ]),
-  )
+    switch.new()
+      |> switch.checked(switch.IsChecked)
+      |> switch.disabled(switch.IsDisabled)
+      |> switch.render([attribute.id("disabled-on")], []),
+    html.label([attribute.for("disabled-on")], [
+      element.text("Disabled Switch 2"),
+    ]),
+  ])
 }
 
 /// package() describes the switch showcase in the standard Package record format

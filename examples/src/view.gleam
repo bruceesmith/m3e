@@ -9,20 +9,22 @@ import lustre/element/html
 import lustre/event
 
 import m3e/app_bar
+import m3e/color_scheme
+import m3e/contrast_level
 import m3e/drawer_container
+import m3e/drawer_mode
 import m3e/drawer_toggle
 import m3e/icon
 import m3e/icon_button
-import m3e/link
 import m3e/nav_menu
 import m3e/nav_menu_item
-import m3e/state.{Selected}
 import m3e/theme
 import m3e/tooltip
 
 import components/app_bar_
 import components/button_
 import components/calendar_
+import components/datepicker_
 import components/home
 import components/icon_
 import components/switch_
@@ -36,9 +38,9 @@ import package.{type Package}
 ///
 pub fn view(model: Model) -> Element(Msg) {
   theme.render(
-    theme.new("app-theme")
-      |> theme.contrast(theme.High)
-      |> theme.scheme(theme.Auto),
+    theme.new()
+      |> theme.contrast(contrast_level.High)
+      |> theme.scheme(color_scheme.Auto),
     [],
     [
       appbar(),
@@ -54,16 +56,19 @@ fn appbar() -> Element(Msg) {
   |> app_bar.for(Some("main-content"))
   |> app_bar.render([layout.app_bar_style()], [
     icon_button.new()
-      |> icon_button.purpose(Some(app_bar.slot(app_bar.Leading)))
-      |> icon_button.selected(Selected)
-      |> icon_button.toggle(icon_button.Toggle)
-      |> icon_button.render([], [
-        icon.new("menu") |> icon.filled(icon.Filled) |> icon.render([], []),
-        icon.new("menu_open")
-          |> icon.filled(icon.Filled)
-          |> icon.purpose(icon_button.slot(icon_button.Selected))
+      |> icon_button.selected(icon_button.IsSelected)
+      |> icon_button.toggle(icon_button.IsToggle)
+      |> icon_button.render([app_bar.slot(app_bar.Leading)], [
+        icon.new()
+          |> icon.name("menu")
+          |> icon.filled(icon.IsFilled)
           |> icon.render([], []),
-        drawer_toggle.new("nav-drawer") |> drawer_toggle.render([], []),
+        icon.new()
+          |> icon.name("menu_open")
+          |> icon.filled(icon.IsFilled)
+          |> icon.render([icon_button.slot(icon_button.Selected)], []),
+        drawer_toggle.new(Some("nav-drawer"))
+          |> drawer_toggle.render([], []),
       ]),
     html.span(
       [
@@ -83,14 +88,13 @@ fn appbar() -> Element(Msg) {
     ),
     html.span([app_bar.slot(app_bar.Trailing)], [
       icon_button.new()
-        |> icon_button.link(
-          Some(link.new("https://github.com/bruceesmith/m3e")),
-        )
+        |> icon_button.href("https://github.com/bruceesmith/m3e")
         |> icon_button.render([attribute.id("github-button")], [
           github(),
         ]),
-
-      tooltip.new("Github", "github-button") |> tooltip.render([]),
+      tooltip.new()
+        |> tooltip.for(Some("github-button"))
+        |> tooltip.render([], [element.text("Github")]),
     ]),
   ])
 }
@@ -101,12 +105,14 @@ fn body(content: Element(Msg)) -> Element(Msg) {
   drawer_container.render_config(
     drawer_container.Config(
       ..drawer_container.default_config(),
-      main_content: content,
-      start_drawer: Some(menu()),
-      start: drawer_container.Open,
-      start_mode: drawer_container.Auto,
+      start: drawer_container.IsStart,
+      start_mode: drawer_mode.Auto,
     ),
     [],
+    [
+      html.div([drawer_container.slot(drawer_container.Start)], [menu()]),
+      html.div([], [content]),
+    ],
   )
 }
 
@@ -148,10 +154,17 @@ fn menu() -> Element(Msg) {
 ///
 fn nav_menu_items() -> List(Element(Msg)) {
   list.map(packages(), fn(package) -> Element(Msg) {
-    nav_menu_item.new(package.label)
-    |> nav_menu_item.render([
-      event.on_click(package.msg),
-    ])
+    nav_menu_item.new()
+    |> nav_menu_item.render(
+      [
+        event.on_click(package.msg),
+      ],
+      [
+        html.span([nav_menu_item.slot(nav_menu_item.Label)], [
+          element.text(package.label),
+        ]),
+      ],
+    )
   })
 }
 
@@ -165,6 +178,7 @@ fn packages() -> List(Package) {
     app_bar_.package(),
     button_.package(),
     calendar_.package(),
+    datepicker_.package(),
     icon_.package(),
     switch_.package(),
   ]

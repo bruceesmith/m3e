@@ -27,6 +27,16 @@ pub fn app_bar_title_style() -> Attribute(msg) {
   attribute.styles([display.flex])
 }
 
+/// button_style is the style for each Icon
+///
+pub fn button_style() -> Attribute(msg) {
+  attribute.styles([
+    display.flex,
+    align_items.center,
+    gap(5),
+  ])
+}
+
 /// card_style is the style for each Card on a single Frame
 ///
 pub fn card_style() -> Attribute(msg) {
@@ -105,6 +115,7 @@ pub fn pad(p: Int) -> #(String, String) {
 pub fn switch_style() -> Attribute(msg) {
   attribute.styles([
     display.flex,
+    align_items.center,
     gap(5),
   ])
 }

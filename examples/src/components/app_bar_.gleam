@@ -15,7 +15,7 @@ import monks/position
 import monks/top
 
 import m3e/app_bar
-import m3e/config
+import m3e/app_bar_size
 import m3e/icon
 
 import model
@@ -44,10 +44,10 @@ fn anatomy(_: model.Model) -> Element(Msg) {
 fn sizes(_: model.Model) -> Element(Msg) {
   html.div([attribute.styles([flex_grow.raw("1")])], [
     app_bar.new()
-      |> app_bar.size(config.Medium)
+      |> app_bar.size(app_bar_size.Medium)
       |> app_bar.render([], content()),
     app_bar.new()
-      |> app_bar.size(config.Large)
+      |> app_bar.size(app_bar_size.Large)
       |> app_bar.render([], content()),
   ])
 }
@@ -55,7 +55,7 @@ fn sizes(_: model.Model) -> Element(Msg) {
 fn centered(_: model.Model) -> Element(Msg) {
   html.div([attribute.styles([flex_grow.raw("1")])], [
     app_bar.new()
-    |> app_bar.centered(app_bar.Centered)
+    |> app_bar.centered(app_bar.IsCentered)
     |> app_bar.render([], content()),
   ])
 }
@@ -102,9 +102,8 @@ fn scroll_effects(_: model.Model) -> Element(Msg) {
 fn content() -> List(Element(Msg)) {
   [
     icon_button.new()
-      |> icon_button.purpose(Some(app_bar.slot(app_bar.Leading)))
-      |> icon_button.render([], [
-        icon.new("arrow_back") |> icon.render([], []),
+      |> icon_button.render([app_bar.slot(app_bar.Leading)], [
+        icon.new() |> icon.name("arrow_back") |> icon.render([], []),
       ]),
     html.span([app_bar.slot(app_bar.Title)], [
       element.text("Top 10 hiking trails"),
@@ -113,9 +112,8 @@ fn content() -> List(Element(Msg)) {
       element.text("Discover popular trails"),
     ]),
     icon_button.new()
-      |> icon_button.purpose(Some(app_bar.slot(app_bar.Trailing)))
-      |> icon_button.render([], [
-        icon.new("bookmark") |> icon.render([], []),
+      |> icon_button.render([app_bar.slot(app_bar.Trailing)], [
+        icon.new() |> icon.name("bookmark") |> icon.render([], []),
       ]),
   ]
 }

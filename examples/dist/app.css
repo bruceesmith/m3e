@@ -164,38 +164,17 @@
   .static {
     position: static;
   }
-  .col-2 {
-    grid-column: 2;
+  .sticky {
+    position: sticky;
   }
-  .grid {
-    display: grid;
+  .flex {
+    display: flex;
   }
   .inline {
     display: inline;
   }
-  .grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .grid-cols-\[1fr_1fr_1fr_1fr_1fr_1fr\] {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  }
-  .grid-cols-\[5fr_5fr_5fr\] {
-    grid-template-columns: 5fr 5fr 5fr;
-  }
-  .grid-rows-1 {
-    grid-template-rows: repeat(1, minmax(0, 1fr));
-  }
-  .items-center {
-    align-items: center;
-  }
-  .justify-center {
-    justify-content: center;
-  }
-  .gap-5 {
-    gap: calc(var(--spacing) * 5);
-  }
-  .justify-self-center {
-    justify-self: center;
+  .flex-grow {
+    flex-grow: 1;
   }
   .rounded {
     border-radius: 0.25rem;

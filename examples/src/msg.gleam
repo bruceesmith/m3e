@@ -6,6 +6,7 @@ pub type Msg {
   AppBarPageSelected
   ButtonSelected
   CalendarSelected(String)
+  DatepickerSelected(String, String)
   IconPageSelected
   SwitchPageSelected
 
@@ -13,4 +14,7 @@ pub type Msg {
   CalendarDateSelected(String)
   CalendarDateFetched(String)
   CalendarBlackoutAttached
+
+  /// messages for datepicker
+  DatepickerReady
 }

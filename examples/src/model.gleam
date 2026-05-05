@@ -5,6 +5,7 @@ pub type State {
   AppBar
   Button
   Calendar
+  Datepicker
   Icon
   Switch
 }

@@ -11,6 +11,7 @@ import model.{type Model, Model}
 import msg.{type Msg}
 
 import components/calendar_effects
+import components/datepicker_effects
 
 pub fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
@@ -20,14 +21,10 @@ pub fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
       effect.none(),
     )
     msg.ButtonSelected -> #(Model(..model, state: model.Button), effect.none())
+
     msg.CalendarSelected(id) -> #(
       Model(..model, state: model.Calendar),
       calendar_effects.attach_blackout_function(id),
-    )
-    msg.IconPageSelected -> #(Model(..model, state: model.Icon), effect.none())
-    msg.SwitchPageSelected -> #(
-      Model(..model, state: model.Switch),
-      effect.none(),
     )
 
     msg.CalendarDateSelected(id) -> {
@@ -41,5 +38,19 @@ pub fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
     }
 
     msg.CalendarBlackoutAttached -> #(model, effect.none())
+
+    msg.DatepickerSelected(picker_id, input_id) -> #(
+      Model(..model, state: model.Datepicker),
+      datepicker_effects.attach_change_handler(picker_id, input_id),
+    )
+
+    msg.DatepickerReady -> #(model, effect.none())
+
+    msg.IconPageSelected -> #(Model(..model, state: model.Icon), effect.none())
+
+    msg.SwitchPageSelected -> #(
+      Model(..model, state: model.Switch),
+      effect.none(),
+    )
   }
 }
