@@ -1,0 +1,122 @@
+//// ScrollContainer is a vertically oriented content container which presents dividers above and below content when scrolled.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+import m3e/scroll_dividers.{type ScrollDividers}
+
+// --- Types ---
+
+/// ScrollContainer is a View Model for this component
+///
+/// ## Fields:
+///
+/// - dividers: The dividers used to separate scrollable content.
+/// - thin: Whether to present thin scrollbars.
+///
+pub opaque type ScrollContainer {
+  ScrollContainer(dividers: ScrollDividers, thin: Thin)
+}
+
+/// Thin is whether to present thin scrollbars.
+///
+pub type Thin {
+  IsThin
+  IsNotThin
+}
+
+// --- Defaults ---
+
+pub const default_dividers: ScrollDividers = scroll_dividers.AboveBelow
+
+pub const default_thin: Thin = IsNotThin
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(dividers: ScrollDividers, thin: Thin)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(dividers: scroll_dividers.AboveBelow, thin: IsNotThin)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new ScrollContainer from the given configuration.
+///
+pub fn from_config(config: Config) -> ScrollContainer {
+  ScrollContainer(dividers: config.dividers, thin: config.thin)
+}
+
+/// new creates a new ScrollContainer with the default configuration.
+///
+pub fn new() -> ScrollContainer {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// dividers sets the value of dividers for this ScrollContainer.
+///
+pub fn dividers(
+  record: ScrollContainer,
+  dividers: ScrollDividers,
+) -> ScrollContainer {
+  ScrollContainer(..record, dividers: dividers)
+}
+
+/// thin sets the value of thin for this ScrollContainer.
+///
+pub fn thin(record: ScrollContainer, thin: Thin) -> ScrollContainer {
+  ScrollContainer(..record, thin: thin)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a ScrollContainer
+///
+pub fn render(
+  model: ScrollContainer,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-scroll-container",
+    list.flatten([
+      [
+        attr.with_default(
+          "dividers",
+          scroll_dividers.to_string(model.dividers),
+          scroll_dividers.to_string(default_dividers),
+        ),
+        attr.boolean("thin", model.thin == IsThin),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a ScrollContainer Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

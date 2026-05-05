@@ -1,0 +1,224 @@
+//// BreadcrumbItem is an item in a breadcrumb.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/function
+import gleam/list
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+import m3e/breadcrumb_item_current.{type BreadcrumbItemCurrent}
+import m3e/link_target.{type LinkTarget}
+
+// --- Types ---
+
+/// BreadcrumbItem is a View Model for this component
+///
+/// ## Fields:
+///
+/// - item_label: The accessible label given to the item's internal button.
+/// - disabled: Whether the element is disabled.
+/// - current: Indicates the current item in the breadcrumb path.
+/// - href: The URL to which the internal breadcrumb link button points.
+/// - target: The target of the internal breadcrumb link button.
+/// - download: A value indicating whether the internal link target will be downloaded, optionally specifying a file name.
+/// - rel: The relationship between the internal link target and the document.
+///
+pub opaque type BreadcrumbItem {
+  BreadcrumbItem(
+    item_label: String,
+    disabled: Disabled,
+    current: Option(BreadcrumbItemCurrent),
+    href: String,
+    target: Option(LinkTarget),
+    download: Option(String),
+    rel: String,
+  )
+}
+
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_item_label: String = ""
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_current: Option(BreadcrumbItemCurrent) = None
+
+pub const default_href: String = ""
+
+pub const default_target: Option(LinkTarget) = None
+
+pub const default_download: Option(String) = None
+
+pub const default_rel: String = ""
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    item_label: String,
+    disabled: Disabled,
+    current: Option(BreadcrumbItemCurrent),
+    href: String,
+    target: Option(LinkTarget),
+    download: Option(String),
+    rel: String,
+  )
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    item_label: "",
+    disabled: IsNotDisabled,
+    current: None,
+    href: "",
+    target: None,
+    download: None,
+    rel: "",
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new BreadcrumbItem from the given configuration.
+///
+pub fn from_config(config: Config) -> BreadcrumbItem {
+  BreadcrumbItem(
+    item_label: config.item_label,
+    disabled: config.disabled,
+    current: config.current,
+    href: config.href,
+    target: config.target,
+    download: config.download,
+    rel: config.rel,
+  )
+}
+
+/// new creates a new BreadcrumbItem with the default configuration.
+///
+pub fn new() -> BreadcrumbItem {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// item_label sets the value of item_label for this BreadcrumbItem.
+///
+pub fn item_label(record: BreadcrumbItem, item_label: String) -> BreadcrumbItem {
+  BreadcrumbItem(..record, item_label: item_label)
+}
+
+/// disabled sets the value of disabled for this BreadcrumbItem.
+///
+pub fn disabled(record: BreadcrumbItem, disabled: Disabled) -> BreadcrumbItem {
+  BreadcrumbItem(..record, disabled: disabled)
+}
+
+/// current sets the value of current for this BreadcrumbItem.
+///
+pub fn current(
+  record: BreadcrumbItem,
+  current: Option(BreadcrumbItemCurrent),
+) -> BreadcrumbItem {
+  BreadcrumbItem(..record, current: current)
+}
+
+/// href sets the value of href for this BreadcrumbItem.
+///
+pub fn href(record: BreadcrumbItem, href: String) -> BreadcrumbItem {
+  BreadcrumbItem(..record, href: href)
+}
+
+/// target sets the value of target for this BreadcrumbItem.
+///
+pub fn target(
+  record: BreadcrumbItem,
+  target: Option(LinkTarget),
+) -> BreadcrumbItem {
+  BreadcrumbItem(..record, target: target)
+}
+
+/// download sets the value of download for this BreadcrumbItem.
+///
+pub fn download(
+  record: BreadcrumbItem,
+  download: Option(String),
+) -> BreadcrumbItem {
+  BreadcrumbItem(..record, download: download)
+}
+
+/// rel sets the value of rel for this BreadcrumbItem.
+///
+pub fn rel(record: BreadcrumbItem, rel: String) -> BreadcrumbItem {
+  BreadcrumbItem(..record, rel: rel)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a BreadcrumbItem
+///
+pub fn render(
+  model: BreadcrumbItem,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-breadcrumb-item",
+    list.flatten([
+      [
+        attr.with_default("item-label", model.item_label, default_item_label),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(
+          model.current,
+          fn(_) { "current" },
+          breadcrumb_item_current.to_string,
+          default_current,
+        ),
+        attr.with_default("href", model.href, default_href),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("rel", model.rel, default_rel),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a BreadcrumbItem Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

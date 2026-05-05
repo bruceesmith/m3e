@@ -1,0 +1,148 @@
+//// StateLayer is provides focus and hover state layer treatment for an interactive element.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/function
+import gleam/list
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// StateLayer is a View Model for this component
+///
+/// ## Fields:
+///
+/// - disabled: Whether hover and focus events will not trigger the state layer. State layers can still
+///     be controlled manually using the `show` and `hide` methods.
+/// - disable_hover: Whether hover events will not trigger the state layer. State layers can still
+///     be controlled manually using the `show` and `hide` methods.
+/// - for: The identifier of the interactive control to which this element is attached.
+///
+pub opaque type StateLayer {
+  StateLayer(
+    disabled: Disabled,
+    disable_hover: DisableHover,
+    for: Option(String),
+  )
+}
+
+/// Disabled is whether hover and focus events will not trigger the state layer. State layers can still
+///     be controlled manually using the `show` and `hide` methods.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// DisableHover is whether hover events will not trigger the state layer. State layers can still
+///     be controlled manually using the `show` and `hide` methods.
+///
+pub type DisableHover {
+  IsDisableHover
+  IsNotDisableHover
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_disable_hover: DisableHover = IsNotDisableHover
+
+pub const default_for: Option(String) = None
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(disabled: Disabled, disable_hover: DisableHover, for: Option(String))
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(disabled: IsNotDisabled, disable_hover: IsNotDisableHover, for: None)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new StateLayer from the given configuration.
+///
+pub fn from_config(config: Config) -> StateLayer {
+  StateLayer(
+    disabled: config.disabled,
+    disable_hover: config.disable_hover,
+    for: config.for,
+  )
+}
+
+/// new creates a new StateLayer with the default configuration.
+///
+pub fn new() -> StateLayer {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// disabled sets the value of disabled for this StateLayer.
+///
+pub fn disabled(record: StateLayer, disabled: Disabled) -> StateLayer {
+  StateLayer(..record, disabled: disabled)
+}
+
+/// disable_hover sets the value of disable_hover for this StateLayer.
+///
+pub fn disable_hover(
+  record: StateLayer,
+  disable_hover: DisableHover,
+) -> StateLayer {
+  StateLayer(..record, disable_hover: disable_hover)
+}
+
+/// for sets the value of for for this StateLayer.
+///
+pub fn for(record: StateLayer, for: Option(String)) -> StateLayer {
+  StateLayer(..record, for: for)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a StateLayer
+///
+pub fn render(
+  model: StateLayer,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-state-layer",
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("disable-hover", model.disable_hover == IsDisableHover),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a StateLayer Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

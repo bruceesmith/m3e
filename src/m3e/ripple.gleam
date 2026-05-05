@@ -1,0 +1,194 @@
+//// Ripple is connects user input to screen reactions using ripples.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/float
+import gleam/function
+import gleam/list
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// Ripple is a View Model for this component
+///
+/// ## Fields:
+///
+/// - centered: Whether the ripple always originates from the center of the element's bounds, rather
+///     than originating from the location of the click event.
+/// - disabled: Whether click events will not trigger the ripple.
+///     Ripples can be still controlled manually by using the `show` and 'hide' methods.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - radius: The radius, in pixels, of the ripple.
+/// - unbounded: Whether the ripple is visible outside the element's bounds.
+///
+pub opaque type Ripple {
+  Ripple(
+    centered: Centered,
+    disabled: Disabled,
+    for: Option(String),
+    radius: Option(Float),
+    unbounded: Unbounded,
+  )
+}
+
+/// Centered is whether the ripple always originates from the center of the element's bounds, rather
+///     than originating from the location of the click event.
+///
+pub type Centered {
+  IsCentered
+  IsNotCentered
+}
+
+/// Disabled is whether click events will not trigger the ripple.
+///     Ripples can be still controlled manually by using the `show` and 'hide' methods.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Unbounded is whether the ripple is visible outside the element's bounds.
+///
+pub type Unbounded {
+  IsUnbounded
+  IsNotUnbounded
+}
+
+// --- Defaults ---
+
+pub const default_centered: Centered = IsNotCentered
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_for: Option(String) = None
+
+pub const default_radius: Option(Float) = None
+
+pub const default_unbounded: Unbounded = IsNotUnbounded
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    centered: Centered,
+    disabled: Disabled,
+    for: Option(String),
+    radius: Option(Float),
+    unbounded: Unbounded,
+  )
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    centered: IsNotCentered,
+    disabled: IsNotDisabled,
+    for: None,
+    radius: None,
+    unbounded: IsNotUnbounded,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new Ripple from the given configuration.
+///
+pub fn from_config(config: Config) -> Ripple {
+  Ripple(
+    centered: config.centered,
+    disabled: config.disabled,
+    for: config.for,
+    radius: config.radius,
+    unbounded: config.unbounded,
+  )
+}
+
+/// new creates a new Ripple with the default configuration.
+///
+pub fn new() -> Ripple {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// centered sets the value of centered for this Ripple.
+///
+pub fn centered(record: Ripple, centered: Centered) -> Ripple {
+  Ripple(..record, centered: centered)
+}
+
+/// disabled sets the value of disabled for this Ripple.
+///
+pub fn disabled(record: Ripple, disabled: Disabled) -> Ripple {
+  Ripple(..record, disabled: disabled)
+}
+
+/// for sets the value of for for this Ripple.
+///
+pub fn for(record: Ripple, for: Option(String)) -> Ripple {
+  Ripple(..record, for: for)
+}
+
+/// radius sets the value of radius for this Ripple.
+///
+pub fn radius(record: Ripple, radius: Option(Float)) -> Ripple {
+  Ripple(..record, radius: radius)
+}
+
+/// unbounded sets the value of unbounded for this Ripple.
+///
+pub fn unbounded(record: Ripple, unbounded: Unbounded) -> Ripple {
+  Ripple(..record, unbounded: unbounded)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Ripple
+///
+pub fn render(
+  model: Ripple,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-ripple",
+    list.flatten([
+      [
+        attr.boolean("centered", model.centered == IsCentered),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.option(
+          model.radius,
+          fn(_) { "radius" },
+          float.to_string,
+          default_radius,
+        ),
+        attr.boolean("unbounded", model.unbounded == IsUnbounded),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a Ripple Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

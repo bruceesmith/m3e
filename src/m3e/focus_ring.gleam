@@ -1,0 +1,135 @@
+//// FocusRing is a focus ring used to depict a strong focus indicator.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/function
+import gleam/list
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// FocusRing is a View Model for this component
+///
+/// ## Fields:
+///
+/// - disabled: Whether the focus events will not trigger the focus ring.
+///     Focus rings can be still controlled manually by using the `show` and `hide` methods.
+/// - inward: Whether the focus ring animates inward instead of outward.
+/// - for: The identifier of the interactive control to which this element is attached.
+///
+pub opaque type FocusRing {
+  FocusRing(disabled: Disabled, inward: Inward, for: Option(String))
+}
+
+/// Disabled is whether the focus events will not trigger the focus ring.
+///     Focus rings can be still controlled manually by using the `show` and `hide` methods.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Inward is whether the focus ring animates inward instead of outward.
+///
+pub type Inward {
+  IsInward
+  IsNotInward
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_inward: Inward = IsNotInward
+
+pub const default_for: Option(String) = None
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(disabled: Disabled, inward: Inward, for: Option(String))
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(disabled: IsNotDisabled, inward: IsNotInward, for: None)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new FocusRing from the given configuration.
+///
+pub fn from_config(config: Config) -> FocusRing {
+  FocusRing(disabled: config.disabled, inward: config.inward, for: config.for)
+}
+
+/// new creates a new FocusRing with the default configuration.
+///
+pub fn new() -> FocusRing {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// disabled sets the value of disabled for this FocusRing.
+///
+pub fn disabled(record: FocusRing, disabled: Disabled) -> FocusRing {
+  FocusRing(..record, disabled: disabled)
+}
+
+/// inward sets the value of inward for this FocusRing.
+///
+pub fn inward(record: FocusRing, inward: Inward) -> FocusRing {
+  FocusRing(..record, inward: inward)
+}
+
+/// for sets the value of for for this FocusRing.
+///
+pub fn for(record: FocusRing, for: Option(String)) -> FocusRing {
+  FocusRing(..record, for: for)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a FocusRing
+///
+pub fn render(
+  model: FocusRing,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-focus-ring",
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("inward", model.inward == IsInward),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a FocusRing Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

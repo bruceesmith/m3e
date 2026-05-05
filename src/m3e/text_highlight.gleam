@@ -1,0 +1,169 @@
+//// TextHighlight is highlights text which matches a given search term.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+import m3e/text_highlight_mode.{type TextHighlightMode}
+
+// --- Types ---
+
+/// TextHighlight is a View Model for this component
+///
+/// ## Fields:
+///
+/// - case_sensitive: Whether matching is case sensitive.
+/// - disabled: A value indicating whether text highlighting is disabled.
+/// - mode: The mode in which to highlight text.
+/// - term: The term to highlight.
+///
+pub opaque type TextHighlight {
+  TextHighlight(
+    case_sensitive: CaseSensitive,
+    disabled: Disabled,
+    mode: TextHighlightMode,
+    term: String,
+  )
+}
+
+/// CaseSensitive is whether matching is case sensitive.
+///
+pub type CaseSensitive {
+  IsCaseSensitive
+  IsNotCaseSensitive
+}
+
+/// Disabled is a value indicating whether text highlighting is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_case_sensitive: CaseSensitive = IsNotCaseSensitive
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_mode: TextHighlightMode = text_highlight_mode.Contains
+
+pub const default_term: String = ""
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    case_sensitive: CaseSensitive,
+    disabled: Disabled,
+    mode: TextHighlightMode,
+    term: String,
+  )
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    case_sensitive: IsNotCaseSensitive,
+    disabled: IsNotDisabled,
+    mode: text_highlight_mode.Contains,
+    term: "",
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new TextHighlight from the given configuration.
+///
+pub fn from_config(config: Config) -> TextHighlight {
+  TextHighlight(
+    case_sensitive: config.case_sensitive,
+    disabled: config.disabled,
+    mode: config.mode,
+    term: config.term,
+  )
+}
+
+/// new creates a new TextHighlight with the default configuration.
+///
+pub fn new() -> TextHighlight {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// case_sensitive sets the value of case_sensitive for this TextHighlight.
+///
+pub fn case_sensitive(
+  record: TextHighlight,
+  case_sensitive: CaseSensitive,
+) -> TextHighlight {
+  TextHighlight(..record, case_sensitive: case_sensitive)
+}
+
+/// disabled sets the value of disabled for this TextHighlight.
+///
+pub fn disabled(record: TextHighlight, disabled: Disabled) -> TextHighlight {
+  TextHighlight(..record, disabled: disabled)
+}
+
+/// mode sets the value of mode for this TextHighlight.
+///
+pub fn mode(record: TextHighlight, mode: TextHighlightMode) -> TextHighlight {
+  TextHighlight(..record, mode: mode)
+}
+
+/// term sets the value of term for this TextHighlight.
+///
+pub fn term(record: TextHighlight, term: String) -> TextHighlight {
+  TextHighlight(..record, term: term)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a TextHighlight
+///
+pub fn render(
+  model: TextHighlight,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-text-highlight",
+    list.flatten([
+      [
+        attr.boolean("case-sensitive", model.case_sensitive == IsCaseSensitive),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.with_default(
+          "mode",
+          text_highlight_mode.to_string(model.mode),
+          text_highlight_mode.to_string(default_mode),
+        ),
+        attr.with_default("term", model.term, default_term),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a TextHighlight Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

@@ -1,0 +1,72 @@
+//// Mlist is a list of items.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+import m3e/list_variant.{type ListVariant}
+
+// --- Types ---
+
+/// Mlist is a View Model for this component
+///
+/// ## Fields:
+///
+/// - variant: The appearance variant of the list.
+///
+pub opaque type Mlist {
+  Mlist(variant: ListVariant)
+}
+
+// --- Defaults ---
+
+pub const default_variant: ListVariant = list_variant.Standard
+
+// --- Constructors ---
+
+/// new creates a new Mlist with the default configuration.
+///
+pub fn new(variant: ListVariant) -> Mlist {
+  Mlist(variant: variant)
+}
+
+// --- Setters ---
+
+/// variant sets the value of variant for this Mlist.
+///
+pub fn variant(_: Mlist, variant: ListVariant) -> Mlist {
+  Mlist(variant: variant)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Mlist
+///
+pub fn render(
+  model: Mlist,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-list",
+    list.flatten([
+      [
+        attr.with_default(
+          "variant",
+          list_variant.to_string(model.variant),
+          list_variant.to_string(default_variant),
+        ),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}

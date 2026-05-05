@@ -1,0 +1,202 @@
+//// TreeItem is an expandable item in a tree.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// TreeItem is a View Model for this component
+///
+/// ## Fields:
+///
+/// - disabled: Whether the element is disabled.
+/// - indeterminate: A value indicating whether the element's selected / checked state is indeterminate.
+/// - open: Whether the item is expanded.
+/// - selected: Whether the item is selected.
+///
+pub opaque type TreeItem {
+  TreeItem(
+    disabled: Disabled,
+    indeterminate: Indeterminate,
+    open: Open,
+    selected: Selected,
+  )
+}
+
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+/// Indeterminate is a value indicating whether the element's selected / checked state is indeterminate.
+///
+pub type Indeterminate {
+  IsIndeterminate
+  IsNotIndeterminate
+}
+
+/// Open is whether the item is expanded.
+///
+pub type Open {
+  IsOpen
+  IsNotOpen
+}
+
+/// Selected is whether the item is selected.
+///
+pub type Selected {
+  IsSelected
+  IsNotSelected
+}
+
+// --- Defaults ---
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+pub const default_indeterminate: Indeterminate = IsNotIndeterminate
+
+pub const default_open: Open = IsNotOpen
+
+pub const default_selected: Selected = IsNotSelected
+
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  Label
+  // Renders the label of the item.
+  Icon
+  // Renders the icon of the item.
+  SelectedIcon
+  // Renders the icon of the item when selected.
+  ToggleIcon
+  // Renders the toggle icon.
+  OpenToggleIcon
+  // Renders the toggle icon when selected.
+}
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    disabled: Disabled,
+    indeterminate: Indeterminate,
+    open: Open,
+    selected: Selected,
+  )
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    disabled: IsNotDisabled,
+    indeterminate: IsNotIndeterminate,
+    open: IsNotOpen,
+    selected: IsNotSelected,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new TreeItem from the given configuration.
+///
+pub fn from_config(config: Config) -> TreeItem {
+  TreeItem(
+    disabled: config.disabled,
+    indeterminate: config.indeterminate,
+    open: config.open,
+    selected: config.selected,
+  )
+}
+
+/// new creates a new TreeItem with the default configuration.
+///
+pub fn new() -> TreeItem {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// disabled sets the value of disabled for this TreeItem.
+///
+pub fn disabled(record: TreeItem, disabled: Disabled) -> TreeItem {
+  TreeItem(..record, disabled: disabled)
+}
+
+/// indeterminate sets the value of indeterminate for this TreeItem.
+///
+pub fn indeterminate(record: TreeItem, indeterminate: Indeterminate) -> TreeItem {
+  TreeItem(..record, indeterminate: indeterminate)
+}
+
+/// open sets the value of open for this TreeItem.
+///
+pub fn open(record: TreeItem, open: Open) -> TreeItem {
+  TreeItem(..record, open: open)
+}
+
+/// selected sets the value of selected for this TreeItem.
+///
+pub fn selected(record: TreeItem, selected: Selected) -> TreeItem {
+  TreeItem(..record, selected: selected)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a TreeItem
+///
+pub fn render(
+  model: TreeItem,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-tree-item",
+    list.flatten([
+      [
+        attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.boolean("indeterminate", model.indeterminate == IsIndeterminate),
+        attr.boolean("open", model.open == IsOpen),
+        attr.boolean("selected", model.selected == IsSelected),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a TreeItem Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Label -> attribute.attribute("slot", "label")
+    Icon -> attribute.attribute("slot", "icon")
+    SelectedIcon -> attribute.attribute("slot", "selected-icon")
+    ToggleIcon -> attribute.attribute("slot", "toggle-icon")
+    OpenToggleIcon -> attribute.attribute("slot", "open-toggle-icon")
+  }
+}

@@ -1,0 +1,121 @@
+//// PseudoRadio is an element which looks like a radio button.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// PseudoRadio is a View Model for this component
+///
+/// ## Fields:
+///
+/// - checked: A value indicating whether the element is checked.
+/// - disabled: A value indicating whether the element is disabled.
+///
+pub opaque type PseudoRadio {
+  PseudoRadio(checked: Checked, disabled: Disabled)
+}
+
+/// Checked is a value indicating whether the element is checked.
+///
+pub type Checked {
+  IsChecked
+  IsNotChecked
+}
+
+/// Disabled is a value indicating whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_checked: Checked = IsNotChecked
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(checked: Checked, disabled: Disabled)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(checked: IsNotChecked, disabled: IsNotDisabled)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new PseudoRadio from the given configuration.
+///
+pub fn from_config(config: Config) -> PseudoRadio {
+  PseudoRadio(checked: config.checked, disabled: config.disabled)
+}
+
+/// new creates a new PseudoRadio with the default configuration.
+///
+pub fn new() -> PseudoRadio {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// checked sets the value of checked for this PseudoRadio.
+///
+pub fn checked(record: PseudoRadio, checked: Checked) -> PseudoRadio {
+  PseudoRadio(..record, checked: checked)
+}
+
+/// disabled sets the value of disabled for this PseudoRadio.
+///
+pub fn disabled(record: PseudoRadio, disabled: Disabled) -> PseudoRadio {
+  PseudoRadio(..record, disabled: disabled)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a PseudoRadio
+///
+pub fn render(
+  model: PseudoRadio,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-pseudo-radio",
+    list.flatten([
+      [
+        attr.boolean("checked", model.checked == IsChecked),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a PseudoRadio Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

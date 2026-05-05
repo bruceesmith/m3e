@@ -1,0 +1,74 @@
+//// Slide is a carousel-like container used to horizontally cycle through slotted items.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/float
+import gleam/list
+import gleam/option.{type Option, None}
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// Slide is a View Model for this component
+///
+/// ## Fields:
+///
+/// - selected_index: The zero-based index of the visible item.
+///
+pub opaque type Slide {
+  Slide(selected_index: Option(Float))
+}
+
+// --- Defaults ---
+
+pub const default_selected_index: Option(Float) = None
+
+// --- Constructors ---
+
+/// new creates a new Slide with the default configuration.
+///
+pub fn new(selected_index: Option(Float)) -> Slide {
+  Slide(selected_index: selected_index)
+}
+
+// --- Setters ---
+
+/// selected_index sets the value of selected_index for this Slide.
+///
+pub fn selected_index(_: Slide, selected_index: Option(Float)) -> Slide {
+  Slide(selected_index: selected_index)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Slide
+///
+pub fn render(
+  model: Slide,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-slide",
+    list.flatten([
+      [
+        attr.option(
+          model.selected_index,
+          fn(_) { "selected-index" },
+          float.to_string,
+          default_selected_index,
+        ),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}

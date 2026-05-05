@@ -1,0 +1,121 @@
+//// Tree is presents hierarchical data in a tree structure.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+
+// --- Types ---
+
+/// Tree is a View Model for this component
+///
+/// ## Fields:
+///
+/// - multi: Whether multiple items can be selected.
+/// - cascade: Whether multiple item selection cascades to child items.
+///
+pub opaque type Tree {
+  Tree(multi: Multi, cascade: Cascade)
+}
+
+/// Multi is whether multiple items can be selected.
+///
+pub type Multi {
+  IsMulti
+  IsNotMulti
+}
+
+/// Cascade is whether multiple item selection cascades to child items.
+///
+pub type Cascade {
+  IsCascade
+  IsNotCascade
+}
+
+// --- Defaults ---
+
+pub const default_multi: Multi = IsNotMulti
+
+pub const default_cascade: Cascade = IsNotCascade
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(multi: Multi, cascade: Cascade)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(multi: IsNotMulti, cascade: IsNotCascade)
+}
+
+// --- Constructors ---
+
+/// from_config creates a new Tree from the given configuration.
+///
+pub fn from_config(config: Config) -> Tree {
+  Tree(multi: config.multi, cascade: config.cascade)
+}
+
+/// new creates a new Tree with the default configuration.
+///
+pub fn new() -> Tree {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// multi sets the value of multi for this Tree.
+///
+pub fn multi(record: Tree, multi: Multi) -> Tree {
+  Tree(..record, multi: multi)
+}
+
+/// cascade sets the value of cascade for this Tree.
+///
+pub fn cascade(record: Tree, cascade: Cascade) -> Tree {
+  Tree(..record, cascade: cascade)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a Tree
+///
+pub fn render(
+  model: Tree,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-tree",
+    list.flatten([
+      [
+        attr.boolean("multi", model.multi == IsMulti),
+        attr.boolean("cascade", model.cascade == IsCascade),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a Tree Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}

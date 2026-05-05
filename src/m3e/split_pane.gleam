@@ -1,0 +1,324 @@
+//// SplitPane is a dual-view layout that separates content with a movable drag handle.
+////
+//// This file was generated:
+////    By: m3e/generator version 0.1.0
+////    At: 2026-05-05T14:38:23+10:00
+////
+////          DO NOT EDIT
+////
+
+import gleam/float
+import gleam/list
+import lustre/attribute.{type Attribute}
+import lustre/element.{type Element}
+import m3e/attr
+import m3e/split_pane_orientation.{type SplitPaneOrientation}
+
+// --- Types ---
+
+/// SplitPane is a View Model for this component
+///
+/// ## Fields:
+///
+/// - detents: Detents (discrete sizes) the start pane can snap to.
+/// - label: The accessible label given to the movable drag handle.
+/// - max: A fractional value, between 0 and 100, indicating the maximum size of the start pane.
+/// - min: A fractional value, between 0 and 100, indicating the minimum size of the start pane.
+/// - orientation: The orientation of the split.
+/// - overshoot_limit: A fractional value, between 0 and 100, indicating the maximum visual overshoot allowed when dragging past the minimum or maximum size.
+/// - step: A fractional value, between 0 and 100, indicating the increment by which to adjust the value when resized via keyboard.
+/// - value: A fractional value, between 0 and 100, indicating the size of the start pane.
+/// - wrap_detents: Whether cycling through detents will wrap.
+/// - value_formatter: A function used to generates human readable text for the accessible value (`aria-valuetext`) of the drag handle.
+/// - name: The name that identifies the element when submitting the associated form.
+/// - disabled: Whether the element is disabled.
+///
+pub opaque type SplitPane {
+  SplitPane(
+    detents: List(String),
+    label: String,
+    max: Float,
+    min: Float,
+    orientation: SplitPaneOrientation,
+    overshoot_limit: Float,
+    step: Float,
+    value: Float,
+    wrap_detents: WrapDetents,
+    value_formatter: String,
+    name: String,
+    disabled: Disabled,
+  )
+}
+
+/// WrapDetents is whether cycling through detents will wrap.
+///
+pub type WrapDetents {
+  IsWrapDetents
+  IsNotWrapDetents
+}
+
+/// Disabled is whether the element is disabled.
+///
+pub type Disabled {
+  IsDisabled
+  IsNotDisabled
+}
+
+// --- Defaults ---
+
+pub const default_detents: List(String) = []
+
+pub const default_label: String = "Resize panes"
+
+pub const default_max: Float = 100.0
+
+pub const default_min: Float = 0.0
+
+pub const default_orientation: SplitPaneOrientation = split_pane_orientation.Horizontal
+
+pub const default_overshoot_limit: Float = 4.0
+
+pub const default_step: Float = 1.0
+
+pub const default_value: Float = 50.0
+
+pub const default_wrap_detents: WrapDetents = IsNotWrapDetents
+
+pub const default_value_formatter: String = ""
+
+pub const default_name: String = ""
+
+pub const default_disabled: Disabled = IsNotDisabled
+
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  Start
+  // Renders content at the logical start side of the pane.
+  End
+  // Renders content at the logical end side of the pane.
+}
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(
+    detents: List(String),
+    label: String,
+    max: Float,
+    min: Float,
+    orientation: SplitPaneOrientation,
+    overshoot_limit: Float,
+    step: Float,
+    value: Float,
+    wrap_detents: WrapDetents,
+    value_formatter: String,
+    name: String,
+    disabled: Disabled,
+  )
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    detents: [],
+    label: "Resize panes",
+    max: 100.0,
+    min: 0.0,
+    orientation: split_pane_orientation.Horizontal,
+    overshoot_limit: 4.0,
+    step: 1.0,
+    value: 50.0,
+    wrap_detents: IsNotWrapDetents,
+    value_formatter: "",
+    name: "",
+    disabled: IsNotDisabled,
+  )
+}
+
+// --- Constructors ---
+
+/// from_config creates a new SplitPane from the given configuration.
+///
+pub fn from_config(config: Config) -> SplitPane {
+  SplitPane(
+    detents: config.detents,
+    label: config.label,
+    max: config.max,
+    min: config.min,
+    orientation: config.orientation,
+    overshoot_limit: config.overshoot_limit,
+    step: config.step,
+    value: config.value,
+    wrap_detents: config.wrap_detents,
+    value_formatter: config.value_formatter,
+    name: config.name,
+    disabled: config.disabled,
+  )
+}
+
+/// new creates a new SplitPane with the default configuration.
+///
+pub fn new() -> SplitPane {
+  from_config(default_config())
+}
+
+// --- Setters ---
+
+/// detents sets the value of detents for this SplitPane.
+///
+pub fn detents(record: SplitPane, detents: List(String)) -> SplitPane {
+  SplitPane(..record, detents: detents)
+}
+
+/// label sets the value of label for this SplitPane.
+///
+pub fn label(record: SplitPane, label: String) -> SplitPane {
+  SplitPane(..record, label: label)
+}
+
+/// max sets the value of max for this SplitPane.
+///
+pub fn max(record: SplitPane, max: Float) -> SplitPane {
+  SplitPane(..record, max: max)
+}
+
+/// min sets the value of min for this SplitPane.
+///
+pub fn min(record: SplitPane, min: Float) -> SplitPane {
+  SplitPane(..record, min: min)
+}
+
+/// orientation sets the value of orientation for this SplitPane.
+///
+pub fn orientation(
+  record: SplitPane,
+  orientation: SplitPaneOrientation,
+) -> SplitPane {
+  SplitPane(..record, orientation: orientation)
+}
+
+/// overshoot_limit sets the value of overshoot_limit for this SplitPane.
+///
+pub fn overshoot_limit(record: SplitPane, overshoot_limit: Float) -> SplitPane {
+  SplitPane(..record, overshoot_limit: overshoot_limit)
+}
+
+/// step sets the value of step for this SplitPane.
+///
+pub fn step(record: SplitPane, step: Float) -> SplitPane {
+  SplitPane(..record, step: step)
+}
+
+/// value sets the value of value for this SplitPane.
+///
+pub fn value(record: SplitPane, value: Float) -> SplitPane {
+  SplitPane(..record, value: value)
+}
+
+/// wrap_detents sets the value of wrap_detents for this SplitPane.
+///
+pub fn wrap_detents(record: SplitPane, wrap_detents: WrapDetents) -> SplitPane {
+  SplitPane(..record, wrap_detents: wrap_detents)
+}
+
+/// value_formatter sets the value of value_formatter for this SplitPane.
+///
+pub fn value_formatter(record: SplitPane, value_formatter: String) -> SplitPane {
+  SplitPane(..record, value_formatter: value_formatter)
+}
+
+/// name sets the value of name for this SplitPane.
+///
+pub fn name(record: SplitPane, name: String) -> SplitPane {
+  SplitPane(..record, name: name)
+}
+
+/// disabled sets the value of disabled for this SplitPane.
+///
+pub fn disabled(record: SplitPane, disabled: Disabled) -> SplitPane {
+  SplitPane(..record, disabled: disabled)
+}
+
+// --- Renderers ---
+
+/// render creates a Lustre Element for a SplitPane
+///
+pub fn render(
+  model: SplitPane,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  element.element(
+    "m3e-split-pane",
+    list.flatten([
+      [
+        attr.list_of_string("detents", model.detents),
+        attr.with_default("label", model.label, default_label),
+        attr.with_default(
+          "max",
+          float.to_string(model.max),
+          float.to_string(default_max),
+        ),
+        attr.with_default(
+          "min",
+          float.to_string(model.min),
+          float.to_string(default_min),
+        ),
+        attr.with_default(
+          "orientation",
+          split_pane_orientation.to_string(model.orientation),
+          split_pane_orientation.to_string(default_orientation),
+        ),
+        attr.with_default(
+          "overshoot-limit",
+          float.to_string(model.overshoot_limit),
+          float.to_string(default_overshoot_limit),
+        ),
+        attr.with_default(
+          "step",
+          float.to_string(model.step),
+          float.to_string(default_step),
+        ),
+        attr.with_default(
+          "value",
+          float.to_string(model.value),
+          float.to_string(default_value),
+        ),
+        attr.boolean("wrap-detents", model.wrap_detents == IsWrapDetents),
+        attr.with_default(
+          "value-formatter",
+          model.value_formatter,
+          default_value_formatter,
+        ),
+        attr.with_default("name", model.name, default_name),
+        attr.boolean("disabled", model.disabled == IsDisabled),
+      ],
+      attributes,
+    ])
+      |> list.filter(fn(a) { a != attribute.none() }),
+    children,
+  )
+}
+
+/// render_config creates a Lustre Element from a SplitPane Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Start -> attribute.attribute("slot", "start")
+    End -> attribute.attribute("slot", "end")
+  }
+}
