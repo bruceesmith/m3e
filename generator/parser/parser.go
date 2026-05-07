@@ -59,6 +59,10 @@ type Module struct {
 	// The value is the remainder of the import line, e.g. for "lustre/element"
 	// it would be ".{type Element}"
 	TestImports map[string]string
+	// HasChildren reflects whether the M3E component defines either default (unnamed)
+	// or named Slots. When there are neither defined, the render() functions and
+	// their tests should not have "children: List(Element(msg))" as a parameter
+	HasChildren bool
 }
 
 // Parse extracts the module declarations and enumerated types from the manifest and M3e code

@@ -10,7 +10,9 @@ pub fn render(
  _: {{.Name}},
 {{- end }}
  attributes: List(Attribute(msg)),
+{{- if .HasChildren -}}
  children: List(Element(msg)),
+{{- end -}}
 ) -> Element(msg) {
  element.element(
    "{{.Tag}}",
@@ -27,7 +29,11 @@ pub fn render(
 {{- else -}}
    attributes,
 {{- end -}}
+{{- if .HasChildren }}
    children,
+{{- else }}
+   [],
+{{- end }}
  )
 }
 

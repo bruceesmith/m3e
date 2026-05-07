@@ -75,7 +75,7 @@ type Attribute struct {
 ```
 
 <a name="Attribute.IsList"></a>
-### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L553>)
+### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L552>)
 
 ```go
 func (attr *Attribute) IsList() bool
@@ -84,7 +84,7 @@ func (attr *Attribute) IsList() bool
 IsList returns true if the Attribute is declared as a Gleam List
 
 <a name="Attribute.IsOptional"></a>
-### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L548>)
+### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L547>)
 
 ```go
 func (attr *Attribute) IsOptional() bool
@@ -93,7 +93,7 @@ func (attr *Attribute) IsOptional() bool
 IsOptional returns true if the Attribute's type is Option\(something\)
 
 <a name="Attribute.IsSemBool"></a>
-### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L558>)
+### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L557>)
 
 ```go
 func (attr *Attribute) IsSemBool() bool
@@ -102,7 +102,7 @@ func (attr *Attribute) IsSemBool() bool
 IsSemBool returns true if the Attribute is a semantic boolean
 
 <a name="Attribute.IsStandard"></a>
-### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L563>)
+### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L562>)
 
 ```go
 func (attr *Attribute) IsStandard() bool
@@ -125,7 +125,7 @@ type Definition struct {
 ```
 
 <a name="Parse"></a>
-### func [Parse](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L65>)
+### func [Parse](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L69>)
 
 ```go
 func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (definition Definition, err error)
@@ -148,7 +148,7 @@ type Enumeration struct {
 ```
 
 <a name="Module"></a>
-## type [Module](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L39-L62>)
+## type [Module](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L39-L66>)
 
 Module is an internal representation of a cem Module
 
@@ -176,6 +176,10 @@ type Module struct {
     // The value is the remainder of the import line, e.g. for "lustre/element"
     // it would be ".{type Element}"
     TestImports map[string]string
+    // HasChildren reflects whether the M3E component defines either default (unnamed)
+    // or named Slots. When there are neither defined, the render() functions and
+    // their tests should not have "children: List(Element(msg))" as a parameter
+    HasChildren bool
 }
 ```
 

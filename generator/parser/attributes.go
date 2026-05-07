@@ -79,11 +79,10 @@ var (
 		"lustre/element":   ".{type Element}",
 	}
 	commonTestImports = map[string]string{
-		"gleam/list":          "",
-		"gleeunit/should":     "",
-		"lustre/attribute":    "",
-		"lustre/element":      "",
-		"lustre/element/html": "",
+		"gleam/list":       "",
+		"gleeunit/should":  "",
+		"lustre/attribute": "",
+		"lustre/element":   "",
 	}
 	gleamStandardTypes = map[string]string{
 		"boolean": "Bool",

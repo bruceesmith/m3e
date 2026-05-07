@@ -7,33 +7,8 @@
 {{- else }}
 {{ template "render_multiple.tmpl" (dict "Snake" $snake "Attributes" .Attributes) }}
 {{- end }}
-
-  let cases = [
-    // Happy path with no attributes nor children
-    #(#(mod, [], []), element.element("{{ $tag }}", [], [])),
-    // Happy path with no children
-    #(
-      #(mod, [attribute.id("id")], []),
-      element.element("{{ $tag }}", [attribute.id("id")], []),
-    ),
-    // Happy path with no attributes
-    #(
-      #(mod, [], [html.br([])]),
-      element.element("{{ $tag }}", [], [html.br([])]),
-    ),
-{{ range .Attributes }}
-    // Happy path with a {{ .SnakeName }} attribute
-    #(
-      #(mod_{{ .SnakeName }}, [], []),
-      element.element("{{ $tag }}", [attribute.attribute("{{ .KebabName }}", {{ printf "%s" .Test.AttributeValue }})], []),
-    ),
-{{- end }}
-  ]
-
-  list.each(cases, fn(c) {
-    let #(#(mod, attributes, children), expected) = c
-
-    {{ $snake }}.render(mod, attributes, children)
-    |> should.equal(expected)
-  })
-}
+{{- if .HasChildren }}
+{{ template "render_cases_with_children.tmpl" (dict "Snake" $snake "Tag" $tag "A" .Attributes) }}
+{{- else -}}
+{{ template "render_cases_without_children.tmpl" (dict "Snake" $snake "Tag" $tag "A" .Attributes) }}
+{{- end -}}

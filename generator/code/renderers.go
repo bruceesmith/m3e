@@ -25,9 +25,10 @@ func init() {
 
 func render(module *parser.Module) (builder *strings.Builder, err error) {
 	type Render struct {
-		Attributes []string
-		Name       string
-		Tag        string
+		Attributes  []string
+		HasChildren bool
+		Name        string
+		Tag         string
 	}
 	builder = &strings.Builder{}
 
@@ -37,8 +38,9 @@ func render(module *parser.Module) (builder *strings.Builder, err error) {
 	}
 
 	data := Render{
-		Name: module.Name,
-		Tag:  module.Tag,
+		HasChildren: module.HasChildren,
+		Name:        module.Name,
+		Tag:         module.Tag,
 	}
 
 	for _, attr := range module.Attributes {

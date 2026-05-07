@@ -68,11 +68,12 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 		name = "Mlist"
 	}
 	mod := Module{
-		Tag:       *declaration.TagName,
-		Slots:     makeSlots(declaration.Slots),
-		Name:      name,
-		SnakeName: strcase.ToSnake(name),
-		Imports:   make(map[string]string, maxImports),
+		Tag:         *declaration.TagName,
+		Slots:       makeSlots(declaration.Slots),
+		Name:        name,
+		SnakeName:   strcase.ToSnake(name),
+		Imports:     make(map[string]string, maxImports),
+		HasChildren: len(declaration.Slots) > 0,
 	}
 	desc := *declaration.Description
 	first, remainder := desc[0], desc[1:]
@@ -81,6 +82,9 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 	mod.Description = desc
 
 	mod.Attributes, mod.Imports, mod.TestImports, externalModules = makeAttributes(name, declaration.Attributes)
+	if mod.HasChildren {
+		mod.TestImports["lustre/element/html"] = ""
+	}
 	logger.TraceID("module", fmt.Sprintf("Module %s", name))
 	d.Modules[name] = mod
 	return externalModules

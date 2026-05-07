@@ -1,0 +1,23 @@
+{{- define "render_cases_without_children.tmpl" }}{{ $tag := .Tag }}
+  let cases = [
+    #(#(mod, []), element.element("{{ $tag }}", [], [])),
+    #(
+      #(mod, [attribute.id("id")]),
+      element.element("{{ $tag }}", [attribute.id("id")], []),
+    ),
+{{ range .A }}
+    #(
+      #(mod_{{ .SnakeName }}, []),
+      element.element("{{ $tag }}", [attribute.attribute("{{ .KebabName }}", {{ printf "%s" .Test.AttributeValue }})], []),
+    ),
+{{- end }}
+  ]
+
+  list.each(cases, fn(c) {
+    let #(#(mod, attributes), expected) = c
+
+    {{ .Snake }}.render(mod, attributes)
+    |> should.equal(expected)
+  })
+}
+{{ end -}}

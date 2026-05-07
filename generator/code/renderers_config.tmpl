@@ -5,9 +5,15 @@
 pub fn render_config(
  c: Config,
  attributes: List(Attribute(msg)),
+{{ if .HasChildren }}
  children: List(Element(msg)),
+{{ end }}
 ) -> Element(msg) {
+{{ if .HasChildren }}
  render(from_config(c), attributes, children)
+{{ else }}
+ render(from_config(c), attributes)
+{{- end -}}
 }
 {{- end }}
 {{ end }}
