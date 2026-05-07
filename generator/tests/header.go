@@ -19,15 +19,10 @@ func init() {
 	}
 }
 
-func header(name, desc, version string, date string) (builder *strings.Builder, err error) {
-	type data struct {
-		Name    string
-		Date    string
-		Version string
-	}
+func header(name string) (builder *strings.Builder, err error) {
 
 	builder = &strings.Builder{}
-	err = headerTmpl.Execute(builder, data{Name: name, Date: date, Version: version})
+	err = headerTmpl.Execute(builder, name)
 	if err != nil {
 		err = fmt.Errorf("header failed to save result: %w", err)
 	}

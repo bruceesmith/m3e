@@ -16,7 +16,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/bruceesmith/echidna"
 	"github.com/bruceesmith/logger"
@@ -122,16 +121,14 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
 
-	date := time.Now().Format(time.RFC3339)
-
 	// Generate Gleam/Lustre bindings for the modules
-	if err = generateModules(!cmd.Bool("no-code"), &modules, date, cmd.Version, metrics); err != nil {
+	if err = generateModules(!cmd.Bool("no-code"), &modules, metrics); err != nil {
 		logger.Error("error generating the Gleam modules", internal.ErrorAttr(err))
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
 
 	// Generate unit tests for the bindings,
-	if err = generateTests(!cmd.Bool("no-tests"), &modules, date, cmd.Version, metrics); err != nil {
+	if err = generateTests(!cmd.Bool("no-tests"), &modules, metrics); err != nil {
 		logger.Error("error generating the Gleam unit tests", internal.ErrorAttr(err))
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
@@ -152,10 +149,10 @@ func customManifest() (manifest cem.SchemaJson, err error) {
 	return manifest, nil
 }
 
-func generateModules(generate bool, modules *parser.Definition, date string, version string, metrics *metrics.Metrics) (err error) {
+func generateModules(generate bool, modules *parser.Definition, metrics *metrics.Metrics) (err error) {
 	if generate {
 		metrics.Start("generate-code")
-		if err := code.Generate(modules, filepath.Join(cfg.Destination, "src/m3e/"), version, date); err != nil {
+		if err := code.Generate(modules, filepath.Join(cfg.Destination, "src/m3e/")); err != nil {
 			return fmt.Errorf("failed to generate bindings: %w", err)
 		}
 		err = metrics.End("generate-code")
@@ -167,10 +164,10 @@ func generateModules(generate bool, modules *parser.Definition, date string, ver
 	return nil
 }
 
-func generateTests(generate bool, modules *parser.Definition, date string, version string, metrics *metrics.Metrics) (err error) {
+func generateTests(generate bool, modules *parser.Definition, metrics *metrics.Metrics) (err error) {
 	if generate {
 		metrics.Start("generate-tests")
-		if err := tests.Generate(modules, filepath.Join(cfg.Destination, "test/m3e/"), version, date); err != nil {
+		if err := tests.Generate(modules, filepath.Join(cfg.Destination, "test/m3e/")); err != nil {
 			return fmt.Errorf("failed to generate tests: %w", err)
 		}
 		err = metrics.End("generate-tests")

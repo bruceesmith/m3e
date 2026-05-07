@@ -11,9 +11,9 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-func generateEnums(destination string, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
+func generateEnums(destination string, enumerations map[string][]parser.Enumeration) (err error) {
 	for name, enum := range enumerations {
-		err = writeEnumFile(destination, name, enum, version, date)
+		err = writeEnumFile(destination, name, enum)
 	}
 	return
 }
@@ -30,7 +30,7 @@ func init() {
 	}
 }
 
-func writeEnumFile(directory string, identifier string, enum []parser.Enumeration, version string, date string) error {
+func writeEnumFile(directory string, identifier string, enum []parser.Enumeration) error {
 	type Data struct {
 		Type    string
 		Enums   []parser.Enumeration
@@ -38,10 +38,8 @@ func writeEnumFile(directory string, identifier string, enum []parser.Enumeratio
 		Date    string
 	}
 	data := Data{
-		Type:    identifier,
-		Enums:   enum,
-		Version: version,
-		Date:    date,
+		Type:  identifier,
+		Enums: enum,
 	}
 	fileName := strcase.ToSnake(identifier)
 	file, err := os.Create(filepath.Join(directory, fileName+".gleam"))

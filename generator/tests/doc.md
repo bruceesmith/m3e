@@ -20,14 +20,14 @@ Finally, for every module which defines one or more Slots, there is a test of th
 
 ## Index
 
-- [func Generate\(definition \*parser.Definition, destination string, version string, date string\) \(err error\)](<#Generate>)
+- [func Generate\(definition \*parser.Definition, destination string\) \(err error\)](<#Generate>)
 
 
 <a name="Generate"></a>
 ## func [Generate](<https://github.com/bruceesmith/m3e/blob/main/generator/tests/generate.go#L9>)
 
 ```go
-func Generate(definition *parser.Definition, destination string, version string, date string) (err error)
+func Generate(definition *parser.Definition, destination string) (err error)
 ```
 
 Generate generates all the unit test files

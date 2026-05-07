@@ -22,7 +22,7 @@ type gleamModule struct {
 }
 
 // generateTests creates all the unit test files
-func generateTests(directory string, module *parser.Module, enumerations map[string][]parser.Enumeration, version string, date string) (err error) {
+func generateTests(directory string, module *parser.Module, enumerations map[string][]parser.Enumeration) (err error) {
 
 	gleam := gleamModule{}
 	logger.TraceID("tests", fmt.Sprintf("Module %s", module.Name))
@@ -37,7 +37,7 @@ func generateTests(directory string, module *parser.Module, enumerations map[str
 	}
 	defer file.Close()
 
-	gleam.header, err = header(newMod.Name, newMod.Description, version, date)
+	gleam.header, err = header(newMod.Name)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", newMod.Name, err)
 	}

@@ -57,14 +57,14 @@ These Gleam types are imported by any Gleam web component modules which referenc
 
 ## Index
 
-- [func Generate\(definition \*parser.Definition, destination string, version string, date string\) \(err error\)](<#Generate>)
+- [func Generate\(definition \*parser.Definition, destination string\) \(err error\)](<#Generate>)
 
 
 <a name="Generate"></a>
 ## func [Generate](<https://github.com/bruceesmith/m3e/blob/main/generator/code/generate.go#L8>)
 
 ```go
-func Generate(definition *parser.Definition, destination string, version string, date string) (err error)
+func Generate(definition *parser.Definition, destination string) (err error)
 ```
 
 

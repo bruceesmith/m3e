@@ -19,12 +19,10 @@ func init() {
 	}
 }
 
-func header(name, desc, version string, date string) (builder *strings.Builder, err error) {
+func header(name, desc string) (builder *strings.Builder, err error) {
 	type headerData struct {
-		Name    string
-		Date    string
-		Desc    string
-		Version string
+		Name string
+		Desc string
 	}
 	if len(desc) > 0 {
 		first, remainder := desc[0], desc[1:]
@@ -33,7 +31,7 @@ func header(name, desc, version string, date string) (builder *strings.Builder, 
 	desc = strings.ReplaceAll(desc, "\n", "\n//// ")
 
 	builder = &strings.Builder{}
-	err = headerTmpl.Execute(builder, headerData{Name: name, Date: date, Desc: desc, Version: version})
+	err = headerTmpl.Execute(builder, headerData{Name: name, Desc: desc})
 	if err != nil {
 		err = fmt.Errorf("header failed to save result: %w", err)
 	}

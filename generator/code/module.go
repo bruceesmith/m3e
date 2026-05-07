@@ -22,7 +22,7 @@ type gleamModule struct {
 	renderers     *strings.Builder
 }
 
-func generateModule(directory string, module *parser.Module, version string, date string) (err error) {
+func generateModule(directory string, module *parser.Module) (err error) {
 	gleam := gleamModule{}
 	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", module.Name, module.Description))
 
@@ -32,7 +32,7 @@ func generateModule(directory string, module *parser.Module, version string, dat
 	}
 	defer file.Close()
 
-	gleam.header, err = header(module.Name, module.Description, version, date)
+	gleam.header, err = header(module.Name, module.Description)
 	if err != nil {
 		return fmt.Errorf("processing of %s failed: %w", module.Name, err)
 	}
