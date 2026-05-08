@@ -10,6 +10,7 @@ import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/slide
 
 pub fn slide_render_test() {
@@ -17,14 +18,18 @@ pub fn slide_render_test() {
   let mod_selected_index = slide.new(Some(42.0))
 
   let cases = [
-    #(#(mod, []), element.element("m3e-slide", [], [])),
+    #(#(mod, [], []), element.element("m3e-slide", [], [])),
     #(
-      #(mod, [attribute.id("id")]),
+      #(mod, [attribute.id("id")], []),
       element.element("m3e-slide", [attribute.id("id")], []),
+    ),
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-slide", [], [html.br([])]),
     ),
 
     #(
-      #(mod_selected_index, []),
+      #(mod_selected_index, [], []),
       element.element(
         "m3e-slide",
         [attribute.attribute("selected-index", "42.0")],
@@ -34,9 +39,9 @@ pub fn slide_render_test() {
   ]
 
   list.each(cases, fn(c) {
-    let #(#(mod, attributes), expected) = c
+    let #(#(mod, attributes, children), expected) = c
 
-    slide.render(mod, attributes)
+    slide.render(mod, attributes, children)
     |> should.equal(expected)
   })
 }

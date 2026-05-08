@@ -175,7 +175,11 @@ pub fn size(record: Slider, size: SliderSize) -> Slider {
 
 /// render creates a Lustre Element for a Slider
 ///
-pub fn render(model: Slider, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: Slider,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-slider",
     list.flatten([
@@ -207,7 +211,7 @@ pub fn render(model: Slider, attributes: List(Attribute(msg))) -> Element(msg) {
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
@@ -216,6 +220,7 @@ pub fn render(model: Slider, attributes: List(Attribute(msg))) -> Element(msg) {
 pub fn render_config(
   c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(c), attributes)
+  render(from_config(c), attributes, children)
 }

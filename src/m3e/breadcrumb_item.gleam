@@ -63,6 +63,13 @@ pub const default_download: Option(String) = None
 
 pub const default_rel: String = ""
 
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  Icon
+  // Renders an icon before the item's label.
+}
+
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
@@ -219,4 +226,12 @@ pub fn render_config(
   children: List(Element(msg)),
 ) -> Element(msg) {
   render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    Icon -> attribute.attribute("slot", "icon")
+  }
 }

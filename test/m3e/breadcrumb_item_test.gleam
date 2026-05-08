@@ -335,3 +335,16 @@ pub fn breadcrumb_item_render_test() {
     |> should.equal(expected)
   })
 }
+
+pub fn breadcrumb_item_slot_test() {
+  let cases = [
+    #(breadcrumb_item.Icon, attribute.attribute("slot", "icon")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    breadcrumb_item.slot(s)
+    |> should.equal(expected)
+  })
+}

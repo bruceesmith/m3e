@@ -9,6 +9,7 @@ import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/slider.{Config}
 import m3e/slider_size
 
@@ -222,39 +223,44 @@ pub fn slider_render_test() {
   let mod_min = slider.new() |> slider.min(42.0)
   let mod_step = slider.new() |> slider.step(42.0)
   let mod_size = slider.new() |> slider.size(slider_size.Small)
+
   let cases = [
-    #(#(mod, []), element.element("m3e-slider", [], [])),
+    #(#(mod, [], []), element.element("m3e-slider", [], [])),
     #(
-      #(mod, [attribute.id("id")]),
+      #(mod, [attribute.id("id")], []),
       element.element("m3e-slider", [attribute.id("id")], []),
+    ),
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-slider", [], [html.br([])]),
     ),
 
     #(
-      #(mod_disabled, []),
+      #(mod_disabled, [], []),
       element.element("m3e-slider", [attribute.attribute("disabled", "")], []),
     ),
     #(
-      #(mod_discrete, []),
+      #(mod_discrete, [], []),
       element.element("m3e-slider", [attribute.attribute("discrete", "")], []),
     ),
     #(
-      #(mod_labelled, []),
+      #(mod_labelled, [], []),
       element.element("m3e-slider", [attribute.attribute("labelled", "")], []),
     ),
     #(
-      #(mod_max, []),
+      #(mod_max, [], []),
       element.element("m3e-slider", [attribute.attribute("max", "42.0")], []),
     ),
     #(
-      #(mod_min, []),
+      #(mod_min, [], []),
       element.element("m3e-slider", [attribute.attribute("min", "42.0")], []),
     ),
     #(
-      #(mod_step, []),
+      #(mod_step, [], []),
       element.element("m3e-slider", [attribute.attribute("step", "42.0")], []),
     ),
     #(
-      #(mod_size, []),
+      #(mod_size, [], []),
       element.element(
         "m3e-slider",
         [attribute.attribute("size", slider_size.to_string(slider_size.Small))],
@@ -264,9 +270,9 @@ pub fn slider_render_test() {
   ]
 
   list.each(cases, fn(c) {
-    let #(#(mod, attributes), expected) = c
+    let #(#(mod, attributes, children), expected) = c
 
-    slider.render(mod, attributes)
+    slider.render(mod, attributes, children)
     |> should.equal(expected)
   })
 }

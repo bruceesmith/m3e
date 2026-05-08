@@ -48,7 +48,11 @@ pub fn selected_index(_: Slide, selected_index: Option(Float)) -> Slide {
 
 /// render creates a Lustre Element for a Slide
 ///
-pub fn render(model: Slide, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: Slide,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-slide",
     list.flatten([
@@ -63,6 +67,6 @@ pub fn render(model: Slide, attributes: List(Attribute(msg))) -> Element(msg) {
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
