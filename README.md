@@ -3,9 +3,7 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
->⚠️ Test State Warning
-
->Version 2.0.0-alpha.1 of this software is currently under test. It is actively being developed, and features may change or break without notice. It is not recommended for production use. We welcome feedback and bug reports.
+Version 2.0.0 of this software is aligned with v2.5.2 of [M3E](https://github.com/matraic/m3e).
 
 ## Overview
 
