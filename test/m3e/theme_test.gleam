@@ -9,6 +9,7 @@ import gleam/list
 import gleeunit/should
 import lustre/attribute
 import lustre/element
+import lustre/element/html
 import m3e/color_scheme
 import m3e/contrast_level
 import m3e/motion_scheme
@@ -205,19 +206,24 @@ pub fn theme_render_test() {
   let mod_scheme = theme.new() |> theme.scheme(color_scheme.Light)
   let mod_strong_focus = theme.new() |> theme.strong_focus(theme.IsStrongFocus)
   let mod_motion = theme.new() |> theme.motion(motion_scheme.Expressive)
+
   let cases = [
-    #(#(mod, []), element.element("m3e-theme", [], [])),
+    #(#(mod, [], []), element.element("m3e-theme", [], [])),
     #(
-      #(mod, [attribute.id("id")]),
+      #(mod, [attribute.id("id")], []),
       element.element("m3e-theme", [attribute.id("id")], []),
+    ),
+    #(
+      #(mod, [], [html.br([])]),
+      element.element("m3e-theme", [], [html.br([])]),
     ),
 
     #(
-      #(mod_color, []),
+      #(mod_color, [], []),
       element.element("m3e-theme", [attribute.attribute("color", "test")], []),
     ),
     #(
-      #(mod_contrast, []),
+      #(mod_contrast, [], []),
       element.element(
         "m3e-theme",
         [
@@ -230,11 +236,11 @@ pub fn theme_render_test() {
       ),
     ),
     #(
-      #(mod_density, []),
+      #(mod_density, [], []),
       element.element("m3e-theme", [attribute.attribute("density", "42.0")], []),
     ),
     #(
-      #(mod_scheme, []),
+      #(mod_scheme, [], []),
       element.element(
         "m3e-theme",
         [
@@ -247,7 +253,7 @@ pub fn theme_render_test() {
       ),
     ),
     #(
-      #(mod_strong_focus, []),
+      #(mod_strong_focus, [], []),
       element.element(
         "m3e-theme",
         [attribute.attribute("strong-focus", "")],
@@ -255,7 +261,7 @@ pub fn theme_render_test() {
       ),
     ),
     #(
-      #(mod_motion, []),
+      #(mod_motion, [], []),
       element.element(
         "m3e-theme",
         [
@@ -270,9 +276,9 @@ pub fn theme_render_test() {
   ]
 
   list.each(cases, fn(c) {
-    let #(#(mod, attributes), expected) = c
+    let #(#(mod, attributes, children), expected) = c
 
-    theme.render(mod, attributes)
+    theme.render(mod, attributes, children)
     |> should.equal(expected)
   })
 }

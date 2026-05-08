@@ -150,7 +150,11 @@ pub fn motion(record: Theme, motion: MotionScheme) -> Theme {
 
 /// render creates a Lustre Element for a Theme
 ///
-pub fn render(model: Theme, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: Theme,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-theme",
     list.flatten([
@@ -181,7 +185,7 @@ pub fn render(model: Theme, attributes: List(Attribute(msg))) -> Element(msg) {
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
@@ -190,6 +194,7 @@ pub fn render(model: Theme, attributes: List(Attribute(msg))) -> Element(msg) {
 pub fn render_config(
   c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(c), attributes)
+  render(from_config(c), attributes, children)
 }
