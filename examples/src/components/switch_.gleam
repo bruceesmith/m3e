@@ -26,17 +26,17 @@ fn basic(_: model.Model) -> Element(Msg) {
   html.div([], [
     switch.new()
     |> switch.checked(switch.IsChecked)
-    |> switch.render([], []),
+    |> switch.render([]),
   ])
 }
 
 fn labels(_: model.Model) -> Element(Msg) {
   html.div([layout.switch_style()], [
     html.label([layout.switch_style()], [
-      switch.render_config(switch.default_config(), [], []),
+      switch.render_config(switch.default_config(), []),
       element.text("Switch 1"),
     ]),
-    switch.render_config(switch.default_config(), [attribute.id("switch2")], []),
+    switch.render_config(switch.default_config(), [attribute.id("switch2")]),
     html.label(
       [
         attribute.for("switch2"),
@@ -50,18 +50,18 @@ fn icons(_: model.Model) -> Element(Msg) {
   html.div([layout.switch_style()], [
     switch.new()
       |> switch.icons(switch_icons.None)
-      |> switch.render([], []),
+      |> switch.render([]),
     html.label([], [element.text("None")]),
 
     switch.new()
       |> switch.checked(switch.IsChecked)
       |> switch.icons(switch_icons.Selected)
-      |> switch.render([], []),
+      |> switch.render([]),
     html.label([], [element.text("Selected")]),
 
     switch.new()
       |> switch.icons(switch_icons.Both)
-      |> switch.render([], []),
+      |> switch.render([]),
     html.label([], [element.text("Both")]),
   ])
 }
@@ -71,13 +71,13 @@ fn disabled(_: model.Model) -> Element(Msg) {
     html.label([layout.switch_style()], [
       switch.new()
         |> switch.disabled(switch.IsDisabled)
-        |> switch.render([], []),
+        |> switch.render([]),
       element.text("Disabled Switch 1"),
     ]),
     switch.new()
       |> switch.checked(switch.IsChecked)
       |> switch.disabled(switch.IsDisabled)
-      |> switch.render([attribute.id("disabled-on")], []),
+      |> switch.render([attribute.id("disabled-on")]),
     html.label([attribute.for("disabled-on")], [
       element.text("Disabled Switch 2"),
     ]),

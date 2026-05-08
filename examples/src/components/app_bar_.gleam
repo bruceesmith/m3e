@@ -103,7 +103,7 @@ fn content() -> List(Element(Msg)) {
   [
     icon_button.new()
       |> icon_button.render([app_bar.slot(app_bar.Leading)], [
-        icon.new() |> icon.name("arrow_back") |> icon.render([], []),
+        icon.new() |> icon.name("arrow_back") |> icon.render([]),
       ]),
     html.span([app_bar.slot(app_bar.Title)], [
       element.text("Top 10 hiking trails"),
@@ -113,7 +113,7 @@ fn content() -> List(Element(Msg)) {
     ]),
     icon_button.new()
       |> icon_button.render([app_bar.slot(app_bar.Trailing)], [
-        icon.new() |> icon.name("bookmark") |> icon.render([], []),
+        icon.new() |> icon.name("bookmark") |> icon.render([]),
       ]),
   ]
 }

@@ -17,34 +17,34 @@ pub fn page(displays: List(Element(Msg))) -> Element(Msg) {
   )
 }
 
-/// panel builds a panel showcasing one aspect of tje showcased warpper
+/// panel builds a panel showcasing one aspect of the showcased warpper
 ///
 pub fn panel(
   model: model.Model,
   description: String,
   content: fn(model.Model) -> Element(Msg),
 ) -> Element(Msg) {
-  // card.render_config(
-  //   card.Config(..card.default_config(), variant: card_variant.Outlined),
-  //   [
-  //     layout.card_style(),
-  //   ],
-  //   [
-  //     html.div(
-  //       [
-  //         layout.card_content_style(),
-  //         card.slot(card.Content),
-  //       ],
-  //       [
-  //         element.text(description),
-  //         content(model),
-  //       ],
-  //     ),
-  //   ],
-  // )
   card.render_config(
     card.Config(..card.default_config(), variant: card_variant.Outlined),
-    [],
-    [html.div([card.slot(card.Content)], [element.text("This is a card")])],
+    [
+      layout.card_style(),
+    ],
+    [
+      html.div(
+        [
+          layout.card_content_style(),
+          card.slot(card.Content),
+        ],
+        [
+          element.text(description),
+          content(model),
+        ],
+      ),
+    ],
   )
+  // card.render_config(
+  //   card.Config(..card.default_config(), variant: card_variant.Outlined),
+  //   [],
+  //   [html.div([card.slot(card.Content)], [element.text("This is a card")])],
+  // )
 }

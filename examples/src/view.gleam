@@ -62,13 +62,13 @@ fn appbar() -> Element(Msg) {
         icon.new()
           |> icon.name("menu")
           |> icon.filled(icon.IsFilled)
-          |> icon.render([], []),
+          |> icon.render([]),
         icon.new()
           |> icon.name("menu_open")
           |> icon.filled(icon.IsFilled)
-          |> icon.render([icon_button.slot(icon_button.Selected)], []),
+          |> icon.render([icon_button.slot(icon_button.Selected)]),
         drawer_toggle.new(Some("nav-drawer"))
-          |> drawer_toggle.render([], []),
+          |> drawer_toggle.render([]),
       ]),
     html.span(
       [

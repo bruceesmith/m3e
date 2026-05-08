@@ -21,7 +21,7 @@ fn icon(model: model.Model) -> Element(Msg) {
 
 fn basic(_: model.Model) -> Element(Msg) {
   html.div([], [
-    icon.new() |> icon.name("home") |> icon.render([], []),
+    icon.new() |> icon.name("home") |> icon.render([]),
   ])
 }
 
@@ -30,19 +30,19 @@ fn appearance(_: model.Model) -> Element(Msg) {
     icon.new()
       |> icon.name("home")
       |> icon.variant(icon_variant.Outlined)
-      |> icon.render([], []),
+      |> icon.render([]),
     html.label([], [element.text("Outlined")]),
     icon.new()
       |> icon.name("lock")
       |> icon.variant(icon_variant.Rounded)
       |> icon.filled(icon.IsFilled)
-      |> icon.render([], []),
+      |> icon.render([]),
     html.label([], [element.text("Rounded")]),
     icon.new()
       |> icon.name("lock")
       |> icon.variant(icon_variant.Sharp)
       |> icon.filled(icon.IsFilled)
-      |> icon.render([], []),
+      |> icon.render([]),
     html.label([], [element.text("Sharp")]),
   ])
 }

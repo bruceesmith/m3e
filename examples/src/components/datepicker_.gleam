@@ -36,9 +36,9 @@ fn basic_usage(_: model.Model) -> Element(Msg) {
         html.input([attribute.id("fld1"), attribute.autocomplete("off")]),
         icon_button.new()
           |> icon_button.render([form_field.slot(form_field.Suffix)], [
-            icon.new() |> icon.name("calendar_today") |> icon.render([], []),
+            icon.new() |> icon.name("calendar_today") |> icon.render([]),
             datepicker_toggle.new(Some("datepicker1"))
-              |> datepicker_toggle.render([], []),
+              |> datepicker_toggle.render([]),
           ]),
         html.span([form_field.slot(form_field.Hint)], [
           element.text("MM/DD/YYYY"),
@@ -46,7 +46,7 @@ fn basic_usage(_: model.Model) -> Element(Msg) {
       ]),
     datepicker.new()
       |> datepicker.variant(datepicker_variant.Auto)
-      |> datepicker.render([attribute.id("datepicker1")], []),
+      |> datepicker.render([attribute.id("datepicker1")]),
   ])
 }
 

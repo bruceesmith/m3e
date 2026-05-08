@@ -62,7 +62,7 @@ fn icons(_: model.Model) -> Element(Msg) {
       |> button.render([], [
         icon.new()
           |> icon.name("send")
-          |> icon.render([button.slot(button.Icon)], []),
+          |> icon.render([button.slot(button.Icon)]),
         element.text("Send"),
       ]),
 
@@ -71,7 +71,7 @@ fn icons(_: model.Model) -> Element(Msg) {
       |> button.render([], [
         icon.new()
           |> icon.name("open_in_new_window")
-          |> icon.render([button.slot(button.TrailingIcon)], []),
+          |> icon.render([button.slot(button.TrailingIcon)]),
         element.text("Open"),
       ]),
   ])
@@ -101,14 +101,10 @@ fn toggling(_: model.Model) -> Element(Msg) {
       |> button.render([], [
         icon.new()
           |> icon.name("play_arrow")
-          |> icon.render([button.slot(button.Icon)], [
-            element.text("Open"),
-          ]),
+          |> icon.render([button.slot(button.Icon)]),
         icon.new()
           |> icon.name("stop")
-          |> icon.render([button.slot(button.SelectedIcon)], [
-            element.text("Open"),
-          ]),
+          |> icon.render([button.slot(button.SelectedIcon)]),
         element.text("Start"),
         html.span([button.slot(button.Selected)], [element.text("Stop")]),
       ]),
@@ -138,7 +134,7 @@ fn links(_: model.Model) -> Element(Msg) {
       element.text("Google"),
       icon.new()
         |> icon.name("open_in_new_window")
-        |> icon.render([button.slot(button.TrailingIcon)], []),
+        |> icon.render([button.slot(button.TrailingIcon)]),
     ]),
   ])
 }

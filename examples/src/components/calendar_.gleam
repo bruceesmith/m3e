@@ -1,5 +1,5 @@
 import gleam/dynamic/decode
-import gleam/option.{None, Some}
+import gleam/option.{Some}
 import gleam/result
 
 import lustre/attribute

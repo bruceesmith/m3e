@@ -1605,7 +1605,7 @@ function identity2(x) {
   return x;
 }
 // build/dev/javascript/houdini/houdini.ffi.mjs
-function do_escape(string2) {
+function escape(string2) {
   return string2.replaceAll(/[><&"']/g, (replaced) => {
     switch (replaced) {
       case ">":
@@ -1622,16 +1622,6 @@ function do_escape(string2) {
         return replaced;
     }
   });
-}
-
-// build/dev/javascript/houdini/houdini/internal/escape_js.mjs
-function escape(text) {
-  return do_escape(text);
-}
-
-// build/dev/javascript/houdini/houdini.mjs
-function escape2(string2) {
-  return escape(string2);
 }
 
 // build/dev/javascript/lustre/lustre/internals/constants.mjs
@@ -4458,7 +4448,7 @@ class Reconciler {
 }
 var markerComment = (marker, key) => {
   if (key) {
-    return ` ${marker} key="${escape2(key)}" `;
+    return ` ${marker} key="${escape(key)}" `;
   } else {
     return ` ${marker} `;
   }
@@ -5534,7 +5524,7 @@ var default_for2 = /* @__PURE__ */ new None;
 function new$7(for$3) {
   return new DrawerToggle(for$3);
 }
-function render3(model, attributes, children) {
+function render3(model, attributes) {
   return element2("m3e-drawer-toggle", (() => {
     let _pipe = flatten(toList([
       toList([
@@ -5547,7 +5537,7 @@ function render3(model, attributes, children) {
     return filter(_pipe, (a) => {
       return !isEqual(a, none());
     });
-  })(), children);
+  })(), toList([]));
 }
 
 // build/dev/javascript/m3e/m3e/icon_grade.mjs
@@ -5664,7 +5654,7 @@ function name(record, name2) {
 function variant(record, variant2) {
   return new Icon2(record.filled, record.grade, record.optical_size, record.name, variant2, record.weight);
 }
-function render4(model, attributes, children) {
+function render4(model, attributes) {
   return element2("m3e-icon", (() => {
     let _pipe = flatten(toList([
       toList([
@@ -5680,7 +5670,7 @@ function render4(model, attributes, children) {
     return filter(_pipe, (a) => {
       return !isEqual(a, none());
     });
-  })(), children);
+  })(), toList([]));
 }
 
 // build/dev/javascript/m3e/m3e/form_submitter_type.mjs
@@ -6460,7 +6450,7 @@ function content() {
         (() => {
           let _pipe$1 = new$8();
           let _pipe$2 = name(_pipe$1, "arrow_back");
-          return render4(_pipe$2, toList([]), toList([]));
+          return render4(_pipe$2, toList([]));
         })()
       ]));
     })(),
@@ -6472,7 +6462,7 @@ function content() {
         (() => {
           let _pipe$1 = new$8();
           let _pipe$2 = name(_pipe$1, "bookmark");
-          return render4(_pipe$2, toList([]), toList([]));
+          return render4(_pipe$2, toList([]));
         })()
       ]));
     })()
@@ -6808,7 +6798,7 @@ function icons(_) {
         (() => {
           let _pipe$2 = new$8();
           let _pipe$3 = name(_pipe$2, "send");
-          return render4(_pipe$3, toList([slot7(new Icon4)]), toList([]));
+          return render4(_pipe$3, toList([slot7(new Icon4)]));
         })(),
         text2("Send")
       ]));
@@ -6820,7 +6810,7 @@ function icons(_) {
         (() => {
           let _pipe$2 = new$8();
           let _pipe$3 = name(_pipe$2, "open_in_new_window");
-          return render4(_pipe$3, toList([slot7(new TrailingIcon)]), toList([]));
+          return render4(_pipe$3, toList([slot7(new TrailingIcon)]));
         })(),
         text2("Open")
       ]));
@@ -6861,12 +6851,12 @@ function toggling(_) {
         (() => {
           let _pipe$3 = new$8();
           let _pipe$4 = name(_pipe$3, "play_arrow");
-          return render4(_pipe$4, toList([slot7(new Icon4)]), toList([text2("Open")]));
+          return render4(_pipe$4, toList([slot7(new Icon4)]));
         })(),
         (() => {
           let _pipe$3 = new$8();
           let _pipe$4 = name(_pipe$3, "stop");
-          return render4(_pipe$4, toList([slot7(new SelectedIcon2)]), toList([text2("Open")]));
+          return render4(_pipe$4, toList([slot7(new SelectedIcon2)]));
         })(),
         text2("Start"),
         span(toList([slot7(new Selected2)]), toList([text2("Stop")]))
@@ -6902,7 +6892,7 @@ function links(_) {
         (() => {
           let _pipe$4 = new$8();
           let _pipe$5 = name(_pipe$4, "open_in_new_window");
-          return render4(_pipe$5, toList([slot7(new TrailingIcon)]), toList([]));
+          return render4(_pipe$5, toList([slot7(new TrailingIcon)]));
         })()
       ]));
     })()
@@ -7831,7 +7821,7 @@ function new$24() {
 function variant4(record, variant5) {
   return new Datepicker2(variant5, record.clearable, record.date, record.max_date, record.min_date, record.range_end, record.range_start, record.start_at, record.start_view, record.previous_month_label, record.next_month_label, record.previous_year_label, record.next_year_label, record.previous_multi_year_label, record.next_multi_year_label, record.clear_label, record.confirm_label, record.dismiss_label, record.label);
 }
-function render13(model, attributes, children) {
+function render13(model, attributes) {
   return element2("m3e-datepicker", (() => {
     let _pipe = flatten(toList([
       toList([
@@ -7872,7 +7862,7 @@ function render13(model, attributes, children) {
     return filter(_pipe, (a) => {
       return !isEqual(a, none());
     });
-  })(), children);
+  })(), toList([]));
 }
 
 // build/dev/javascript/m3e/m3e/datepicker_toggle.mjs
@@ -7886,7 +7876,7 @@ var default_for4 = /* @__PURE__ */ new None;
 function new$25(for$4) {
   return new DatepickerToggle(for$4);
 }
-function render14(model, attributes, children) {
+function render14(model, attributes) {
   return element2("m3e-datepicker-toggle", (() => {
     let _pipe = flatten(toList([
       toList([
@@ -7899,7 +7889,7 @@ function render14(model, attributes, children) {
     return filter(_pipe, (a) => {
       return !isEqual(a, none());
     });
-  })(), children);
+  })(), toList([]));
 }
 
 // build/dev/javascript/m3e/m3e/float_label_type.mjs
@@ -8039,11 +8029,11 @@ function basic_usage(_) {
             (() => {
               let _pipe$3 = new$8();
               let _pipe$4 = name(_pipe$3, "calendar_today");
-              return render4(_pipe$4, toList([]), toList([]));
+              return render4(_pipe$4, toList([]));
             })(),
             (() => {
               let _pipe$3 = new$25(new Some("datepicker1"));
-              return render14(_pipe$3, toList([]), toList([]));
+              return render14(_pipe$3, toList([]));
             })()
           ]));
         })(),
@@ -8053,7 +8043,7 @@ function basic_usage(_) {
     (() => {
       let _pipe = new$24();
       let _pipe$1 = variant4(_pipe, new Auto4);
-      return render13(_pipe$1, toList([id("datepicker1")]), toList([]));
+      return render13(_pipe$1, toList([id("datepicker1")]));
     })()
   ]));
 }
@@ -8081,7 +8071,7 @@ function basic(_) {
     (() => {
       let _pipe = new$8();
       let _pipe$1 = name(_pipe, "home");
-      return render4(_pipe$1, toList([]), toList([]));
+      return render4(_pipe$1, toList([]));
     })()
   ]));
 }
@@ -8097,7 +8087,7 @@ function appearance(_) {
       let _pipe = new$8();
       let _pipe$1 = name(_pipe, "home");
       let _pipe$2 = variant(_pipe$1, new Outlined);
-      return render4(_pipe$2, toList([]), toList([]));
+      return render4(_pipe$2, toList([]));
     })(),
     label(toList([]), toList([text2("Outlined")])),
     (() => {
@@ -8105,7 +8095,7 @@ function appearance(_) {
       let _pipe$1 = name(_pipe, "lock");
       let _pipe$2 = variant(_pipe$1, new Rounded);
       let _pipe$3 = filled(_pipe$2, new IsFilled);
-      return render4(_pipe$3, toList([]), toList([]));
+      return render4(_pipe$3, toList([]));
     })(),
     label(toList([]), toList([text2("Rounded")])),
     (() => {
@@ -8113,7 +8103,7 @@ function appearance(_) {
       let _pipe$1 = name(_pipe, "lock");
       let _pipe$2 = variant(_pipe$1, new Sharp);
       let _pipe$3 = filled(_pipe$2, new IsFilled);
-      return render4(_pipe$3, toList([]), toList([]));
+      return render4(_pipe$3, toList([]));
     })(),
     label(toList([]), toList([text2("Sharp")]))
   ]));
@@ -8190,7 +8180,7 @@ function disabled2(record, disabled3) {
 function icons2(record, icons3) {
   return new Switch2(record.checked, record.disabled, icons3, record.name, record.value);
 }
-function render16(model, attributes, children) {
+function render16(model, attributes) {
   return element2("m3e-switch", (() => {
     let _pipe = flatten(toList([
       toList([
@@ -8205,10 +8195,10 @@ function render16(model, attributes, children) {
     return filter(_pipe, (a) => {
       return !isEqual(a, none());
     });
-  })(), children);
+  })(), toList([]));
 }
-function render_config3(c, attributes, children) {
-  return render16(from_config13(c), attributes, children);
+function render_config3(c, attributes) {
+  return render16(from_config13(c), attributes);
 }
 
 // build/dev/javascript/showcase/components/switch_.mjs
@@ -8217,17 +8207,17 @@ function basic2(_) {
     (() => {
       let _pipe = new$27();
       let _pipe$1 = checked(_pipe, new IsChecked);
-      return render16(_pipe$1, toList([]), toList([]));
+      return render16(_pipe$1, toList([]));
     })()
   ]));
 }
 function labels(_) {
   return div(toList([switch_style()]), toList([
     label(toList([switch_style()]), toList([
-      render_config3(default_config14(), toList([]), toList([])),
+      render_config3(default_config14(), toList([])),
       text2("Switch 1")
     ])),
-    render_config3(default_config14(), toList([id("switch2")]), toList([])),
+    render_config3(default_config14(), toList([id("switch2")])),
     label(toList([for$("switch2")]), toList([text2("Switch 2")]))
   ]));
 }
@@ -8236,20 +8226,20 @@ function icons3(_) {
     (() => {
       let _pipe = new$27();
       let _pipe$1 = icons2(_pipe, new None2);
-      return render16(_pipe$1, toList([]), toList([]));
+      return render16(_pipe$1, toList([]));
     })(),
     label(toList([]), toList([text2("None")])),
     (() => {
       let _pipe = new$27();
       let _pipe$1 = checked(_pipe, new IsChecked);
       let _pipe$2 = icons2(_pipe$1, new Selected3);
-      return render16(_pipe$2, toList([]), toList([]));
+      return render16(_pipe$2, toList([]));
     })(),
     label(toList([]), toList([text2("Selected")])),
     (() => {
       let _pipe = new$27();
       let _pipe$1 = icons2(_pipe, new Both);
-      return render16(_pipe$1, toList([]), toList([]));
+      return render16(_pipe$1, toList([]));
     })(),
     label(toList([]), toList([text2("Both")]))
   ]));
@@ -8260,7 +8250,7 @@ function disabled3(_) {
       (() => {
         let _pipe = new$27();
         let _pipe$1 = disabled2(_pipe, new IsDisabled6);
-        return render16(_pipe$1, toList([]), toList([]));
+        return render16(_pipe$1, toList([]));
       })(),
       text2("Disabled Switch 1")
     ])),
@@ -8268,7 +8258,7 @@ function disabled3(_) {
       let _pipe = new$27();
       let _pipe$1 = checked(_pipe, new IsChecked);
       let _pipe$2 = disabled2(_pipe$1, new IsDisabled6);
-      return render16(_pipe$2, toList([id("disabled-on")]), toList([]));
+      return render16(_pipe$2, toList([id("disabled-on")]));
     })(),
     label(toList([for$("disabled-on")]), toList([text2("Disabled Switch 2")]))
   ]));
@@ -8307,17 +8297,17 @@ function appbar() {
           let _pipe$5 = new$8();
           let _pipe$6 = name(_pipe$5, "menu");
           let _pipe$7 = filled(_pipe$6, new IsFilled);
-          return render4(_pipe$7, toList([]), toList([]));
+          return render4(_pipe$7, toList([]));
         })(),
         (() => {
           let _pipe$5 = new$8();
           let _pipe$6 = name(_pipe$5, "menu_open");
           let _pipe$7 = filled(_pipe$6, new IsFilled);
-          return render4(_pipe$7, toList([slot4(new Selected)]), toList([]));
+          return render4(_pipe$7, toList([slot4(new Selected)]));
         })(),
         (() => {
           let _pipe$5 = new$7(new Some("nav-drawer"));
-          return render3(_pipe$5, toList([]), toList([]));
+          return render3(_pipe$5, toList([]));
         })()
       ]));
     })(),
