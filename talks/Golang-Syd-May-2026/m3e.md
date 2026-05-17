@@ -418,6 +418,18 @@ My Gleam bindings therefore perform no range checks on numeric attributes
 
 ---
 
+#  Other projects
+
+## lustre/ui
+
+[Lustre UI](https://hexdocs.pm/lustre_ui/) is a pure Gleam UI library for Lustre. Last updated 2 years ago.
+
+## lustre/stylish
+
+[Lustre Stylish](https://hexdocs.pm/lustre_stylish/) is another pure Gleam library - _"A declarative layout library for Lustre, inspired by elm-ui."_
+
+---
+
 # References
 
 1. **Gleam**: https://gleam.run
