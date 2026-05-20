@@ -9,6 +9,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
+import m3e/collapsible_orientation.{type CollapsibleOrientation}
 
 // --- Types ---
 
@@ -17,9 +18,15 @@ import m3e/attr
 /// ## Fields:
 ///
 /// - open: Whether content is visible.
+/// - orientation: Orientation of collapsible content.
+/// - no_animate: Whether to disable animation.
 ///
 pub opaque type Collapsible {
-  Collapsible(open: Open)
+  Collapsible(
+    open: Open,
+    orientation: CollapsibleOrientation,
+    no_animate: NoAnimate,
+  )
 }
 
 /// Open is whether content is visible.
@@ -29,24 +36,78 @@ pub type Open {
   IsNotOpen
 }
 
+/// NoAnimate is whether to disable animation.
+///
+pub type NoAnimate {
+  IsNoAnimate
+  IsNotNoAnimate
+}
+
 // --- Defaults ---
 
 pub const default_open: Open = IsNotOpen
 
+pub const default_orientation: CollapsibleOrientation = collapsible_orientation.Vertical
+
+pub const default_no_animate: NoAnimate = IsNotNoAnimate
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(open: Open, orientation: CollapsibleOrientation, no_animate: NoAnimate)
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(
+    open: IsNotOpen,
+    orientation: collapsible_orientation.Vertical,
+    no_animate: IsNotNoAnimate,
+  )
+}
+
 // --- Constructors ---
+
+/// from_config creates a new Collapsible from the given configuration.
+///
+pub fn from_config(config: Config) -> Collapsible {
+  Collapsible(
+    open: config.open,
+    orientation: config.orientation,
+    no_animate: config.no_animate,
+  )
+}
 
 /// new creates a new Collapsible with the default configuration.
 ///
-pub fn new(open: Open) -> Collapsible {
-  Collapsible(open: open)
+pub fn new() -> Collapsible {
+  from_config(default_config())
 }
 
 // --- Setters ---
 
 /// open sets the value of open for this Collapsible.
 ///
-pub fn open(_: Collapsible, open: Open) -> Collapsible {
-  Collapsible(open: open)
+pub fn open(record: Collapsible, open: Open) -> Collapsible {
+  Collapsible(..record, open: open)
+}
+
+/// orientation sets the value of orientation for this Collapsible.
+///
+pub fn orientation(
+  record: Collapsible,
+  orientation: CollapsibleOrientation,
+) -> Collapsible {
+  Collapsible(..record, orientation: orientation)
+}
+
+/// no_animate sets the value of no_animate for this Collapsible.
+///
+pub fn no_animate(record: Collapsible, no_animate: NoAnimate) -> Collapsible {
+  Collapsible(..record, no_animate: no_animate)
 }
 
 // --- Renderers ---
@@ -63,10 +124,26 @@ pub fn render(
     list.flatten([
       [
         attr.boolean("open", model.open == IsOpen),
+        attr.with_default(
+          "orientation",
+          collapsible_orientation.to_string(model.orientation),
+          collapsible_orientation.to_string(default_orientation),
+        ),
+        attr.boolean("no-animate", model.no_animate == IsNoAnimate),
       ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
     children,
   )
+}
+
+/// render_config creates a Lustre Element from a Collapsible Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes, children)
 }

@@ -10,11 +10,141 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html
-import m3e/collapsible
+import m3e/collapsible.{Config}
+import m3e/collapsible_orientation
+
+pub fn collapsible_default_config_test() {
+  let cases = [
+    Config(
+      open: collapsible.IsNotOpen,
+      orientation: collapsible_orientation.Vertical,
+      no_animate: collapsible.IsNotNoAnimate,
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    collapsible.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn collapsible_from_config_test() {
+  let cases = [
+    #(
+      collapsible.Config(
+        open: collapsible.IsOpen,
+        orientation: collapsible_orientation.Horizontal,
+        no_animate: collapsible.IsNoAnimate,
+      ),
+      collapsible.new()
+        |> collapsible.open(collapsible.IsOpen)
+        |> collapsible.orientation(collapsible_orientation.Horizontal)
+        |> collapsible.no_animate(collapsible.IsNoAnimate),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    collapsible.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn collapsible_new_test() {
+  let cases = [
+    collapsible.from_config(collapsible.Config(
+      open: collapsible.IsNotOpen,
+      orientation: collapsible_orientation.Vertical,
+      no_animate: collapsible.IsNotNoAnimate,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    collapsible.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn collapsible_open_test() {
+  let mod = collapsible.new()
+  let cases = [
+    #(
+      collapsible.IsOpen,
+      collapsible.from_config(
+        collapsible.Config(
+          ..collapsible.default_config(),
+          open: collapsible.IsOpen,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    collapsible.open(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn collapsible_orientation_test() {
+  let mod = collapsible.new()
+  let cases = [
+    #(
+      collapsible_orientation.Horizontal,
+      collapsible.from_config(
+        collapsible.Config(
+          ..collapsible.default_config(),
+          orientation: collapsible_orientation.Horizontal,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    collapsible.orientation(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn collapsible_no_animate_test() {
+  let mod = collapsible.new()
+  let cases = [
+    #(
+      collapsible.IsNoAnimate,
+      collapsible.from_config(
+        collapsible.Config(
+          ..collapsible.default_config(),
+          no_animate: collapsible.IsNoAnimate,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    collapsible.no_animate(mod, field)
+    |> should.equal(expected)
+  })
+}
 
 pub fn collapsible_render_test() {
-  let mod = collapsible.new(collapsible.IsNotOpen)
-  let mod_open = collapsible.new(collapsible.IsOpen)
+  let mod = collapsible.new()
+
+  let mod_open = collapsible.new() |> collapsible.open(collapsible.IsOpen)
+  let mod_orientation =
+    collapsible.new()
+    |> collapsible.orientation(collapsible_orientation.Horizontal)
+  let mod_no_animate =
+    collapsible.new() |> collapsible.no_animate(collapsible.IsNoAnimate)
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-collapsible", [], [])),
@@ -30,6 +160,29 @@ pub fn collapsible_render_test() {
     #(
       #(mod_open, [], []),
       element.element("m3e-collapsible", [attribute.attribute("open", "")], []),
+    ),
+    #(
+      #(mod_orientation, [], []),
+      element.element(
+        "m3e-collapsible",
+        [
+          attribute.attribute(
+            "orientation",
+            collapsible_orientation.to_string(
+              collapsible_orientation.Horizontal,
+            ),
+          ),
+        ],
+        [],
+      ),
+    ),
+    #(
+      #(mod_no_animate, [], []),
+      element.element(
+        "m3e-collapsible",
+        [attribute.attribute("no-animate", "")],
+        [],
+      ),
     ),
   ]
 
