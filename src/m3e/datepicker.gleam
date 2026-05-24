@@ -25,6 +25,7 @@ import m3e/datepicker_variant.{type DatepickerVariant}
 /// - date: The selected date.
 /// - max_date: The maximum date that can be selected.
 /// - min_date: The minimum date that can be selected.
+/// - range: Whether a range of dates can be selected.
 /// - range_end: End of a date range.
 /// - range_start: Start of a date range.
 /// - start_at: A date specifying the period (month or year) to start the calendar in.
@@ -47,6 +48,7 @@ pub opaque type Datepicker {
     date: Option(Date),
     max_date: Option(Date),
     min_date: Option(Date),
+    range: Range,
     range_end: Option(Date),
     range_start: Option(Date),
     start_at: Option(Date),
@@ -71,6 +73,13 @@ pub type Clearable {
   IsNotClearable
 }
 
+/// Range is whether a range of dates can be selected.
+///
+pub type Range {
+  IsRange
+  IsNotRange
+}
+
 // --- Defaults ---
 
 pub const default_variant: DatepickerVariant = datepicker_variant.Docked
@@ -82,6 +91,8 @@ pub const default_date: Option(Date) = None
 pub const default_max_date: Option(Date) = None
 
 pub const default_min_date: Option(Date) = None
+
+pub const default_range: Range = IsNotRange
 
 pub const default_range_end: Option(Date) = None
 
@@ -122,6 +133,7 @@ pub type Config {
     date: Option(Date),
     max_date: Option(Date),
     min_date: Option(Date),
+    range: Range,
     range_end: Option(Date),
     range_start: Option(Date),
     start_at: Option(Date),
@@ -148,6 +160,7 @@ pub fn default_config() -> Config {
     date: None,
     max_date: None,
     min_date: None,
+    range: IsNotRange,
     range_end: None,
     range_start: None,
     start_at: None,
@@ -176,6 +189,7 @@ pub fn from_config(config: Config) -> Datepicker {
     date: config.date,
     max_date: config.max_date,
     min_date: config.min_date,
+    range: config.range,
     range_end: config.range_end,
     range_start: config.range_start,
     start_at: config.start_at,
@@ -229,6 +243,12 @@ pub fn max_date(record: Datepicker, max_date: Option(Date)) -> Datepicker {
 ///
 pub fn min_date(record: Datepicker, min_date: Option(Date)) -> Datepicker {
   Datepicker(..record, min_date: min_date)
+}
+
+/// range sets the value of range for this Datepicker.
+///
+pub fn range(record: Datepicker, range: Range) -> Datepicker {
+  Datepicker(..record, range: range)
 }
 
 /// range_end sets the value of range_end for this Datepicker.
@@ -364,6 +384,7 @@ pub fn render(
           date.to_string,
           default_min_date,
         ),
+        attr.boolean("range", model.range == IsRange),
         attr.option(
           model.range_end,
           fn(_) { "range-end" },

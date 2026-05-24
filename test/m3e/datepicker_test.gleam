@@ -23,6 +23,7 @@ pub fn datepicker_default_config_test() {
       date: None,
       max_date: None,
       min_date: None,
+      range: datepicker.IsNotRange,
       range_end: None,
       range_start: None,
       start_at: None,
@@ -57,6 +58,7 @@ pub fn datepicker_from_config_test() {
         date: Some(date.today_utc()),
         max_date: Some(date.today_utc()),
         min_date: Some(date.today_utc()),
+        range: datepicker.IsRange,
         range_end: Some(date.today_utc()),
         range_start: Some(date.today_utc()),
         start_at: Some(date.today_utc()),
@@ -78,6 +80,7 @@ pub fn datepicker_from_config_test() {
         |> datepicker.date(Some(date.today_utc()))
         |> datepicker.max_date(Some(date.today_utc()))
         |> datepicker.min_date(Some(date.today_utc()))
+        |> datepicker.range(datepicker.IsRange)
         |> datepicker.range_end(Some(date.today_utc()))
         |> datepicker.range_start(Some(date.today_utc()))
         |> datepicker.start_at(Some(date.today_utc()))
@@ -111,6 +114,7 @@ pub fn datepicker_new_test() {
       date: None,
       max_date: None,
       min_date: None,
+      range: datepicker.IsNotRange,
       range_end: None,
       range_start: None,
       start_at: None,
@@ -242,6 +246,28 @@ pub fn datepicker_min_date_test() {
     let #(field, expected) = c
 
     datepicker.min_date(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn datepicker_range_test() {
+  let mod = datepicker.new()
+  let cases = [
+    #(
+      datepicker.IsRange,
+      datepicker.from_config(
+        datepicker.Config(
+          ..datepicker.default_config(),
+          range: datepicker.IsRange,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    datepicker.range(mod, field)
     |> should.equal(expected)
   })
 }
@@ -554,6 +580,7 @@ pub fn datepicker_render_test() {
     datepicker.new() |> datepicker.max_date(Some(date.today_utc()))
   let mod_min_date =
     datepicker.new() |> datepicker.min_date(Some(date.today_utc()))
+  let mod_range = datepicker.new() |> datepicker.range(datepicker.IsRange)
   let mod_range_end =
     datepicker.new() |> datepicker.range_end(Some(date.today_utc()))
   let mod_range_start =
@@ -629,6 +656,10 @@ pub fn datepicker_render_test() {
         [attribute.attribute("min-date", date.to_string(date.today_utc()))],
         [],
       ),
+    ),
+    #(
+      #(mod_range, []),
+      element.element("m3e-datepicker", [attribute.attribute("range", "")], []),
     ),
     #(
       #(mod_range_end, []),

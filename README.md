@@ -3,8 +3,13 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.1.0 of this software is aligned with v2.5.5 of [M3E](https://github.com/matraic/m3e).
-- updated Collapsible with the new attributes `orientation` and `no_animate`
+Version 2.2.0 of this software is aligned with v2.5.6 of [M3E](https://github.com/matraic/m3e).
+
+### 2.2.0
+- DatePicker: add `range` - Whether a range of dates can be selected
+
+### 2.1.0
+- Collapsible: updated with the new attributes `orientation` and `no_animate`
 
 ## Overview
 
