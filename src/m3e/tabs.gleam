@@ -27,20 +27,13 @@ import m3e/tab_variant.{type TabVariant}
 ///
 pub opaque type Tabs {
   Tabs(
-    disable_pagination: DisablePagination,
+    disable_pagination: String,
     header_position: TabHeaderPosition,
     next_page_label: String,
     previous_page_label: String,
     stretch: Stretch,
     variant: TabVariant,
   )
-}
-
-/// DisablePagination is whether scroll buttons are disabled.
-///
-pub type DisablePagination {
-  IsDisablePagination
-  IsNotDisablePagination
 }
 
 /// Stretch is whether tabs are stretched to fill the header.
@@ -52,7 +45,7 @@ pub type Stretch {
 
 // --- Defaults ---
 
-pub const default_disable_pagination: DisablePagination = IsNotDisablePagination
+pub const default_disable_pagination: String = ""
 
 pub const default_header_position: TabHeaderPosition = tab_header_position.Before
 
@@ -81,7 +74,7 @@ pub type Slot {
 ///
 pub type Config {
   Config(
-    disable_pagination: DisablePagination,
+    disable_pagination: String,
     header_position: TabHeaderPosition,
     next_page_label: String,
     previous_page_label: String,
@@ -94,7 +87,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    disable_pagination: IsNotDisablePagination,
+    disable_pagination: "",
     header_position: tab_header_position.Before,
     next_page_label: "Next page",
     previous_page_label: "Previous page",
@@ -128,10 +121,7 @@ pub fn new() -> Tabs {
 
 /// disable_pagination sets the value of disable_pagination for this Tabs.
 ///
-pub fn disable_pagination(
-  record: Tabs,
-  disable_pagination: DisablePagination,
-) -> Tabs {
+pub fn disable_pagination(record: Tabs, disable_pagination: String) -> Tabs {
   Tabs(..record, disable_pagination: disable_pagination)
 }
 
@@ -178,9 +168,10 @@ pub fn render(
     "m3e-tabs",
     list.flatten([
       [
-        attr.boolean(
+        attr.with_default(
           "disable-pagination",
-          model.disable_pagination == IsDisablePagination,
+          model.disable_pagination,
+          default_disable_pagination,
         ),
         attr.with_default(
           "header-position",

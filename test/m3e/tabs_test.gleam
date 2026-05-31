@@ -17,7 +17,7 @@ import m3e/tabs.{Config}
 pub fn tabs_default_config_test() {
   let cases = [
     Config(
-      disable_pagination: tabs.IsNotDisablePagination,
+      disable_pagination: "",
       header_position: tab_header_position.Before,
       next_page_label: "Next page",
       previous_page_label: "Previous page",
@@ -38,7 +38,7 @@ pub fn tabs_from_config_test() {
   let cases = [
     #(
       tabs.Config(
-        disable_pagination: tabs.IsDisablePagination,
+        disable_pagination: "test",
         header_position: tab_header_position.After,
         next_page_label: "test",
         previous_page_label: "test",
@@ -46,7 +46,7 @@ pub fn tabs_from_config_test() {
         variant: tab_variant.Primary,
       ),
       tabs.new()
-        |> tabs.disable_pagination(tabs.IsDisablePagination)
+        |> tabs.disable_pagination("test")
         |> tabs.header_position(tab_header_position.After)
         |> tabs.next_page_label("test")
         |> tabs.previous_page_label("test")
@@ -66,7 +66,7 @@ pub fn tabs_from_config_test() {
 pub fn tabs_new_test() {
   let cases = [
     tabs.from_config(tabs.Config(
-      disable_pagination: tabs.IsNotDisablePagination,
+      disable_pagination: "",
       header_position: tab_header_position.Before,
       next_page_label: "Next page",
       previous_page_label: "Previous page",
@@ -87,12 +87,9 @@ pub fn tabs_disable_pagination_test() {
   let mod = tabs.new()
   let cases = [
     #(
-      tabs.IsDisablePagination,
+      "test",
       tabs.from_config(
-        tabs.Config(
-          ..tabs.default_config(),
-          disable_pagination: tabs.IsDisablePagination,
-        ),
+        tabs.Config(..tabs.default_config(), disable_pagination: "test"),
       ),
     ),
   ]
@@ -206,8 +203,7 @@ pub fn tabs_variant_test() {
 pub fn tabs_render_test() {
   let mod = tabs.new()
 
-  let mod_disable_pagination =
-    tabs.new() |> tabs.disable_pagination(tabs.IsDisablePagination)
+  let mod_disable_pagination = tabs.new() |> tabs.disable_pagination("test")
   let mod_header_position =
     tabs.new() |> tabs.header_position(tab_header_position.After)
   let mod_next_page_label = tabs.new() |> tabs.next_page_label("test")
@@ -227,7 +223,7 @@ pub fn tabs_render_test() {
       #(mod_disable_pagination, [], []),
       element.element(
         "m3e-tabs",
-        [attribute.attribute("disable-pagination", "")],
+        [attribute.attribute("disable-pagination", "test")],
         [],
       ),
     ),
