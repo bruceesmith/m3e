@@ -127,7 +127,10 @@ pub fn disable_pagination(record: Tabs, disable_pagination: String) -> Tabs {
 
 /// header_position sets the value of header_position for this Tabs.
 ///
-pub fn header_position(record: Tabs, header_position: TabHeaderPosition) -> Tabs {
+pub fn header_position(
+  record: Tabs,
+  header_position: TabHeaderPosition,
+) -> Tabs {
   Tabs(..record, header_position: header_position)
 }
 

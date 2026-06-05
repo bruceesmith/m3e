@@ -209,7 +209,10 @@ pub fn target(
 
 /// type_ sets the value of type_ for this SuggestionChip.
 ///
-pub fn type_(record: SuggestionChip, type_: FormSubmitterType) -> SuggestionChip {
+pub fn type_(
+  record: SuggestionChip,
+  type_: FormSubmitterType,
+) -> SuggestionChip {
   SuggestionChip(..record, type_: type_)
 }
 

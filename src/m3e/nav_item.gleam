@@ -176,7 +176,10 @@ pub fn href(record: NavItem, href: String) -> NavItem {
 
 /// orientation sets the value of orientation for this NavItem.
 ///
-pub fn orientation(record: NavItem, orientation: NavItemOrientation) -> NavItem {
+pub fn orientation(
+  record: NavItem,
+  orientation: NavItemOrientation,
+) -> NavItem {
   NavItem(..record, orientation: orientation)
 }
 

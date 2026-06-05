@@ -130,7 +130,10 @@ pub fn linear(record: Stepper, linear: Linear) -> Stepper {
 
 /// orientation sets the value of orientation for this Stepper.
 ///
-pub fn orientation(record: Stepper, orientation: StepperOrientation) -> Stepper {
+pub fn orientation(
+  record: Stepper,
+  orientation: StepperOrientation,
+) -> Stepper {
   Stepper(..record, orientation: orientation)
 }
 

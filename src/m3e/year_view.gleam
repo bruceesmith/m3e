@@ -128,7 +128,10 @@ pub fn max_date(record: YearView, max_date: Option(Date)) -> YearView {
 
 /// render creates a Lustre Element for a YearView
 ///
-pub fn render(model: YearView, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: YearView,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-year-view",
     list.flatten([

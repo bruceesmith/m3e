@@ -114,13 +114,19 @@ pub fn active_date(record: MultiYearView, active_date: Date) -> MultiYearView {
 
 /// min_date sets the value of min_date for this MultiYearView.
 ///
-pub fn min_date(record: MultiYearView, min_date: Option(Date)) -> MultiYearView {
+pub fn min_date(
+  record: MultiYearView,
+  min_date: Option(Date),
+) -> MultiYearView {
   MultiYearView(..record, min_date: min_date)
 }
 
 /// max_date sets the value of max_date for this MultiYearView.
 ///
-pub fn max_date(record: MultiYearView, max_date: Option(Date)) -> MultiYearView {
+pub fn max_date(
+  record: MultiYearView,
+  max_date: Option(Date),
+) -> MultiYearView {
   MultiYearView(..record, max_date: max_date)
 }
 

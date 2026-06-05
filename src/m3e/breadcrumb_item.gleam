@@ -126,7 +126,10 @@ pub fn new() -> BreadcrumbItem {
 
 /// item_label sets the value of item_label for this BreadcrumbItem.
 ///
-pub fn item_label(record: BreadcrumbItem, item_label: String) -> BreadcrumbItem {
+pub fn item_label(
+  record: BreadcrumbItem,
+  item_label: String,
+) -> BreadcrumbItem {
   BreadcrumbItem(..record, item_label: item_label)
 }
 

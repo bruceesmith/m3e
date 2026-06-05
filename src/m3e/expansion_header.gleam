@@ -137,7 +137,10 @@ pub fn toggle_position(
 
 /// disabled sets the value of disabled for this ExpansionHeader.
 ///
-pub fn disabled(record: ExpansionHeader, disabled: Disabled) -> ExpansionHeader {
+pub fn disabled(
+  record: ExpansionHeader,
+  disabled: Disabled,
+) -> ExpansionHeader {
   ExpansionHeader(..record, disabled: disabled)
 }
 

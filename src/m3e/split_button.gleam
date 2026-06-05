@@ -72,7 +72,10 @@ pub fn new() -> SplitButton {
 
 /// variant sets the value of variant for this SplitButton.
 ///
-pub fn variant(record: SplitButton, variant: SplitButtonVariant) -> SplitButton {
+pub fn variant(
+  record: SplitButton,
+  variant: SplitButtonVariant,
+) -> SplitButton {
   SplitButton(..record, variant: variant)
 }
 

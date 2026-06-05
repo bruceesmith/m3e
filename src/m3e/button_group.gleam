@@ -89,7 +89,10 @@ pub fn size(record: ButtonGroup, size: ButtonGroupSize) -> ButtonGroup {
 
 /// variant sets the value of variant for this ButtonGroup.
 ///
-pub fn variant(record: ButtonGroup, variant: ButtonGroupVariant) -> ButtonGroup {
+pub fn variant(
+  record: ButtonGroup,
+  variant: ButtonGroupVariant,
+) -> ButtonGroup {
   ButtonGroup(..record, variant: variant)
 }
 

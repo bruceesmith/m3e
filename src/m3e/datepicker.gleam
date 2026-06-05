@@ -259,7 +259,10 @@ pub fn range_end(record: Datepicker, range_end: Option(Date)) -> Datepicker {
 
 /// range_start sets the value of range_start for this Datepicker.
 ///
-pub fn range_start(record: Datepicker, range_start: Option(Date)) -> Datepicker {
+pub fn range_start(
+  record: Datepicker,
+  range_start: Option(Date),
+) -> Datepicker {
   Datepicker(..record, range_start: range_start)
 }
 

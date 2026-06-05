@@ -222,7 +222,10 @@ pub fn items_per_page_label(
 
 /// last_page_label sets the value of last_page_label for this Paginator.
 ///
-pub fn last_page_label(record: Paginator, last_page_label: String) -> Paginator {
+pub fn last_page_label(
+  record: Paginator,
+  last_page_label: String,
+) -> Paginator {
   Paginator(..record, last_page_label: last_page_label)
 }
 
@@ -234,7 +237,10 @@ pub fn length(record: Paginator, length: Float) -> Paginator {
 
 /// next_page_label sets the value of next_page_label for this Paginator.
 ///
-pub fn next_page_label(record: Paginator, next_page_label: String) -> Paginator {
+pub fn next_page_label(
+  record: Paginator,
+  next_page_label: String,
+) -> Paginator {
   Paginator(..record, next_page_label: next_page_label)
 }
 

@@ -141,7 +141,10 @@ pub fn disabled(record: Checkbox, disabled: Disabled) -> Checkbox {
 
 /// indeterminate sets the value of indeterminate for this Checkbox.
 ///
-pub fn indeterminate(record: Checkbox, indeterminate: Indeterminate) -> Checkbox {
+pub fn indeterminate(
+  record: Checkbox,
+  indeterminate: Indeterminate,
+) -> Checkbox {
   Checkbox(..record, indeterminate: indeterminate)
 }
 
@@ -167,7 +170,10 @@ pub fn value(record: Checkbox, value: String) -> Checkbox {
 
 /// render creates a Lustre Element for a Checkbox
 ///
-pub fn render(model: Checkbox, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: Checkbox,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-checkbox",
     list.flatten([

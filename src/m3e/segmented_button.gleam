@@ -108,7 +108,10 @@ pub fn new() -> SegmentedButton {
 
 /// disabled sets the value of disabled for this SegmentedButton.
 ///
-pub fn disabled(record: SegmentedButton, disabled: Disabled) -> SegmentedButton {
+pub fn disabled(
+  record: SegmentedButton,
+  disabled: Disabled,
+) -> SegmentedButton {
   SegmentedButton(..record, disabled: disabled)
 }
 

@@ -225,7 +225,10 @@ pub fn wrap_detents(record: SplitPane, wrap_detents: WrapDetents) -> SplitPane {
 
 /// value_formatter sets the value of value_formatter for this SplitPane.
 ///
-pub fn value_formatter(record: SplitPane, value_formatter: String) -> SplitPane {
+pub fn value_formatter(
+  record: SplitPane,
+  value_formatter: String,
+) -> SplitPane {
   SplitPane(..record, value_formatter: value_formatter)
 }
 

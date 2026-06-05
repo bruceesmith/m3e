@@ -114,7 +114,10 @@ pub fn new() -> FormField {
 
 /// float_label sets the value of float_label for this FormField.
 ///
-pub fn float_label(record: FormField, float_label: FloatLabelType) -> FormField {
+pub fn float_label(
+  record: FormField,
+  float_label: FloatLabelType,
+) -> FormField {
   FormField(..record, float_label: float_label)
 }
 

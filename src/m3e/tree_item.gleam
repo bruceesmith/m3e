@@ -136,7 +136,10 @@ pub fn disabled(record: TreeItem, disabled: Disabled) -> TreeItem {
 
 /// indeterminate sets the value of indeterminate for this TreeItem.
 ///
-pub fn indeterminate(record: TreeItem, indeterminate: Indeterminate) -> TreeItem {
+pub fn indeterminate(
+  record: TreeItem,
+  indeterminate: Indeterminate,
+) -> TreeItem {
   TreeItem(..record, indeterminate: indeterminate)
 }
 

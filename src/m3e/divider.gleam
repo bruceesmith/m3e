@@ -141,7 +141,10 @@ pub fn vertical(record: Divider, vertical: Vertical) -> Divider {
 
 /// render creates a Lustre Element for a Divider
 ///
-pub fn render(model: Divider, attributes: List(Attribute(msg))) -> Element(msg) {
+pub fn render(
+  model: Divider,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
   element.element(
     "m3e-divider",
     list.flatten([

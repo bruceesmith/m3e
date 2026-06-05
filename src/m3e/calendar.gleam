@@ -211,7 +211,10 @@ pub fn previous_month_label(
 
 /// next_month_label sets the value of next_month_label for this Calendar.
 ///
-pub fn next_month_label(record: Calendar, next_month_label: String) -> Calendar {
+pub fn next_month_label(
+  record: Calendar,
+  next_month_label: String,
+) -> Calendar {
   Calendar(..record, next_month_label: next_month_label)
 }
 
