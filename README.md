@@ -3,7 +3,10 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.0 of this software is aligned with v2.5.7 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.1 of this software is aligned with v2.5.9 of [M3E](https://github.com/matraic/m3e).
+
+### 2.3.1
+- no API changes
 
 ### 2.3.0
 - Tabs: disable_pagination changed from boolean to string
