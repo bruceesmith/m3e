@@ -3,7 +3,11 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.3 of this software is aligned with v2.5.9 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.4 of this software is aligned with v2.5.11 of [M3E](https://github.com/matraic/m3e).
+
+### 2.3.4
+- Theme now has a ThemeVariant 
+- added ThemeIcon
 
 ### 2.3.3
 - no API changes

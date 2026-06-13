@@ -14,6 +14,7 @@ import m3e/color_scheme
 import m3e/contrast_level
 import m3e/motion_scheme
 import m3e/theme.{Config}
+import m3e/theme_variant
 
 pub fn theme_default_config_test() {
   let cases = [
@@ -23,6 +24,7 @@ pub fn theme_default_config_test() {
       density: 0.0,
       scheme: color_scheme.Auto,
       strong_focus: theme.IsNotStrongFocus,
+      variant: theme_variant.Neutral,
       motion: motion_scheme.Standard,
     ),
   ]
@@ -44,6 +46,7 @@ pub fn theme_from_config_test() {
         density: 42.0,
         scheme: color_scheme.Light,
         strong_focus: theme.IsStrongFocus,
+        variant: theme_variant.Monochrome,
         motion: motion_scheme.Expressive,
       ),
       theme.new()
@@ -52,6 +55,7 @@ pub fn theme_from_config_test() {
         |> theme.density(42.0)
         |> theme.scheme(color_scheme.Light)
         |> theme.strong_focus(theme.IsStrongFocus)
+        |> theme.variant(theme_variant.Monochrome)
         |> theme.motion(motion_scheme.Expressive),
     ),
   ]
@@ -72,6 +76,7 @@ pub fn theme_new_test() {
       density: 0.0,
       scheme: color_scheme.Auto,
       strong_focus: theme.IsNotStrongFocus,
+      variant: theme_variant.Neutral,
       motion: motion_scheme.Standard,
     )),
   ]
@@ -178,6 +183,28 @@ pub fn theme_strong_focus_test() {
   })
 }
 
+pub fn theme_variant_test() {
+  let mod = theme.new()
+  let cases = [
+    #(
+      theme_variant.Monochrome,
+      theme.from_config(
+        theme.Config(
+          ..theme.default_config(),
+          variant: theme_variant.Monochrome,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    theme.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn theme_motion_test() {
   let mod = theme.new()
   let cases = [
@@ -205,6 +232,7 @@ pub fn theme_render_test() {
   let mod_density = theme.new() |> theme.density(42.0)
   let mod_scheme = theme.new() |> theme.scheme(color_scheme.Light)
   let mod_strong_focus = theme.new() |> theme.strong_focus(theme.IsStrongFocus)
+  let mod_variant = theme.new() |> theme.variant(theme_variant.Monochrome)
   let mod_motion = theme.new() |> theme.motion(motion_scheme.Expressive)
 
   let cases = [
@@ -257,6 +285,19 @@ pub fn theme_render_test() {
       element.element(
         "m3e-theme",
         [attribute.attribute("strong-focus", "")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_variant, [], []),
+      element.element(
+        "m3e-theme",
+        [
+          attribute.attribute(
+            "variant",
+            theme_variant.to_string(theme_variant.Monochrome),
+          ),
+        ],
         [],
       ),
     ),

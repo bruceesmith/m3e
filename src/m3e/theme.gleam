@@ -13,6 +13,7 @@ import m3e/attr
 import m3e/color_scheme.{type ColorScheme}
 import m3e/contrast_level.{type ContrastLevel}
 import m3e/motion_scheme.{type MotionScheme}
+import m3e/theme_variant.{type ThemeVariant}
 
 // --- Types ---
 
@@ -25,6 +26,7 @@ import m3e/motion_scheme.{type MotionScheme}
 /// - density: The density scale (0, -1, -2).
 /// - scheme: The color scheme of the theme.
 /// - strong_focus: Whether to enable strong focus indicators.
+/// - variant: The color variant of the theme.
 /// - motion: The motion scheme.
 ///
 pub opaque type Theme {
@@ -34,6 +36,7 @@ pub opaque type Theme {
     density: Float,
     scheme: ColorScheme,
     strong_focus: StrongFocus,
+    variant: ThemeVariant,
     motion: MotionScheme,
   )
 }
@@ -57,6 +60,8 @@ pub const default_scheme: ColorScheme = color_scheme.Auto
 
 pub const default_strong_focus: StrongFocus = IsNotStrongFocus
 
+pub const default_variant: ThemeVariant = theme_variant.Neutral
+
 pub const default_motion: MotionScheme = motion_scheme.Standard
 
 // --- Configuration ---
@@ -70,6 +75,7 @@ pub type Config {
     density: Float,
     scheme: ColorScheme,
     strong_focus: StrongFocus,
+    variant: ThemeVariant,
     motion: MotionScheme,
   )
 }
@@ -83,6 +89,7 @@ pub fn default_config() -> Config {
     density: 0.0,
     scheme: color_scheme.Auto,
     strong_focus: IsNotStrongFocus,
+    variant: theme_variant.Neutral,
     motion: motion_scheme.Standard,
   )
 }
@@ -98,6 +105,7 @@ pub fn from_config(config: Config) -> Theme {
     density: config.density,
     scheme: config.scheme,
     strong_focus: config.strong_focus,
+    variant: config.variant,
     motion: config.motion,
   )
 }
@@ -140,6 +148,12 @@ pub fn strong_focus(record: Theme, strong_focus: StrongFocus) -> Theme {
   Theme(..record, strong_focus: strong_focus)
 }
 
+/// variant sets the value of variant for this Theme.
+///
+pub fn variant(record: Theme, variant: ThemeVariant) -> Theme {
+  Theme(..record, variant: variant)
+}
+
 /// motion sets the value of motion for this Theme.
 ///
 pub fn motion(record: Theme, motion: MotionScheme) -> Theme {
@@ -176,6 +190,11 @@ pub fn render(
           color_scheme.to_string(default_scheme),
         ),
         attr.boolean("strong-focus", model.strong_focus == IsStrongFocus),
+        attr.with_default(
+          "variant",
+          theme_variant.to_string(model.variant),
+          theme_variant.to_string(default_variant),
+        ),
         attr.with_default(
           "motion",
           motion_scheme.to_string(model.motion),
