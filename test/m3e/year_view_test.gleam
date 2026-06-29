@@ -16,6 +16,7 @@ import m3e/year_view.{Config}
 pub fn year_view_default_config_test() {
   let cases = [
     Config(
+      active: year_view.IsNotActive,
       today: date.default,
       date: None,
       active_date: date.default,
@@ -36,6 +37,7 @@ pub fn year_view_from_config_test() {
   let cases = [
     #(
       year_view.Config(
+        active: year_view.IsActive,
         today: date.today_utc(),
         date: Some(date.today_utc()),
         active_date: date.today_utc(),
@@ -43,6 +45,7 @@ pub fn year_view_from_config_test() {
         max_date: Some(date.today_utc()),
       ),
       year_view.new()
+        |> year_view.active(year_view.IsActive)
         |> year_view.today(date.today_utc())
         |> year_view.date(Some(date.today_utc()))
         |> year_view.active_date(date.today_utc())
@@ -62,6 +65,7 @@ pub fn year_view_from_config_test() {
 pub fn year_view_new_test() {
   let cases = [
     year_view.from_config(year_view.Config(
+      active: year_view.IsNotActive,
       today: date.default,
       date: None,
       active_date: date.default,
@@ -74,6 +78,28 @@ pub fn year_view_new_test() {
     let expected = c
 
     year_view.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn year_view_active_test() {
+  let mod = year_view.new()
+  let cases = [
+    #(
+      year_view.IsActive,
+      year_view.from_config(
+        year_view.Config(
+          ..year_view.default_config(),
+          active: year_view.IsActive,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    year_view.active(mod, field)
     |> should.equal(expected)
   })
 }
@@ -188,6 +214,7 @@ pub fn year_view_max_date_test() {
 pub fn year_view_render_test() {
   let mod = year_view.new()
 
+  let mod_active = year_view.new() |> year_view.active(year_view.IsActive)
   let mod_today = year_view.new() |> year_view.today(date.today_utc())
   let mod_date = year_view.new() |> year_view.date(Some(date.today_utc()))
   let mod_active_date =
@@ -203,6 +230,10 @@ pub fn year_view_render_test() {
       element.element("m3e-year-view", [attribute.id("id")], []),
     ),
 
+    #(
+      #(mod_active, []),
+      element.element("m3e-year-view", [attribute.attribute("active", "")], []),
+    ),
     #(
       #(mod_today, []),
       element.element(

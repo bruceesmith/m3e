@@ -20,6 +20,7 @@ import m3e/date.{type Date}
 ///
 /// - range_start: Start of a date range.
 /// - range_end: End of a date range.
+/// - active: Whether the view is active.
 /// - today: Today's date.
 /// - date: The selected date.
 /// - active_date: The active date.
@@ -30,6 +31,7 @@ pub opaque type MonthView {
   MonthView(
     range_start: Option(Date),
     range_end: Option(Date),
+    active: Active,
     today: Date,
     date: Option(Date),
     active_date: Date,
@@ -38,11 +40,20 @@ pub opaque type MonthView {
   )
 }
 
+/// Active is whether the view is active.
+///
+pub type Active {
+  IsActive
+  IsNotActive
+}
+
 // --- Defaults ---
 
 pub const default_range_start: Option(Date) = None
 
 pub const default_range_end: Option(Date) = None
+
+pub const default_active: Active = IsNotActive
 
 pub const default_today: Date = date.default
 
@@ -62,6 +73,7 @@ pub type Config {
   Config(
     range_start: Option(Date),
     range_end: Option(Date),
+    active: Active,
     today: Date,
     date: Option(Date),
     active_date: Date,
@@ -76,6 +88,7 @@ pub fn default_config() -> Config {
   Config(
     range_start: None,
     range_end: None,
+    active: IsNotActive,
     today: date.default,
     date: None,
     active_date: date.default,
@@ -92,6 +105,7 @@ pub fn from_config(config: Config) -> MonthView {
   MonthView(
     range_start: config.range_start,
     range_end: config.range_end,
+    active: config.active,
     today: config.today,
     date: config.date,
     active_date: config.active_date,
@@ -118,6 +132,12 @@ pub fn range_start(record: MonthView, range_start: Option(Date)) -> MonthView {
 ///
 pub fn range_end(record: MonthView, range_end: Option(Date)) -> MonthView {
   MonthView(..record, range_end: range_end)
+}
+
+/// active sets the value of active for this MonthView.
+///
+pub fn active(record: MonthView, active: Active) -> MonthView {
+  MonthView(..record, active: active)
 }
 
 /// today sets the value of today for this MonthView.
@@ -174,6 +194,7 @@ pub fn render(
           date.to_string,
           default_range_end,
         ),
+        attr.boolean("active", model.active == IsActive),
         attr.with_default(
           "today",
           date.to_string(model.today),

@@ -18,6 +18,7 @@ pub fn month_view_default_config_test() {
     Config(
       range_start: None,
       range_end: None,
+      active: month_view.IsNotActive,
       today: date.default,
       date: None,
       active_date: date.default,
@@ -40,6 +41,7 @@ pub fn month_view_from_config_test() {
       month_view.Config(
         range_start: Some(date.today_utc()),
         range_end: Some(date.today_utc()),
+        active: month_view.IsActive,
         today: date.today_utc(),
         date: Some(date.today_utc()),
         active_date: date.today_utc(),
@@ -49,6 +51,7 @@ pub fn month_view_from_config_test() {
       month_view.new()
         |> month_view.range_start(Some(date.today_utc()))
         |> month_view.range_end(Some(date.today_utc()))
+        |> month_view.active(month_view.IsActive)
         |> month_view.today(date.today_utc())
         |> month_view.date(Some(date.today_utc()))
         |> month_view.active_date(date.today_utc())
@@ -70,6 +73,7 @@ pub fn month_view_new_test() {
     month_view.from_config(month_view.Config(
       range_start: None,
       range_end: None,
+      active: month_view.IsNotActive,
       today: date.default,
       date: None,
       active_date: date.default,
@@ -126,6 +130,28 @@ pub fn month_view_range_end_test() {
     let #(field, expected) = c
 
     month_view.range_end(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn month_view_active_test() {
+  let mod = month_view.new()
+  let cases = [
+    #(
+      month_view.IsActive,
+      month_view.from_config(
+        month_view.Config(
+          ..month_view.default_config(),
+          active: month_view.IsActive,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    month_view.active(mod, field)
     |> should.equal(expected)
   })
 }
@@ -247,6 +273,7 @@ pub fn month_view_render_test() {
     month_view.new() |> month_view.range_start(Some(date.today_utc()))
   let mod_range_end =
     month_view.new() |> month_view.range_end(Some(date.today_utc()))
+  let mod_active = month_view.new() |> month_view.active(month_view.IsActive)
   let mod_today = month_view.new() |> month_view.today(date.today_utc())
   let mod_date = month_view.new() |> month_view.date(Some(date.today_utc()))
   let mod_active_date =
@@ -277,6 +304,10 @@ pub fn month_view_render_test() {
         [attribute.attribute("range-end", date.to_string(date.today_utc()))],
         [],
       ),
+    ),
+    #(
+      #(mod_active, []),
+      element.element("m3e-month-view", [attribute.attribute("active", "")], []),
     ),
     #(
       #(mod_today, []),

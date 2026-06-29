@@ -16,6 +16,7 @@ import m3e/multi_year_view.{Config}
 pub fn multi_year_view_default_config_test() {
   let cases = [
     Config(
+      active: multi_year_view.IsNotActive,
       today: date.default,
       date: None,
       active_date: date.default,
@@ -36,6 +37,7 @@ pub fn multi_year_view_from_config_test() {
   let cases = [
     #(
       multi_year_view.Config(
+        active: multi_year_view.IsActive,
         today: date.today_utc(),
         date: Some(date.today_utc()),
         active_date: date.today_utc(),
@@ -43,6 +45,7 @@ pub fn multi_year_view_from_config_test() {
         max_date: Some(date.today_utc()),
       ),
       multi_year_view.new()
+        |> multi_year_view.active(multi_year_view.IsActive)
         |> multi_year_view.today(date.today_utc())
         |> multi_year_view.date(Some(date.today_utc()))
         |> multi_year_view.active_date(date.today_utc())
@@ -62,6 +65,7 @@ pub fn multi_year_view_from_config_test() {
 pub fn multi_year_view_new_test() {
   let cases = [
     multi_year_view.from_config(multi_year_view.Config(
+      active: multi_year_view.IsNotActive,
       today: date.default,
       date: None,
       active_date: date.default,
@@ -74,6 +78,28 @@ pub fn multi_year_view_new_test() {
     let expected = c
 
     multi_year_view.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn multi_year_view_active_test() {
+  let mod = multi_year_view.new()
+  let cases = [
+    #(
+      multi_year_view.IsActive,
+      multi_year_view.from_config(
+        multi_year_view.Config(
+          ..multi_year_view.default_config(),
+          active: multi_year_view.IsActive,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    multi_year_view.active(mod, field)
     |> should.equal(expected)
   })
 }
@@ -191,6 +217,8 @@ pub fn multi_year_view_max_date_test() {
 pub fn multi_year_view_render_test() {
   let mod = multi_year_view.new()
 
+  let mod_active =
+    multi_year_view.new() |> multi_year_view.active(multi_year_view.IsActive)
   let mod_today =
     multi_year_view.new() |> multi_year_view.today(date.today_utc())
   let mod_date =
@@ -208,6 +236,14 @@ pub fn multi_year_view_render_test() {
       element.element("m3e-multi-year-view", [attribute.id("id")], []),
     ),
 
+    #(
+      #(mod_active, []),
+      element.element(
+        "m3e-multi-year-view",
+        [attribute.attribute("active", "")],
+        [],
+      ),
+    ),
     #(
       #(mod_today, []),
       element.element(

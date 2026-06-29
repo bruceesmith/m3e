@@ -18,6 +18,7 @@ import m3e/date.{type Date}
 ///
 /// ## Fields:
 ///
+/// - active: Whether the view is active.
 /// - today: Today's date.
 /// - date: The selected date.
 /// - active_date: The active date.
@@ -26,6 +27,7 @@ import m3e/date.{type Date}
 ///
 pub opaque type YearView {
   YearView(
+    active: Active,
     today: Date,
     date: Option(Date),
     active_date: Date,
@@ -34,7 +36,16 @@ pub opaque type YearView {
   )
 }
 
+/// Active is whether the view is active.
+///
+pub type Active {
+  IsActive
+  IsNotActive
+}
+
 // --- Defaults ---
+
+pub const default_active: Active = IsNotActive
 
 pub const default_today: Date = date.default
 
@@ -52,6 +63,7 @@ pub const default_max_date: Option(Date) = None
 ///
 pub type Config {
   Config(
+    active: Active,
     today: Date,
     date: Option(Date),
     active_date: Date,
@@ -64,6 +76,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
+    active: IsNotActive,
     today: date.default,
     date: None,
     active_date: date.default,
@@ -78,6 +91,7 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> YearView {
   YearView(
+    active: config.active,
     today: config.today,
     date: config.date,
     active_date: config.active_date,
@@ -93,6 +107,12 @@ pub fn new() -> YearView {
 }
 
 // --- Setters ---
+
+/// active sets the value of active for this YearView.
+///
+pub fn active(record: YearView, active: Active) -> YearView {
+  YearView(..record, active: active)
+}
 
 /// today sets the value of today for this YearView.
 ///
@@ -136,6 +156,7 @@ pub fn render(
     "m3e-year-view",
     list.flatten([
       [
+        attr.boolean("active", model.active == IsActive),
         attr.with_default(
           "today",
           date.to_string(model.today),
