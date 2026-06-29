@@ -3,7 +3,10 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.5 of this software is aligned with v2.5.13 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.6 of this software is aligned with v2.5.13 of [M3E](https://github.com/matraic/m3e).
+
+### 2.3.6
+- gleam.toml correctly updated
 
 ### 2.3.5
 - MonthView: new field "active"
