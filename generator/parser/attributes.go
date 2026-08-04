@@ -113,6 +113,9 @@ func makeAttributes(modName string, attrs []cem.Attribute) (
 	maps.Copy(testModuleImports, commonTestImports)
 
 	for _, attr := range attrs {
+		if attr.Type != nil && attr.Type.Text == "ValidationMessages" {
+			continue
+		}
 		attribute := Attribute{
 			CamelName:  strcase.ToCamel(attr.Name),
 			KebabName:  strcase.ToKebab(attr.Name),
@@ -236,7 +239,12 @@ var defaultTransformRules = []defaultTransformFunc{
 			if a.Type == "String" {
 				return d, true
 			}
-			return strcase.ToSnake(a.Type) + "." + strcase.ToCamel(strings.Trim(d, `"`)), true
+			d = strings.Trim(d, `"`)
+			if unicode.IsDigit(rune(d[0])) {
+				buf := make([]string, 0, 50)
+				return strcase.ToSnake(a.Type) + "." + internal.MapDigits(d, buf), true
+			}
+			return strcase.ToSnake(a.Type) + "." + strcase.ToCamel(d), true
 		}
 		return d, false
 	},
@@ -371,12 +379,16 @@ func (attr *Attribute) imports() (importStrings map[string]string, testImportStr
 		if len(matches) == 2 {
 			// example: Option(BadgePosition) - an optional externally defined type
 			importStrings["m3e/"+strcase.ToSnake(matches[1])] = ".{type " + matches[1] + "}"
-			importedModule = strcase.ToSnake(matches[1])
+			if matches[1] != "Date" && matches[1] != "TimeParts" && matches[1] != "ValidationMessages" {
+				importedModule = strcase.ToSnake(matches[1])
+			}
 			testImportStrings["m3e/"+strcase.ToSnake(matches[1])] = ""
 		} else {
 			// example: AppBarSize - an externally defined type
 			importStrings["m3e/"+strcase.ToSnake(attr.Type)] = ".{type " + attr.Type + "}"
-			importedModule = strcase.ToSnake(attr.Type)
+			if attr.Type != "Date" && attr.Type != "TimeParts" && attr.Type != "ValidationMessages" {
+				importedModule = strcase.ToSnake(attr.Type)
+			}
 			testImportStrings["m3e/"+strcase.ToSnake(attr.Type)] = ""
 		}
 	}
@@ -406,6 +418,19 @@ func (attr *Attribute) boolean(text string) (matched bool) {
 		return true
 	}
 	return false
+}
+
+func (attr *Attribute) exclude(text string) (matched bool) {
+	tx, ok := strings.CutPrefix(text, "Exclude<")
+	if !ok {
+		return false
+	}
+	comma := strings.Index(tx, ",")
+	if comma == -1 {
+		return false
+	}
+	attr.Type = tx[:comma]
+	return true
 }
 
 func (attr *Attribute) function(text string) (matched bool) {
@@ -490,6 +515,7 @@ type typeTransformFunction func(attr *Attribute, text string, adef *string) bool
 
 var typeTransformRules = []typeTransformFunction{
 	func(attr *Attribute, text string, _ *string) bool { return attr.boolean(text) },
+	func(attr *Attribute, text string, _ *string) bool { return attr.exclude(text) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.function(text) },
 	func(attr *Attribute, text string, adef *string) bool { return attr.linkTarget(text, adef) },
 	func(attr *Attribute, _ string, _ *string) bool { return attr.list() },

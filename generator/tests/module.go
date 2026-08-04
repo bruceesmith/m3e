@@ -98,7 +98,9 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 		attr := v
 		if !v.IsStandard() && !v.IsSemBool() && v.Type != "Date" && v.Type != "number_string.NumberString" {
 			if attr.IsOptional() {
-				if v.BaseType != "Date" {
+				if v.BaseType == "TimeParts" {
+					attr.Test.Value, attr.Test.AttributeValue = "Some(time_parts.zero())", "time_parts.zero_string()"
+				} else if v.BaseType != "Date" {
 					attr.Test.Value, attr.Test.AttributeValue = anyValue(attr.BaseType, enumerations)
 				}
 			} else {
