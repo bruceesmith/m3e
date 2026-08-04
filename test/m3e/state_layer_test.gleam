@@ -17,6 +17,7 @@ pub fn state_layer_default_config_test() {
     Config(
       disabled: state_layer.IsNotDisabled,
       disable_hover: state_layer.IsNotDisableHover,
+      enable_pressed: state_layer.IsNotEnablePressed,
       for: None,
     ),
   ]
@@ -35,11 +36,13 @@ pub fn state_layer_from_config_test() {
       state_layer.Config(
         disabled: state_layer.IsDisabled,
         disable_hover: state_layer.IsDisableHover,
+        enable_pressed: state_layer.IsEnablePressed,
         for: Some("test"),
       ),
       state_layer.new()
         |> state_layer.disabled(state_layer.IsDisabled)
         |> state_layer.disable_hover(state_layer.IsDisableHover)
+        |> state_layer.enable_pressed(state_layer.IsEnablePressed)
         |> state_layer.for(Some("test")),
     ),
   ]
@@ -57,6 +60,7 @@ pub fn state_layer_new_test() {
     state_layer.from_config(state_layer.Config(
       disabled: state_layer.IsNotDisabled,
       disable_hover: state_layer.IsNotDisableHover,
+      enable_pressed: state_layer.IsNotEnablePressed,
       for: None,
     )),
   ]
@@ -113,6 +117,28 @@ pub fn state_layer_disable_hover_test() {
   })
 }
 
+pub fn state_layer_enable_pressed_test() {
+  let mod = state_layer.new()
+  let cases = [
+    #(
+      state_layer.IsEnablePressed,
+      state_layer.from_config(
+        state_layer.Config(
+          ..state_layer.default_config(),
+          enable_pressed: state_layer.IsEnablePressed,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    state_layer.enable_pressed(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn state_layer_for_test() {
   let mod = state_layer.new()
   let cases = [
@@ -139,6 +165,8 @@ pub fn state_layer_render_test() {
     state_layer.new() |> state_layer.disabled(state_layer.IsDisabled)
   let mod_disable_hover =
     state_layer.new() |> state_layer.disable_hover(state_layer.IsDisableHover)
+  let mod_enable_pressed =
+    state_layer.new() |> state_layer.enable_pressed(state_layer.IsEnablePressed)
   let mod_for = state_layer.new() |> state_layer.for(Some("test"))
   let cases = [
     #(#(mod, []), element.element("m3e-state-layer", [], [])),
@@ -160,6 +188,14 @@ pub fn state_layer_render_test() {
       element.element(
         "m3e-state-layer",
         [attribute.attribute("disable-hover", "")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_enable_pressed, []),
+      element.element(
+        "m3e-state-layer",
+        [attribute.attribute("enable-pressed", "")],
         [],
       ),
     ),

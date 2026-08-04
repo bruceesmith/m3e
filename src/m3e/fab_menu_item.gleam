@@ -149,7 +149,7 @@ pub fn render(
   children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
-    "m3e-menu-item",
+    "m3e-fab-menu-item",
     list.flatten([
       [
         attr.boolean("disabled", model.disabled == IsDisabled),

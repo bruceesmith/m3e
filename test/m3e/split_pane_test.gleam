@@ -25,7 +25,6 @@ pub fn split_pane_default_config_test() {
       step: 1.0,
       value: 50.0,
       wrap_detents: split_pane.IsNotWrapDetents,
-      value_formatter: "",
       name: "",
       disabled: split_pane.IsNotDisabled,
     ),
@@ -52,7 +51,6 @@ pub fn split_pane_from_config_test() {
         step: 42.0,
         value: 42.0,
         wrap_detents: split_pane.IsWrapDetents,
-        value_formatter: "test",
         name: "test",
         disabled: split_pane.IsDisabled,
       ),
@@ -66,7 +64,6 @@ pub fn split_pane_from_config_test() {
         |> split_pane.step(42.0)
         |> split_pane.value(42.0)
         |> split_pane.wrap_detents(split_pane.IsWrapDetents)
-        |> split_pane.value_formatter("test")
         |> split_pane.name("test")
         |> split_pane.disabled(split_pane.IsDisabled),
     ),
@@ -92,7 +89,6 @@ pub fn split_pane_new_test() {
       step: 1.0,
       value: 50.0,
       wrap_detents: split_pane.IsNotWrapDetents,
-      value_formatter: "",
       name: "",
       disabled: split_pane.IsNotDisabled,
     )),
@@ -286,28 +282,6 @@ pub fn split_pane_wrap_detents_test() {
   })
 }
 
-pub fn split_pane_value_formatter_test() {
-  let mod = split_pane.new()
-  let cases = [
-    #(
-      "test",
-      split_pane.from_config(
-        split_pane.Config(
-          ..split_pane.default_config(),
-          value_formatter: "test",
-        ),
-      ),
-    ),
-  ]
-
-  list.each(cases, fn(c) {
-    let #(field, expected) = c
-
-    split_pane.value_formatter(mod, field)
-    |> should.equal(expected)
-  })
-}
-
 pub fn split_pane_name_test() {
   let mod = split_pane.new()
   let cases = [
@@ -363,8 +337,6 @@ pub fn split_pane_render_test() {
   let mod_value = split_pane.new() |> split_pane.value(42.0)
   let mod_wrap_detents =
     split_pane.new() |> split_pane.wrap_detents(split_pane.IsWrapDetents)
-  let mod_value_formatter =
-    split_pane.new() |> split_pane.value_formatter("test")
   let mod_name = split_pane.new() |> split_pane.name("test")
   let mod_disabled =
     split_pane.new() |> split_pane.disabled(split_pane.IsDisabled)
@@ -454,14 +426,6 @@ pub fn split_pane_render_test() {
       element.element(
         "m3e-split-pane",
         [attribute.attribute("wrap-detents", "")],
-        [],
-      ),
-    ),
-    #(
-      #(mod_value_formatter, [], []),
-      element.element(
-        "m3e-split-pane",
-        [attribute.attribute("value-formatter", "test")],
         [],
       ),
     ),

@@ -247,6 +247,7 @@ pub fn form_field_render_test() {
 
 pub fn form_field_slot_test() {
   let cases = [
+    #(form_field.Label, attribute.attribute("slot", "label")),
     #(form_field.Prefix, attribute.attribute("slot", "prefix")),
     #(form_field.PrefixText, attribute.attribute("slot", "prefix-text")),
     #(form_field.Suffix, attribute.attribute("slot", "suffix")),

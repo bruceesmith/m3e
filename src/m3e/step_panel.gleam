@@ -51,6 +51,6 @@ pub fn render(
 ///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
-    Actions -> attribute.attribute("slot", "actions-")
+    Actions -> attribute.attribute("slot", "actions")
   }
 }

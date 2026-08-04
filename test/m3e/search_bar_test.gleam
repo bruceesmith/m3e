@@ -149,6 +149,7 @@ pub fn search_bar_slot_test() {
     #(search_bar.Leading, attribute.attribute("slot", "leading")),
     #(search_bar.Input, attribute.attribute("slot", "input")),
     #(search_bar.Trailing, attribute.attribute("slot", "trailing")),
+    #(search_bar.ClearIcon, attribute.attribute("slot", "clear-icon")),
   ]
 
   list.each(cases, fn(c) {

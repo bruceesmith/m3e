@@ -37,7 +37,7 @@ pub fn step_panel_render_test() {
 
 pub fn step_panel_slot_test() {
   let cases = [
-    #(step_panel.Actions, attribute.attribute("slot", "actions-")),
+    #(step_panel.Actions, attribute.attribute("slot", "actions")),
   ]
 
   list.each(cases, fn(c) {

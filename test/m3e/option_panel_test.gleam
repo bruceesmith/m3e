@@ -242,3 +242,17 @@ pub fn option_panel_render_test() {
     |> should.equal(expected)
   })
 }
+
+pub fn option_panel_slot_test() {
+  let cases = [
+    #(option_panel.NoData, attribute.attribute("slot", "no-data")),
+    #(option_panel.Loading, attribute.attribute("slot", "loading")),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(s, expected) = c
+
+    option_panel.slot(s)
+    |> should.equal(expected)
+  })
+}

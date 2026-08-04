@@ -195,20 +195,20 @@ pub fn fab_menu_item_render_test() {
     fab_menu_item.new() |> fab_menu_item.target(Some(link_target.Self))
 
   let cases = [
-    #(#(mod, [], []), element.element("m3e-menu-item", [], [])),
+    #(#(mod, [], []), element.element("m3e-fab-menu-item", [], [])),
     #(
       #(mod, [attribute.id("id")], []),
-      element.element("m3e-menu-item", [attribute.id("id")], []),
+      element.element("m3e-fab-menu-item", [attribute.id("id")], []),
     ),
     #(
       #(mod, [], [html.br([])]),
-      element.element("m3e-menu-item", [], [html.br([])]),
+      element.element("m3e-fab-menu-item", [], [html.br([])]),
     ),
 
     #(
       #(mod_disabled, [], []),
       element.element(
-        "m3e-menu-item",
+        "m3e-fab-menu-item",
         [attribute.attribute("disabled", "")],
         [],
       ),
@@ -216,7 +216,7 @@ pub fn fab_menu_item_render_test() {
     #(
       #(mod_download, [], []),
       element.element(
-        "m3e-menu-item",
+        "m3e-fab-menu-item",
         [attribute.attribute("download", "test")],
         [],
       ),
@@ -224,19 +224,23 @@ pub fn fab_menu_item_render_test() {
     #(
       #(mod_href, [], []),
       element.element(
-        "m3e-menu-item",
+        "m3e-fab-menu-item",
         [attribute.attribute("href", "test")],
         [],
       ),
     ),
     #(
       #(mod_rel, [], []),
-      element.element("m3e-menu-item", [attribute.attribute("rel", "test")], []),
+      element.element(
+        "m3e-fab-menu-item",
+        [attribute.attribute("rel", "test")],
+        [],
+      ),
     ),
     #(
       #(mod_target, [], []),
       element.element(
-        "m3e-menu-item",
+        "m3e-fab-menu-item",
         [attribute.attribute("target", link_target.to_string(link_target.Self))],
         [],
       ),

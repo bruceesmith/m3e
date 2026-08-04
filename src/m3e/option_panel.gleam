@@ -50,6 +50,15 @@ pub const default_fit_anchor_width: FitAnchorWidth = IsNotFitAnchorWidth
 
 pub const default_anchor_offset: Float = 0.0
 
+/// Slots are used in child elements to insert content into this component
+///
+pub type Slot {
+  NoData
+  // Renders content shown when there is no data.
+  Loading
+  // Renders content shown while the panel is loading.
+}
+
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
@@ -173,4 +182,13 @@ pub fn render_config(
   children: List(Element(msg)),
 ) -> Element(msg) {
   render(from_config(c), attributes, children)
+}
+
+/// slot returns a Lustre Attribute(msg) for the given slot name
+///
+pub fn slot(s: Slot) -> Attribute(msg) {
+  case s {
+    NoData -> attribute.attribute("slot", "no-data")
+    Loading -> attribute.attribute("slot", "loading")
+  }
 }

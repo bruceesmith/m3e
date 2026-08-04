@@ -45,6 +45,8 @@ pub type Slot {
   // Renders the input of the bar.
   Trailing
   // Renders content after the input of the bar.
+  ClearIcon
+  // Overrides the default clear icon of the bar.
 }
 
 // --- Configuration ---
@@ -129,5 +131,6 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     Leading -> attribute.attribute("slot", "leading")
     Input -> attribute.attribute("slot", "input")
     Trailing -> attribute.attribute("slot", "trailing")
+    ClearIcon -> attribute.attribute("slot", "clear-icon")
   }
 }

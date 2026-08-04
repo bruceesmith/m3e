@@ -53,6 +53,8 @@ pub const default_variant: FormFieldVariant = form_field_variant.Outlined
 /// Slots are used in child elements to insert content into this component
 ///
 pub type Slot {
+  Label
+  // Renders the label of the field.
   Prefix
   // Renders content before the fields's control.
   PrefixText
@@ -199,6 +201,7 @@ pub fn render_config(
 ///
 pub fn slot(s: Slot) -> Attribute(msg) {
   case s {
+    Label -> attribute.attribute("slot", "label")
     Prefix -> attribute.attribute("slot", "prefix")
     PrefixText -> attribute.attribute("slot", "prefix-text")
     Suffix -> attribute.attribute("slot", "suffix")

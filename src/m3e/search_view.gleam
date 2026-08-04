@@ -83,6 +83,12 @@ pub type Slot {
   // When closed, renders content before the input of the view.
   ClosedTrailing
   // When closed, renders content after the input of the view.
+  SearchIcon
+  // Overrides the default search icon of the view.
+  CloseIcon
+  // Overrides the default close icon shown while the view is open.
+  ClearIcon
+  // Overrides the default clear icon of the view.
 }
 
 // --- Configuration ---
@@ -228,5 +234,8 @@ pub fn slot(s: Slot) -> Attribute(msg) {
     OpenTrailing -> attribute.attribute("slot", "open-trailing")
     ClosedLeading -> attribute.attribute("slot", "closed-leading")
     ClosedTrailing -> attribute.attribute("slot", "closed-trailing")
+    SearchIcon -> attribute.attribute("slot", "search-icon")
+    CloseIcon -> attribute.attribute("slot", "close-icon")
+    ClearIcon -> attribute.attribute("slot", "clear-icon")
   }
 }

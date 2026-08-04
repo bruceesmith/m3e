@@ -22,12 +22,15 @@ import m3e/attr
 ///     be controlled manually using the `show` and `hide` methods.
 /// - disable_hover: Whether hover events will not trigger the state layer. State layers can still
 ///     be controlled manually using the `show` and `hide` methods.
+/// - enable_pressed: Whether pressed events will trigger the state layer. State layers can still
+///     be controlled manually using the `show` and `hide` methods.
 /// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type StateLayer {
   StateLayer(
     disabled: Disabled,
     disable_hover: DisableHover,
+    enable_pressed: EnablePressed,
     for: Option(String),
   )
 }
@@ -48,11 +51,21 @@ pub type DisableHover {
   IsNotDisableHover
 }
 
+/// EnablePressed is whether pressed events will trigger the state layer. State layers can still
+///     be controlled manually using the `show` and `hide` methods.
+///
+pub type EnablePressed {
+  IsEnablePressed
+  IsNotEnablePressed
+}
+
 // --- Defaults ---
 
 pub const default_disabled: Disabled = IsNotDisabled
 
 pub const default_disable_hover: DisableHover = IsNotDisableHover
+
+pub const default_enable_pressed: EnablePressed = IsNotEnablePressed
 
 pub const default_for: Option(String) = None
 
@@ -61,13 +74,23 @@ pub const default_for: Option(String) = None
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(disabled: Disabled, disable_hover: DisableHover, for: Option(String))
+  Config(
+    disabled: Disabled,
+    disable_hover: DisableHover,
+    enable_pressed: EnablePressed,
+    for: Option(String),
+  )
 }
 
 /// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(disabled: IsNotDisabled, disable_hover: IsNotDisableHover, for: None)
+  Config(
+    disabled: IsNotDisabled,
+    disable_hover: IsNotDisableHover,
+    enable_pressed: IsNotEnablePressed,
+    for: None,
+  )
 }
 
 // --- Constructors ---
@@ -78,6 +101,7 @@ pub fn from_config(config: Config) -> StateLayer {
   StateLayer(
     disabled: config.disabled,
     disable_hover: config.disable_hover,
+    enable_pressed: config.enable_pressed,
     for: config.for,
   )
 }
@@ -105,6 +129,15 @@ pub fn disable_hover(
   StateLayer(..record, disable_hover: disable_hover)
 }
 
+/// enable_pressed sets the value of enable_pressed for this StateLayer.
+///
+pub fn enable_pressed(
+  record: StateLayer,
+  enable_pressed: EnablePressed,
+) -> StateLayer {
+  StateLayer(..record, enable_pressed: enable_pressed)
+}
+
 /// for sets the value of for for this StateLayer.
 ///
 pub fn for(record: StateLayer, for: Option(String)) -> StateLayer {
@@ -125,6 +158,7 @@ pub fn render(
       [
         attr.boolean("disabled", model.disabled == IsDisabled),
         attr.boolean("disable-hover", model.disable_hover == IsDisableHover),
+        attr.boolean("enable-pressed", model.enable_pressed == IsEnablePressed),
         attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
       ],
       attributes,

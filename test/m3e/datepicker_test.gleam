@@ -38,6 +38,7 @@ pub fn datepicker_default_config_test() {
       confirm_label: "OK",
       dismiss_label: "Cancel",
       label: "Select date",
+      for: None,
     ),
   ]
 
@@ -73,6 +74,7 @@ pub fn datepicker_from_config_test() {
         confirm_label: "test",
         dismiss_label: "test",
         label: "test",
+        for: Some("test"),
       ),
       datepicker.new()
         |> datepicker.variant(datepicker_variant.Modal)
@@ -94,7 +96,8 @@ pub fn datepicker_from_config_test() {
         |> datepicker.clear_label("test")
         |> datepicker.confirm_label("test")
         |> datepicker.dismiss_label("test")
-        |> datepicker.label("test"),
+        |> datepicker.label("test")
+        |> datepicker.for(Some("test")),
     ),
   ]
 
@@ -129,6 +132,7 @@ pub fn datepicker_new_test() {
       confirm_label: "OK",
       dismiss_label: "Cancel",
       label: "Select date",
+      for: None,
     )),
   ]
 
@@ -568,6 +572,25 @@ pub fn datepicker_label_test() {
   })
 }
 
+pub fn datepicker_for_test() {
+  let mod = datepicker.new()
+  let cases = [
+    #(
+      Some("test"),
+      datepicker.from_config(
+        datepicker.Config(..datepicker.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    datepicker.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn datepicker_render_test() {
   let mod = datepicker.new()
 
@@ -605,6 +628,7 @@ pub fn datepicker_render_test() {
   let mod_confirm_label = datepicker.new() |> datepicker.confirm_label("test")
   let mod_dismiss_label = datepicker.new() |> datepicker.dismiss_label("test")
   let mod_label = datepicker.new() |> datepicker.label("test")
+  let mod_for = datepicker.new() |> datepicker.for(Some("test"))
   let cases = [
     #(#(mod, []), element.element("m3e-datepicker", [], [])),
     #(
@@ -775,6 +799,14 @@ pub fn datepicker_render_test() {
       element.element(
         "m3e-datepicker",
         [attribute.attribute("label", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_for, []),
+      element.element(
+        "m3e-datepicker",
+        [attribute.attribute("for", "test")],
         [],
       ),
     ),

@@ -8,11 +8,13 @@
 pub type CollapsibleOrientation {
   Vertical
   Horizontal
+  Both
 }
 
 pub fn to_string(level: CollapsibleOrientation) -> String {
   case level {
     Vertical -> "vertical"
     Horizontal -> "horizontal"
+    Both -> "both"
   }
 }

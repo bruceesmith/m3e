@@ -27,7 +27,6 @@ import m3e/split_pane_orientation.{type SplitPaneOrientation}
 /// - step: A fractional value, between 0 and 100, indicating the increment by which to adjust the value when resized via keyboard.
 /// - value: A fractional value, between 0 and 100, indicating the size of the start pane.
 /// - wrap_detents: Whether cycling through detents will wrap.
-/// - value_formatter: A function used to generates human readable text for the accessible value (`aria-valuetext`) of the drag handle.
 /// - name: The name that identifies the element when submitting the associated form.
 /// - disabled: Whether the element is disabled.
 ///
@@ -42,7 +41,6 @@ pub opaque type SplitPane {
     step: Float,
     value: Float,
     wrap_detents: WrapDetents,
-    value_formatter: String,
     name: String,
     disabled: Disabled,
   )
@@ -82,8 +80,6 @@ pub const default_value: Float = 50.0
 
 pub const default_wrap_detents: WrapDetents = IsNotWrapDetents
 
-pub const default_value_formatter: String = ""
-
 pub const default_name: String = ""
 
 pub const default_disabled: Disabled = IsNotDisabled
@@ -112,7 +108,6 @@ pub type Config {
     step: Float,
     value: Float,
     wrap_detents: WrapDetents,
-    value_formatter: String,
     name: String,
     disabled: Disabled,
   )
@@ -131,7 +126,6 @@ pub fn default_config() -> Config {
     step: 1.0,
     value: 50.0,
     wrap_detents: IsNotWrapDetents,
-    value_formatter: "",
     name: "",
     disabled: IsNotDisabled,
   )
@@ -152,7 +146,6 @@ pub fn from_config(config: Config) -> SplitPane {
     step: config.step,
     value: config.value,
     wrap_detents: config.wrap_detents,
-    value_formatter: config.value_formatter,
     name: config.name,
     disabled: config.disabled,
   )
@@ -223,15 +216,6 @@ pub fn wrap_detents(record: SplitPane, wrap_detents: WrapDetents) -> SplitPane {
   SplitPane(..record, wrap_detents: wrap_detents)
 }
 
-/// value_formatter sets the value of value_formatter for this SplitPane.
-///
-pub fn value_formatter(
-  record: SplitPane,
-  value_formatter: String,
-) -> SplitPane {
-  SplitPane(..record, value_formatter: value_formatter)
-}
-
 /// name sets the value of name for this SplitPane.
 ///
 pub fn name(record: SplitPane, name: String) -> SplitPane {
@@ -290,11 +274,6 @@ pub fn render(
           float.to_string(default_value),
         ),
         attr.boolean("wrap-detents", model.wrap_detents == IsWrapDetents),
-        attr.with_default(
-          "value-formatter",
-          model.value_formatter,
-          default_value_formatter,
-        ),
         attr.with_default("name", model.name, default_name),
         attr.boolean("disabled", model.disabled == IsDisabled),
       ],

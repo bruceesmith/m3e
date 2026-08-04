@@ -302,6 +302,9 @@ pub fn search_view_slot_test() {
       search_view.ClosedTrailing,
       attribute.attribute("slot", "closed-trailing"),
     ),
+    #(search_view.SearchIcon, attribute.attribute("slot", "search-icon")),
+    #(search_view.CloseIcon, attribute.attribute("slot", "close-icon")),
+    #(search_view.ClearIcon, attribute.attribute("slot", "clear-icon")),
   ]
 
   list.each(cases, fn(c) {

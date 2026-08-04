@@ -5,6 +5,7 @@
 ////          DO NOT EDIT
 ////
 
+import gleam/function
 import gleam/list
 import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
@@ -40,6 +41,7 @@ import m3e/datepicker_variant.{type DatepickerVariant}
 /// - confirm_label: The label given to the button used apply the selected date and close the picker.
 /// - dismiss_label: The label given to the button used discard the selected date and close the picker.
 /// - label: The label given to the the picker.
+/// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type Datepicker {
   Datepicker(
@@ -63,6 +65,7 @@ pub opaque type Datepicker {
     confirm_label: String,
     dismiss_label: String,
     label: String,
+    for: Option(String),
   )
 }
 
@@ -122,6 +125,8 @@ pub const default_dismiss_label: String = "Cancel"
 
 pub const default_label: String = "Select date"
 
+pub const default_for: Option(String) = None
+
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
@@ -148,6 +153,7 @@ pub type Config {
     confirm_label: String,
     dismiss_label: String,
     label: String,
+    for: Option(String),
   )
 }
 
@@ -175,6 +181,7 @@ pub fn default_config() -> Config {
     confirm_label: "OK",
     dismiss_label: "Cancel",
     label: "Select date",
+    for: None,
   )
 }
 
@@ -204,6 +211,7 @@ pub fn from_config(config: Config) -> Datepicker {
     confirm_label: config.confirm_label,
     dismiss_label: config.dismiss_label,
     label: config.label,
+    for: config.for,
   )
 }
 
@@ -356,6 +364,12 @@ pub fn label(record: Datepicker, label: String) -> Datepicker {
   Datepicker(..record, label: label)
 }
 
+/// for sets the value of for for this Datepicker.
+///
+pub fn for(record: Datepicker, for: Option(String)) -> Datepicker {
+  Datepicker(..record, for: for)
+}
+
 // --- Renderers ---
 
 /// render creates a Lustre Element for a Datepicker
@@ -453,6 +467,7 @@ pub fn render(
           default_dismiss_label,
         ),
         attr.with_default("label", model.label, default_label),
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
       ],
       attributes,
     ])
