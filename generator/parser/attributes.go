@@ -425,11 +425,15 @@ func (attr *Attribute) exclude(text string) (matched bool) {
 	if !ok {
 		return false
 	}
-	comma := strings.Index(tx, ",")
-	if comma == -1 {
+	// comma := strings.Index(tx, ",")
+	// if comma == -1 {
+	// 	return false
+	// }
+	before, _, ok := strings.Cut(tx, ",")
+	if !ok {
 		return false
 	}
-	attr.Type = tx[:comma]
+	attr.Type = before
 	return true
 }
 
