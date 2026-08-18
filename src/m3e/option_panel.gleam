@@ -11,7 +11,6 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
 import m3e/floating_panel_scroll_strategy.{type FloatingPanelScrollStrategy}
-import m3e/option_panel_state.{type OptionPanelState}
 
 // --- Types ---
 
@@ -19,14 +18,12 @@ import m3e/option_panel_state.{type OptionPanelState}
 ///
 /// ## Fields:
 ///
-/// - state: The state for which to present content.
 /// - scroll_strategy: The strategy that controls how the panel behaves when its trigger scrolls.
 /// - fit_anchor_width: Whether the panel's width should match its anchor's width.
 /// - anchor_offset: The logical margin, in pixels, between the panel and its anchor.
 ///
 pub opaque type OptionPanel {
   OptionPanel(
-    state: OptionPanelState,
     scroll_strategy: FloatingPanelScrollStrategy,
     fit_anchor_width: FitAnchorWidth,
     anchor_offset: Float,
@@ -41,8 +38,6 @@ pub type FitAnchorWidth {
 }
 
 // --- Defaults ---
-
-pub const default_state: OptionPanelState = option_panel_state.Content
 
 pub const default_scroll_strategy: FloatingPanelScrollStrategy = floating_panel_scroll_strategy.Hide
 
@@ -65,7 +60,6 @@ pub type Slot {
 ///
 pub type Config {
   Config(
-    state: OptionPanelState,
     scroll_strategy: FloatingPanelScrollStrategy,
     fit_anchor_width: FitAnchorWidth,
     anchor_offset: Float,
@@ -76,7 +70,6 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    state: option_panel_state.Content,
     scroll_strategy: floating_panel_scroll_strategy.Hide,
     fit_anchor_width: IsNotFitAnchorWidth,
     anchor_offset: 0.0,
@@ -89,7 +82,6 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> OptionPanel {
   OptionPanel(
-    state: config.state,
     scroll_strategy: config.scroll_strategy,
     fit_anchor_width: config.fit_anchor_width,
     anchor_offset: config.anchor_offset,
@@ -103,12 +95,6 @@ pub fn new() -> OptionPanel {
 }
 
 // --- Setters ---
-
-/// state sets the value of state for this OptionPanel.
-///
-pub fn state(record: OptionPanel, state: OptionPanelState) -> OptionPanel {
-  OptionPanel(..record, state: state)
-}
 
 /// scroll_strategy sets the value of scroll_strategy for this OptionPanel.
 ///
@@ -147,11 +133,6 @@ pub fn render(
     "m3e-option-panel",
     list.flatten([
       [
-        attr.with_default(
-          "state",
-          option_panel_state.to_string(model.state),
-          option_panel_state.to_string(default_state),
-        ),
         attr.with_default(
           "scroll-strategy",
           floating_panel_scroll_strategy.to_string(model.scroll_strategy),

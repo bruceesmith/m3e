@@ -31,6 +31,7 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 	for enum := range enumerations {
 		cenum := strcase.ToCamel(enum)
 		cmd := []string{"-c", `grep -r -l "export type ` + cenum + `" ` + m3eSource}
+		logger.TraceID("grepcmd", "grep", "cmd", strings.Join(cmd, " "))
 		command := exec.Command("sh", cmd...)
 		stdoutStderr, err := command.CombinedOutput()
 		if err != nil {

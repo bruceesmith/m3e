@@ -16,14 +16,14 @@ import m3e/attr
 ///
 /// ## Fields:
 ///
-/// - disabled: A value indicating whether the element is disabled.
+/// - disabled: Whether the element is disabled.
 /// - selected: Whether the element is selected.
 ///
 pub opaque type TocItem {
   TocItem(disabled: Disabled, selected: Selected)
 }
 
-/// Disabled is a value indicating whether the element is disabled.
+/// Disabled is whether the element is disabled.
 ///
 pub type Disabled {
   IsDisabled

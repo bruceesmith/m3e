@@ -25,7 +25,7 @@ import m3e/link_target.{type LinkTarget}
 ///
 /// - disabled: Whether the element is disabled.
 /// - disabled_interactive: Whether the element is disabled and interactive.
-/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - download: Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
 /// - href: The URL to which the link button points.
 /// - name: The name of the element, submitted as a pair with the element's `value` as part of form data, when the element is used to submit a form.
 /// - rel: The relationship between the `target` of the link button and the document.

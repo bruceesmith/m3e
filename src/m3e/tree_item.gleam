@@ -17,7 +17,7 @@ import m3e/attr
 /// ## Fields:
 ///
 /// - disabled: Whether the element is disabled.
-/// - indeterminate: A value indicating whether the element's selected / checked state is indeterminate.
+/// - indeterminate: Whether the element's selected / checked state is indeterminate.
 /// - open: Whether the item is expanded.
 /// - selected: Whether the item is selected.
 ///
@@ -37,7 +37,7 @@ pub type Disabled {
   IsNotDisabled
 }
 
-/// Indeterminate is a value indicating whether the element's selected / checked state is indeterminate.
+/// Indeterminate is whether the element's selected / checked state is indeterminate.
 ///
 pub type Indeterminate {
   IsIndeterminate

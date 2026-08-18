@@ -20,7 +20,7 @@ import m3e/link_target.{type LinkTarget}
 /// ## Fields:
 ///
 /// - disabled: Whether the element is disabled.
-/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - download: Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
 /// - href: The URL to which the link button points.
 /// - rel: The relationship between the `target` of the link button and the document.
 /// - target: The target of the link button.

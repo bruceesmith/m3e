@@ -20,13 +20,13 @@ import m3e/nav_item_orientation.{type NavItemOrientation}
 ///
 /// ## Fields:
 ///
-/// - disabled: A value indicating whether the element is disabled.
-/// - disabled_interactive: A value indicating whether the element is disabled and interactive.
-/// - download: A value indicating whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - disabled: Whether the element is disabled.
+/// - disabled_interactive: Whether the element is disabled and interactive.
+/// - download: Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
 /// - href: The URL to which the link button points.
 /// - orientation: The layout orientation of the item.
 /// - rel: The relationship between the `target` of the link button and the document.
-/// - selected: A value indicating whether the element is selected.
+/// - selected: Whether the element is selected.
 /// - target: The target of the link button.
 ///
 pub opaque type NavItem {
@@ -42,21 +42,21 @@ pub opaque type NavItem {
   )
 }
 
-/// Disabled is a value indicating whether the element is disabled.
+/// Disabled is whether the element is disabled.
 ///
 pub type Disabled {
   IsDisabled
   IsNotDisabled
 }
 
-/// DisabledInteractive is a value indicating whether the element is disabled and interactive.
+/// DisabledInteractive is whether the element is disabled and interactive.
 ///
 pub type DisabledInteractive {
   IsDisabledInteractive
   IsNotDisabledInteractive
 }
 
-/// Selected is a value indicating whether the element is selected.
+/// Selected is whether the element is selected.
 ///
 pub type Selected {
   IsSelected

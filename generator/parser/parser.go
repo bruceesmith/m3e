@@ -89,6 +89,7 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 
 				externalModules := definition.module(declaration)
 				for _, moduleName := range externalModules {
+					logger.TraceID("external", "externals", "module", declaration.Name, "imports", moduleName)
 					enumerations[moduleName] = struct{}{}
 				}
 			}

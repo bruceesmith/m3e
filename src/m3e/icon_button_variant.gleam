@@ -9,6 +9,7 @@ pub type IconButtonVariant {
   Filled
   Tonal
   Outlined
+  Elevated
   Standard
 }
 
@@ -17,6 +18,7 @@ pub fn to_string(level: IconButtonVariant) -> String {
     Filled -> "filled"
     Tonal -> "tonal"
     Outlined -> "outlined"
+    Elevated -> "elevated"
     Standard -> "standard"
   }
 }

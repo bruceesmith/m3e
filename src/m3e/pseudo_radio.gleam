@@ -16,21 +16,21 @@ import m3e/attr
 ///
 /// ## Fields:
 ///
-/// - checked: A value indicating whether the element is checked.
-/// - disabled: A value indicating whether the element is disabled.
+/// - checked: Whether the element is checked.
+/// - disabled: Whether the element is disabled.
 ///
 pub opaque type PseudoRadio {
   PseudoRadio(checked: Checked, disabled: Disabled)
 }
 
-/// Checked is a value indicating whether the element is checked.
+/// Checked is whether the element is checked.
 ///
 pub type Checked {
   IsChecked
   IsNotChecked
 }
 
-/// Disabled is a value indicating whether the element is disabled.
+/// Disabled is whether the element is disabled.
 ///
 pub type Disabled {
   IsDisabled

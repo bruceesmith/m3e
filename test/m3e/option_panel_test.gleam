@@ -12,12 +12,10 @@ import lustre/element
 import lustre/element/html
 import m3e/floating_panel_scroll_strategy
 import m3e/option_panel.{Config}
-import m3e/option_panel_state
 
 pub fn option_panel_default_config_test() {
   let cases = [
     Config(
-      state: option_panel_state.Content,
       scroll_strategy: floating_panel_scroll_strategy.Hide,
       fit_anchor_width: option_panel.IsNotFitAnchorWidth,
       anchor_offset: 0.0,
@@ -36,13 +34,11 @@ pub fn option_panel_from_config_test() {
   let cases = [
     #(
       option_panel.Config(
-        state: option_panel_state.Loading,
         scroll_strategy: floating_panel_scroll_strategy.Reposition,
         fit_anchor_width: option_panel.IsFitAnchorWidth,
         anchor_offset: 42.0,
       ),
       option_panel.new()
-        |> option_panel.state(option_panel_state.Loading)
         |> option_panel.scroll_strategy(
           floating_panel_scroll_strategy.Reposition,
         )
@@ -62,7 +58,6 @@ pub fn option_panel_from_config_test() {
 pub fn option_panel_new_test() {
   let cases = [
     option_panel.from_config(option_panel.Config(
-      state: option_panel_state.Content,
       scroll_strategy: floating_panel_scroll_strategy.Hide,
       fit_anchor_width: option_panel.IsNotFitAnchorWidth,
       anchor_offset: 0.0,
@@ -73,28 +68,6 @@ pub fn option_panel_new_test() {
     let expected = c
 
     option_panel.new()
-    |> should.equal(expected)
-  })
-}
-
-pub fn option_panel_state_test() {
-  let mod = option_panel.new()
-  let cases = [
-    #(
-      option_panel_state.Loading,
-      option_panel.from_config(
-        option_panel.Config(
-          ..option_panel.default_config(),
-          state: option_panel_state.Loading,
-        ),
-      ),
-    ),
-  ]
-
-  list.each(cases, fn(c) {
-    let #(field, expected) = c
-
-    option_panel.state(mod, field)
     |> should.equal(expected)
   })
 }
@@ -168,8 +141,6 @@ pub fn option_panel_anchor_offset_test() {
 pub fn option_panel_render_test() {
   let mod = option_panel.new()
 
-  let mod_state =
-    option_panel.new() |> option_panel.state(option_panel_state.Loading)
   let mod_scroll_strategy =
     option_panel.new()
     |> option_panel.scroll_strategy(floating_panel_scroll_strategy.Reposition)
@@ -189,19 +160,6 @@ pub fn option_panel_render_test() {
       element.element("m3e-option-panel", [], [html.br([])]),
     ),
 
-    #(
-      #(mod_state, [], []),
-      element.element(
-        "m3e-option-panel",
-        [
-          attribute.attribute(
-            "state",
-            option_panel_state.to_string(option_panel_state.Loading),
-          ),
-        ],
-        [],
-      ),
-    ),
     #(
       #(mod_scroll_strategy, [], []),
       element.element(

@@ -17,6 +17,7 @@ pub fn snackbar_open_to_action_test() {
         close_label: "Close",
         dismissible: snackbar.IsDismissible,
         duration: 5000.0,
+        open: snackbar.IsNotOpen,
       ),
       "Hello",
       Some(CallMe),

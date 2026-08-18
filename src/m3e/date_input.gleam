@@ -37,7 +37,7 @@ import m3e/time_parts.{type TimeParts}
 /// - second_label: The accessible label given to the second segment.
 /// - period_label: The accessible label given to the period segment (AM/PM).
 /// - disabled: Whether the element is disabled.
-/// - readonly: A value indicating whether the element is read-only.
+/// - readonly: Whether the element is read-only.
 /// - required: Whether a value is required for the element.
 /// - name: The name that identifies the element when submitting the associated form.
 ///
@@ -79,7 +79,7 @@ pub type Disabled {
   IsNotDisabled
 }
 
-/// Readonly is a value indicating whether the element is read-only.
+/// Readonly is whether the element is read-only.
 ///
 pub type Readonly {
   IsReadonly

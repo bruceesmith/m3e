@@ -6,6 +6,7 @@
 ////
 
 import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
@@ -19,6 +20,7 @@ pub fn input_chip_set_default_config_test() {
       name: "",
       required: input_chip_set.IsNotRequired,
       vertical: input_chip_set.IsNotVertical,
+      max_chips: None,
     ),
   ]
 
@@ -38,12 +40,14 @@ pub fn input_chip_set_from_config_test() {
         name: "test",
         required: input_chip_set.IsRequired,
         vertical: input_chip_set.IsVertical,
+        max_chips: Some(42.0),
       ),
       input_chip_set.new()
         |> input_chip_set.disabled(input_chip_set.IsDisabled)
         |> input_chip_set.name("test")
         |> input_chip_set.required(input_chip_set.IsRequired)
-        |> input_chip_set.vertical(input_chip_set.IsVertical),
+        |> input_chip_set.vertical(input_chip_set.IsVertical)
+        |> input_chip_set.max_chips(Some(42.0)),
     ),
   ]
 
@@ -62,6 +66,7 @@ pub fn input_chip_set_new_test() {
       name: "",
       required: input_chip_set.IsNotRequired,
       vertical: input_chip_set.IsNotVertical,
+      max_chips: None,
     )),
   ]
 
@@ -158,6 +163,28 @@ pub fn input_chip_set_vertical_test() {
   })
 }
 
+pub fn input_chip_set_max_chips_test() {
+  let mod = input_chip_set.new()
+  let cases = [
+    #(
+      Some(42.0),
+      input_chip_set.from_config(
+        input_chip_set.Config(
+          ..input_chip_set.default_config(),
+          max_chips: Some(42.0),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    input_chip_set.max_chips(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn input_chip_set_render_test() {
   let mod = input_chip_set.new()
 
@@ -168,6 +195,8 @@ pub fn input_chip_set_render_test() {
     input_chip_set.new() |> input_chip_set.required(input_chip_set.IsRequired)
   let mod_vertical =
     input_chip_set.new() |> input_chip_set.vertical(input_chip_set.IsVertical)
+  let mod_max_chips =
+    input_chip_set.new() |> input_chip_set.max_chips(Some(42.0))
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-input-chip-set", [], [])),
@@ -209,6 +238,14 @@ pub fn input_chip_set_render_test() {
       element.element(
         "m3e-input-chip-set",
         [attribute.attribute("vertical", "")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_max_chips, [], []),
+      element.element(
+        "m3e-input-chip-set",
+        [attribute.attribute("max-chips", "42.0")],
         [],
       ),
     ),

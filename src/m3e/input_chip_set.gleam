@@ -5,7 +5,9 @@
 ////          DO NOT EDIT
 ////
 
+import gleam/float
 import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
@@ -20,6 +22,7 @@ import m3e/attr
 /// - name: The name that identifies the element when submitting the associated form.
 /// - required: Whether a value is required for the element.
 /// - vertical: Whether the element is oriented vertically.
+/// - max_chips: Maximum number of chips to display when not focused. When focused, all chips are displayed.
 ///
 pub opaque type InputChipSet {
   InputChipSet(
@@ -27,6 +30,7 @@ pub opaque type InputChipSet {
     name: String,
     required: Required,
     vertical: Vertical,
+    max_chips: Option(Float),
   )
 }
 
@@ -61,6 +65,8 @@ pub const default_required: Required = IsNotRequired
 
 pub const default_vertical: Vertical = IsNotVertical
 
+pub const default_max_chips: Option(Float) = None
+
 /// Slots are used in child elements to insert content into this component
 ///
 pub type Slot {
@@ -78,6 +84,7 @@ pub type Config {
     name: String,
     required: Required,
     vertical: Vertical,
+    max_chips: Option(Float),
   )
 }
 
@@ -89,6 +96,7 @@ pub fn default_config() -> Config {
     name: "",
     required: IsNotRequired,
     vertical: IsNotVertical,
+    max_chips: None,
   )
 }
 
@@ -102,6 +110,7 @@ pub fn from_config(config: Config) -> InputChipSet {
     name: config.name,
     required: config.required,
     vertical: config.vertical,
+    max_chips: config.max_chips,
   )
 }
 
@@ -137,6 +146,15 @@ pub fn vertical(record: InputChipSet, vertical: Vertical) -> InputChipSet {
   InputChipSet(..record, vertical: vertical)
 }
 
+/// max_chips sets the value of max_chips for this InputChipSet.
+///
+pub fn max_chips(
+  record: InputChipSet,
+  max_chips: Option(Float),
+) -> InputChipSet {
+  InputChipSet(..record, max_chips: max_chips)
+}
+
 // --- Renderers ---
 
 /// render creates a Lustre Element for a InputChipSet
@@ -154,6 +172,12 @@ pub fn render(
         attr.with_default("name", model.name, default_name),
         attr.boolean("required", model.required == IsRequired),
         attr.boolean("vertical", model.vertical == IsVertical),
+        attr.option(
+          model.max_chips,
+          fn(_) { "max-chips" },
+          float.to_string,
+          default_max_chips,
+        ),
       ],
       attributes,
     ])

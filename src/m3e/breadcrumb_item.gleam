@@ -25,7 +25,7 @@ import m3e/link_target.{type LinkTarget}
 /// - current: Indicates the current item in the breadcrumb path.
 /// - href: The URL to which the internal breadcrumb link button points.
 /// - target: The target of the internal breadcrumb link button.
-/// - download: A value indicating whether the internal link target will be downloaded, optionally specifying a file name.
+/// - download: Whether the internal link target will be downloaded, optionally specifying a file name.
 /// - rel: The relationship between the internal link target and the document.
 ///
 pub opaque type BreadcrumbItem {

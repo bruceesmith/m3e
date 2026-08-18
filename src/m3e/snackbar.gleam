@@ -21,6 +21,7 @@ import m3e/attr
 /// - close_label: The accessible label given to the button used to dismiss the snackbar.
 /// - dismissible: Whether a button is presented that can be used to close the snackbar.
 /// - duration: The length of time, in milliseconds, to wait before automatically dismissing the snackbar.
+/// - open: Whether the snackbar is open.
 ///
 pub opaque type Snackbar {
   Snackbar(
@@ -28,6 +29,7 @@ pub opaque type Snackbar {
     close_label: String,
     dismissible: Dismissible,
     duration: Float,
+    open: Open,
   )
 }
 
@@ -36,6 +38,13 @@ pub opaque type Snackbar {
 pub type Dismissible {
   IsDismissible
   IsNotDismissible
+}
+
+/// Open is whether the snackbar is open.
+///
+pub type Open {
+  IsOpen
+  IsNotOpen
 }
 
 // --- Defaults ---
@@ -47,6 +56,8 @@ pub const default_close_label: String = "Close"
 pub const default_dismissible: Dismissible = IsNotDismissible
 
 pub const default_duration: Float = 3000.0
+
+pub const default_open: Open = IsNotOpen
 
 /// Slots are used in child elements to insert content into this component
 ///
@@ -65,6 +76,7 @@ pub type Config {
     close_label: String,
     dismissible: Dismissible,
     duration: Float,
+    open: Open,
   )
 }
 
@@ -76,6 +88,7 @@ pub fn default_config() -> Config {
     close_label: "Close",
     dismissible: IsNotDismissible,
     duration: 3000.0,
+    open: IsNotOpen,
   )
 }
 
@@ -89,6 +102,7 @@ pub fn from_config(config: Config) -> Snackbar {
     close_label: config.close_label,
     dismissible: config.dismissible,
     duration: config.duration,
+    open: config.open,
   )
 }
 
@@ -124,6 +138,12 @@ pub fn duration(record: Snackbar, duration: Float) -> Snackbar {
   Snackbar(..record, duration: duration)
 }
 
+/// open sets the value of open for this Snackbar.
+///
+pub fn open(record: Snackbar, open: Open) -> Snackbar {
+  Snackbar(..record, open: open)
+}
+
 // --- Renderers ---
 
 /// render creates a Lustre Element for a Snackbar
@@ -145,6 +165,7 @@ pub fn render(
           float.to_string(model.duration),
           float.to_string(default_duration),
         ),
+        attr.boolean("open", model.open == IsOpen),
       ],
       attributes,
     ])

@@ -18,7 +18,7 @@ import m3e/text_highlight_mode.{type TextHighlightMode}
 /// ## Fields:
 ///
 /// - case_sensitive: Whether matching is case sensitive.
-/// - disabled: A value indicating whether text highlighting is disabled.
+/// - disabled: Whether text highlighting is disabled.
 /// - mode: The mode in which to highlight text.
 /// - term: The term to highlight.
 ///
@@ -38,7 +38,7 @@ pub type CaseSensitive {
   IsNotCaseSensitive
 }
 
-/// Disabled is a value indicating whether text highlighting is disabled.
+/// Disabled is whether text highlighting is disabled.
 ///
 pub type Disabled {
   IsDisabled

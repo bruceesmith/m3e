@@ -29,7 +29,7 @@ import m3e/link_target.{type LinkTarget}
 /// - href: The URL to which the link button points.
 /// - target: The target of the link button.
 /// - rel: The relationship between the `target` of the link button and the document.
-/// - download: A value indicating whether the `target` of the link button will be downloaded,
+/// - download: Whether the `target` of the link button will be downloaded,
 ///     optionally specifying the new name of the file.
 /// - name: The name of the element, submitted as a pair with the element's `value`
 ///     as part of form data, when the element is used to submit a form.

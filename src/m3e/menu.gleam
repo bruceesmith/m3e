@@ -22,7 +22,7 @@ import m3e/menu_variant.{type MenuVariant}
 /// - position_x: The position of the menu, on the x-axis.
 /// - position_y: The position of the menu, on the y-axis.
 /// - variant: The appearance variant of the menu.
-/// - submenu: A value indicating whether the menu is a submenu.
+/// - submenu: Whether the menu is a submenu.
 ///
 pub opaque type Menu {
   Menu(
@@ -33,7 +33,7 @@ pub opaque type Menu {
   )
 }
 
-/// Submenu is a value indicating whether the menu is a submenu.
+/// Submenu is whether the menu is a submenu.
 ///
 pub type Submenu {
   IsSubmenu

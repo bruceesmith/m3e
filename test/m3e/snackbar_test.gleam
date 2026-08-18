@@ -19,6 +19,7 @@ pub fn snackbar_default_config_test() {
       close_label: "Close",
       dismissible: snackbar.IsNotDismissible,
       duration: 3000.0,
+      open: snackbar.IsNotOpen,
     ),
   ]
 
@@ -38,12 +39,14 @@ pub fn snackbar_from_config_test() {
         close_label: "test",
         dismissible: snackbar.IsDismissible,
         duration: 42.0,
+        open: snackbar.IsOpen,
       ),
       snackbar.new()
         |> snackbar.action("test")
         |> snackbar.close_label("test")
         |> snackbar.dismissible(snackbar.IsDismissible)
-        |> snackbar.duration(42.0),
+        |> snackbar.duration(42.0)
+        |> snackbar.open(snackbar.IsOpen),
     ),
   ]
 
@@ -62,6 +65,7 @@ pub fn snackbar_new_test() {
       close_label: "Close",
       dismissible: snackbar.IsNotDismissible,
       duration: 3000.0,
+      open: snackbar.IsNotOpen,
     )),
   ]
 
@@ -152,6 +156,25 @@ pub fn snackbar_duration_test() {
   })
 }
 
+pub fn snackbar_open_test() {
+  let mod = snackbar.new()
+  let cases = [
+    #(
+      snackbar.IsOpen,
+      snackbar.from_config(
+        snackbar.Config(..snackbar.default_config(), open: snackbar.IsOpen),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    snackbar.open(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn snackbar_render_test() {
   let mod = snackbar.new()
 
@@ -160,6 +183,7 @@ pub fn snackbar_render_test() {
   let mod_dismissible =
     snackbar.new() |> snackbar.dismissible(snackbar.IsDismissible)
   let mod_duration = snackbar.new() |> snackbar.duration(42.0)
+  let mod_open = snackbar.new() |> snackbar.open(snackbar.IsOpen)
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-snackbar", [], [])),
@@ -203,6 +227,10 @@ pub fn snackbar_render_test() {
         [attribute.attribute("duration", "42.0")],
         [],
       ),
+    ),
+    #(
+      #(mod_open, [], []),
+      element.element("m3e-snackbar", [attribute.attribute("open", "")], []),
     ),
   ]
 

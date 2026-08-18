@@ -16,9 +16,9 @@ import m3e/attr
 ///
 /// ## Fields:
 ///
-/// - checked: A value indicating whether the element is checked.
-/// - disabled: A value indicating whether the element is disabled.
-/// - indeterminate: A value indicating whether the element's checked state is indeterminate.
+/// - checked: Whether the element is checked.
+/// - disabled: Whether the element is disabled.
+/// - indeterminate: Whether the element's checked state is indeterminate.
 ///
 pub opaque type PseudoCheckbox {
   PseudoCheckbox(
@@ -28,21 +28,21 @@ pub opaque type PseudoCheckbox {
   )
 }
 
-/// Checked is a value indicating whether the element is checked.
+/// Checked is whether the element is checked.
 ///
 pub type Checked {
   IsChecked
   IsNotChecked
 }
 
-/// Disabled is a value indicating whether the element is disabled.
+/// Disabled is whether the element is disabled.
 ///
 pub type Disabled {
   IsDisabled
   IsNotDisabled
 }
 
-/// Indeterminate is a value indicating whether the element's checked state is indeterminate.
+/// Indeterminate is whether the element's checked state is indeterminate.
 ///
 pub type Indeterminate {
   IsIndeterminate

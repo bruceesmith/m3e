@@ -75,7 +75,7 @@ type Attribute struct {
 ```
 
 <a name="Attribute.IsList"></a>
-### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L578>)
+### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L582>)
 
 ```go
 func (attr *Attribute) IsList() bool
@@ -84,7 +84,7 @@ func (attr *Attribute) IsList() bool
 IsList returns true if the Attribute is declared as a Gleam List
 
 <a name="Attribute.IsOptional"></a>
-### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L573>)
+### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L577>)
 
 ```go
 func (attr *Attribute) IsOptional() bool
@@ -93,7 +93,7 @@ func (attr *Attribute) IsOptional() bool
 IsOptional returns true if the Attribute's type is Option\(something\)
 
 <a name="Attribute.IsSemBool"></a>
-### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L583>)
+### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L587>)
 
 ```go
 func (attr *Attribute) IsSemBool() bool
@@ -102,7 +102,7 @@ func (attr *Attribute) IsSemBool() bool
 IsSemBool returns true if the Attribute is a semantic boolean
 
 <a name="Attribute.IsStandard"></a>
-### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L588>)
+### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L592>)
 
 ```go
 func (attr *Attribute) IsStandard() bool

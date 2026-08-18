@@ -17,9 +17,9 @@ import m3e/chip_variant.{type ChipVariant}
 ///
 /// ## Fields:
 ///
-/// - disabled: A value indicating whether the element is disabled.
-/// - disabled_interactive: A value indicating whether the element is disabled and interactive.
-/// - selected: A value indicating whether the element is selected.
+/// - disabled: Whether the element is disabled.
+/// - disabled_interactive: Whether the element is disabled and interactive.
+/// - selected: Whether the element is selected.
 /// - value: A string representing the value of the chip.
 /// - variant: The appearance variant of the chip.
 ///
@@ -33,21 +33,21 @@ pub opaque type FilterChip {
   )
 }
 
-/// Disabled is a value indicating whether the element is disabled.
+/// Disabled is whether the element is disabled.
 ///
 pub type Disabled {
   IsDisabled
   IsNotDisabled
 }
 
-/// DisabledInteractive is a value indicating whether the element is disabled and interactive.
+/// DisabledInteractive is whether the element is disabled and interactive.
 ///
 pub type DisabledInteractive {
   IsDisabledInteractive
   IsNotDisabledInteractive
 }
 
-/// Selected is a value indicating whether the element is selected.
+/// Selected is whether the element is selected.
 ///
 pub type Selected {
   IsSelected
