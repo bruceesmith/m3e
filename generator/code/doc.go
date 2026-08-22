@@ -54,5 +54,5 @@
 //
 // These Gleam types are imported by any Gleam web component modules which references them.
 //
-//go:generate bash -c "go tool gomarkdoc . > doc.md"
+//go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
 package code

@@ -6,16 +6,6 @@ vars:
     sh: date +%Y-%m-%d_%H-%M-%S
 
 tasks:
-  test:
-    desc: "Run the test suite"
-    cmds:
-      - go test -race -cover ./...
-
-  generate:
-    desc: "Run code generation"
-    cmds:
-      - go generate ./...
-
   audit:
     desc: "Run quality control checks"
     deps: [test, generate]
@@ -25,9 +15,9 @@ tasks:
       - test -z "$(gofmt -l .)"
       - go vet ./...
       - go fix -diff ./...
-      - go tool deadcode -test ./...
-      - go tool govulncheck ./...
-      - go tool scc
+      - go tool -modfile=tools/go.mod deadcode -test ./...
+      - go tool -modfile=tools/go.mod govulncheck ./...
+      - go tool -modfile=tools/go.mod scc
       - golangci-lint run
 
   build:
@@ -35,3 +25,18 @@ tasks:
     deps: [test, generate]
     cmds:
       - go build -a -tags osusergo,netgo -ldflags "-s -X 'github.com/bruceesmith/echidna.BuildDate={{.BUILD_DATE}}' -w -extldflags '-static'" cmd/generator/generator.go
+
+  generate:
+    desc: "Run code generation"
+    cmds:
+      - go generate ./...
+
+  gosec:
+    desc: "Run security static analysis on the module using go tool"
+    cmds:
+      - go tool -modfile=tools/go.mod gosec ./...
+
+  test:
+    desc: "Run the test suite"
+    cmds:
+      - go test -race -cover ./...

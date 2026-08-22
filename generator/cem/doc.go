@@ -18,5 +18,5 @@
 // [custom element manifest repository]: https://github.com/webcomponents/custom-elements-manifest
 // [raw file]: https://github.com/webcomponents/custom-elements-manifest/blob/main/schema.json
 //
-//go:generate bash -c "go tool gomarkdoc . > doc.md"
+//go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
 package cem

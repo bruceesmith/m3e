@@ -11,5 +11,5 @@
 // Finally, for every module which defines one or more Slots, there is a test
 // of the slots() function
 //
-//go:generate bash -c "go tool gomarkdoc . > doc.md"
+//go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
 package tests

@@ -21,5 +21,5 @@
 // The output from Report() is intended to be human-readable and can be piped into
 // tools like `less`, `grep`, or, if JSON logging is enabled, `jq` for further processing.
 //
-//go:generate bash -c "go tool gomarkdoc . > doc.md"
+//go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
 package metrics

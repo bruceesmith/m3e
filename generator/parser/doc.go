@@ -18,5 +18,5 @@
 //     constructors NumberVal() and StringVal()
 //   - the M3E type List clashes with the intrinsic Gleam type List, so in the bindings it is called MList instea
 //
-//go:generate bash -c "go tool gomarkdoc . > doc.md"
+//go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
 package parser

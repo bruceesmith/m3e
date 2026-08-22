@@ -6,5 +6,5 @@
 //   - ErrorAttr - converts a series of wrapped (with %w) error messages into a slog.Attr
 //   - Unique - removes duplicates from a slice, and returns the sorted result
 //
-//go:generate bash -c "go tool gomarkdoc . > doc.md"
+//go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
 package internal
