@@ -1,0 +1,37 @@
+version: "3"
+
+vars:
+  # Evaluates "date" using Task's internal POSIX interpreter
+  BUILD_DATE:
+    sh: date +%Y-%m-%d_%H-%M-%S
+
+tasks:
+  test:
+    desc: "Run the test suite"
+    cmds:
+      - go test -race -cover ./...
+
+  generate:
+    desc: "Run code generation"
+    cmds:
+      - go generate ./...
+
+  audit:
+    desc: "Run quality control checks"
+    deps: [test, generate]
+    cmds:
+      - go mod tidy -diff
+      - go mod verify
+      - test -z "$(gofmt -l .)"
+      - go vet ./...
+      - go fix -diff ./...
+      - go tool deadcode -test ./...
+      - go tool govulncheck ./...
+      - go tool scc
+      - golangci-lint run
+
+  build:
+    desc: "Build the application"
+    deps: [test, generate]
+    cmds:
+      - go build -a -tags osusergo,netgo -ldflags "-s -X 'github.com/bruceesmith/echidna.BuildDate={{.BUILD_DATE}}' -w -extldflags '-static'" cmd/generator/generator.go
