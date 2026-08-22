@@ -5,16 +5,15 @@ import (
 	"fmt"
 	"generator/parser"
 	"os"
-	"path/filepath"
 	"text/template"
 
 	"github.com/bruceesmith/logger"
 	"github.com/iancoleman/strcase"
 )
 
-func generateEnums(destination string, enumerations map[string][]parser.Enumeration) (err error) {
+func generateEnums(root *os.Root, enumerations map[string][]parser.Enumeration) (err error) {
 	for name, enum := range enumerations {
-		err = writeEnumFile(destination, name, enum)
+		err = writeEnumFile(root, name, enum)
 	}
 	return
 }
@@ -31,7 +30,7 @@ func init() {
 	}
 }
 
-func writeEnumFile(directory string, identifier string, enum []parser.Enumeration) error {
+func writeEnumFile(root *os.Root, identifier string, enum []parser.Enumeration) error {
 	type Data struct {
 		Type    string
 		Enums   []parser.Enumeration
@@ -43,7 +42,11 @@ func writeEnumFile(directory string, identifier string, enum []parser.Enumeratio
 		Enums: enum,
 	}
 	fileName := strcase.ToSnake(identifier)
-	file, err := os.Create(filepath.Join(directory, fileName+".gleam"))
+	err := root.Remove(fileName + ".gleam")
+	if err != nil {
+		return fmt.Errorf("cannot remove %s: %w", fileName+".gleam", err)
+	}
+	file, err := root.OpenFile(fileName+".gleam", os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", fileName+".gleam", err)
 	}

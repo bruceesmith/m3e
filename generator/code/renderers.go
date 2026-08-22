@@ -55,7 +55,6 @@ func render(module *parser.Module) (builder *strings.Builder, err error) {
 			data.Attributes = append(data.Attributes, attributeWithDefault(attr))
 		}
 	}
-
 	err = renderTmpl.Execute(builder, data)
 	if err != nil {
 		return nil, fmt.Errorf("config failed to save result: %w", err)

@@ -19,11 +19,11 @@ type tsTypeDef struct {
 	Values []string
 }
 
-func typeDefinitions(fileName string, identifier string, buf []tsTypeDef) (types []tsTypeDef, err error) {
+func typeDefinitions(root *os.Root, fileName string, identifier string, buf []tsTypeDef) (types []tsTypeDef, err error) {
 	var code []byte
 
 	buf = buf[:0]
-	code, err = os.ReadFile(fileName)
+	code, err = root.ReadFile(fileName)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read %s: %w", fileName, err)
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"generator/cem"
 	"generator/internal"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -28,6 +29,16 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 
 	buf := make([]string, 0, 50)
 	typeBuf := make([]tsTypeDef, 0, maxEnumTypeDefs)
+	root, err := os.OpenRoot(m3eSource)
+	if err != nil {
+		return fmt.Errorf("failed to open m3eSource %s: %w", m3eSource, err)
+	}
+	defer func() {
+		if err := root.Close(); err != nil {
+			logger.Error("failed to close m3eSource folder", "folder", m3eSource, "error", err)
+		}
+	}()
+
 	for enum := range enumerations {
 		cenum := strcase.ToCamel(enum)
 		cmd := []string{"-c", `grep -r -l "export type ` + cenum + `" ` + m3eSource}
@@ -37,12 +48,12 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 		if err != nil {
 			return fmt.Errorf("error locating enumeration declaration file for %s: %w", cenum, err)
 		}
-		fileName := strings.TrimSpace(string(stdoutStderr))
+		fileName := strings.TrimPrefix(strings.TrimSpace(string(stdoutStderr)), m3eSource)
 		if fileName == "" {
 			return fmt.Errorf("error extracing enumeration declaration filename for %s from %s: %w", cenum, string(stdoutStderr), err)
 		}
 		var types []tsTypeDef
-		types, err = typeDefinitions(fileName, cenum, typeBuf)
+		types, err = typeDefinitions(root, fileName, cenum, typeBuf)
 		if err != nil {
 			return fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", fileName, cenum, err)
 		}

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"generator/parser"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/bruceesmith/logger"
@@ -22,11 +21,15 @@ type gleamModule struct {
 	renderers     *strings.Builder
 }
 
-func generateModule(directory string, module *parser.Module) (err error) {
+func generateModule(root *os.Root, module *parser.Module) (err error) {
 	gleam := gleamModule{}
 	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", module.Name, module.Description))
 
-	file, err := os.Create(filepath.Join(directory, module.SnakeName+".gleam"))
+	err = root.Remove(module.SnakeName + ".gleam")
+	if err != nil {
+		return fmt.Errorf("cannot remove %s: %w", module.SnakeName+".gleam", err)
+	}
+	file, err := root.OpenFile(module.SnakeName+".gleam", os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", module.SnakeName+".gleam", err)
 	}

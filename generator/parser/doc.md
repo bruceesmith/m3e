@@ -111,7 +111,7 @@ func (attr *Attribute) IsStandard() bool
 IsStandard returns true if the Attribute's type is one of the Gleam intrinsic types
 
 <a name="Definition"></a>
-## type [Definition](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/definition.go#L16-L21>)
+## type [Definition](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/definition.go#L17-L22>)
 
 Definition is the internal representation of the entire CEM manifest for the Material 3 Expression components
 

@@ -24,7 +24,7 @@ Finally, for every module which defines one or more Slots, there is a test of th
 
 
 <a name="Generate"></a>
-## func [Generate](<https://github.com/bruceesmith/m3e/blob/main/generator/tests/generate.go#L9>)
+## func [Generate](<https://github.com/bruceesmith/m3e/blob/main/generator/tests/generate.go#L12>)
 
 ```go
 func Generate(definition *parser.Definition, destination string) (err error)
