@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"generator/parser"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/bruceesmith/logger"
@@ -22,7 +21,7 @@ type gleamModule struct {
 }
 
 // generateTests creates all the unit test files
-func generateTests(directory string, module *parser.Module, enumerations map[string][]parser.Enumeration) (err error) {
+func generateTests(fs *os.Root, module *parser.Module, enumerations map[string][]parser.Enumeration) (err error) {
 
 	gleam := gleamModule{}
 	logger.TraceID("tests", fmt.Sprintf("Module %s", module.Name))
@@ -31,7 +30,8 @@ func generateTests(directory string, module *parser.Module, enumerations map[str
 	newMod := enumerationTestValues(module, enumerations)
 
 	fileName := strcase.ToSnake(newMod.Name)
-	file, err := os.Create(filepath.Join(directory, fileName+"_test.gleam"))
+	// file, err := os.Create(filepath.Join(directory, fileName+"_test.gleam"))
+	file, err := fs.OpenFile(fileName+"_test.gleam", os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", fileName+".gleam", err)
 	}
