@@ -30,7 +30,10 @@ func typeDefinitions(fileName string, identifier string, buf []tsTypeDef) (types
 
 	parser := tree_sitter.NewParser()
 	defer parser.Close()
-	parser.SetLanguage(tree_sitter.NewLanguage(tree_sitter_typescript.LanguageTypescript()))
+	err = parser.SetLanguage(tree_sitter.NewLanguage(tree_sitter_typescript.LanguageTypescript()))
+	if err != nil {
+		return nil, fmt.Errorf("failed to set the tree-sitter language: %w", err)
+	}
 
 	tree := parser.Parse(code, nil)
 	defer tree.Close()

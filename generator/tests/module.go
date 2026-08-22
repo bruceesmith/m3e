@@ -35,7 +35,11 @@ func generateTests(directory string, module *parser.Module, enumerations map[str
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", fileName+".gleam", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			logger.Error("error closing file", "filename", fileName+".gleam", "error", err)
+		}
+	}()
 
 	gleam.header, err = header(newMod.Name)
 	if err != nil {
@@ -78,13 +82,18 @@ func generateTests(directory string, module *parser.Module, enumerations map[str
 }
 
 func write(file *os.File, gleam gleamModule) {
-	fmt.Fprint(file, gleam.header.String())
-	fmt.Fprint(file, gleam.imports.String())
-	fmt.Fprint(file, gleam.configuration.String())
-	fmt.Fprint(file, gleam.constructor.String())
-	fmt.Fprint(file, gleam.setters.String())
-	fmt.Fprint(file, gleam.renderers.String())
-	fmt.Fprint(file, gleam.slots.String())
+	output := func(file *os.File, s string) {
+		if _, err := fmt.Fprint(file, s); err != nil {
+			logger.Error("error writing to file", "error", err)
+		}
+	}
+	output(file, gleam.header.String())
+	output(file, gleam.imports.String())
+	output(file, gleam.configuration.String())
+	output(file, gleam.constructor.String())
+	output(file, gleam.setters.String())
+	output(file, gleam.renderers.String())
+	output(file, gleam.slots.String())
 }
 
 // enumerationTestValues establishes a test value, and its corresponding HTML attribute value, for each

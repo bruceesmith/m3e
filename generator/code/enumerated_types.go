@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/bruceesmith/logger"
 	"github.com/iancoleman/strcase"
 )
 
@@ -46,7 +47,11 @@ func writeEnumFile(directory string, identifier string, enum []parser.Enumeratio
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", fileName+".gleam", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			logger.Error("error closing file", "filename", fileName+".gleam", "error", err)
+		}
+	}()
 
 	err = enumTmpl.Execute(file, data)
 	if err != nil {

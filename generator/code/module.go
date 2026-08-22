@@ -30,7 +30,11 @@ func generateModule(directory string, module *parser.Module) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to create file %s: %w", module.SnakeName+".gleam", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			logger.Error("error closing file", "filename", module.SnakeName+".gleam", "error", err)
+		}
+	}()
 
 	gleam.header, err = header(module.Name, module.Description)
 	if err != nil {
@@ -77,13 +81,18 @@ func generateModule(directory string, module *parser.Module) (err error) {
 }
 
 func write(file *os.File, gleam gleamModule) {
-	fmt.Fprint(file, gleam.header.String())
-	fmt.Fprint(file, gleam.imports.String())
-	fmt.Fprint(file, gleam.declaration.String())
-	fmt.Fprint(file, gleam.slotDefs.String())
-	fmt.Fprint(file, gleam.configuration.String())
-	fmt.Fprint(file, gleam.constructor.String())
-	fmt.Fprint(file, gleam.setters.String())
-	fmt.Fprint(file, gleam.renderers.String())
-	fmt.Fprint(file, gleam.slotFn.String())
+	output := func(file *os.File, s string) {
+		if _, err := fmt.Fprint(file, s); err != nil {
+			logger.Error("error writing to file", "error", err)
+		}
+	}
+	output(file, gleam.header.String())
+	output(file, gleam.imports.String())
+	output(file, gleam.declaration.String())
+	output(file, gleam.slotDefs.String())
+	output(file, gleam.configuration.String())
+	output(file, gleam.constructor.String())
+	output(file, gleam.setters.String())
+	output(file, gleam.renderers.String())
+	output(file, gleam.slotFn.String())
 }
