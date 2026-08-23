@@ -18,6 +18,7 @@ Functions included are:
 ## Index
 
 - [func ErrorAttr\(err error\) slog.Attr](<#ErrorAttr>)
+- [func GrepLR\(m3eSource, pattern string\) \(foundIn string, err error\)](<#GrepLR>)
 - [func MapDigits\(s string, buf \[\]string\) string](<#MapDigits>)
 - [func Unique\[T cmp.Ordered\]\(input \[\]T\) \[\]T](<#Unique>)
 
@@ -30,6 +31,15 @@ func ErrorAttr(err error) slog.Attr
 ```
 
 ErrorAttr converts a series of wrapped \(with %w\) error messages into a slog.Attr for use with either the standard [log/slog](<https://pkg.go.dev/log/slog/>) package or the [github.com/bruceesmith/logger](<https://pkg.go.dev/github.com/bruceesmith/logger/>) package
+
+<a name="GrepLR"></a>
+## func [GrepLR](<https://github.com/bruceesmith/m3e/blob/main/generator/internal/grep.go#L16>)
+
+```go
+func GrepLR(m3eSource, pattern string) (foundIn string, err error)
+```
+
+GrepLR mimics: grep \-r \-l pattern m3eSource
 
 <a name="MapDigits"></a>
 ## func [MapDigits](<https://github.com/bruceesmith/m3e/blob/main/generator/internal/map_digits.go#L12>)

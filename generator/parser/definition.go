@@ -5,7 +5,6 @@ import (
 	"generator/cem"
 	"generator/internal"
 	"os"
-	"os/exec"
 	"strings"
 
 	"github.com/bruceesmith/logger"
@@ -41,21 +40,20 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 
 	for enum := range enumerations {
 		cenum := strcase.ToCamel(enum)
-		cmd := []string{"-c", `grep -r -l "export type ` + cenum + `" ` + m3eSource}
-		logger.TraceID("grepcmd", "grep", "cmd", strings.Join(cmd, " "))
-		command := exec.Command("sh", cmd...)
-		stdoutStderr, err := command.CombinedOutput()
+		foundIn, err := internal.GrepLR(m3eSource, "export type "+cenum)
 		if err != nil {
-			return fmt.Errorf("error locating enumeration declaration file for %s: %w", cenum, err)
+			logger.Warn("did not find TypeScript declaration", "type", enum, "error", err)
+			return fmt.Errorf("did not find TypeScript declaration %s: %w", enum, err)
 		}
-		fileName := strings.TrimPrefix(strings.TrimSpace(string(stdoutStderr)), m3eSource)
-		if fileName == "" {
-			return fmt.Errorf("error extracing enumeration declaration filename for %s from %s: %w", cenum, string(stdoutStderr), err)
+		if foundIn == "" {
+			logger.Warn("error extracing enumeration declaration filename", "type", enum, "file", foundIn, "error", err)
+			return fmt.Errorf("error extracing enumeration declaration filename for %s from %s: %w", cenum, foundIn, err)
 		}
 		var types []tsTypeDef
-		types, err = typeDefinitions(root, fileName, cenum, typeBuf)
+		types, err = typeDefinitions(root, foundIn, cenum, typeBuf)
 		if err != nil {
-			return fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", fileName, cenum, err)
+			logger.Warn("failed to parse enumeration declaration file", "file", foundIn, "error", err)
+			return fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", foundIn, cenum, err)
 		}
 		for _, tipe := range types {
 			def := make([]Enumeration, 0, len(tipe.Values))
