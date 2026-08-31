@@ -3,42 +3,58 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.8 of this software is aligned with v2.7.6 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.9 of this software is aligned with v2.7.9 of [M3E](https://github.com/matraic/m3e).
+
+### 2.3.9
+
+- generator now supports TypeScript Array types and defaults
+- compatibility with the Gestures APIs in M3E 2.7.9
 
 ### 2.3.8
+
 - compatibility with numerous fixes in the M3E library
 
 ### 2.3.7
+
 - substantial changes to move from M3E 2.5.13 up to 2.7.3
 
 ### 2.3.6
+
 - gleam.toml correctly updated
 
 ### 2.3.5
+
 - MonthView: new field "active"
 - MultiYearView: new field "active"
 - YearView: new field "active"
 
 ### 2.3.4
-- Theme now has a ThemeVariant 
+
+- Theme now has a ThemeVariant
 - added ThemeIcon
 
 ### 2.3.3
+
 - no API changes
 
 ### 2.3.2
+
 - no API changes
 
 ### 2.3.1
+
 - no API changes
 
 ### 2.3.0
+
 - Tabs: disable_pagination changed from boolean to string
 
 ### 2.2.0
+
 - DatePicker: add `range` - Whether a range of dates can be selected
 
 ### 2.1.0
+
 - Collapsible: updated with the new attributes `orientation` and `no_animate`
 
 ## Overview
@@ -48,11 +64,12 @@ Version 2.3.8 of this software is aligned with v2.7.6 of [M3E](https://github.co
 **m3e** provides Gleam functions for all of the M3E components
 
 Each M3E component is represented by a Gleam type, has
+
 - a constructor function _new(...)_
 - a _render()_ function which creates a Lustre Element from the Gleam type
 - setter functions which return a new record with one of the fields of the input record updated. As such, these functions are designed to be used in the [Builder Pattern](https://dev.to/mrcaidev/design-patterns-in-functional-programming-4aah) with Gleam's pipe operator
 - where there are 2 or more fields in the opaque record of each component (and hence 2 or more setter functions), support is
-provided for the [Config Record](https://tour.gleam.run/data-types/records/) pattern, i.e. a _Config_ type, and _default_config()_, _from_config()_, and _render_config()_ functions
+  provided for the [Config Record](https://tour.gleam.run/data-types/records/) pattern, i.e. a _Config_ type, and _default_config()_, _from_config()_, and _render_config()_ functions
 
 ## Builder Pattern example:
 
@@ -78,14 +95,15 @@ provided for the [Config Record](https://tour.gleam.run/data-types/records/) pat
 
   )
 
-````
+```
+
 ## Breaking changes from version 1.*
 
 Version 1.* of this software was hand-written. Version 2.* is machine generated from a Custom
 Element Manifest supplied with each new release of [Material 3 Expressive](https://github.com/matraic/m3e). As such, the Gleam
 API more closely follows the Manifest (and hence the documented M3E components) than did version 1.*
 
-## Further documentation 
+## Further documentation
 
 <https://hexdocs.pm/m3e>
 
