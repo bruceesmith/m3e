@@ -3,6 +3,7 @@ package tests
 import (
 	"fmt"
 	"generator/parser"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -40,7 +41,7 @@ func generateTests(root *os.Root, module *parser.Module, enumerations map[string
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
-			logger.Error("error closing file", "filename", fileName+".gleam", "error", err)
+			slog.Error("error closing file", "filename", fileName+".gleam", "error", err)
 		}
 	}()
 
@@ -87,7 +88,7 @@ func generateTests(root *os.Root, module *parser.Module, enumerations map[string
 func write(file *os.File, gleam gleamModule) {
 	output := func(file *os.File, s string) {
 		if _, err := fmt.Fprint(file, s); err != nil {
-			logger.Error("error writing to file", "error", err)
+			slog.Error("error writing to file", "error", err)
 		}
 	}
 	output(file, gleam.header.String())
@@ -129,7 +130,7 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 func anyValue(lookup string, enumerations map[string][]parser.Enumeration) (value, attribute string) {
 	values, ok := enumerations[lookup]
 	if !ok || len(values) == 0 {
-		logger.Error("anyValue cannot find external type in enumerations", "type", lookup)
+		slog.Error("anyValue cannot find external type in enumerations", "type", lookup)
 		return "Unknown", "unknown"
 	}
 	return "Some(" + strcase.ToSnake(lookup) + "." + values[0].Name + ")",
@@ -139,12 +140,12 @@ func anyValue(lookup string, enumerations map[string][]parser.Enumeration) (valu
 func nonDefaultValue(lookup string, defawlt string, enumerations map[string][]parser.Enumeration) (value, attribute string) {
 	values, ok := enumerations[lookup]
 	if !ok || len(values) == 0 {
-		logger.Error("nonDefaultValue cannot find external type in enumerations", "type", lookup)
+		slog.Error("nonDefaultValue cannot find external type in enumerations", "type", lookup)
 		return "Unknown", "unknown"
 	}
 	parts := strings.Split(defawlt, ".")
 	if len(parts) != 2 {
-		logger.Info(fmt.Sprintf("default value %s should be qualified", defawlt))
+		slog.Info(fmt.Sprintf("default value %s should be qualified", defawlt))
 	}
 	for _, v := range values {
 		if v.Name != parts[1] {

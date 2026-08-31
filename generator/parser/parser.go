@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"generator/cem"
 	"generator/metrics"
+	"log/slog"
 	"strings"
 
 	"github.com/bruceesmith/logger"
@@ -97,9 +98,9 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 	}
 	err = m.End("parse-modules")
 	if err != nil {
-		logger.Warn("failed to close parse-modules metrics", "error", err)
+		slog.Warn("failed to close parse-modules metrics", "error", err)
 	}
-	logger.Info("Module parsing complete", "modules", len(definition.Modules))
+	slog.Info("Module parsing complete", "modules", len(definition.Modules))
 
 	// Extract the definitions of enumerated types from the M3e code
 	m.Start("parse-enums")
@@ -109,12 +110,12 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 	}
 	err = m.End("parse-enums")
 	if err != nil {
-		logger.Warn("failed to close parse-enums metrics", "error", err)
+		slog.Warn("failed to close parse-enums metrics", "error", err)
 	}
 	if len(definition.Enumerations) > estimatedEnumerations {
-		logger.Info(fmt.Sprintf("EstimatedEnumerations exceeded, new value should be at least %d", len(definition.Enumerations)+10))
+		slog.Info(fmt.Sprintf("EstimatedEnumerations exceeded, new value should be at least %d", len(definition.Enumerations)+10))
 	}
-	logger.Info("Enumerated type parsing complete", "types", len(definition.Enumerations))
+	slog.Info("Enumerated type parsing complete", "types", len(definition.Enumerations))
 
 	return
 }

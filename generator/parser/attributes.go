@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"generator/cem"
 	"generator/internal"
+	"log/slog"
 	"maps"
 	"regexp"
 	"strings"
@@ -260,7 +261,7 @@ func (attr *Attribute) computeDefault(def string) string {
 		}
 	}
 
-	logger.Warn(fmt.Sprintf("unhandled default %s for %s of type %s", def, attr.SnakeName, attr.Type))
+	slog.Warn(fmt.Sprintf("unhandled default %s for %s of type %s", def, attr.SnakeName, attr.Type))
 	return def
 }
 

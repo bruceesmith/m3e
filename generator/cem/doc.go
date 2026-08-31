@@ -19,4 +19,5 @@
 // [raw file]: https://github.com/webcomponents/custom-elements-manifest/blob/main/schema.json
 //
 //go:generate bash -c "go tool -modfile=../tools/go.mod gomarkdoc . > doc.md"
+//go:generate go tool -modfile=../tools/go.mod go-jsonschema -o cem.go --only-models -p cem schema.json
 package cem

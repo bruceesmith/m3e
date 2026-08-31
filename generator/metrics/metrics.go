@@ -2,9 +2,8 @@ package metrics
 
 import (
 	"fmt"
+	"log/slog"
 	"runtime"
-
-	"github.com/bruceesmith/logger"
 )
 
 // sample is a set of memry & GC metrics. It stores the difference between
@@ -60,7 +59,7 @@ func (m *Metrics) Report() {
 		return
 	}
 	for id, samp := range m.samples {
-		logger.Info("metrics", "id", id, "mallocs", samp.allocs, "frees", samp.frees, "numGC", samp.numGC)
+		slog.Info("metrics", "id", id, "mallocs", samp.allocs, "frees", samp.frees, "numGC", samp.numGC)
 	}
 }
 

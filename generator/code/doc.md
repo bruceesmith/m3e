@@ -61,7 +61,7 @@ These Gleam types are imported by any Gleam web component modules which referenc
 
 
 <a name="Generate"></a>
-## func [Generate](<https://github.com/bruceesmith/m3e/blob/main/generator/code/generate.go#L11>)
+## func [Generate](<https://github.com/bruceesmith/m3e/blob/main/generator/code/generate.go#L10>)
 
 ```go
 func Generate(definition *parser.Definition, destination string) (err error)

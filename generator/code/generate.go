@@ -3,9 +3,8 @@ package code
 import (
 	"fmt"
 	"generator/parser"
+	"log/slog"
 	"os"
-
-	"github.com/bruceesmith/logger"
 )
 
 func Generate(definition *parser.Definition, destination string) (err error) {
@@ -15,7 +14,7 @@ func Generate(definition *parser.Definition, destination string) (err error) {
 	}
 	defer func() {
 		if err := root.Close(); err != nil {
-			logger.Error("failed to close test destination folder", "folder", destination, "error", err)
+			slog.Error("failed to close test destination folder", "folder", destination, "error", err)
 		}
 	}()
 

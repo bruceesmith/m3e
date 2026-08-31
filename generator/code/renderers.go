@@ -4,10 +4,10 @@ import (
 	"embed"
 	"fmt"
 	"generator/parser"
+	"log/slog"
 	"strings"
 	"text/template"
 
-	"github.com/bruceesmith/logger"
 	"github.com/iancoleman/strcase"
 )
 
@@ -33,7 +33,7 @@ func render(module *parser.Module) (builder *strings.Builder, err error) {
 	builder = &strings.Builder{}
 
 	if len(module.Tag) == 0 {
-		logger.Error(fmt.Sprintf("tag for %s is empty, skipping renderers generation", module.Name))
+		slog.Error(fmt.Sprintf("tag for %s is empty, skipping renderers generation", module.Name))
 		return builder, nil
 	}
 

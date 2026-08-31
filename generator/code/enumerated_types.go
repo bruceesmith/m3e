@@ -4,10 +4,10 @@ import (
 	_ "embed"
 	"fmt"
 	"generator/parser"
+	"log/slog"
 	"os"
 	"text/template"
 
-	"github.com/bruceesmith/logger"
 	"github.com/iancoleman/strcase"
 )
 
@@ -52,7 +52,7 @@ func writeEnumFile(root *os.Root, identifier string, enum []parser.Enumeration) 
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
-			logger.Error("error closing file", "filename", fileName+".gleam", "error", err)
+			slog.Error("error closing file", "filename", fileName+".gleam", "error", err)
 		}
 	}()
 

@@ -5,6 +5,7 @@ go 1.27.0
 tool (
 	github.com/atombender/go-jsonschema
 	github.com/boyter/scc
+	github.com/google/jsonschema-go
 	github.com/princjef/gomarkdoc/cmd/gomarkdoc
 	github.com/securego/gosec/v2/cmd/gosec
 	go.uber.org/mock/mockgen
@@ -39,6 +40,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/google/jsonschema-go v0.4.3 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.18 // indirect

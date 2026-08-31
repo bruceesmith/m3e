@@ -35,7 +35,7 @@ Several TS types deserve special mention.
 
 
 <a name="Attribute"></a>
-## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L43-L74>)
+## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L44-L75>)
 
 Attribute is an internal representation of a cem Attribute
 
@@ -75,7 +75,7 @@ type Attribute struct {
 ```
 
 <a name="Attribute.IsList"></a>
-### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L582>)
+### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L583>)
 
 ```go
 func (attr *Attribute) IsList() bool
@@ -84,7 +84,7 @@ func (attr *Attribute) IsList() bool
 IsList returns true if the Attribute is declared as a Gleam List
 
 <a name="Attribute.IsOptional"></a>
-### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L577>)
+### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L578>)
 
 ```go
 func (attr *Attribute) IsOptional() bool
@@ -93,7 +93,7 @@ func (attr *Attribute) IsOptional() bool
 IsOptional returns true if the Attribute's type is Option\(something\)
 
 <a name="Attribute.IsSemBool"></a>
-### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L587>)
+### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L588>)
 
 ```go
 func (attr *Attribute) IsSemBool() bool
@@ -102,7 +102,7 @@ func (attr *Attribute) IsSemBool() bool
 IsSemBool returns true if the Attribute is a semantic boolean
 
 <a name="Attribute.IsStandard"></a>
-### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L592>)
+### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L593>)
 
 ```go
 func (attr *Attribute) IsStandard() bool
@@ -111,7 +111,7 @@ func (attr *Attribute) IsStandard() bool
 IsStandard returns true if the Attribute's type is one of the Gleam intrinsic types
 
 <a name="Definition"></a>
-## type [Definition](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/definition.go#L16-L21>)
+## type [Definition](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/definition.go#L17-L22>)
 
 Definition is the internal representation of the entire CEM manifest for the Material 3 Expression components
 
@@ -125,7 +125,7 @@ type Definition struct {
 ```
 
 <a name="Parse"></a>
-### func [Parse](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L69>)
+### func [Parse](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L70>)
 
 ```go
 func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (definition Definition, err error)
@@ -134,7 +134,7 @@ func Parse(manifest *cem.SchemaJson, m3eCode string, m *metrics.Metrics) (defini
 Parse extracts the module declarations and enumerated types from the manifest and M3e code
 
 <a name="Enumeration"></a>
-## type [Enumeration](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L31-L36>)
+## type [Enumeration](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L32-L37>)
 
 Enumeration is an internal representation of a cem Enumeration
 
@@ -148,7 +148,7 @@ type Enumeration struct {
 ```
 
 <a name="Module"></a>
-## type [Module](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L39-L66>)
+## type [Module](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L40-L67>)
 
 Module is an internal representation of a cem Module
 
@@ -184,7 +184,7 @@ type Module struct {
 ```
 
 <a name="Property"></a>
-## type [Property](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L33>)
+## type [Property](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L34>)
 
 Property is a feature of an Attribute, used instead of hard\-coded "field = va;ue" tests
 
@@ -204,7 +204,7 @@ const (
 ```
 
 <a name="Slot"></a>
-## type [Slot](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L20-L28>)
+## type [Slot](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/parser.go#L21-L29>)
 
 Slot is an internal representation of a cem Slot
 
@@ -221,7 +221,7 @@ type Slot struct {
 ```
 
 <a name="Test"></a>
-## type [Test](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L23-L30>)
+## type [Test](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L24-L31>)
 
 Test represents each of the pieces of data required to generate unit tests
 

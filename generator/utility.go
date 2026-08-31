@@ -13,6 +13,7 @@ import (
 	"generator/metrics"
 	"generator/parser"
 	"generator/tests"
+	"log/slog"
 	"os"
 	"path/filepath"
 
@@ -75,39 +76,39 @@ func run(ctx context.Context, cmd *cli.Command) (err error) {
 		metrics.Disable()
 	}
 
-	logger.Info("Starting generation...")
+	slog.Info("Starting generation...")
 
 	// If JSON output is requested (--json) then switch the loggers to JSON
 	if cmd.Bool("json") {
 		err = jsonLogging()
 		if err != nil {
-			logger.Warn("cannot set JSON logging", "error", err)
+			slog.Warn("cannot set JSON logging", "error", err)
 		}
 	}
 
 	// Parse the Custom Element Manifest into a SchemaJson struct
 	var manifest cem.SchemaJson
 	if manifest, err = processManifest(metrics); err != nil {
-		logger.Error("error ingesting the Custom Element Manifest", internal.ErrorAttr(err))
+		slog.Error("error ingesting the Custom Element Manifest", internal.ErrorAttr(err))
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
 
 	// Parse the SchemaJson into the internal format of a Definition struct
 	var modules parser.Definition
 	if modules, err = parser.Parse(&manifest, cmd.String("m3e-source"), metrics); err != nil {
-		logger.Error("error parsing the custom manifest", internal.ErrorAttr(err))
+		slog.Error("error parsing the custom manifest", internal.ErrorAttr(err))
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
 
 	// Generate Gleam/Lustre bindings for the modules
 	if err = generateModules(!cmd.Bool("no-code"), cmd.String("destination"), &modules, metrics); err != nil {
-		logger.Error("error generating the Gleam modules", internal.ErrorAttr(err))
+		slog.Error("error generating the Gleam modules", internal.ErrorAttr(err))
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
 
 	// Generate unit tests for the bindings,
 	if err = generateTests(!cmd.Bool("no-tests"), cmd.String("destination"), &modules, metrics); err != nil {
-		logger.Error("error generating the Gleam unit tests", internal.ErrorAttr(err))
+		slog.Error("error generating the Gleam unit tests", internal.ErrorAttr(err))
 		return fmt.Errorf("failed - refer to previous error messages")
 	}
 
@@ -135,9 +136,9 @@ func generateModules(generate bool, destination string, modules *parser.Definiti
 		}
 		err = metrics.End("generate-code")
 		if err != nil {
-			logger.Warn("failed to close generate-code metrics", "error", err)
+			slog.Warn("failed to close generate-code metrics", "error", err)
 		}
-		logger.Info("Module code generation complete ...")
+		slog.Info("Module code generation complete ...")
 	}
 	return nil
 }
@@ -150,9 +151,9 @@ func generateTests(generate bool, destination string, modules *parser.Definition
 		}
 		err = metrics.End("generate-tests")
 		if err != nil {
-			logger.Warn("failed to close generate-tests metrics", "error", err)
+			slog.Warn("failed to close generate-tests metrics", "error", err)
 		}
-		logger.Info("Unit test generation complete ...")
+		slog.Info("Unit test generation complete ...")
 	}
 	return nil
 }
@@ -183,8 +184,8 @@ func processManifest(metrics *metrics.Metrics) (manifest cem.SchemaJson, err err
 	}
 	err = metrics.End("cem")
 	if err != nil {
-		logger.Warn("failed to close cem metrics", "error", err)
+		slog.Warn("failed to close cem metrics", "error", err)
 	}
-	logger.Info("CEM parsing complete ...")
+	slog.Info("CEM parsing complete ...")
 	return manifest, nil
 }

@@ -3,6 +3,7 @@ package code
 import (
 	"fmt"
 	"generator/parser"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -35,7 +36,7 @@ func generateModule(root *os.Root, module *parser.Module) (err error) {
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
-			logger.Error("error closing file", "filename", module.SnakeName+".gleam", "error", err)
+			slog.Error("error closing file", "filename", module.SnakeName+".gleam", "error", err)
 		}
 	}()
 
@@ -86,7 +87,7 @@ func generateModule(root *os.Root, module *parser.Module) (err error) {
 func write(file *os.File, gleam gleamModule) {
 	output := func(file *os.File, s string) {
 		if _, err := fmt.Fprint(file, s); err != nil {
-			logger.Error("error writing to file", "error", err)
+			slog.Error("error writing to file", "error", err)
 		}
 	}
 	output(file, gleam.header.String())

@@ -36,7 +36,7 @@ The output from Report\(\) is intended to be human\-readable and can be piped in
 
 
 <a name="Metrics"></a>
-## type [Metrics](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L21-L24>)
+## type [Metrics](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L20-L23>)
 
 Metrics is a container for zero or more sets of runtime metric samples
 
@@ -47,7 +47,7 @@ type Metrics struct {
 ```
 
 <a name="New"></a>
-### func [New](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L27>)
+### func [New](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L26>)
 
 ```go
 func New() *Metrics
@@ -56,7 +56,7 @@ func New() *Metrics
 New creates a new container for runtime metric samples
 
 <a name="Metrics.Disable"></a>
-### func \(\*Metrics\) [Disable](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L34>)
+### func \(\*Metrics\) [Disable](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L33>)
 
 ```go
 func (m *Metrics) Disable()
@@ -65,7 +65,7 @@ func (m *Metrics) Disable()
 Disable stops collection of metrics, turning the various methods \(Start, End and Report\) into no\-ops. This allows calls to these functions to be left in code but not actually do anything
 
 <a name="Metrics.End"></a>
-### func \(\*Metrics\) [End](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L40>)
+### func \(\*Metrics\) [End](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L39>)
 
 ```go
 func (m *Metrics) End(id string) (err error)
@@ -74,7 +74,7 @@ func (m *Metrics) End(id string) (err error)
 End captures the current runtime metrics and calculates the difference between them and the set of runtime metrics captured when Start\(\) was called
 
 <a name="Metrics.Report"></a>
-### func \(\*Metrics\) [Report](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L58>)
+### func \(\*Metrics\) [Report](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L57>)
 
 ```go
 func (m *Metrics) Report()
@@ -83,7 +83,7 @@ func (m *Metrics) Report()
 Report creates a report of each of the samples that have been captured to date
 
 <a name="Metrics.Start"></a>
-### func \(\*Metrics\) [Start](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L68>)
+### func \(\*Metrics\) [Start](<https://github.com/bruceesmith/m3e/blob/main/generator/metrics/metrics.go#L67>)
 
 ```go
 func (m *Metrics) Start(id string)

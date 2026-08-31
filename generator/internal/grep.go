@@ -5,11 +5,10 @@ import (
 	"bytes"
 	"fmt"
 	"io/fs"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/bruceesmith/logger"
 )
 
 // GrepLR mimics: grep -r -l pattern m3eSource
@@ -23,7 +22,7 @@ func GrepLR(m3eSource, pattern string) (foundIn string, err error) {
 	}
 	defer func() {
 		if err := root.Close(); err != nil {
-			logger.Error("failed to closed root filesystem", "root", m3eSource, "error", err)
+			slog.Error("failed to closed root filesystem", "root", m3eSource, "error", err)
 		}
 	}()
 
@@ -69,7 +68,7 @@ func hasPattern(root *os.Root, relPath string, target []byte) (bool, error) {
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
-			logger.Error("failed to close file", "file", relPath, "error", err)
+			slog.Error("failed to close file", "file", relPath, "error", err)
 		}
 	}()
 

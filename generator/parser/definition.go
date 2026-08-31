@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"generator/cem"
 	"generator/internal"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -34,7 +35,7 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 	}
 	defer func() {
 		if err := root.Close(); err != nil {
-			logger.Error("failed to close m3eSource folder", "folder", m3eSource, "error", err)
+			slog.Error("failed to close m3eSource folder", "folder", m3eSource, "error", err)
 		}
 	}()
 
@@ -42,17 +43,17 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 		cenum := strcase.ToCamel(enum)
 		foundIn, err := internal.GrepLR(m3eSource, "export type "+cenum)
 		if err != nil {
-			logger.Warn("did not find TypeScript declaration", "type", enum, "error", err)
+			slog.Warn("did not find TypeScript declaration", "type", enum, "error", err)
 			return fmt.Errorf("did not find TypeScript declaration %s: %w", enum, err)
 		}
 		if foundIn == "" {
-			logger.Warn("error extracing enumeration declaration filename", "type", enum, "file", foundIn, "error", err)
+			slog.Warn("error extracing enumeration declaration filename", "type", enum, "file", foundIn, "error", err)
 			return fmt.Errorf("error extracing enumeration declaration filename for %s from %s: %w", cenum, foundIn, err)
 		}
 		var types []tsTypeDef
 		types, err = typeDefinitions(root, foundIn, cenum, typeBuf)
 		if err != nil {
-			logger.Warn("failed to parse enumeration declaration file", "file", foundIn, "error", err)
+			slog.Warn("failed to parse enumeration declaration file", "file", foundIn, "error", err)
 			return fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", foundIn, cenum, err)
 		}
 		for _, tipe := range types {
