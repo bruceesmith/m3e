@@ -11,6 +11,7 @@ import lustre/attribute
 import lustre/element
 import lustre/element/html
 import m3e/slider.{Config}
+import m3e/slider_orientation
 import m3e/slider_size
 
 pub fn slider_default_config_test() {
@@ -21,6 +22,7 @@ pub fn slider_default_config_test() {
       labelled: slider.IsNotLabelled,
       max: 100.0,
       min: 0.0,
+      orientation: slider_orientation.Horizontal,
       step: 1.0,
       size: slider_size.ExtraSmall,
     ),
@@ -43,6 +45,7 @@ pub fn slider_from_config_test() {
         labelled: slider.IsLabelled,
         max: 42.0,
         min: 42.0,
+        orientation: slider_orientation.Vertical,
         step: 42.0,
         size: slider_size.Small,
       ),
@@ -52,6 +55,7 @@ pub fn slider_from_config_test() {
         |> slider.labelled(slider.IsLabelled)
         |> slider.max(42.0)
         |> slider.min(42.0)
+        |> slider.orientation(slider_orientation.Vertical)
         |> slider.step(42.0)
         |> slider.size(slider_size.Small),
     ),
@@ -73,6 +77,7 @@ pub fn slider_new_test() {
       labelled: slider.IsNotLabelled,
       max: 100.0,
       min: 0.0,
+      orientation: slider_orientation.Horizontal,
       step: 1.0,
       size: slider_size.ExtraSmall,
     )),
@@ -177,6 +182,28 @@ pub fn slider_min_test() {
   })
 }
 
+pub fn slider_orientation_test() {
+  let mod = slider.new()
+  let cases = [
+    #(
+      slider_orientation.Vertical,
+      slider.from_config(
+        slider.Config(
+          ..slider.default_config(),
+          orientation: slider_orientation.Vertical,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    slider.orientation(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn slider_step_test() {
   let mod = slider.new()
   let cases = [
@@ -221,6 +248,8 @@ pub fn slider_render_test() {
   let mod_labelled = slider.new() |> slider.labelled(slider.IsLabelled)
   let mod_max = slider.new() |> slider.max(42.0)
   let mod_min = slider.new() |> slider.min(42.0)
+  let mod_orientation =
+    slider.new() |> slider.orientation(slider_orientation.Vertical)
   let mod_step = slider.new() |> slider.step(42.0)
   let mod_size = slider.new() |> slider.size(slider_size.Small)
 
@@ -254,6 +283,19 @@ pub fn slider_render_test() {
     #(
       #(mod_min, [], []),
       element.element("m3e-slider", [attribute.attribute("min", "42.0")], []),
+    ),
+    #(
+      #(mod_orientation, [], []),
+      element.element(
+        "m3e-slider",
+        [
+          attribute.attribute(
+            "orientation",
+            slider_orientation.to_string(slider_orientation.Vertical),
+          ),
+        ],
+        [],
+      ),
     ),
     #(
       #(mod_step, [], []),

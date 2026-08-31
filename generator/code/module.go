@@ -1,6 +1,7 @@
 package code
 
 import (
+	"errors"
 	"fmt"
 	"generator/parser"
 	"log/slog"
@@ -27,8 +28,8 @@ func generateModule(root *os.Root, module *parser.Module) (err error) {
 	logger.TraceID("code", fmt.Sprintf("Module %s: %s\n", module.Name, module.Description))
 
 	err = root.Remove(module.SnakeName + ".gleam")
-	if err != nil {
-		return fmt.Errorf("cannot remove %s: %w", module.SnakeName+".gleam", err)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("cannot remove Gleam module %s: %w", module.SnakeName+".gleam", err)
 	}
 	file, err := root.OpenFile(module.SnakeName+".gleam", os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {

@@ -10,6 +10,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
+import m3e/slider_orientation.{type SliderOrientation}
 import m3e/slider_size.{type SliderSize}
 
 // --- Types ---
@@ -23,6 +24,7 @@ import m3e/slider_size.{type SliderSize}
 /// - labelled: Whether to show value labels when activated.
 /// - max: The maximum allowable value.
 /// - min: The minimum allowable value.
+/// - orientation: The orientation of the slider.
 /// - step: The value at which the thumb will snap.
 /// - size: The size of the slider.
 ///
@@ -33,6 +35,7 @@ pub opaque type Slider {
     labelled: Labelled,
     max: Float,
     min: Float,
+    orientation: SliderOrientation,
     step: Float,
     size: SliderSize,
   )
@@ -71,6 +74,8 @@ pub const default_max: Float = 100.0
 
 pub const default_min: Float = 0.0
 
+pub const default_orientation: SliderOrientation = slider_orientation.Horizontal
+
 pub const default_step: Float = 1.0
 
 pub const default_size: SliderSize = slider_size.ExtraSmall
@@ -86,6 +91,7 @@ pub type Config {
     labelled: Labelled,
     max: Float,
     min: Float,
+    orientation: SliderOrientation,
     step: Float,
     size: SliderSize,
   )
@@ -100,6 +106,7 @@ pub fn default_config() -> Config {
     labelled: IsNotLabelled,
     max: 100.0,
     min: 0.0,
+    orientation: slider_orientation.Horizontal,
     step: 1.0,
     size: slider_size.ExtraSmall,
   )
@@ -116,6 +123,7 @@ pub fn from_config(config: Config) -> Slider {
     labelled: config.labelled,
     max: config.max,
     min: config.min,
+    orientation: config.orientation,
     step: config.step,
     size: config.size,
   )
@@ -159,6 +167,12 @@ pub fn min(record: Slider, min: Float) -> Slider {
   Slider(..record, min: min)
 }
 
+/// orientation sets the value of orientation for this Slider.
+///
+pub fn orientation(record: Slider, orientation: SliderOrientation) -> Slider {
+  Slider(..record, orientation: orientation)
+}
+
 /// step sets the value of step for this Slider.
 ///
 pub fn step(record: Slider, step: Float) -> Slider {
@@ -196,6 +210,11 @@ pub fn render(
           "min",
           float.to_string(model.min),
           float.to_string(default_min),
+        ),
+        attr.with_default(
+          "orientation",
+          slider_orientation.to_string(model.orientation),
+          slider_orientation.to_string(default_orientation),
         ),
         attr.with_default(
           "step",

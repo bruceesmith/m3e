@@ -236,6 +236,12 @@ var defaultTransformRules = []defaultTransformFunc{
 		return d, d == "" || d == "[]"
 	},
 	func(a *Attribute, d string) (string, bool) {
+		if strings.HasPrefix(d, `["`) && strings.HasSuffix(d, `"]`) {
+			return strcase.ToSnake(a.Type) + "." + strcase.ToCamel(strings.Trim(d, `[]"`)), true
+		}
+		return d, false
+	},
+	func(a *Attribute, d string) (string, bool) {
 		if strings.HasPrefix(d, `"`) && strings.HasSuffix(d, `"`) {
 			if a.Type == "String" {
 				return d, true
@@ -421,15 +427,24 @@ func (attr *Attribute) boolean(text string) (matched bool) {
 	return false
 }
 
+func (attr *Attribute) array(text string) (matched bool) {
+	after, ok := strings.CutPrefix(text, "Array<")
+	if !ok {
+		return false
+	}
+	before, ok := strings.CutSuffix(after, ">")
+	if !ok {
+		return false
+	}
+	attr.Type = before
+	return true
+}
+
 func (attr *Attribute) exclude(text string) (matched bool) {
 	tx, ok := strings.CutPrefix(text, "Exclude<")
 	if !ok {
 		return false
 	}
-	// comma := strings.Index(tx, ",")
-	// if comma == -1 {
-	// 	return false
-	// }
 	before, _, ok := strings.Cut(tx, ",")
 	if !ok {
 		return false
@@ -519,6 +534,7 @@ func (attr *Attribute) number(text string) (matched bool) {
 type typeTransformFunction func(attr *Attribute, text string, adef *string) bool
 
 var typeTransformRules = []typeTransformFunction{
+	func(attr *Attribute, text string, _ *string) bool { return attr.array(text) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.boolean(text) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.exclude(text) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.function(text) },

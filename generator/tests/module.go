@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"errors"
 	"fmt"
 	"generator/parser"
 	"log/slog"
@@ -32,8 +33,8 @@ func generateTests(root *os.Root, module *parser.Module, enumerations map[string
 
 	fileName := strcase.ToSnake(newMod.Name)
 	err = root.Remove(fileName + "_test.gleam")
-	if err != nil {
-		return fmt.Errorf("cannot remove %s: %w", fileName+"_test.gleam", err)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("cannot remove test file %s: %w", fileName+"_test.gleam", err)
 	}
 	file, err := root.OpenFile(fileName+"_test.gleam", os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {

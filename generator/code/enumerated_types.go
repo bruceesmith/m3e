@@ -2,6 +2,7 @@ package code
 
 import (
 	_ "embed"
+	"errors"
 	"fmt"
 	"generator/parser"
 	"log/slog"
@@ -43,8 +44,8 @@ func writeEnumFile(root *os.Root, identifier string, enum []parser.Enumeration) 
 	}
 	fileName := strcase.ToSnake(identifier)
 	err := root.Remove(fileName + ".gleam")
-	if err != nil {
-		return fmt.Errorf("cannot remove %s: %w", fileName+".gleam", err)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("cannot remove Gleam enumeration file %s: %w", fileName+".gleam", err)
 	}
 	file, err := root.OpenFile(fileName+".gleam", os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
