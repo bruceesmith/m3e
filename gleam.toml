@@ -1,5 +1,5 @@
 name = "m3e"
-version = "2.3.9"
+version = "2.3.10"
 target = "javascript"
 description = "Gleam bindings to all of the M3E components"
 licences = ["MIT"]

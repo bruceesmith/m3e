@@ -3,7 +3,11 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.9 of this software is aligned with v2.7.9 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.10 of this software is aligned with v2.7.9 of [M3E](https://github.com/matraic/m3e).
+
+### 2.3.10
+
+- adjust/correct the way that TypeScript ARRAY fields are handled
 
 ### 2.3.9
 
