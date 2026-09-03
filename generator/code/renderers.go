@@ -89,8 +89,12 @@ func attributeWithDefault(attr parser.Attribute) string {
 }
 
 func listAttribute(attr parser.Attribute) string {
-	const format = `attr.list_of_string("%s",model.%s)`
-	return fmt.Sprintf(format, attr.SnakeName, attr.SnakeName)
+	if attr.BaseType == "String" {
+		const format = `attr.list_of_string("%s",model.%s)`
+		return fmt.Sprintf(format, attr.KebabName, attr.SnakeName)
+	}
+	const format = `attr.with_default("%s", attr.list_to_spaced_string(model.%s, %s),attr.list_to_spaced_string(default_%s, %s))`
+	return fmt.Sprintf(format, attr.KebabName, attr.SnakeName, strcase.ToSnake(attr.BaseType)+".to_string", attr.SnakeName, strcase.ToSnake(attr.BaseType)+".to_string")
 }
 
 func optionAttribute(attr parser.Attribute) string {

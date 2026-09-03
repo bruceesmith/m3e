@@ -67,7 +67,7 @@ type Attribute struct {
     Test Test
     // CamelCase type name
     Type string
-    // CamelCase type name of an Option(***) Type
+    // CamelCase underlying type name of an Option(***) or List(***) Type
     BaseType string
     // Properties of an Attribute
     Properties set.Set[Property]
@@ -75,7 +75,7 @@ type Attribute struct {
 ```
 
 <a name="Attribute.IsList"></a>
-### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L599>)
+### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L619>)
 
 ```go
 func (attr *Attribute) IsList() bool
@@ -84,7 +84,7 @@ func (attr *Attribute) IsList() bool
 IsList returns true if the Attribute is declared as a Gleam List
 
 <a name="Attribute.IsOptional"></a>
-### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L594>)
+### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L614>)
 
 ```go
 func (attr *Attribute) IsOptional() bool
@@ -93,7 +93,7 @@ func (attr *Attribute) IsOptional() bool
 IsOptional returns true if the Attribute's type is Option\(something\)
 
 <a name="Attribute.IsSemBool"></a>
-### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L604>)
+### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L624>)
 
 ```go
 func (attr *Attribute) IsSemBool() bool
@@ -102,7 +102,7 @@ func (attr *Attribute) IsSemBool() bool
 IsSemBool returns true if the Attribute is a semantic boolean
 
 <a name="Attribute.IsStandard"></a>
-### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L609>)
+### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L629>)
 
 ```go
 func (attr *Attribute) IsStandard() bool

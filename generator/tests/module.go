@@ -117,6 +117,12 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 				} else if v.BaseType != "Date" {
 					attr.Test.Value, attr.Test.AttributeValue = anyValue(attr.BaseType, enumerations)
 				}
+			} else if attr.IsList() {
+				if v.BaseType != "String" {
+					val, attrVal := nonDefaultValue(attr.BaseType, attr.Default, enumerations)
+					attr.Test.Value = "[" + val + "]"
+					attr.Test.AttributeValue = attrVal
+				}
 			} else {
 				attr.Test.Value, attr.Test.AttributeValue = nonDefaultValue(attr.Type, attr.Default, enumerations)
 			}
@@ -144,7 +150,7 @@ func nonDefaultValue(lookup string, defawlt string, enumerations map[string][]pa
 		slog.Error("nonDefaultValue cannot find external type in enumerations", "type", lookup)
 		return "Unknown", "unknown"
 	}
-	parts := strings.Split(defawlt, ".")
+	parts := strings.Split(strings.Trim(defawlt, "[]"), ".")
 	if len(parts) != 2 {
 		slog.Info(fmt.Sprintf("default value %s should be qualified", defawlt))
 	}

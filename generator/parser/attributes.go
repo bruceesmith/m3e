@@ -68,7 +68,7 @@ type Attribute struct {
 	Test Test
 	// CamelCase type name
 	Type string
-	// CamelCase type name of an Option(***) Type
+	// CamelCase underlying type name of an Option(***) or List(***) Type
 	BaseType string
 	// Properties of an Attribute
 	Properties set.Set[Property]
@@ -90,9 +90,8 @@ var (
 		"number":  "Float",
 		"string":  "String",
 	}
-	optionRe = regexp.MustCompile(`Option\(([a-zA-Z]+)\)`)
-	typeRe   = regexp.MustCompile(`^(\w+)((?:\s+\| null)?(?:\s+\| undefined)?)$`)
-	typeRe1  = regexp.MustCompile(`^(\w+) \| (\(.+\))$`)
+	typeRe  = regexp.MustCompile(`^(\w+)((?:\s+\| null)?(?:\s+\| undefined)?)$`)
+	typeRe1 = regexp.MustCompile(`^(\w+) \| (\(.+\))$`)
 )
 
 // makeAttributes converts the M3E manifest into an internal representation that is
@@ -205,6 +204,16 @@ var defaultTransformRules = []defaultTransformFunc{
 	func(a *Attribute, d string) (string, bool) {
 		return "None", a.IsOptional()
 	},
+	func(a *Attribute, d string) (string, bool) {
+		if a.IsList() {
+			if a.BaseType == "String" {
+				return "[]", true
+			}
+			d = strings.Trim(d, `[]"`)
+			return "[" + strcase.ToSnake(a.BaseType) + "." + strcase.ToCamel(d) + "]", true
+		}
+		return d, false
+	},
 	func(a *Attribute, d string) (string, bool) { return "True", d == "true" },
 	func(a *Attribute, d string) (string, bool) {
 		if a.Type == "Bool" {
@@ -303,11 +312,14 @@ func (attr *Attribute) testValues(modName string) {
 			Value:          `42.0`,
 			AttributeValue: `"42.0"`,
 		}
-	case attr.Type == "List(String)":
-		attr.Test = Test{
-			Value:          `["test1", "test2"]`,
-			AttributeValue: `"test1 test2"`,
+	case attr.IsList():
+		if attr.Type == "List(String)" {
+			attr.Test = Test{
+				Value:          `["test1", "test2"]`,
+				AttributeValue: `"test1 test2"`,
+			}
 		}
+		// The Value & Attribute will be filled out in tests/module.go for a List of an enumerated type
 	case attr.Type == "number_string.NumberString":
 		attr.Test = Test{
 			Value:          `number_string.StringVal("10")`,
@@ -382,14 +394,20 @@ func (attr *Attribute) imports() (importStrings map[string]string, testImportStr
 		testImportStrings["m3e/number_string"] = ""
 	}
 	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && !attr.IsSemBool() {
-		matches := optionRe.FindStringSubmatch(attr.Type)
-		if len(matches) == 2 {
+		if after, ok := strings.CutPrefix(attr.Type, "Option("); ok {
 			// example: Option(BadgePosition) - an optional externally defined type
-			importStrings["m3e/"+strcase.ToSnake(matches[1])] = ".{type " + matches[1] + "}"
-			if matches[1] != "Date" && matches[1] != "TimeParts" && matches[1] != "ValidationMessages" {
-				importedModule = strcase.ToSnake(matches[1])
+			t := strings.TrimSuffix(after, ")")
+			importStrings["m3e/"+strcase.ToSnake(t)] = ".{type " + t + "}"
+			if t != "Date" && t != "TimeParts" && t != "ValidationMessages" {
+				importedModule = strcase.ToSnake(t)
 			}
-			testImportStrings["m3e/"+strcase.ToSnake(matches[1])] = ""
+			testImportStrings["m3e/"+strcase.ToSnake(t)] = ""
+		} else if after, ok := strings.CutPrefix(attr.Type, "List("); ok {
+			// example: List(GestureInputButton)
+			t := strings.TrimSuffix(after, ")")
+			importStrings["m3e/"+strcase.ToSnake(t)] = ".{type " + attr.BaseType + "}"
+			importedModule = strcase.ToSnake(t)
+			testImportStrings["m3e/"+strcase.ToSnake(t)] = ""
 		} else {
 			// example: AppBarSize - an externally defined type
 			importStrings["m3e/"+strcase.ToSnake(attr.Type)] = ".{type " + attr.Type + "}"
@@ -436,7 +454,9 @@ func (attr *Attribute) array(text string) (matched bool) {
 	if !ok {
 		return false
 	}
-	attr.Type = before
+	attr.BaseType = before
+	attr.Type = "List(" + before + ")"
+	attr.Properties.Add(List)
 	return true
 }
 
