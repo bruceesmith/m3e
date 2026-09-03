@@ -28,7 +28,7 @@ import m3e/gesture_input_button.{type GestureInputButton}
 ///
 pub opaque type SequenceGesture {
   SequenceGesture(
-    allowed_buttons: GestureInputButton,
+    allowed_buttons: List(GestureInputButton),
     disabled: Disabled,
     priority: Float,
     max_interval: Float,
@@ -45,7 +45,9 @@ pub type Disabled {
 
 // --- Defaults ---
 
-pub const default_allowed_buttons: GestureInputButton = gesture_input_button.Primary
+pub const default_allowed_buttons: List(GestureInputButton) = [
+  gesture_input_button.Primary,
+]
 
 pub const default_disabled: Disabled = IsNotDisabled
 
@@ -61,7 +63,7 @@ pub const default_for: Option(String) = None
 ///
 pub type Config {
   Config(
-    allowed_buttons: GestureInputButton,
+    allowed_buttons: List(GestureInputButton),
     disabled: Disabled,
     priority: Float,
     max_interval: Float,
@@ -73,7 +75,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    allowed_buttons: gesture_input_button.Primary,
+    allowed_buttons: [gesture_input_button.Primary],
     disabled: IsNotDisabled,
     priority: 1.0,
     max_interval: 250.0,
@@ -107,7 +109,7 @@ pub fn new() -> SequenceGesture {
 ///
 pub fn allowed_buttons(
   record: SequenceGesture,
-  allowed_buttons: GestureInputButton,
+  allowed_buttons: List(GestureInputButton),
 ) -> SequenceGesture {
   SequenceGesture(..record, allowed_buttons: allowed_buttons)
 }
@@ -156,8 +158,14 @@ pub fn render(
       [
         attr.with_default(
           "allowed-buttons",
-          gesture_input_button.to_string(model.allowed_buttons),
-          gesture_input_button.to_string(default_allowed_buttons),
+          attr.list_to_spaced_string(
+            model.allowed_buttons,
+            gesture_input_button.to_string,
+          ),
+          attr.list_to_spaced_string(
+            default_allowed_buttons,
+            gesture_input_button.to_string,
+          ),
         ),
         attr.boolean("disabled", model.disabled == IsDisabled),
         attr.with_default(

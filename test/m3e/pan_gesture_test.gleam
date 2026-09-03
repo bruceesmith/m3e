@@ -17,7 +17,7 @@ import m3e/pan_gesture_lock_axis
 pub fn pan_gesture_default_config_test() {
   let cases = [
     Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: pan_gesture.IsNotDisabled,
       priority: 1.0,
       min_displacement: 4.0,
@@ -41,7 +41,7 @@ pub fn pan_gesture_from_config_test() {
   let cases = [
     #(
       pan_gesture.Config(
-        allowed_buttons: gesture_input_button.Secondary,
+        allowed_buttons: [gesture_input_button.Secondary],
         disabled: pan_gesture.IsDisabled,
         priority: 42.0,
         min_displacement: 42.0,
@@ -52,7 +52,7 @@ pub fn pan_gesture_from_config_test() {
         for: Some("test"),
       ),
       pan_gesture.new()
-        |> pan_gesture.allowed_buttons(gesture_input_button.Secondary)
+        |> pan_gesture.allowed_buttons([gesture_input_button.Secondary])
         |> pan_gesture.disabled(pan_gesture.IsDisabled)
         |> pan_gesture.priority(42.0)
         |> pan_gesture.min_displacement(42.0)
@@ -75,7 +75,7 @@ pub fn pan_gesture_from_config_test() {
 pub fn pan_gesture_new_test() {
   let cases = [
     pan_gesture.from_config(pan_gesture.Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: pan_gesture.IsNotDisabled,
       priority: 1.0,
       min_displacement: 4.0,
@@ -99,12 +99,11 @@ pub fn pan_gesture_allowed_buttons_test() {
   let mod = pan_gesture.new()
   let cases = [
     #(
-      gesture_input_button.Secondary,
+      [gesture_input_button.Secondary],
       pan_gesture.from_config(
-        pan_gesture.Config(
-          ..pan_gesture.default_config(),
-          allowed_buttons: gesture_input_button.Secondary,
-        ),
+        pan_gesture.Config(..pan_gesture.default_config(), allowed_buttons: [
+          gesture_input_button.Secondary,
+        ]),
       ),
     ),
   ]
@@ -286,7 +285,7 @@ pub fn pan_gesture_render_test() {
 
   let mod_allowed_buttons =
     pan_gesture.new()
-    |> pan_gesture.allowed_buttons(gesture_input_button.Secondary)
+    |> pan_gesture.allowed_buttons([gesture_input_button.Secondary])
   let mod_disabled =
     pan_gesture.new() |> pan_gesture.disabled(pan_gesture.IsDisabled)
   let mod_priority = pan_gesture.new() |> pan_gesture.priority(42.0)

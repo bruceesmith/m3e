@@ -1,5 +1,6 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/string
 
 import lustre/attribute.{type Attribute}
 
@@ -10,6 +11,20 @@ pub fn boolean(name: String, value: Bool) -> Attribute(msg) {
   case value {
     True -> attribute.attribute(name, "")
     False -> attribute.none()
+  }
+}
+
+/// list_to_spaced_string takes a List and returns a string containing
+/// the list elements separated by a space
+///
+@internal
+pub fn list_to_spaced_string(values: List(a), f: fn(a) -> String) -> String {
+  case values {
+    [] -> ""
+    [_, _, ..] | [_] ->
+      values
+      |> list.map(f)
+      |> string.join(" ")
   }
 }
 

@@ -16,7 +16,7 @@ import m3e/sequence_gesture.{Config}
 pub fn sequence_gesture_default_config_test() {
   let cases = [
     Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: sequence_gesture.IsNotDisabled,
       priority: 1.0,
       max_interval: 250.0,
@@ -36,14 +36,14 @@ pub fn sequence_gesture_from_config_test() {
   let cases = [
     #(
       sequence_gesture.Config(
-        allowed_buttons: gesture_input_button.Secondary,
+        allowed_buttons: [gesture_input_button.Secondary],
         disabled: sequence_gesture.IsDisabled,
         priority: 42.0,
         max_interval: 42.0,
         for: Some("test"),
       ),
       sequence_gesture.new()
-        |> sequence_gesture.allowed_buttons(gesture_input_button.Secondary)
+        |> sequence_gesture.allowed_buttons([gesture_input_button.Secondary])
         |> sequence_gesture.disabled(sequence_gesture.IsDisabled)
         |> sequence_gesture.priority(42.0)
         |> sequence_gesture.max_interval(42.0)
@@ -62,7 +62,7 @@ pub fn sequence_gesture_from_config_test() {
 pub fn sequence_gesture_new_test() {
   let cases = [
     sequence_gesture.from_config(sequence_gesture.Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: sequence_gesture.IsNotDisabled,
       priority: 1.0,
       max_interval: 250.0,
@@ -82,11 +82,11 @@ pub fn sequence_gesture_allowed_buttons_test() {
   let mod = sequence_gesture.new()
   let cases = [
     #(
-      gesture_input_button.Secondary,
+      [gesture_input_button.Secondary],
       sequence_gesture.from_config(
         sequence_gesture.Config(
           ..sequence_gesture.default_config(),
-          allowed_buttons: gesture_input_button.Secondary,
+          allowed_buttons: [gesture_input_button.Secondary],
         ),
       ),
     ),
@@ -193,7 +193,7 @@ pub fn sequence_gesture_render_test() {
 
   let mod_allowed_buttons =
     sequence_gesture.new()
-    |> sequence_gesture.allowed_buttons(gesture_input_button.Secondary)
+    |> sequence_gesture.allowed_buttons([gesture_input_button.Secondary])
   let mod_disabled =
     sequence_gesture.new()
     |> sequence_gesture.disabled(sequence_gesture.IsDisabled)

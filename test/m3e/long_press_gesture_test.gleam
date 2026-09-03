@@ -16,7 +16,7 @@ import m3e/long_press_gesture.{Config}
 pub fn long_press_gesture_default_config_test() {
   let cases = [
     Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: long_press_gesture.IsNotDisabled,
       priority: 1.0,
       max_displacement: 4.0,
@@ -37,7 +37,7 @@ pub fn long_press_gesture_from_config_test() {
   let cases = [
     #(
       long_press_gesture.Config(
-        allowed_buttons: gesture_input_button.Secondary,
+        allowed_buttons: [gesture_input_button.Secondary],
         disabled: long_press_gesture.IsDisabled,
         priority: 42.0,
         max_displacement: 42.0,
@@ -45,7 +45,7 @@ pub fn long_press_gesture_from_config_test() {
         for: Some("test"),
       ),
       long_press_gesture.new()
-        |> long_press_gesture.allowed_buttons(gesture_input_button.Secondary)
+        |> long_press_gesture.allowed_buttons([gesture_input_button.Secondary])
         |> long_press_gesture.disabled(long_press_gesture.IsDisabled)
         |> long_press_gesture.priority(42.0)
         |> long_press_gesture.max_displacement(42.0)
@@ -65,7 +65,7 @@ pub fn long_press_gesture_from_config_test() {
 pub fn long_press_gesture_new_test() {
   let cases = [
     long_press_gesture.from_config(long_press_gesture.Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: long_press_gesture.IsNotDisabled,
       priority: 1.0,
       max_displacement: 4.0,
@@ -86,11 +86,11 @@ pub fn long_press_gesture_allowed_buttons_test() {
   let mod = long_press_gesture.new()
   let cases = [
     #(
-      gesture_input_button.Secondary,
+      [gesture_input_button.Secondary],
       long_press_gesture.from_config(
         long_press_gesture.Config(
           ..long_press_gesture.default_config(),
-          allowed_buttons: gesture_input_button.Secondary,
+          allowed_buttons: [gesture_input_button.Secondary],
         ),
       ),
     ),
@@ -219,7 +219,7 @@ pub fn long_press_gesture_render_test() {
 
   let mod_allowed_buttons =
     long_press_gesture.new()
-    |> long_press_gesture.allowed_buttons(gesture_input_button.Secondary)
+    |> long_press_gesture.allowed_buttons([gesture_input_button.Secondary])
   let mod_disabled =
     long_press_gesture.new()
     |> long_press_gesture.disabled(long_press_gesture.IsDisabled)

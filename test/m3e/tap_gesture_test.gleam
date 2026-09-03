@@ -16,7 +16,7 @@ import m3e/tap_gesture.{Config}
 pub fn tap_gesture_default_config_test() {
   let cases = [
     Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: tap_gesture.IsNotDisabled,
       priority: 1.0,
       pointers: 1.0,
@@ -40,7 +40,7 @@ pub fn tap_gesture_from_config_test() {
   let cases = [
     #(
       tap_gesture.Config(
-        allowed_buttons: gesture_input_button.Secondary,
+        allowed_buttons: [gesture_input_button.Secondary],
         disabled: tap_gesture.IsDisabled,
         priority: 42.0,
         pointers: 42.0,
@@ -51,7 +51,7 @@ pub fn tap_gesture_from_config_test() {
         for: Some("test"),
       ),
       tap_gesture.new()
-        |> tap_gesture.allowed_buttons(gesture_input_button.Secondary)
+        |> tap_gesture.allowed_buttons([gesture_input_button.Secondary])
         |> tap_gesture.disabled(tap_gesture.IsDisabled)
         |> tap_gesture.priority(42.0)
         |> tap_gesture.pointers(42.0)
@@ -74,7 +74,7 @@ pub fn tap_gesture_from_config_test() {
 pub fn tap_gesture_new_test() {
   let cases = [
     tap_gesture.from_config(tap_gesture.Config(
-      allowed_buttons: gesture_input_button.Primary,
+      allowed_buttons: [gesture_input_button.Primary],
       disabled: tap_gesture.IsNotDisabled,
       priority: 1.0,
       pointers: 1.0,
@@ -98,12 +98,11 @@ pub fn tap_gesture_allowed_buttons_test() {
   let mod = tap_gesture.new()
   let cases = [
     #(
-      gesture_input_button.Secondary,
+      [gesture_input_button.Secondary],
       tap_gesture.from_config(
-        tap_gesture.Config(
-          ..tap_gesture.default_config(),
-          allowed_buttons: gesture_input_button.Secondary,
-        ),
+        tap_gesture.Config(..tap_gesture.default_config(), allowed_buttons: [
+          gesture_input_button.Secondary,
+        ]),
       ),
     ),
   ]
@@ -285,7 +284,7 @@ pub fn tap_gesture_render_test() {
 
   let mod_allowed_buttons =
     tap_gesture.new()
-    |> tap_gesture.allowed_buttons(gesture_input_button.Secondary)
+    |> tap_gesture.allowed_buttons([gesture_input_button.Secondary])
   let mod_disabled =
     tap_gesture.new() |> tap_gesture.disabled(tap_gesture.IsDisabled)
   let mod_priority = tap_gesture.new() |> tap_gesture.priority(42.0)
