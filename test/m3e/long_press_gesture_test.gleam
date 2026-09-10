@@ -12,16 +12,18 @@ import lustre/attribute
 import lustre/element
 import m3e/gesture_input_button
 import m3e/long_press_gesture.{Config}
+import m3e/pointer_type
 
 pub fn long_press_gesture_default_config_test() {
   let cases = [
     Config(
-      allowed_buttons: [gesture_input_button.Primary],
+      for: None,
+      buttons: [gesture_input_button.Primary],
+      pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: long_press_gesture.IsNotDisabled,
       priority: 1.0,
       max_displacement: 4.0,
       min_duration: 500.0,
-      for: None,
     ),
   ]
 
@@ -37,20 +39,22 @@ pub fn long_press_gesture_from_config_test() {
   let cases = [
     #(
       long_press_gesture.Config(
-        allowed_buttons: [gesture_input_button.Secondary],
+        for: Some("test"),
+        buttons: [gesture_input_button.Secondary],
+        pointer_types: [pointer_type.Mouse],
         disabled: long_press_gesture.IsDisabled,
         priority: 42.0,
         max_displacement: 42.0,
         min_duration: 42.0,
-        for: Some("test"),
       ),
       long_press_gesture.new()
-        |> long_press_gesture.allowed_buttons([gesture_input_button.Secondary])
+        |> long_press_gesture.for(Some("test"))
+        |> long_press_gesture.buttons([gesture_input_button.Secondary])
+        |> long_press_gesture.pointer_types([pointer_type.Mouse])
         |> long_press_gesture.disabled(long_press_gesture.IsDisabled)
         |> long_press_gesture.priority(42.0)
         |> long_press_gesture.max_displacement(42.0)
-        |> long_press_gesture.min_duration(42.0)
-        |> long_press_gesture.for(Some("test")),
+        |> long_press_gesture.min_duration(42.0),
     ),
   ]
 
@@ -65,12 +69,13 @@ pub fn long_press_gesture_from_config_test() {
 pub fn long_press_gesture_new_test() {
   let cases = [
     long_press_gesture.from_config(long_press_gesture.Config(
-      allowed_buttons: [gesture_input_button.Primary],
+      for: None,
+      buttons: [gesture_input_button.Primary],
+      pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: long_press_gesture.IsNotDisabled,
       priority: 1.0,
       max_displacement: 4.0,
       min_duration: 500.0,
-      for: None,
     )),
   ]
 
@@ -82,15 +87,15 @@ pub fn long_press_gesture_new_test() {
   })
 }
 
-pub fn long_press_gesture_allowed_buttons_test() {
+pub fn long_press_gesture_for_test() {
   let mod = long_press_gesture.new()
   let cases = [
     #(
-      [gesture_input_button.Secondary],
+      Some("test"),
       long_press_gesture.from_config(
         long_press_gesture.Config(
           ..long_press_gesture.default_config(),
-          allowed_buttons: [gesture_input_button.Secondary],
+          for: Some("test"),
         ),
       ),
     ),
@@ -99,7 +104,51 @@ pub fn long_press_gesture_allowed_buttons_test() {
   list.each(cases, fn(c) {
     let #(field, expected) = c
 
-    long_press_gesture.allowed_buttons(mod, field)
+    long_press_gesture.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn long_press_gesture_buttons_test() {
+  let mod = long_press_gesture.new()
+  let cases = [
+    #(
+      [gesture_input_button.Secondary],
+      long_press_gesture.from_config(
+        long_press_gesture.Config(
+          ..long_press_gesture.default_config(),
+          buttons: [gesture_input_button.Secondary],
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    long_press_gesture.buttons(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn long_press_gesture_pointer_types_test() {
+  let mod = long_press_gesture.new()
+  let cases = [
+    #(
+      [pointer_type.Mouse],
+      long_press_gesture.from_config(
+        long_press_gesture.Config(
+          ..long_press_gesture.default_config(),
+          pointer_types: [pointer_type.Mouse],
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    long_press_gesture.pointer_types(mod, field)
     |> should.equal(expected)
   })
 }
@@ -192,34 +241,16 @@ pub fn long_press_gesture_min_duration_test() {
   })
 }
 
-pub fn long_press_gesture_for_test() {
-  let mod = long_press_gesture.new()
-  let cases = [
-    #(
-      Some("test"),
-      long_press_gesture.from_config(
-        long_press_gesture.Config(
-          ..long_press_gesture.default_config(),
-          for: Some("test"),
-        ),
-      ),
-    ),
-  ]
-
-  list.each(cases, fn(c) {
-    let #(field, expected) = c
-
-    long_press_gesture.for(mod, field)
-    |> should.equal(expected)
-  })
-}
-
 pub fn long_press_gesture_render_test() {
   let mod = long_press_gesture.new()
 
-  let mod_allowed_buttons =
+  let mod_for = long_press_gesture.new() |> long_press_gesture.for(Some("test"))
+  let mod_buttons =
     long_press_gesture.new()
-    |> long_press_gesture.allowed_buttons([gesture_input_button.Secondary])
+    |> long_press_gesture.buttons([gesture_input_button.Secondary])
+  let mod_pointer_types =
+    long_press_gesture.new()
+    |> long_press_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     long_press_gesture.new()
     |> long_press_gesture.disabled(long_press_gesture.IsDisabled)
@@ -229,7 +260,6 @@ pub fn long_press_gesture_render_test() {
     long_press_gesture.new() |> long_press_gesture.max_displacement(42.0)
   let mod_min_duration =
     long_press_gesture.new() |> long_press_gesture.min_duration(42.0)
-  let mod_for = long_press_gesture.new() |> long_press_gesture.for(Some("test"))
   let cases = [
     #(#(mod, []), element.element("m3e-long-press-gesture", [], [])),
     #(
@@ -238,13 +268,34 @@ pub fn long_press_gesture_render_test() {
     ),
 
     #(
-      #(mod_allowed_buttons, []),
+      #(mod_for, []),
+      element.element(
+        "m3e-long-press-gesture",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_buttons, []),
       element.element(
         "m3e-long-press-gesture",
         [
           attribute.attribute(
-            "allowed-buttons",
+            "buttons",
             gesture_input_button.to_string(gesture_input_button.Secondary),
+          ),
+        ],
+        [],
+      ),
+    ),
+    #(
+      #(mod_pointer_types, []),
+      element.element(
+        "m3e-long-press-gesture",
+        [
+          attribute.attribute(
+            "pointer-types",
+            pointer_type.to_string(pointer_type.Mouse),
           ),
         ],
         [],
@@ -279,14 +330,6 @@ pub fn long_press_gesture_render_test() {
       element.element(
         "m3e-long-press-gesture",
         [attribute.attribute("min-duration", "42.0")],
-        [],
-      ),
-    ),
-    #(
-      #(mod_for, []),
-      element.element(
-        "m3e-long-press-gesture",
-        [attribute.attribute("for", "test")],
         [],
       ),
     ),

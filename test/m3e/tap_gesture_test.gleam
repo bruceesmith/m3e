@@ -11,12 +11,15 @@ import gleeunit/should
 import lustre/attribute
 import lustre/element
 import m3e/gesture_input_button
+import m3e/pointer_type
 import m3e/tap_gesture.{Config}
 
 pub fn tap_gesture_default_config_test() {
   let cases = [
     Config(
-      allowed_buttons: [gesture_input_button.Primary],
+      for: None,
+      buttons: [gesture_input_button.Primary],
+      pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: tap_gesture.IsNotDisabled,
       priority: 1.0,
       pointers: 1.0,
@@ -24,7 +27,6 @@ pub fn tap_gesture_default_config_test() {
       max_release_interval: 120.0,
       max_displacement: 12.0,
       max_duration: 180.0,
-      for: None,
     ),
   ]
 
@@ -40,7 +42,9 @@ pub fn tap_gesture_from_config_test() {
   let cases = [
     #(
       tap_gesture.Config(
-        allowed_buttons: [gesture_input_button.Secondary],
+        for: Some("test"),
+        buttons: [gesture_input_button.Secondary],
+        pointer_types: [pointer_type.Mouse],
         disabled: tap_gesture.IsDisabled,
         priority: 42.0,
         pointers: 42.0,
@@ -48,18 +52,18 @@ pub fn tap_gesture_from_config_test() {
         max_release_interval: 42.0,
         max_displacement: 42.0,
         max_duration: 42.0,
-        for: Some("test"),
       ),
       tap_gesture.new()
-        |> tap_gesture.allowed_buttons([gesture_input_button.Secondary])
+        |> tap_gesture.for(Some("test"))
+        |> tap_gesture.buttons([gesture_input_button.Secondary])
+        |> tap_gesture.pointer_types([pointer_type.Mouse])
         |> tap_gesture.disabled(tap_gesture.IsDisabled)
         |> tap_gesture.priority(42.0)
         |> tap_gesture.pointers(42.0)
         |> tap_gesture.max_press_interval(42.0)
         |> tap_gesture.max_release_interval(42.0)
         |> tap_gesture.max_displacement(42.0)
-        |> tap_gesture.max_duration(42.0)
-        |> tap_gesture.for(Some("test")),
+        |> tap_gesture.max_duration(42.0),
     ),
   ]
 
@@ -74,7 +78,9 @@ pub fn tap_gesture_from_config_test() {
 pub fn tap_gesture_new_test() {
   let cases = [
     tap_gesture.from_config(tap_gesture.Config(
-      allowed_buttons: [gesture_input_button.Primary],
+      for: None,
+      buttons: [gesture_input_button.Primary],
+      pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: tap_gesture.IsNotDisabled,
       priority: 1.0,
       pointers: 1.0,
@@ -82,7 +88,6 @@ pub fn tap_gesture_new_test() {
       max_release_interval: 120.0,
       max_displacement: 12.0,
       max_duration: 180.0,
-      for: None,
     )),
   ]
 
@@ -94,13 +99,32 @@ pub fn tap_gesture_new_test() {
   })
 }
 
-pub fn tap_gesture_allowed_buttons_test() {
+pub fn tap_gesture_for_test() {
+  let mod = tap_gesture.new()
+  let cases = [
+    #(
+      Some("test"),
+      tap_gesture.from_config(
+        tap_gesture.Config(..tap_gesture.default_config(), for: Some("test")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tap_gesture.for(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tap_gesture_buttons_test() {
   let mod = tap_gesture.new()
   let cases = [
     #(
       [gesture_input_button.Secondary],
       tap_gesture.from_config(
-        tap_gesture.Config(..tap_gesture.default_config(), allowed_buttons: [
+        tap_gesture.Config(..tap_gesture.default_config(), buttons: [
           gesture_input_button.Secondary,
         ]),
       ),
@@ -110,7 +134,28 @@ pub fn tap_gesture_allowed_buttons_test() {
   list.each(cases, fn(c) {
     let #(field, expected) = c
 
-    tap_gesture.allowed_buttons(mod, field)
+    tap_gesture.buttons(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tap_gesture_pointer_types_test() {
+  let mod = tap_gesture.new()
+  let cases = [
+    #(
+      [pointer_type.Mouse],
+      tap_gesture.from_config(
+        tap_gesture.Config(..tap_gesture.default_config(), pointer_types: [
+          pointer_type.Mouse,
+        ]),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tap_gesture.pointer_types(mod, field)
     |> should.equal(expected)
   })
 }
@@ -260,31 +305,14 @@ pub fn tap_gesture_max_duration_test() {
   })
 }
 
-pub fn tap_gesture_for_test() {
-  let mod = tap_gesture.new()
-  let cases = [
-    #(
-      Some("test"),
-      tap_gesture.from_config(
-        tap_gesture.Config(..tap_gesture.default_config(), for: Some("test")),
-      ),
-    ),
-  ]
-
-  list.each(cases, fn(c) {
-    let #(field, expected) = c
-
-    tap_gesture.for(mod, field)
-    |> should.equal(expected)
-  })
-}
-
 pub fn tap_gesture_render_test() {
   let mod = tap_gesture.new()
 
-  let mod_allowed_buttons =
-    tap_gesture.new()
-    |> tap_gesture.allowed_buttons([gesture_input_button.Secondary])
+  let mod_for = tap_gesture.new() |> tap_gesture.for(Some("test"))
+  let mod_buttons =
+    tap_gesture.new() |> tap_gesture.buttons([gesture_input_button.Secondary])
+  let mod_pointer_types =
+    tap_gesture.new() |> tap_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     tap_gesture.new() |> tap_gesture.disabled(tap_gesture.IsDisabled)
   let mod_priority = tap_gesture.new() |> tap_gesture.priority(42.0)
@@ -296,7 +324,6 @@ pub fn tap_gesture_render_test() {
   let mod_max_displacement =
     tap_gesture.new() |> tap_gesture.max_displacement(42.0)
   let mod_max_duration = tap_gesture.new() |> tap_gesture.max_duration(42.0)
-  let mod_for = tap_gesture.new() |> tap_gesture.for(Some("test"))
   let cases = [
     #(#(mod, []), element.element("m3e-tap-gesture", [], [])),
     #(
@@ -305,13 +332,34 @@ pub fn tap_gesture_render_test() {
     ),
 
     #(
-      #(mod_allowed_buttons, []),
+      #(mod_for, []),
+      element.element(
+        "m3e-tap-gesture",
+        [attribute.attribute("for", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_buttons, []),
       element.element(
         "m3e-tap-gesture",
         [
           attribute.attribute(
-            "allowed-buttons",
+            "buttons",
             gesture_input_button.to_string(gesture_input_button.Secondary),
+          ),
+        ],
+        [],
+      ),
+    ),
+    #(
+      #(mod_pointer_types, []),
+      element.element(
+        "m3e-tap-gesture",
+        [
+          attribute.attribute(
+            "pointer-types",
+            pointer_type.to_string(pointer_type.Mouse),
           ),
         ],
         [],
@@ -370,14 +418,6 @@ pub fn tap_gesture_render_test() {
       element.element(
         "m3e-tap-gesture",
         [attribute.attribute("max-duration", "42.0")],
-        [],
-      ),
-    ),
-    #(
-      #(mod_for, []),
-      element.element(
-        "m3e-tap-gesture",
-        [attribute.attribute("for", "test")],
         [],
       ),
     ),

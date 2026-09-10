@@ -13,6 +13,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
 import m3e/gesture_input_button.{type GestureInputButton}
+import m3e/pointer_type.{type PointerType}
 
 // --- Types ---
 
@@ -20,7 +21,9 @@ import m3e/gesture_input_button.{type GestureInputButton}
 ///
 /// ## Fields:
 ///
-/// - allowed_buttons: Which buttons can be pressed.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - buttons: Which buttons can be pressed.
+/// - pointer_types: Which types of pointers can be used to recognize gestures.
 /// - disabled: Whether gesture recognition is disabled.
 /// - priority: The priority in which to recognize gestures.
 /// - pointers: Number of pointers that must be pressed before the gesture fails.
@@ -28,11 +31,12 @@ import m3e/gesture_input_button.{type GestureInputButton}
 /// - max_release_interval: Maximum time (ms) between tap releases.
 /// - max_displacement: Maximum distance (px) a pointer can move before the gesture fails.
 /// - max_duration: Maximum time (ms) taps can be pressed before the gesture fails.
-/// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type TapGesture {
   TapGesture(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
     pointers: Float,
@@ -40,7 +44,6 @@ pub opaque type TapGesture {
     max_release_interval: Float,
     max_displacement: Float,
     max_duration: Float,
-    for: Option(String),
   )
 }
 
@@ -53,8 +56,16 @@ pub type Disabled {
 
 // --- Defaults ---
 
-pub const default_allowed_buttons: List(GestureInputButton) = [
+pub const default_for: Option(String) = None
+
+pub const default_buttons: List(GestureInputButton) = [
   gesture_input_button.Primary,
+]
+
+pub const default_pointer_types: List(PointerType) = [
+  pointer_type.Mouse,
+  pointer_type.Pen,
+  pointer_type.Touch,
 ]
 
 pub const default_disabled: Disabled = IsNotDisabled
@@ -71,15 +82,15 @@ pub const default_max_displacement: Float = 12.0
 
 pub const default_max_duration: Float = 180.0
 
-pub const default_for: Option(String) = None
-
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
     pointers: Float,
@@ -87,7 +98,6 @@ pub type Config {
     max_release_interval: Float,
     max_displacement: Float,
     max_duration: Float,
-    for: Option(String),
   )
 }
 
@@ -95,7 +105,9 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    allowed_buttons: [gesture_input_button.Primary],
+    for: None,
+    buttons: [gesture_input_button.Primary],
+    pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
     disabled: IsNotDisabled,
     priority: 1.0,
     pointers: 1.0,
@@ -103,7 +115,6 @@ pub fn default_config() -> Config {
     max_release_interval: 120.0,
     max_displacement: 12.0,
     max_duration: 180.0,
-    for: None,
   )
 }
 
@@ -113,7 +124,9 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> TapGesture {
   TapGesture(
-    allowed_buttons: config.allowed_buttons,
+    for: config.for,
+    buttons: config.buttons,
+    pointer_types: config.pointer_types,
     disabled: config.disabled,
     priority: config.priority,
     pointers: config.pointers,
@@ -121,7 +134,6 @@ pub fn from_config(config: Config) -> TapGesture {
     max_release_interval: config.max_release_interval,
     max_displacement: config.max_displacement,
     max_duration: config.max_duration,
-    for: config.for,
   )
 }
 
@@ -133,13 +145,28 @@ pub fn new() -> TapGesture {
 
 // --- Setters ---
 
-/// allowed_buttons sets the value of allowed_buttons for this TapGesture.
+/// for sets the value of for for this TapGesture.
 ///
-pub fn allowed_buttons(
+pub fn for(record: TapGesture, for: Option(String)) -> TapGesture {
+  TapGesture(..record, for: for)
+}
+
+/// buttons sets the value of buttons for this TapGesture.
+///
+pub fn buttons(
   record: TapGesture,
-  allowed_buttons: List(GestureInputButton),
+  buttons: List(GestureInputButton),
 ) -> TapGesture {
-  TapGesture(..record, allowed_buttons: allowed_buttons)
+  TapGesture(..record, buttons: buttons)
+}
+
+/// pointer_types sets the value of pointer_types for this TapGesture.
+///
+pub fn pointer_types(
+  record: TapGesture,
+  pointer_types: List(PointerType),
+) -> TapGesture {
+  TapGesture(..record, pointer_types: pointer_types)
 }
 
 /// disabled sets the value of disabled for this TapGesture.
@@ -193,12 +220,6 @@ pub fn max_duration(record: TapGesture, max_duration: Float) -> TapGesture {
   TapGesture(..record, max_duration: max_duration)
 }
 
-/// for sets the value of for for this TapGesture.
-///
-pub fn for(record: TapGesture, for: Option(String)) -> TapGesture {
-  TapGesture(..record, for: for)
-}
-
 // --- Renderers ---
 
 /// render creates a Lustre Element for a TapGesture
@@ -211,15 +232,27 @@ pub fn render(
     "m3e-tap-gesture",
     list.flatten([
       [
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
         attr.with_default(
-          "allowed-buttons",
+          "buttons",
           attr.list_to_spaced_string(
-            model.allowed_buttons,
+            model.buttons,
             gesture_input_button.to_string,
           ),
           attr.list_to_spaced_string(
-            default_allowed_buttons,
+            default_buttons,
             gesture_input_button.to_string,
+          ),
+        ),
+        attr.with_default(
+          "pointer-types",
+          attr.list_to_spaced_string(
+            model.pointer_types,
+            pointer_type.to_string,
+          ),
+          attr.list_to_spaced_string(
+            default_pointer_types,
+            pointer_type.to_string,
           ),
         ),
         attr.boolean("disabled", model.disabled == IsDisabled),
@@ -253,7 +286,6 @@ pub fn render(
           float.to_string(model.max_duration),
           float.to_string(default_max_duration),
         ),
-        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
       ],
       attributes,
     ])

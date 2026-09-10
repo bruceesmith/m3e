@@ -13,6 +13,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
 import m3e/gesture_input_button.{type GestureInputButton}
+import m3e/pointer_type.{type PointerType}
 
 // --- Types ---
 
@@ -20,19 +21,21 @@ import m3e/gesture_input_button.{type GestureInputButton}
 ///
 /// ## Fields:
 ///
-/// - allowed_buttons: Which buttons can be pressed.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - buttons: Which buttons can be pressed.
+/// - pointer_types: Which types of pointers can be used to recognize gestures.
 /// - disabled: Whether gesture recognition is disabled.
 /// - priority: The priority in which to recognize gestures.
 /// - max_interval: Maximum time (ms) between gestures before the sequence fails.
-/// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type SequenceGesture {
   SequenceGesture(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
     max_interval: Float,
-    for: Option(String),
   )
 }
 
@@ -45,8 +48,16 @@ pub type Disabled {
 
 // --- Defaults ---
 
-pub const default_allowed_buttons: List(GestureInputButton) = [
+pub const default_for: Option(String) = None
+
+pub const default_buttons: List(GestureInputButton) = [
   gesture_input_button.Primary,
+]
+
+pub const default_pointer_types: List(PointerType) = [
+  pointer_type.Mouse,
+  pointer_type.Pen,
+  pointer_type.Touch,
 ]
 
 pub const default_disabled: Disabled = IsNotDisabled
@@ -55,19 +66,18 @@ pub const default_priority: Float = 1.0
 
 pub const default_max_interval: Float = 250.0
 
-pub const default_for: Option(String) = None
-
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
     max_interval: Float,
-    for: Option(String),
   )
 }
 
@@ -75,11 +85,12 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    allowed_buttons: [gesture_input_button.Primary],
+    for: None,
+    buttons: [gesture_input_button.Primary],
+    pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
     disabled: IsNotDisabled,
     priority: 1.0,
     max_interval: 250.0,
-    for: None,
   )
 }
 
@@ -89,11 +100,12 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> SequenceGesture {
   SequenceGesture(
-    allowed_buttons: config.allowed_buttons,
+    for: config.for,
+    buttons: config.buttons,
+    pointer_types: config.pointer_types,
     disabled: config.disabled,
     priority: config.priority,
     max_interval: config.max_interval,
-    for: config.for,
   )
 }
 
@@ -105,13 +117,28 @@ pub fn new() -> SequenceGesture {
 
 // --- Setters ---
 
-/// allowed_buttons sets the value of allowed_buttons for this SequenceGesture.
+/// for sets the value of for for this SequenceGesture.
 ///
-pub fn allowed_buttons(
+pub fn for(record: SequenceGesture, for: Option(String)) -> SequenceGesture {
+  SequenceGesture(..record, for: for)
+}
+
+/// buttons sets the value of buttons for this SequenceGesture.
+///
+pub fn buttons(
   record: SequenceGesture,
-  allowed_buttons: List(GestureInputButton),
+  buttons: List(GestureInputButton),
 ) -> SequenceGesture {
-  SequenceGesture(..record, allowed_buttons: allowed_buttons)
+  SequenceGesture(..record, buttons: buttons)
+}
+
+/// pointer_types sets the value of pointer_types for this SequenceGesture.
+///
+pub fn pointer_types(
+  record: SequenceGesture,
+  pointer_types: List(PointerType),
+) -> SequenceGesture {
+  SequenceGesture(..record, pointer_types: pointer_types)
 }
 
 /// disabled sets the value of disabled for this SequenceGesture.
@@ -138,12 +165,6 @@ pub fn max_interval(
   SequenceGesture(..record, max_interval: max_interval)
 }
 
-/// for sets the value of for for this SequenceGesture.
-///
-pub fn for(record: SequenceGesture, for: Option(String)) -> SequenceGesture {
-  SequenceGesture(..record, for: for)
-}
-
 // --- Renderers ---
 
 /// render creates a Lustre Element for a SequenceGesture
@@ -151,20 +172,33 @@ pub fn for(record: SequenceGesture, for: Option(String)) -> SequenceGesture {
 pub fn render(
   model: SequenceGesture,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
   element.element(
     "m3e-sequence-gesture",
     list.flatten([
       [
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
         attr.with_default(
-          "allowed-buttons",
+          "buttons",
           attr.list_to_spaced_string(
-            model.allowed_buttons,
+            model.buttons,
             gesture_input_button.to_string,
           ),
           attr.list_to_spaced_string(
-            default_allowed_buttons,
+            default_buttons,
             gesture_input_button.to_string,
+          ),
+        ),
+        attr.with_default(
+          "pointer-types",
+          attr.list_to_spaced_string(
+            model.pointer_types,
+            pointer_type.to_string,
+          ),
+          attr.list_to_spaced_string(
+            default_pointer_types,
+            pointer_type.to_string,
           ),
         ),
         attr.boolean("disabled", model.disabled == IsDisabled),
@@ -178,12 +212,11 @@ pub fn render(
           float.to_string(model.max_interval),
           float.to_string(default_max_interval),
         ),
-        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
       ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
-    [],
+    children,
   )
 }
 
@@ -192,6 +225,7 @@ pub fn render(
 pub fn render_config(
   c: Config,
   attributes: List(Attribute(msg)),
+  children: List(Element(msg)),
 ) -> Element(msg) {
-  render(from_config(c), attributes)
+  render(from_config(c), attributes, children)
 }

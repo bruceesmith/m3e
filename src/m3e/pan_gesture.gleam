@@ -13,7 +13,9 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
 import m3e/gesture_input_button.{type GestureInputButton}
+import m3e/pan_gesture_activation_mode.{type PanGestureActivationMode}
 import m3e/pan_gesture_lock_axis.{type PanGestureLockAxis}
+import m3e/pointer_type.{type PointerType}
 
 // --- Types ---
 
@@ -21,27 +23,29 @@ import m3e/pan_gesture_lock_axis.{type PanGestureLockAxis}
 ///
 /// ## Fields:
 ///
-/// - allowed_buttons: Which buttons can be pressed.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - buttons: Which buttons can be pressed.
+/// - pointer_types: Which types of pointers can be used to recognize gestures.
 /// - disabled: Whether gesture recognition is disabled.
 /// - priority: The priority in which to recognize gestures.
+/// - activation_mode: Mode in which to activate the gesture.
 /// - min_displacement: Minimum distance (px) a pointer can move before the gesture starts.
-/// - min_duration: Minimum time (ms) a pointer must remain pressed.
 /// - lock_axis: Locks movement to an axis.
 /// - axis_threshold: Minimum total displacement (px) required before axis locking resolves orientation.
 /// - delta_threshold: Minimum incremental movement (px) on the secondary axis required before emitting move updates.
-/// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type PanGesture {
   PanGesture(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
+    activation_mode: PanGestureActivationMode,
     min_displacement: Float,
-    min_duration: String,
     lock_axis: PanGestureLockAxis,
     axis_threshold: Float,
     delta_threshold: Float,
-    for: Option(String),
   )
 }
 
@@ -54,17 +58,25 @@ pub type Disabled {
 
 // --- Defaults ---
 
-pub const default_allowed_buttons: List(GestureInputButton) = [
+pub const default_for: Option(String) = None
+
+pub const default_buttons: List(GestureInputButton) = [
   gesture_input_button.Primary,
+]
+
+pub const default_pointer_types: List(PointerType) = [
+  pointer_type.Mouse,
+  pointer_type.Pen,
+  pointer_type.Touch,
 ]
 
 pub const default_disabled: Disabled = IsNotDisabled
 
 pub const default_priority: Float = 1.0
 
-pub const default_min_displacement: Float = 4.0
+pub const default_activation_mode: PanGestureActivationMode = pan_gesture_activation_mode.Press
 
-pub const default_min_duration: String = ""
+pub const default_min_displacement: Float = 4.0
 
 pub const default_lock_axis: PanGestureLockAxis = pan_gesture_lock_axis.None
 
@@ -72,23 +84,22 @@ pub const default_axis_threshold: Float = 8.0
 
 pub const default_delta_threshold: Float = 0.0
 
-pub const default_for: Option(String) = None
-
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
+    activation_mode: PanGestureActivationMode,
     min_displacement: Float,
-    min_duration: String,
     lock_axis: PanGestureLockAxis,
     axis_threshold: Float,
     delta_threshold: Float,
-    for: Option(String),
   )
 }
 
@@ -96,15 +107,16 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    allowed_buttons: [gesture_input_button.Primary],
+    for: None,
+    buttons: [gesture_input_button.Primary],
+    pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
     disabled: IsNotDisabled,
     priority: 1.0,
+    activation_mode: pan_gesture_activation_mode.Press,
     min_displacement: 4.0,
-    min_duration: "",
     lock_axis: pan_gesture_lock_axis.None,
     axis_threshold: 8.0,
     delta_threshold: 0.0,
-    for: None,
   )
 }
 
@@ -114,15 +126,16 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> PanGesture {
   PanGesture(
-    allowed_buttons: config.allowed_buttons,
+    for: config.for,
+    buttons: config.buttons,
+    pointer_types: config.pointer_types,
     disabled: config.disabled,
     priority: config.priority,
+    activation_mode: config.activation_mode,
     min_displacement: config.min_displacement,
-    min_duration: config.min_duration,
     lock_axis: config.lock_axis,
     axis_threshold: config.axis_threshold,
     delta_threshold: config.delta_threshold,
-    for: config.for,
   )
 }
 
@@ -134,13 +147,28 @@ pub fn new() -> PanGesture {
 
 // --- Setters ---
 
-/// allowed_buttons sets the value of allowed_buttons for this PanGesture.
+/// for sets the value of for for this PanGesture.
 ///
-pub fn allowed_buttons(
+pub fn for(record: PanGesture, for: Option(String)) -> PanGesture {
+  PanGesture(..record, for: for)
+}
+
+/// buttons sets the value of buttons for this PanGesture.
+///
+pub fn buttons(
   record: PanGesture,
-  allowed_buttons: List(GestureInputButton),
+  buttons: List(GestureInputButton),
 ) -> PanGesture {
-  PanGesture(..record, allowed_buttons: allowed_buttons)
+  PanGesture(..record, buttons: buttons)
+}
+
+/// pointer_types sets the value of pointer_types for this PanGesture.
+///
+pub fn pointer_types(
+  record: PanGesture,
+  pointer_types: List(PointerType),
+) -> PanGesture {
+  PanGesture(..record, pointer_types: pointer_types)
 }
 
 /// disabled sets the value of disabled for this PanGesture.
@@ -155,6 +183,15 @@ pub fn priority(record: PanGesture, priority: Float) -> PanGesture {
   PanGesture(..record, priority: priority)
 }
 
+/// activation_mode sets the value of activation_mode for this PanGesture.
+///
+pub fn activation_mode(
+  record: PanGesture,
+  activation_mode: PanGestureActivationMode,
+) -> PanGesture {
+  PanGesture(..record, activation_mode: activation_mode)
+}
+
 /// min_displacement sets the value of min_displacement for this PanGesture.
 ///
 pub fn min_displacement(
@@ -162,12 +199,6 @@ pub fn min_displacement(
   min_displacement: Float,
 ) -> PanGesture {
   PanGesture(..record, min_displacement: min_displacement)
-}
-
-/// min_duration sets the value of min_duration for this PanGesture.
-///
-pub fn min_duration(record: PanGesture, min_duration: String) -> PanGesture {
-  PanGesture(..record, min_duration: min_duration)
 }
 
 /// lock_axis sets the value of lock_axis for this PanGesture.
@@ -194,12 +225,6 @@ pub fn delta_threshold(
   PanGesture(..record, delta_threshold: delta_threshold)
 }
 
-/// for sets the value of for for this PanGesture.
-///
-pub fn for(record: PanGesture, for: Option(String)) -> PanGesture {
-  PanGesture(..record, for: for)
-}
-
 // --- Renderers ---
 
 /// render creates a Lustre Element for a PanGesture
@@ -212,15 +237,27 @@ pub fn render(
     "m3e-pan-gesture",
     list.flatten([
       [
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
         attr.with_default(
-          "allowed-buttons",
+          "buttons",
           attr.list_to_spaced_string(
-            model.allowed_buttons,
+            model.buttons,
             gesture_input_button.to_string,
           ),
           attr.list_to_spaced_string(
-            default_allowed_buttons,
+            default_buttons,
             gesture_input_button.to_string,
+          ),
+        ),
+        attr.with_default(
+          "pointer-types",
+          attr.list_to_spaced_string(
+            model.pointer_types,
+            pointer_type.to_string,
+          ),
+          attr.list_to_spaced_string(
+            default_pointer_types,
+            pointer_type.to_string,
           ),
         ),
         attr.boolean("disabled", model.disabled == IsDisabled),
@@ -230,14 +267,14 @@ pub fn render(
           float.to_string(default_priority),
         ),
         attr.with_default(
+          "activation-mode",
+          pan_gesture_activation_mode.to_string(model.activation_mode),
+          pan_gesture_activation_mode.to_string(default_activation_mode),
+        ),
+        attr.with_default(
           "min-displacement",
           float.to_string(model.min_displacement),
           float.to_string(default_min_displacement),
-        ),
-        attr.with_default(
-          "min-duration",
-          model.min_duration,
-          default_min_duration,
         ),
         attr.with_default(
           "lock-axis",
@@ -254,7 +291,6 @@ pub fn render(
           float.to_string(model.delta_threshold),
           float.to_string(default_delta_threshold),
         ),
-        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
       ],
       attributes,
     ])

@@ -13,6 +13,7 @@ import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
 import m3e/gesture_input_button.{type GestureInputButton}
+import m3e/pointer_type.{type PointerType}
 
 // --- Types ---
 
@@ -20,21 +21,23 @@ import m3e/gesture_input_button.{type GestureInputButton}
 ///
 /// ## Fields:
 ///
-/// - allowed_buttons: Which buttons can be pressed.
+/// - for: The identifier of the interactive control to which this element is attached.
+/// - buttons: Which buttons can be pressed.
+/// - pointer_types: Which types of pointers can be used to recognize gestures.
 /// - disabled: Whether gesture recognition is disabled.
 /// - priority: The priority in which to recognize gestures.
 /// - max_displacement: Maximum distance (px) a pointer can move before the gesture fails.
 /// - min_duration: Minimum time (ms) a pointer must remain pressed.
-/// - for: The identifier of the interactive control to which this element is attached.
 ///
 pub opaque type LongPressGesture {
   LongPressGesture(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
     max_displacement: Float,
     min_duration: Float,
-    for: Option(String),
   )
 }
 
@@ -47,8 +50,16 @@ pub type Disabled {
 
 // --- Defaults ---
 
-pub const default_allowed_buttons: List(GestureInputButton) = [
+pub const default_for: Option(String) = None
+
+pub const default_buttons: List(GestureInputButton) = [
   gesture_input_button.Primary,
+]
+
+pub const default_pointer_types: List(PointerType) = [
+  pointer_type.Mouse,
+  pointer_type.Pen,
+  pointer_type.Touch,
 ]
 
 pub const default_disabled: Disabled = IsNotDisabled
@@ -59,20 +70,19 @@ pub const default_max_displacement: Float = 4.0
 
 pub const default_min_duration: Float = 500.0
 
-pub const default_for: Option(String) = None
-
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
   Config(
-    allowed_buttons: List(GestureInputButton),
+    for: Option(String),
+    buttons: List(GestureInputButton),
+    pointer_types: List(PointerType),
     disabled: Disabled,
     priority: Float,
     max_displacement: Float,
     min_duration: Float,
-    for: Option(String),
   )
 }
 
@@ -80,12 +90,13 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
-    allowed_buttons: [gesture_input_button.Primary],
+    for: None,
+    buttons: [gesture_input_button.Primary],
+    pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
     disabled: IsNotDisabled,
     priority: 1.0,
     max_displacement: 4.0,
     min_duration: 500.0,
-    for: None,
   )
 }
 
@@ -95,12 +106,13 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> LongPressGesture {
   LongPressGesture(
-    allowed_buttons: config.allowed_buttons,
+    for: config.for,
+    buttons: config.buttons,
+    pointer_types: config.pointer_types,
     disabled: config.disabled,
     priority: config.priority,
     max_displacement: config.max_displacement,
     min_duration: config.min_duration,
-    for: config.for,
   )
 }
 
@@ -112,13 +124,28 @@ pub fn new() -> LongPressGesture {
 
 // --- Setters ---
 
-/// allowed_buttons sets the value of allowed_buttons for this LongPressGesture.
+/// for sets the value of for for this LongPressGesture.
 ///
-pub fn allowed_buttons(
+pub fn for(record: LongPressGesture, for: Option(String)) -> LongPressGesture {
+  LongPressGesture(..record, for: for)
+}
+
+/// buttons sets the value of buttons for this LongPressGesture.
+///
+pub fn buttons(
   record: LongPressGesture,
-  allowed_buttons: List(GestureInputButton),
+  buttons: List(GestureInputButton),
 ) -> LongPressGesture {
-  LongPressGesture(..record, allowed_buttons: allowed_buttons)
+  LongPressGesture(..record, buttons: buttons)
+}
+
+/// pointer_types sets the value of pointer_types for this LongPressGesture.
+///
+pub fn pointer_types(
+  record: LongPressGesture,
+  pointer_types: List(PointerType),
+) -> LongPressGesture {
+  LongPressGesture(..record, pointer_types: pointer_types)
 }
 
 /// disabled sets the value of disabled for this LongPressGesture.
@@ -154,12 +181,6 @@ pub fn min_duration(
   LongPressGesture(..record, min_duration: min_duration)
 }
 
-/// for sets the value of for for this LongPressGesture.
-///
-pub fn for(record: LongPressGesture, for: Option(String)) -> LongPressGesture {
-  LongPressGesture(..record, for: for)
-}
-
 // --- Renderers ---
 
 /// render creates a Lustre Element for a LongPressGesture
@@ -172,15 +193,27 @@ pub fn render(
     "m3e-long-press-gesture",
     list.flatten([
       [
+        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
         attr.with_default(
-          "allowed-buttons",
+          "buttons",
           attr.list_to_spaced_string(
-            model.allowed_buttons,
+            model.buttons,
             gesture_input_button.to_string,
           ),
           attr.list_to_spaced_string(
-            default_allowed_buttons,
+            default_buttons,
             gesture_input_button.to_string,
+          ),
+        ),
+        attr.with_default(
+          "pointer-types",
+          attr.list_to_spaced_string(
+            model.pointer_types,
+            pointer_type.to_string,
+          ),
+          attr.list_to_spaced_string(
+            default_pointer_types,
+            pointer_type.to_string,
           ),
         ),
         attr.boolean("disabled", model.disabled == IsDisabled),
@@ -199,7 +232,6 @@ pub fn render(
           float.to_string(model.min_duration),
           float.to_string(default_min_duration),
         ),
-        attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
       ],
       attributes,
     ])
