@@ -70,6 +70,8 @@ type Attribute struct {
 	Type string
 	// CamelCase underlying type name of an Option(***) or List(***) Type
 	BaseType string
+	// SnakeCase import module name where the Type is defined
+	BaseTypeModule string
 	// Properties of an Attribute
 	Properties set.Set[Property]
 }
@@ -189,9 +191,11 @@ type defaultTransformFunc func(attr *Attribute, def string) (string, bool)
 
 // defaultTransformRules is the set of transformation rules for defaults
 var defaultTransformRules = []defaultTransformFunc{
+	// Semantic boolean
 	func(a *Attribute, d string) (string, bool) {
 		return "IsNot" + a.SemBool, a.IsSemBool()
 	},
+	// Float
 	func(a *Attribute, d string) (string, bool) {
 		if a.Type == "Float" {
 			if strings.Contains(d, ".") {
@@ -201,30 +205,52 @@ var defaultTransformRules = []defaultTransformFunc{
 		}
 		return d, false
 	},
+	// Any optional value
 	func(a *Attribute, d string) (string, bool) {
 		return "None", a.IsOptional()
 	},
+	//
 	func(a *Attribute, d string) (string, bool) {
 		if a.IsList() {
 			if a.BaseType == "String" {
 				return "[]", true
 			}
-			d = strings.Trim(d, `[]"`)
-			return "[" + strcase.ToSnake(a.BaseType) + "." + strcase.ToCamel(d) + "]", true
+			d = strings.ReplaceAll((strings.ReplaceAll(strings.Trim(d, `[]`), `"`, "")), " ", "")
+			if !strings.Contains(d, ",") {
+				return "[" + strcase.ToSnake(a.BaseTypeModule) + "." + strcase.ToCamel(d) + "]", true
+			}
+			var value strings.Builder
+			defs := strings.Split(d, ",")
+			value.WriteString("[")
+			for k, v := range defs {
+				if k > 0 {
+					value.WriteString(",")
+				}
+				value.WriteString(strcase.ToSnake(a.BaseTypeModule))
+				value.WriteString(".")
+				value.WriteString(strcase.ToCamel(v))
+			}
+			value.WriteString("]")
+			return value.String(), true
 		}
 		return d, false
 	},
+	// The string "true"
 	func(a *Attribute, d string) (string, bool) { return "True", d == "true" },
+	// The string "false"
 	func(a *Attribute, d string) (string, bool) {
 		if a.Type == "Bool" {
 			return "False", d == "false"
 		}
 		return `"false"`, d == "false"
 	},
+	// a Date default
 	func(a *Attribute, d string) (string, bool) {
 		return "date.default", d == "new Date()"
 	},
+	// A function
 	func(a *Attribute, d string) (string, bool) { return `""`, strings.HasPrefix(d, "(") },
+	// A NumberString
 	func(a *Attribute, d string) (string, bool) {
 		if a.Type == "number_string.NumberString" {
 			if strings.Contains(d, ".") {
@@ -234,6 +260,7 @@ var defaultTransformRules = []defaultTransformFunc{
 		}
 		return d, false
 	},
+	// Simple integer
 	func(a *Attribute, d string) (string, bool) {
 		if a.Type != "Float" && unicode.IsDigit(rune(d[0])) {
 			buf := make([]string, 0, 50)
@@ -241,15 +268,18 @@ var defaultTransformRules = []defaultTransformFunc{
 		}
 		return d, false
 	},
+	// Empty string or empty list
 	func(a *Attribute, d string) (string, bool) {
 		return d, d == "" || d == "[]"
 	},
+	// Defualt
 	func(a *Attribute, d string) (string, bool) {
 		if strings.HasPrefix(d, `["`) && strings.HasSuffix(d, `"]`) {
 			return strcase.ToSnake(a.Type) + "." + strcase.ToCamel(strings.Trim(d, `[]"`)), true
 		}
 		return d, false
 	},
+	// A numeric string, e.g. "700", convert to SevenZeroZero
 	func(a *Attribute, d string) (string, bool) {
 		if strings.HasPrefix(d, `"`) && strings.HasSuffix(d, `"`) {
 			if a.Type == "String" {
@@ -394,20 +424,18 @@ func (attr *Attribute) imports() (importStrings map[string]string, testImportStr
 		testImportStrings["m3e/number_string"] = ""
 	}
 	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && !attr.IsSemBool() {
-		if after, ok := strings.CutPrefix(attr.Type, "Option("); ok {
+		if _, ok := strings.CutPrefix(attr.Type, "Option("); ok {
 			// example: Option(BadgePosition) - an optional externally defined type
-			t := strings.TrimSuffix(after, ")")
-			importStrings["m3e/"+strcase.ToSnake(t)] = ".{type " + t + "}"
-			if t != "Date" && t != "TimeParts" && t != "ValidationMessages" {
-				importedModule = strcase.ToSnake(t)
+			importStrings["m3e/"+attr.BaseTypeModule] = ".{type " + attr.BaseType + "}"
+			if attr.BaseType != "Date" && attr.BaseType != "TimeParts" && attr.BaseType != "ValidationMessages" {
+				importedModule = attr.BaseTypeModule
 			}
-			testImportStrings["m3e/"+strcase.ToSnake(t)] = ""
-		} else if after, ok := strings.CutPrefix(attr.Type, "List("); ok {
-			// example: List(GestureInputButton)
-			t := strings.TrimSuffix(after, ")")
-			importStrings["m3e/"+strcase.ToSnake(t)] = ".{type " + attr.BaseType + "}"
-			importedModule = strcase.ToSnake(t)
-			testImportStrings["m3e/"+strcase.ToSnake(t)] = ""
+			testImportStrings["m3e/"+strcase.ToSnake(attr.BaseType)] = ""
+		} else if _, ok := strings.CutPrefix(attr.Type, "List("); ok {
+			// example: List(gesture_input_button.GestureInputButton)
+			importStrings["m3e/"+attr.BaseTypeModule] = ".{type " + attr.BaseType + "}"
+			importedModule = attr.BaseTypeModule
+			testImportStrings["m3e/"+attr.BaseTypeModule] = ""
 		} else {
 			// example: AppBarSize - an externally defined type
 			importStrings["m3e/"+strcase.ToSnake(attr.Type)] = ".{type " + attr.Type + "}"
@@ -455,7 +483,8 @@ func (attr *Attribute) array(text string) (matched bool) {
 		return false
 	}
 	attr.BaseType = before
-	attr.Type = "List(" + before + ")"
+	attr.BaseTypeModule = strcase.ToSnake(before)
+	attr.Type = "List(" + attr.BaseTypeModule + "." + attr.BaseType + ")"
 	attr.Properties.Add(List)
 	return true
 }
@@ -487,6 +516,7 @@ func (attr *Attribute) linkTarget(text string, adef *string) (matched bool) {
 	if text == "LinkTarget" && adef != nil && *adef == `""` {
 		attr.Type = "Option(" + text + ")"
 		attr.BaseType = text
+		attr.BaseTypeModule = "link_target"
 		attr.Properties.Remove(Standard)
 		attr.Properties.Add(Optional)
 		return true
@@ -515,8 +545,9 @@ func (attr *Attribute) listOf(text string) (matched bool) {
 		attr.BaseType = attr.Type
 		attr.Type = "List(" + attr.Type + ")"
 	} else {
-		attr.Type = "List(" + strcase.ToSnake(tx) + "." + tx + ")"
-		attr.BaseType = strcase.ToSnake(tx) + "." + tx
+		attr.Type = "List(" + tx + ")"
+		attr.BaseType = tx
+		attr.BaseTypeModule = strcase.ToSnake(tx)
 	}
 	attr.Properties.Add(List)
 	return true
@@ -534,6 +565,9 @@ func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool)
 		}
 		if attr.IsOptional() {
 			attr.BaseType = attr.Type
+			if !attr.IsStandard() {
+				attr.BaseTypeModule = strcase.ToSnake(attr.BaseType)
+			}
 			attr.Type = "Option(" + attr.Type + ")"
 		}
 		return true
@@ -570,6 +604,8 @@ var typeTransformRules = []typeTransformFunction{
 // different to the value of the Type.Text field in the manifest
 func (attr *Attribute) varType(text string, adef *string) {
 	for _, rule := range typeTransformRules {
+		text = strings.TrimPrefix(text, "readonly ")
+		text = strings.TrimPrefix(text, "Readonly")
 		matched := rule(attr, text, adef)
 		if matched {
 			return

@@ -151,7 +151,7 @@ func nonDefaultValue(lookup string, defawlt string, enumerations map[string][]pa
 		return "Unknown", "unknown"
 	}
 	parts := strings.Split(strings.Trim(defawlt, "[]"), ".")
-	if len(parts) != 2 {
+	if len(parts) < 2 {
 		slog.Info(fmt.Sprintf("default value %s should be qualified", defawlt))
 	}
 	for _, v := range values {
