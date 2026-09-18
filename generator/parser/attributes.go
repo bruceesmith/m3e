@@ -130,7 +130,7 @@ func makeAttributes(modName string, attrs []cem.Attribute) (
 			attribute.Type = "String"
 			attribute.Properties.Add(Standard)
 		} else {
-			attribute.varType(attr.Type.Text, attr.Default)
+			attribute.computeType(attr.Type.Text, attr.Default)
 		}
 
 		// Adjust the attribute properties based on its type and options
@@ -600,9 +600,9 @@ var typeTransformRules = []typeTransformFunction{
 	func(attr *Attribute, text string, _ *string) bool { return attr.handleRegexTypes(text) },
 }
 
-// varType determines if the Gleam type for the attribute must be
+// computeType determines if the Gleam type for the attribute must be
 // different to the value of the Type.Text field in the manifest
-func (attr *Attribute) varType(text string, adef *string) {
+func (attr *Attribute) computeType(text string, adef *string) {
 	for _, rule := range typeTransformRules {
 		text = strings.TrimPrefix(text, "readonly ")
 		text = strings.TrimPrefix(text, "Readonly")
@@ -618,6 +618,10 @@ func (attr *Attribute) varType(text string, adef *string) {
 	attr.Properties.Remove(Standard)
 	attr.Properties.Remove(Optional)
 }
+
+// -----------------------------------------------------------
+// --- Helper methods                                  -------
+// -----------------------------------------------------------
 
 // handleRegexTypes handles more complex manifest types
 func (attr *Attribute) handleRegexTypes(text string) (matched bool) {
