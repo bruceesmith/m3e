@@ -26,6 +26,12 @@ tasks:
     cmds:
       - go build -a -tags osusergo,netgo -ldflags "-s -X 'github.com/bruceesmith/echidna.BuildDate={{.BUILD_DATE}}' -w -extldflags '-static'" cmd/generator/generator.go
 
+  deps:
+    desc: "Update dependencies"
+    cmds:
+      - go get -u ./...
+      - go mod tidy
+
   generate:
     desc: "Run code generation"
     cmds:
