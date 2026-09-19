@@ -57,6 +57,9 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 			return fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", foundIn, cenum, err)
 		}
 		for _, tipe := range types {
+			if len(tipe.Values) == 0 {
+				continue
+			}
 			def := make([]Enumeration, 0, len(tipe.Values))
 			for _, value := range tipe.Values {
 				value = strings.Trim(value, `"`)

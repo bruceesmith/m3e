@@ -110,7 +110,7 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 	renderAttributes := make([]parser.Attribute, 0, len(module.Attributes))
 	for _, v := range module.Attributes {
 		attr := v
-		if !v.IsStandard() && !v.IsSemBool() && v.Type != "Date" && v.Type != "number_string.NumberString" {
+		if !v.IsStandard() && !v.IsSemBool() && v.Type != "Date" && v.Type != "number_string.NumberString" && v.Type != "selected.Selected" {
 			if attr.IsOptional() {
 				if v.BaseType == "TimeParts" {
 					attr.Test.Value, attr.Test.AttributeValue = "Some(time_parts.zero())", "time_parts.zero_string()"

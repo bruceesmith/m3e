@@ -191,6 +191,16 @@ type defaultTransformFunc func(attr *Attribute, def string) (string, bool)
 
 // defaultTransformRules is the set of transformation rules for defaults
 var defaultTransformRules = []defaultTransformFunc{
+	// Simple string
+	func(a *Attribute, d string) (string, bool) {
+		if a.Type == "String" {
+			if !strings.Contains(d, `"`) {
+				return `"` + d + `"`, true
+			}
+			return d, true
+		}
+		return d, false
+	},
 	// Semantic boolean
 	func(a *Attribute, d string) (string, bool) {
 		return "IsNot" + a.SemBool, a.IsSemBool()
@@ -312,10 +322,13 @@ func (attr *Attribute) computeDefault(def string) string {
 
 // nilDefault handles the case where the manifest does not define a default value for the attribute
 func (attr *Attribute) nilDefault(modName string) {
-	if attr.Type == "String" {
+	switch attr.Type {
+	case "String":
 		attr.Default = `""`
-	} else {
-		logger.TraceID("defs", fmt.Sprintf("%s in %s has no default", attr.SnakeName, modName))
+	case "selected.Selected":
+		attr.Default = "selected.None"
+	default:
+		slog.Error(fmt.Sprintf("%s in %s has no default", attr.SnakeName, modName))
 		// Provoke a Gleam compile error in this case
 		attr.Default = "invalid-default"
 	}
@@ -375,6 +388,11 @@ func (attr *Attribute) testValues(modName string) {
 			Value:          `Some("test")`,
 			AttributeValue: `"test"`,
 		}
+	case attr.Type == "selected.Selected":
+		attr.Test = Test{
+			Value:          `selected.One("one")`,
+			AttributeValue: `"one"`,
+		}
 	case attr.Type == "String":
 		attr.Test = Test{
 			Value:          `"test"`,
@@ -423,7 +441,11 @@ func (attr *Attribute) imports() (importStrings map[string]string, testImportStr
 		importStrings["m3e/number_string"] = ""
 		testImportStrings["m3e/number_string"] = ""
 	}
-	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && !attr.IsSemBool() {
+	if attr.Type == "selected.Selected" {
+		importStrings["m3e/selected"] = ""
+		testImportStrings["m3e/selected"] = ""
+	}
+	if !attr.IsStandard() && attr.Type != "number_string.NumberString" && attr.Type != "selected.Selected" && !attr.IsSemBool() {
 		if _, ok := strings.CutPrefix(attr.Type, "Option("); ok {
 			// example: Option(BadgePosition) - an optional externally defined type
 			importStrings["m3e/"+attr.BaseTypeModule] = ".{type " + attr.BaseType + "}"
@@ -575,9 +597,21 @@ func (attr *Attribute) nullOrUndefined(text string, adef *string) (matched bool)
 	return false
 }
 
+// number checks if the type represents a number
 func (attr *Attribute) number(text string) (matched bool) {
 	if text == `number | "all"` {
 		attr.Type = "number_string.NumberString"
+		attr.Properties.Remove(Standard)
+		attr.Properties.Remove(Optional)
+		return true
+	}
+	return false
+}
+
+// selected checks if the type represents a string ot string array or null
+func (attr *Attribute) selected(text string) (matched bool) {
+	if text == `string | readonly string[] | null` {
+		attr.Type = "selected.Selected"
 		attr.Properties.Remove(Standard)
 		attr.Properties.Remove(Optional)
 		return true
@@ -597,6 +631,7 @@ var typeTransformRules = []typeTransformFunction{
 	func(attr *Attribute, text string, _ *string) bool { return attr.listOf(text) },
 	func(attr *Attribute, text string, adef *string) bool { return attr.nullOrUndefined(text, adef) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.number(text) },
+	func(attr *Attribute, text string, _ *string) bool { return attr.selected(text) },
 	func(attr *Attribute, text string, _ *string) bool { return attr.handleRegexTypes(text) },
 }
 

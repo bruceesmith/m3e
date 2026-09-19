@@ -73,19 +73,27 @@ func attributeWithDefault(attr parser.Attribute) string {
                  number_string.to_string(model.%s),
                  number_string.to_string(default_%s),
                )`
-
 	const format3 = `attr.with_default(
           "%s",
           %s.to_string(model.%s),
           %s.to_string(default_%s),
         )`
-	if attr.Type == "String" {
+	const format4 = `attr.with_default(
+                "%s",
+                selected.to_string(model.%s),
+                selected.to_string(default_%s),
+                )`
+
+	switch attr.Type {
+	case "String":
 		return fmt.Sprintf(format1, attr.KebabName, attr.SnakeName, attr.SnakeName)
-	}
-	if attr.Type == "number_string.NumberString" {
+	case "number_string.NumberString":
 		return fmt.Sprintf(format2, attr.KebabName, attr.SnakeName, attr.SnakeName)
+	case "selected.Selected":
+		return fmt.Sprintf(format4, attr.KebabName, attr.SnakeName, attr.SnakeName)
+	default:
+		return fmt.Sprintf(format3, attr.KebabName, strcase.ToSnake(attr.Type), attr.SnakeName, strcase.ToSnake(attr.Type), attr.SnakeName)
 	}
-	return fmt.Sprintf(format3, attr.KebabName, strcase.ToSnake(attr.Type), attr.SnakeName, strcase.ToSnake(attr.Type), attr.SnakeName)
 }
 
 func listAttribute(attr parser.Attribute) string {
