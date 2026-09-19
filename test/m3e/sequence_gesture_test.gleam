@@ -22,7 +22,7 @@ pub fn sequence_gesture_default_config_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: sequence_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       max_interval: 250.0,
     ),
   ]
@@ -43,7 +43,7 @@ pub fn sequence_gesture_from_config_test() {
         buttons: [gesture_input_button.Secondary],
         pointer_types: [pointer_type.Mouse],
         disabled: sequence_gesture.IsDisabled,
-        priority: 42.0,
+        priority: "test",
         max_interval: 42.0,
       ),
       sequence_gesture.new()
@@ -51,7 +51,7 @@ pub fn sequence_gesture_from_config_test() {
         |> sequence_gesture.buttons([gesture_input_button.Secondary])
         |> sequence_gesture.pointer_types([pointer_type.Mouse])
         |> sequence_gesture.disabled(sequence_gesture.IsDisabled)
-        |> sequence_gesture.priority(42.0)
+        |> sequence_gesture.priority("test")
         |> sequence_gesture.max_interval(42.0),
     ),
   ]
@@ -71,7 +71,7 @@ pub fn sequence_gesture_new_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: sequence_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       max_interval: 250.0,
     )),
   ]
@@ -175,11 +175,11 @@ pub fn sequence_gesture_priority_test() {
   let mod = sequence_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       sequence_gesture.from_config(
         sequence_gesture.Config(
           ..sequence_gesture.default_config(),
-          priority: 42.0,
+          priority: "test",
         ),
       ),
     ),
@@ -228,7 +228,7 @@ pub fn sequence_gesture_render_test() {
   let mod_disabled =
     sequence_gesture.new()
     |> sequence_gesture.disabled(sequence_gesture.IsDisabled)
-  let mod_priority = sequence_gesture.new() |> sequence_gesture.priority(42.0)
+  let mod_priority = sequence_gesture.new() |> sequence_gesture.priority("test")
   let mod_max_interval =
     sequence_gesture.new() |> sequence_gesture.max_interval(42.0)
 
@@ -289,7 +289,7 @@ pub fn sequence_gesture_render_test() {
       #(mod_priority, [], []),
       element.element(
         "m3e-sequence-gesture",
-        [attribute.attribute("priority", "42.0")],
+        [attribute.attribute("priority", "test")],
         [],
       ),
     ),

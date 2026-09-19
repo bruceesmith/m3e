@@ -22,7 +22,7 @@ pub fn repeat_gesture_default_config_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: repeat_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       max_interval: 250.0,
       count: 2.0,
     ),
@@ -44,7 +44,7 @@ pub fn repeat_gesture_from_config_test() {
         buttons: [gesture_input_button.Secondary],
         pointer_types: [pointer_type.Mouse],
         disabled: repeat_gesture.IsDisabled,
-        priority: 42.0,
+        priority: "test",
         max_interval: 42.0,
         count: 42.0,
       ),
@@ -53,7 +53,7 @@ pub fn repeat_gesture_from_config_test() {
         |> repeat_gesture.buttons([gesture_input_button.Secondary])
         |> repeat_gesture.pointer_types([pointer_type.Mouse])
         |> repeat_gesture.disabled(repeat_gesture.IsDisabled)
-        |> repeat_gesture.priority(42.0)
+        |> repeat_gesture.priority("test")
         |> repeat_gesture.max_interval(42.0)
         |> repeat_gesture.count(42.0),
     ),
@@ -74,7 +74,7 @@ pub fn repeat_gesture_new_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: repeat_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       max_interval: 250.0,
       count: 2.0,
     )),
@@ -178,9 +178,12 @@ pub fn repeat_gesture_priority_test() {
   let mod = repeat_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       repeat_gesture.from_config(
-        repeat_gesture.Config(..repeat_gesture.default_config(), priority: 42.0),
+        repeat_gesture.Config(
+          ..repeat_gesture.default_config(),
+          priority: "test",
+        ),
       ),
     ),
   ]
@@ -245,7 +248,7 @@ pub fn repeat_gesture_render_test() {
     repeat_gesture.new() |> repeat_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     repeat_gesture.new() |> repeat_gesture.disabled(repeat_gesture.IsDisabled)
-  let mod_priority = repeat_gesture.new() |> repeat_gesture.priority(42.0)
+  let mod_priority = repeat_gesture.new() |> repeat_gesture.priority("test")
   let mod_max_interval =
     repeat_gesture.new() |> repeat_gesture.max_interval(42.0)
   let mod_count = repeat_gesture.new() |> repeat_gesture.count(42.0)
@@ -307,7 +310,7 @@ pub fn repeat_gesture_render_test() {
       #(mod_priority, [], []),
       element.element(
         "m3e-repeat-gesture",
-        [attribute.attribute("priority", "42.0")],
+        [attribute.attribute("priority", "test")],
         [],
       ),
     ),

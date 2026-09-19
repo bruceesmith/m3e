@@ -124,7 +124,7 @@ pub const default_panel_class: String = ""
 
 pub const default_required: Required = IsNotRequired
 
-pub const default_results_label: String = ""
+pub const default_results_label: String = "(count) => `${count} options`"
 
 pub const default_for: Option(String) = None
 
@@ -174,7 +174,7 @@ pub fn default_config() -> Config {
     no_data_label: "No options",
     panel_class: "",
     required: IsNotRequired,
-    results_label: "",
+    results_label: "(count) => `${count} options`",
     for: None,
   )
 }

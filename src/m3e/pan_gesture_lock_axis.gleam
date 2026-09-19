@@ -8,7 +8,7 @@
 pub type PanGestureLockAxis {
   X
   Y
-  Lock
+  Auto
   None
 }
 
@@ -16,7 +16,7 @@ pub fn to_string(level: PanGestureLockAxis) -> String {
   case level {
     X -> "x"
     Y -> "y"
-    Lock -> "lock"
+    Auto -> "auto"
     None -> "none"
   }
 }

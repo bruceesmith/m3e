@@ -11,6 +11,7 @@ import lustre/attribute
 import lustre/element
 import lustre/element/html
 import m3e/select.{Config}
+import m3e/selected
 
 pub fn select_default_config_test() {
   let cases = [
@@ -21,6 +22,7 @@ pub fn select_default_config_test() {
       name: "",
       panel_class: "",
       required: select.IsNotRequired,
+      value: selected.None,
     ),
   ]
 
@@ -42,6 +44,7 @@ pub fn select_from_config_test() {
         name: "test",
         panel_class: "test",
         required: select.IsRequired,
+        value: selected.One("one"),
       ),
       select.new()
         |> select.disabled(select.IsDisabled)
@@ -49,7 +52,8 @@ pub fn select_from_config_test() {
         |> select.multi(select.IsMulti)
         |> select.name("test")
         |> select.panel_class("test")
-        |> select.required(select.IsRequired),
+        |> select.required(select.IsRequired)
+        |> select.value(selected.One("one")),
     ),
   ]
 
@@ -70,6 +74,7 @@ pub fn select_new_test() {
       name: "",
       panel_class: "",
       required: select.IsNotRequired,
+      value: selected.None,
     )),
   ]
 
@@ -196,6 +201,25 @@ pub fn select_required_test() {
   })
 }
 
+pub fn select_value_test() {
+  let mod = select.new()
+  let cases = [
+    #(
+      selected.One("one"),
+      select.from_config(
+        select.Config(..select.default_config(), value: selected.One("one")),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    select.value(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn select_render_test() {
   let mod = select.new()
 
@@ -207,6 +231,7 @@ pub fn select_render_test() {
   let mod_name = select.new() |> select.name("test")
   let mod_panel_class = select.new() |> select.panel_class("test")
   let mod_required = select.new() |> select.required(select.IsRequired)
+  let mod_value = select.new() |> select.value(selected.One("one"))
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-select", [], [])),
@@ -250,6 +275,10 @@ pub fn select_render_test() {
     #(
       #(mod_required, [], []),
       element.element("m3e-select", [attribute.attribute("required", "")], []),
+    ),
+    #(
+      #(mod_value, [], []),
+      element.element("m3e-select", [attribute.attribute("value", "one")], []),
     ),
   ]
 

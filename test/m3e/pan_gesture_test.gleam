@@ -23,12 +23,14 @@ pub fn pan_gesture_default_config_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: pan_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
+      pointers: 1.0,
       activation_mode: pan_gesture_activation_mode.Press,
       min_displacement: 4.0,
       lock_axis: pan_gesture_lock_axis.None,
       axis_threshold: 8.0,
       delta_threshold: 0.0,
+      max_press_interval: 120.0,
     ),
   ]
 
@@ -48,24 +50,28 @@ pub fn pan_gesture_from_config_test() {
         buttons: [gesture_input_button.Secondary],
         pointer_types: [pointer_type.Mouse],
         disabled: pan_gesture.IsDisabled,
-        priority: 42.0,
+        priority: "test",
+        pointers: 42.0,
         activation_mode: pan_gesture_activation_mode.Move,
         min_displacement: 42.0,
         lock_axis: pan_gesture_lock_axis.X,
         axis_threshold: 42.0,
         delta_threshold: 42.0,
+        max_press_interval: 42.0,
       ),
       pan_gesture.new()
         |> pan_gesture.for(Some("test"))
         |> pan_gesture.buttons([gesture_input_button.Secondary])
         |> pan_gesture.pointer_types([pointer_type.Mouse])
         |> pan_gesture.disabled(pan_gesture.IsDisabled)
-        |> pan_gesture.priority(42.0)
+        |> pan_gesture.priority("test")
+        |> pan_gesture.pointers(42.0)
         |> pan_gesture.activation_mode(pan_gesture_activation_mode.Move)
         |> pan_gesture.min_displacement(42.0)
         |> pan_gesture.lock_axis(pan_gesture_lock_axis.X)
         |> pan_gesture.axis_threshold(42.0)
-        |> pan_gesture.delta_threshold(42.0),
+        |> pan_gesture.delta_threshold(42.0)
+        |> pan_gesture.max_press_interval(42.0),
     ),
   ]
 
@@ -84,12 +90,14 @@ pub fn pan_gesture_new_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: pan_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
+      pointers: 1.0,
       activation_mode: pan_gesture_activation_mode.Press,
       min_displacement: 4.0,
       lock_axis: pan_gesture_lock_axis.None,
       axis_threshold: 8.0,
       delta_threshold: 0.0,
+      max_press_interval: 120.0,
     )),
   ]
 
@@ -188,9 +196,9 @@ pub fn pan_gesture_priority_test() {
   let mod = pan_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       pan_gesture.from_config(
-        pan_gesture.Config(..pan_gesture.default_config(), priority: 42.0),
+        pan_gesture.Config(..pan_gesture.default_config(), priority: "test"),
       ),
     ),
   ]
@@ -199,6 +207,25 @@ pub fn pan_gesture_priority_test() {
     let #(field, expected) = c
 
     pan_gesture.priority(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn pan_gesture_pointers_test() {
+  let mod = pan_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      pan_gesture.from_config(
+        pan_gesture.Config(..pan_gesture.default_config(), pointers: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    pan_gesture.pointers(mod, field)
     |> should.equal(expected)
   })
 }
@@ -310,6 +337,28 @@ pub fn pan_gesture_delta_threshold_test() {
   })
 }
 
+pub fn pan_gesture_max_press_interval_test() {
+  let mod = pan_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      pan_gesture.from_config(
+        pan_gesture.Config(
+          ..pan_gesture.default_config(),
+          max_press_interval: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    pan_gesture.max_press_interval(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn pan_gesture_render_test() {
   let mod = pan_gesture.new()
 
@@ -320,7 +369,8 @@ pub fn pan_gesture_render_test() {
     pan_gesture.new() |> pan_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     pan_gesture.new() |> pan_gesture.disabled(pan_gesture.IsDisabled)
-  let mod_priority = pan_gesture.new() |> pan_gesture.priority(42.0)
+  let mod_priority = pan_gesture.new() |> pan_gesture.priority("test")
+  let mod_pointers = pan_gesture.new() |> pan_gesture.pointers(42.0)
   let mod_activation_mode =
     pan_gesture.new()
     |> pan_gesture.activation_mode(pan_gesture_activation_mode.Move)
@@ -331,6 +381,8 @@ pub fn pan_gesture_render_test() {
   let mod_axis_threshold = pan_gesture.new() |> pan_gesture.axis_threshold(42.0)
   let mod_delta_threshold =
     pan_gesture.new() |> pan_gesture.delta_threshold(42.0)
+  let mod_max_press_interval =
+    pan_gesture.new() |> pan_gesture.max_press_interval(42.0)
   let cases = [
     #(#(mod, []), element.element("m3e-pan-gesture", [], [])),
     #(
@@ -384,7 +436,15 @@ pub fn pan_gesture_render_test() {
       #(mod_priority, []),
       element.element(
         "m3e-pan-gesture",
-        [attribute.attribute("priority", "42.0")],
+        [attribute.attribute("priority", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_pointers, []),
+      element.element(
+        "m3e-pan-gesture",
+        [attribute.attribute("pointers", "42.0")],
         [],
       ),
     ),
@@ -437,6 +497,14 @@ pub fn pan_gesture_render_test() {
       element.element(
         "m3e-pan-gesture",
         [attribute.attribute("delta-threshold", "42.0")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_max_press_interval, []),
+      element.element(
+        "m3e-pan-gesture",
+        [attribute.attribute("max-press-interval", "42.0")],
         [],
       ),
     ),

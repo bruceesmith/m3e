@@ -21,12 +21,12 @@ pub fn tap_gesture_default_config_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: tap_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       pointers: 1.0,
-      max_press_interval: 120.0,
-      max_release_interval: 120.0,
       max_displacement: 12.0,
       max_duration: 180.0,
+      max_press_interval: 120.0,
+      max_release_interval: 120.0,
     ),
   ]
 
@@ -46,24 +46,24 @@ pub fn tap_gesture_from_config_test() {
         buttons: [gesture_input_button.Secondary],
         pointer_types: [pointer_type.Mouse],
         disabled: tap_gesture.IsDisabled,
-        priority: 42.0,
+        priority: "test",
         pointers: 42.0,
-        max_press_interval: 42.0,
-        max_release_interval: 42.0,
         max_displacement: 42.0,
         max_duration: 42.0,
+        max_press_interval: 42.0,
+        max_release_interval: 42.0,
       ),
       tap_gesture.new()
         |> tap_gesture.for(Some("test"))
         |> tap_gesture.buttons([gesture_input_button.Secondary])
         |> tap_gesture.pointer_types([pointer_type.Mouse])
         |> tap_gesture.disabled(tap_gesture.IsDisabled)
-        |> tap_gesture.priority(42.0)
+        |> tap_gesture.priority("test")
         |> tap_gesture.pointers(42.0)
-        |> tap_gesture.max_press_interval(42.0)
-        |> tap_gesture.max_release_interval(42.0)
         |> tap_gesture.max_displacement(42.0)
-        |> tap_gesture.max_duration(42.0),
+        |> tap_gesture.max_duration(42.0)
+        |> tap_gesture.max_press_interval(42.0)
+        |> tap_gesture.max_release_interval(42.0),
     ),
   ]
 
@@ -82,12 +82,12 @@ pub fn tap_gesture_new_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: tap_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       pointers: 1.0,
-      max_press_interval: 120.0,
-      max_release_interval: 120.0,
       max_displacement: 12.0,
       max_duration: 180.0,
+      max_press_interval: 120.0,
+      max_release_interval: 120.0,
     )),
   ]
 
@@ -186,9 +186,9 @@ pub fn tap_gesture_priority_test() {
   let mod = tap_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       tap_gesture.from_config(
-        tap_gesture.Config(..tap_gesture.default_config(), priority: 42.0),
+        tap_gesture.Config(..tap_gesture.default_config(), priority: "test"),
       ),
     ),
   ]
@@ -216,6 +216,47 @@ pub fn tap_gesture_pointers_test() {
     let #(field, expected) = c
 
     tap_gesture.pointers(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tap_gesture_max_displacement_test() {
+  let mod = tap_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      tap_gesture.from_config(
+        tap_gesture.Config(
+          ..tap_gesture.default_config(),
+          max_displacement: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tap_gesture.max_displacement(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tap_gesture_max_duration_test() {
+  let mod = tap_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      tap_gesture.from_config(
+        tap_gesture.Config(..tap_gesture.default_config(), max_duration: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tap_gesture.max_duration(mod, field)
     |> should.equal(expected)
   })
 }
@@ -264,47 +305,6 @@ pub fn tap_gesture_max_release_interval_test() {
   })
 }
 
-pub fn tap_gesture_max_displacement_test() {
-  let mod = tap_gesture.new()
-  let cases = [
-    #(
-      42.0,
-      tap_gesture.from_config(
-        tap_gesture.Config(
-          ..tap_gesture.default_config(),
-          max_displacement: 42.0,
-        ),
-      ),
-    ),
-  ]
-
-  list.each(cases, fn(c) {
-    let #(field, expected) = c
-
-    tap_gesture.max_displacement(mod, field)
-    |> should.equal(expected)
-  })
-}
-
-pub fn tap_gesture_max_duration_test() {
-  let mod = tap_gesture.new()
-  let cases = [
-    #(
-      42.0,
-      tap_gesture.from_config(
-        tap_gesture.Config(..tap_gesture.default_config(), max_duration: 42.0),
-      ),
-    ),
-  ]
-
-  list.each(cases, fn(c) {
-    let #(field, expected) = c
-
-    tap_gesture.max_duration(mod, field)
-    |> should.equal(expected)
-  })
-}
-
 pub fn tap_gesture_render_test() {
   let mod = tap_gesture.new()
 
@@ -315,15 +315,15 @@ pub fn tap_gesture_render_test() {
     tap_gesture.new() |> tap_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     tap_gesture.new() |> tap_gesture.disabled(tap_gesture.IsDisabled)
-  let mod_priority = tap_gesture.new() |> tap_gesture.priority(42.0)
+  let mod_priority = tap_gesture.new() |> tap_gesture.priority("test")
   let mod_pointers = tap_gesture.new() |> tap_gesture.pointers(42.0)
+  let mod_max_displacement =
+    tap_gesture.new() |> tap_gesture.max_displacement(42.0)
+  let mod_max_duration = tap_gesture.new() |> tap_gesture.max_duration(42.0)
   let mod_max_press_interval =
     tap_gesture.new() |> tap_gesture.max_press_interval(42.0)
   let mod_max_release_interval =
     tap_gesture.new() |> tap_gesture.max_release_interval(42.0)
-  let mod_max_displacement =
-    tap_gesture.new() |> tap_gesture.max_displacement(42.0)
-  let mod_max_duration = tap_gesture.new() |> tap_gesture.max_duration(42.0)
   let cases = [
     #(#(mod, []), element.element("m3e-tap-gesture", [], [])),
     #(
@@ -377,7 +377,7 @@ pub fn tap_gesture_render_test() {
       #(mod_priority, []),
       element.element(
         "m3e-tap-gesture",
-        [attribute.attribute("priority", "42.0")],
+        [attribute.attribute("priority", "test")],
         [],
       ),
     ),
@@ -386,22 +386,6 @@ pub fn tap_gesture_render_test() {
       element.element(
         "m3e-tap-gesture",
         [attribute.attribute("pointers", "42.0")],
-        [],
-      ),
-    ),
-    #(
-      #(mod_max_press_interval, []),
-      element.element(
-        "m3e-tap-gesture",
-        [attribute.attribute("max-press-interval", "42.0")],
-        [],
-      ),
-    ),
-    #(
-      #(mod_max_release_interval, []),
-      element.element(
-        "m3e-tap-gesture",
-        [attribute.attribute("max-release-interval", "42.0")],
         [],
       ),
     ),
@@ -418,6 +402,22 @@ pub fn tap_gesture_render_test() {
       element.element(
         "m3e-tap-gesture",
         [attribute.attribute("max-duration", "42.0")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_max_press_interval, []),
+      element.element(
+        "m3e-tap-gesture",
+        [attribute.attribute("max-press-interval", "42.0")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_max_release_interval, []),
+      element.element(
+        "m3e-tap-gesture",
+        [attribute.attribute("max-release-interval", "42.0")],
         [],
       ),
     ),

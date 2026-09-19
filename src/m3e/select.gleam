@@ -9,6 +9,7 @@ import gleam/list
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
+import m3e/selected
 
 // --- Types ---
 
@@ -22,6 +23,7 @@ import m3e/attr
 /// - name: The name that identifies the element when submitting the associated form.
 /// - panel_class: Class or list of classes to be applied to the select's overlay panel.
 /// - required: Whether the element is required.
+/// - value: The selected (enabled) value(s).
 ///
 pub opaque type Select {
   Select(
@@ -31,6 +33,7 @@ pub opaque type Select {
     name: String,
     panel_class: String,
     required: Required,
+    value: selected.Selected,
   )
 }
 
@@ -76,6 +79,8 @@ pub const default_panel_class: String = ""
 
 pub const default_required: Required = IsNotRequired
 
+pub const default_value: selected.Selected = selected.None
+
 /// Slots are used in child elements to insert content into this component
 ///
 pub type Slot {
@@ -97,6 +102,7 @@ pub type Config {
     name: String,
     panel_class: String,
     required: Required,
+    value: selected.Selected,
   )
 }
 
@@ -110,6 +116,7 @@ pub fn default_config() -> Config {
     name: "",
     panel_class: "",
     required: IsNotRequired,
+    value: selected.None,
   )
 }
 
@@ -125,6 +132,7 @@ pub fn from_config(config: Config) -> Select {
     name: config.name,
     panel_class: config.panel_class,
     required: config.required,
+    value: config.value,
   )
 }
 
@@ -175,6 +183,12 @@ pub fn required(record: Select, required: Required) -> Select {
   Select(..record, required: required)
 }
 
+/// value sets the value of value for this Select.
+///
+pub fn value(record: Select, value: selected.Selected) -> Select {
+  Select(..record, value: value)
+}
+
 // --- Renderers ---
 
 /// render creates a Lustre Element for a Select
@@ -197,6 +211,11 @@ pub fn render(
         attr.with_default("name", model.name, default_name),
         attr.with_default("panel-class", model.panel_class, default_panel_class),
         attr.boolean("required", model.required == IsRequired),
+        attr.with_default(
+          "value",
+          selected.to_string(model.value),
+          selected.to_string(default_value),
+        ),
       ],
       attributes,
     ])

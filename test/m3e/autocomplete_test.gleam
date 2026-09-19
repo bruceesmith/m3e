@@ -28,7 +28,7 @@ pub fn autocomplete_default_config_test() {
       no_data_label: "No options",
       panel_class: "",
       required: autocomplete.IsNotRequired,
-      results_label: "",
+      results_label: "(count) => `${count} options`",
       for: None,
     ),
   ]
@@ -100,7 +100,7 @@ pub fn autocomplete_new_test() {
       no_data_label: "No options",
       panel_class: "",
       required: autocomplete.IsNotRequired,
-      results_label: "",
+      results_label: "(count) => `${count} options`",
       for: None,
     )),
   ]

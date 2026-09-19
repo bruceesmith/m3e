@@ -23,6 +23,7 @@ import m3e/hide_subscript_type.{type HideSubscriptType}
 /// - hide_required_marker: Whether the required marker should be hidden.
 /// - hide_subscript: Whether subscript content is hidden.
 /// - variant: The appearance variant of the field.
+/// - error: Manually forces the field into an error state using the error slot text.
 ///
 pub opaque type FormField {
   FormField(
@@ -30,6 +31,7 @@ pub opaque type FormField {
     hide_required_marker: HideRequiredMarker,
     hide_subscript: HideSubscriptType,
     variant: FormFieldVariant,
+    error: Error,
   )
 }
 
@@ -38,6 +40,13 @@ pub opaque type FormField {
 pub type HideRequiredMarker {
   IsHideRequiredMarker
   IsNotHideRequiredMarker
+}
+
+/// Error is manually forces the field into an error state using the error slot text.
+///
+pub type Error {
+  IsError
+  IsNotError
 }
 
 // --- Defaults ---
@@ -49,6 +58,8 @@ pub const default_hide_required_marker: HideRequiredMarker = IsNotHideRequiredMa
 pub const default_hide_subscript: HideSubscriptType = hide_subscript_type.Auto
 
 pub const default_variant: FormFieldVariant = form_field_variant.Outlined
+
+pub const default_error: Error = IsNotError
 
 /// Slots are used in child elements to insert content into this component
 ///
@@ -79,6 +90,7 @@ pub type Config {
     hide_required_marker: HideRequiredMarker,
     hide_subscript: HideSubscriptType,
     variant: FormFieldVariant,
+    error: Error,
   )
 }
 
@@ -90,6 +102,7 @@ pub fn default_config() -> Config {
     hide_required_marker: IsNotHideRequiredMarker,
     hide_subscript: hide_subscript_type.Auto,
     variant: form_field_variant.Outlined,
+    error: IsNotError,
   )
 }
 
@@ -103,6 +116,7 @@ pub fn from_config(config: Config) -> FormField {
     hide_required_marker: config.hide_required_marker,
     hide_subscript: config.hide_subscript,
     variant: config.variant,
+    error: config.error,
   )
 }
 
@@ -147,6 +161,12 @@ pub fn variant(record: FormField, variant: FormFieldVariant) -> FormField {
   FormField(..record, variant: variant)
 }
 
+/// error sets the value of error for this FormField.
+///
+pub fn error(record: FormField, error: Error) -> FormField {
+  FormField(..record, error: error)
+}
+
 // --- Renderers ---
 
 /// render creates a Lustre Element for a FormField
@@ -179,6 +199,7 @@ pub fn render(
           form_field_variant.to_string(model.variant),
           form_field_variant.to_string(default_variant),
         ),
+        attr.boolean("error", model.error == IsError),
       ],
       attributes,
     ])

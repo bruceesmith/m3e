@@ -22,16 +22,20 @@ pub fn swipe_gesture_default_config_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: swipe_gesture.IsNotDisabled,
-      priority: 1.0,
-      max_displacement: 24.0,
-      min_velocity: 0.3,
-      direction_threshold: 8.0,
+      priority: "1",
+      pointers: 1.0,
+      start_threshold: 4.0,
+      min_displacement: 12.0,
+      min_velocity: "0.3",
+      direction_threshold: "12",
+      direction_grace_period: 0.0,
       directions: [
         swipe_gesture_direction.Left,
         swipe_gesture_direction.Right,
         swipe_gesture_direction.Up,
         swipe_gesture_direction.Down,
       ],
+      max_press_interval: 120.0,
     ),
   ]
 
@@ -51,22 +55,30 @@ pub fn swipe_gesture_from_config_test() {
         buttons: [gesture_input_button.Secondary],
         pointer_types: [pointer_type.Mouse],
         disabled: swipe_gesture.IsDisabled,
-        priority: 42.0,
-        max_displacement: 42.0,
-        min_velocity: 42.0,
-        direction_threshold: 42.0,
+        priority: "test",
+        pointers: 42.0,
+        start_threshold: 42.0,
+        min_displacement: 42.0,
+        min_velocity: "test",
+        direction_threshold: "test",
+        direction_grace_period: 42.0,
         directions: [swipe_gesture_direction.Left],
+        max_press_interval: 42.0,
       ),
       swipe_gesture.new()
         |> swipe_gesture.for(Some("test"))
         |> swipe_gesture.buttons([gesture_input_button.Secondary])
         |> swipe_gesture.pointer_types([pointer_type.Mouse])
         |> swipe_gesture.disabled(swipe_gesture.IsDisabled)
-        |> swipe_gesture.priority(42.0)
-        |> swipe_gesture.max_displacement(42.0)
-        |> swipe_gesture.min_velocity(42.0)
-        |> swipe_gesture.direction_threshold(42.0)
-        |> swipe_gesture.directions([swipe_gesture_direction.Left]),
+        |> swipe_gesture.priority("test")
+        |> swipe_gesture.pointers(42.0)
+        |> swipe_gesture.start_threshold(42.0)
+        |> swipe_gesture.min_displacement(42.0)
+        |> swipe_gesture.min_velocity("test")
+        |> swipe_gesture.direction_threshold("test")
+        |> swipe_gesture.direction_grace_period(42.0)
+        |> swipe_gesture.directions([swipe_gesture_direction.Left])
+        |> swipe_gesture.max_press_interval(42.0),
     ),
   ]
 
@@ -80,28 +92,26 @@ pub fn swipe_gesture_from_config_test() {
 
 pub fn swipe_gesture_new_test() {
   let cases = [
-    swipe_gesture.from_config(
-      swipe_gesture.Config(
-        for: None,
-        buttons: [gesture_input_button.Primary],
-        pointer_types: [
-          pointer_type.Mouse,
-          pointer_type.Pen,
-          pointer_type.Touch,
-        ],
-        disabled: swipe_gesture.IsNotDisabled,
-        priority: 1.0,
-        max_displacement: 24.0,
-        min_velocity: 0.3,
-        direction_threshold: 8.0,
-        directions: [
-          swipe_gesture_direction.Left,
-          swipe_gesture_direction.Right,
-          swipe_gesture_direction.Up,
-          swipe_gesture_direction.Down,
-        ],
-      ),
-    ),
+    swipe_gesture.from_config(swipe_gesture.Config(
+      for: None,
+      buttons: [gesture_input_button.Primary],
+      pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
+      disabled: swipe_gesture.IsNotDisabled,
+      priority: "1",
+      pointers: 1.0,
+      start_threshold: 4.0,
+      min_displacement: 12.0,
+      min_velocity: "0.3",
+      direction_threshold: "12",
+      direction_grace_period: 0.0,
+      directions: [
+        swipe_gesture_direction.Left,
+        swipe_gesture_direction.Right,
+        swipe_gesture_direction.Up,
+        swipe_gesture_direction.Down,
+      ],
+      max_press_interval: 120.0,
+    )),
   ]
 
   list.each(cases, fn(c) {
@@ -202,9 +212,9 @@ pub fn swipe_gesture_priority_test() {
   let mod = swipe_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       swipe_gesture.from_config(
-        swipe_gesture.Config(..swipe_gesture.default_config(), priority: 42.0),
+        swipe_gesture.Config(..swipe_gesture.default_config(), priority: "test"),
       ),
     ),
   ]
@@ -217,7 +227,26 @@ pub fn swipe_gesture_priority_test() {
   })
 }
 
-pub fn swipe_gesture_max_displacement_test() {
+pub fn swipe_gesture_pointers_test() {
+  let mod = swipe_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      swipe_gesture.from_config(
+        swipe_gesture.Config(..swipe_gesture.default_config(), pointers: 42.0),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    swipe_gesture.pointers(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn swipe_gesture_start_threshold_test() {
   let mod = swipe_gesture.new()
   let cases = [
     #(
@@ -225,7 +254,7 @@ pub fn swipe_gesture_max_displacement_test() {
       swipe_gesture.from_config(
         swipe_gesture.Config(
           ..swipe_gesture.default_config(),
-          max_displacement: 42.0,
+          start_threshold: 42.0,
         ),
       ),
     ),
@@ -234,7 +263,29 @@ pub fn swipe_gesture_max_displacement_test() {
   list.each(cases, fn(c) {
     let #(field, expected) = c
 
-    swipe_gesture.max_displacement(mod, field)
+    swipe_gesture.start_threshold(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn swipe_gesture_min_displacement_test() {
+  let mod = swipe_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      swipe_gesture.from_config(
+        swipe_gesture.Config(
+          ..swipe_gesture.default_config(),
+          min_displacement: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    swipe_gesture.min_displacement(mod, field)
     |> should.equal(expected)
   })
 }
@@ -243,11 +294,11 @@ pub fn swipe_gesture_min_velocity_test() {
   let mod = swipe_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       swipe_gesture.from_config(
         swipe_gesture.Config(
           ..swipe_gesture.default_config(),
-          min_velocity: 42.0,
+          min_velocity: "test",
         ),
       ),
     ),
@@ -265,11 +316,11 @@ pub fn swipe_gesture_direction_threshold_test() {
   let mod = swipe_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       swipe_gesture.from_config(
         swipe_gesture.Config(
           ..swipe_gesture.default_config(),
-          direction_threshold: 42.0,
+          direction_threshold: "test",
         ),
       ),
     ),
@@ -279,6 +330,28 @@ pub fn swipe_gesture_direction_threshold_test() {
     let #(field, expected) = c
 
     swipe_gesture.direction_threshold(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn swipe_gesture_direction_grace_period_test() {
+  let mod = swipe_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      swipe_gesture.from_config(
+        swipe_gesture.Config(
+          ..swipe_gesture.default_config(),
+          direction_grace_period: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    swipe_gesture.direction_grace_period(mod, field)
     |> should.equal(expected)
   })
 }
@@ -304,6 +377,28 @@ pub fn swipe_gesture_directions_test() {
   })
 }
 
+pub fn swipe_gesture_max_press_interval_test() {
+  let mod = swipe_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      swipe_gesture.from_config(
+        swipe_gesture.Config(
+          ..swipe_gesture.default_config(),
+          max_press_interval: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    swipe_gesture.max_press_interval(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn swipe_gesture_render_test() {
   let mod = swipe_gesture.new()
 
@@ -315,15 +410,23 @@ pub fn swipe_gesture_render_test() {
     swipe_gesture.new() |> swipe_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     swipe_gesture.new() |> swipe_gesture.disabled(swipe_gesture.IsDisabled)
-  let mod_priority = swipe_gesture.new() |> swipe_gesture.priority(42.0)
-  let mod_max_displacement =
-    swipe_gesture.new() |> swipe_gesture.max_displacement(42.0)
-  let mod_min_velocity = swipe_gesture.new() |> swipe_gesture.min_velocity(42.0)
+  let mod_priority = swipe_gesture.new() |> swipe_gesture.priority("test")
+  let mod_pointers = swipe_gesture.new() |> swipe_gesture.pointers(42.0)
+  let mod_start_threshold =
+    swipe_gesture.new() |> swipe_gesture.start_threshold(42.0)
+  let mod_min_displacement =
+    swipe_gesture.new() |> swipe_gesture.min_displacement(42.0)
+  let mod_min_velocity =
+    swipe_gesture.new() |> swipe_gesture.min_velocity("test")
   let mod_direction_threshold =
-    swipe_gesture.new() |> swipe_gesture.direction_threshold(42.0)
+    swipe_gesture.new() |> swipe_gesture.direction_threshold("test")
+  let mod_direction_grace_period =
+    swipe_gesture.new() |> swipe_gesture.direction_grace_period(42.0)
   let mod_directions =
     swipe_gesture.new()
     |> swipe_gesture.directions([swipe_gesture_direction.Left])
+  let mod_max_press_interval =
+    swipe_gesture.new() |> swipe_gesture.max_press_interval(42.0)
   let cases = [
     #(#(mod, []), element.element("m3e-swipe-gesture", [], [])),
     #(
@@ -377,15 +480,31 @@ pub fn swipe_gesture_render_test() {
       #(mod_priority, []),
       element.element(
         "m3e-swipe-gesture",
-        [attribute.attribute("priority", "42.0")],
+        [attribute.attribute("priority", "test")],
         [],
       ),
     ),
     #(
-      #(mod_max_displacement, []),
+      #(mod_pointers, []),
       element.element(
         "m3e-swipe-gesture",
-        [attribute.attribute("max-displacement", "42.0")],
+        [attribute.attribute("pointers", "42.0")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_start_threshold, []),
+      element.element(
+        "m3e-swipe-gesture",
+        [attribute.attribute("start-threshold", "42.0")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_min_displacement, []),
+      element.element(
+        "m3e-swipe-gesture",
+        [attribute.attribute("min-displacement", "42.0")],
         [],
       ),
     ),
@@ -393,7 +512,7 @@ pub fn swipe_gesture_render_test() {
       #(mod_min_velocity, []),
       element.element(
         "m3e-swipe-gesture",
-        [attribute.attribute("min-velocity", "42.0")],
+        [attribute.attribute("min-velocity", "test")],
         [],
       ),
     ),
@@ -401,7 +520,15 @@ pub fn swipe_gesture_render_test() {
       #(mod_direction_threshold, []),
       element.element(
         "m3e-swipe-gesture",
-        [attribute.attribute("direction-threshold", "42.0")],
+        [attribute.attribute("direction-threshold", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_direction_grace_period, []),
+      element.element(
+        "m3e-swipe-gesture",
+        [attribute.attribute("direction-grace-period", "42.0")],
         [],
       ),
     ),
@@ -415,6 +542,14 @@ pub fn swipe_gesture_render_test() {
             swipe_gesture_direction.to_string(swipe_gesture_direction.Left),
           ),
         ],
+        [],
+      ),
+    ),
+    #(
+      #(mod_max_press_interval, []),
+      element.element(
+        "m3e-swipe-gesture",
+        [attribute.attribute("max-press-interval", "42.0")],
         [],
       ),
     ),

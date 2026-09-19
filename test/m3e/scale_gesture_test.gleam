@@ -21,9 +21,10 @@ pub fn scale_gesture_default_config_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: scale_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       pointers: 2.0,
-      distance_threshold: 4.0,
+      min_displacement: 4.0,
+      max_press_interval: 120.0,
     ),
   ]
 
@@ -43,18 +44,20 @@ pub fn scale_gesture_from_config_test() {
         buttons: [gesture_input_button.Secondary],
         pointer_types: [pointer_type.Mouse],
         disabled: scale_gesture.IsDisabled,
-        priority: 42.0,
+        priority: "test",
         pointers: 42.0,
-        distance_threshold: 42.0,
+        min_displacement: 42.0,
+        max_press_interval: 42.0,
       ),
       scale_gesture.new()
         |> scale_gesture.for(Some("test"))
         |> scale_gesture.buttons([gesture_input_button.Secondary])
         |> scale_gesture.pointer_types([pointer_type.Mouse])
         |> scale_gesture.disabled(scale_gesture.IsDisabled)
-        |> scale_gesture.priority(42.0)
+        |> scale_gesture.priority("test")
         |> scale_gesture.pointers(42.0)
-        |> scale_gesture.distance_threshold(42.0),
+        |> scale_gesture.min_displacement(42.0)
+        |> scale_gesture.max_press_interval(42.0),
     ),
   ]
 
@@ -73,9 +76,10 @@ pub fn scale_gesture_new_test() {
       buttons: [gesture_input_button.Primary],
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: scale_gesture.IsNotDisabled,
-      priority: 1.0,
+      priority: "1",
       pointers: 2.0,
-      distance_threshold: 4.0,
+      min_displacement: 4.0,
+      max_press_interval: 120.0,
     )),
   ]
 
@@ -177,9 +181,9 @@ pub fn scale_gesture_priority_test() {
   let mod = scale_gesture.new()
   let cases = [
     #(
-      42.0,
+      "test",
       scale_gesture.from_config(
-        scale_gesture.Config(..scale_gesture.default_config(), priority: 42.0),
+        scale_gesture.Config(..scale_gesture.default_config(), priority: "test"),
       ),
     ),
   ]
@@ -211,7 +215,7 @@ pub fn scale_gesture_pointers_test() {
   })
 }
 
-pub fn scale_gesture_distance_threshold_test() {
+pub fn scale_gesture_min_displacement_test() {
   let mod = scale_gesture.new()
   let cases = [
     #(
@@ -219,7 +223,7 @@ pub fn scale_gesture_distance_threshold_test() {
       scale_gesture.from_config(
         scale_gesture.Config(
           ..scale_gesture.default_config(),
-          distance_threshold: 42.0,
+          min_displacement: 42.0,
         ),
       ),
     ),
@@ -228,7 +232,29 @@ pub fn scale_gesture_distance_threshold_test() {
   list.each(cases, fn(c) {
     let #(field, expected) = c
 
-    scale_gesture.distance_threshold(mod, field)
+    scale_gesture.min_displacement(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn scale_gesture_max_press_interval_test() {
+  let mod = scale_gesture.new()
+  let cases = [
+    #(
+      42.0,
+      scale_gesture.from_config(
+        scale_gesture.Config(
+          ..scale_gesture.default_config(),
+          max_press_interval: 42.0,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    scale_gesture.max_press_interval(mod, field)
     |> should.equal(expected)
   })
 }
@@ -244,10 +270,12 @@ pub fn scale_gesture_render_test() {
     scale_gesture.new() |> scale_gesture.pointer_types([pointer_type.Mouse])
   let mod_disabled =
     scale_gesture.new() |> scale_gesture.disabled(scale_gesture.IsDisabled)
-  let mod_priority = scale_gesture.new() |> scale_gesture.priority(42.0)
+  let mod_priority = scale_gesture.new() |> scale_gesture.priority("test")
   let mod_pointers = scale_gesture.new() |> scale_gesture.pointers(42.0)
-  let mod_distance_threshold =
-    scale_gesture.new() |> scale_gesture.distance_threshold(42.0)
+  let mod_min_displacement =
+    scale_gesture.new() |> scale_gesture.min_displacement(42.0)
+  let mod_max_press_interval =
+    scale_gesture.new() |> scale_gesture.max_press_interval(42.0)
   let cases = [
     #(#(mod, []), element.element("m3e-scale-gesture", [], [])),
     #(
@@ -301,7 +329,7 @@ pub fn scale_gesture_render_test() {
       #(mod_priority, []),
       element.element(
         "m3e-scale-gesture",
-        [attribute.attribute("priority", "42.0")],
+        [attribute.attribute("priority", "test")],
         [],
       ),
     ),
@@ -314,10 +342,18 @@ pub fn scale_gesture_render_test() {
       ),
     ),
     #(
-      #(mod_distance_threshold, []),
+      #(mod_min_displacement, []),
       element.element(
         "m3e-scale-gesture",
-        [attribute.attribute("distance-threshold", "42.0")],
+        [attribute.attribute("min-displacement", "42.0")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_max_press_interval, []),
+      element.element(
+        "m3e-scale-gesture",
+        [attribute.attribute("max-press-interval", "42.0")],
         [],
       ),
     ),

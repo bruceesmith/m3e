@@ -22,6 +22,7 @@ pub fn form_field_default_config_test() {
       hide_required_marker: form_field.IsNotHideRequiredMarker,
       hide_subscript: hide_subscript_type.Auto,
       variant: form_field_variant.Outlined,
+      error: form_field.IsNotError,
     ),
   ]
 
@@ -41,12 +42,14 @@ pub fn form_field_from_config_test() {
         hide_required_marker: form_field.IsHideRequiredMarker,
         hide_subscript: hide_subscript_type.Always,
         variant: form_field_variant.Filled,
+        error: form_field.IsError,
       ),
       form_field.new()
         |> form_field.float_label(float_label_type.Always)
         |> form_field.hide_required_marker(form_field.IsHideRequiredMarker)
         |> form_field.hide_subscript(hide_subscript_type.Always)
-        |> form_field.variant(form_field_variant.Filled),
+        |> form_field.variant(form_field_variant.Filled)
+        |> form_field.error(form_field.IsError),
     ),
   ]
 
@@ -65,6 +68,7 @@ pub fn form_field_new_test() {
       hide_required_marker: form_field.IsNotHideRequiredMarker,
       hide_subscript: hide_subscript_type.Auto,
       variant: form_field_variant.Outlined,
+      error: form_field.IsNotError,
     )),
   ]
 
@@ -164,6 +168,28 @@ pub fn form_field_variant_test() {
   })
 }
 
+pub fn form_field_error_test() {
+  let mod = form_field.new()
+  let cases = [
+    #(
+      form_field.IsError,
+      form_field.from_config(
+        form_field.Config(
+          ..form_field.default_config(),
+          error: form_field.IsError,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    form_field.error(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn form_field_render_test() {
   let mod = form_field.new()
 
@@ -176,6 +202,7 @@ pub fn form_field_render_test() {
     form_field.new() |> form_field.hide_subscript(hide_subscript_type.Always)
   let mod_variant =
     form_field.new() |> form_field.variant(form_field_variant.Filled)
+  let mod_error = form_field.new() |> form_field.error(form_field.IsError)
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-form-field", [], [])),
@@ -234,6 +261,10 @@ pub fn form_field_render_test() {
         ],
         [],
       ),
+    ),
+    #(
+      #(mod_error, [], []),
+      element.element("m3e-form-field", [attribute.attribute("error", "")], []),
     ),
   ]
 
