@@ -22,6 +22,7 @@ pub fn long_press_gesture_default_config_test() {
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: long_press_gesture.IsNotDisabled,
       priority: "1",
+      discrete: long_press_gesture.IsNotDiscrete,
       pointers: 1.0,
       max_displacement: 4.0,
       min_duration: 500.0,
@@ -46,6 +47,7 @@ pub fn long_press_gesture_from_config_test() {
         pointer_types: [pointer_type.Mouse],
         disabled: long_press_gesture.IsDisabled,
         priority: "test",
+        discrete: long_press_gesture.IsDiscrete,
         pointers: 42.0,
         max_displacement: 42.0,
         min_duration: 42.0,
@@ -57,6 +59,7 @@ pub fn long_press_gesture_from_config_test() {
         |> long_press_gesture.pointer_types([pointer_type.Mouse])
         |> long_press_gesture.disabled(long_press_gesture.IsDisabled)
         |> long_press_gesture.priority("test")
+        |> long_press_gesture.discrete(long_press_gesture.IsDiscrete)
         |> long_press_gesture.pointers(42.0)
         |> long_press_gesture.max_displacement(42.0)
         |> long_press_gesture.min_duration(42.0)
@@ -80,6 +83,7 @@ pub fn long_press_gesture_new_test() {
       pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
       disabled: long_press_gesture.IsNotDisabled,
       priority: "1",
+      discrete: long_press_gesture.IsNotDiscrete,
       pointers: 1.0,
       max_displacement: 4.0,
       min_duration: 500.0,
@@ -205,6 +209,28 @@ pub fn long_press_gesture_priority_test() {
   })
 }
 
+pub fn long_press_gesture_discrete_test() {
+  let mod = long_press_gesture.new()
+  let cases = [
+    #(
+      long_press_gesture.IsDiscrete,
+      long_press_gesture.from_config(
+        long_press_gesture.Config(
+          ..long_press_gesture.default_config(),
+          discrete: long_press_gesture.IsDiscrete,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    long_press_gesture.discrete(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn long_press_gesture_pointers_test() {
   let mod = long_press_gesture.new()
   let cases = [
@@ -308,6 +334,9 @@ pub fn long_press_gesture_render_test() {
     |> long_press_gesture.disabled(long_press_gesture.IsDisabled)
   let mod_priority =
     long_press_gesture.new() |> long_press_gesture.priority("test")
+  let mod_discrete =
+    long_press_gesture.new()
+    |> long_press_gesture.discrete(long_press_gesture.IsDiscrete)
   let mod_pointers =
     long_press_gesture.new() |> long_press_gesture.pointers(42.0)
   let mod_max_displacement =
@@ -370,6 +399,14 @@ pub fn long_press_gesture_render_test() {
       element.element(
         "m3e-long-press-gesture",
         [attribute.attribute("priority", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_discrete, []),
+      element.element(
+        "m3e-long-press-gesture",
+        [attribute.attribute("discrete", "")],
         [],
       ),
     ),

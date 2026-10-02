@@ -19,6 +19,7 @@ import m3e/tab_variant.{type TabVariant}
 /// ## Fields:
 ///
 /// - disable_pagination: Whether scroll buttons are disabled.
+/// - disable_swipe: Whether to disable swipe gestures for switching tabs.
 /// - header_position: The position of the tab headers.
 /// - next_page_label: The accessible label given to the button used to move to the next page.
 /// - previous_page_label: The accessible label given to the button used to move to the previous page.
@@ -28,12 +29,20 @@ import m3e/tab_variant.{type TabVariant}
 pub opaque type Tabs {
   Tabs(
     disable_pagination: String,
+    disable_swipe: DisableSwipe,
     header_position: TabHeaderPosition,
     next_page_label: String,
     previous_page_label: String,
     stretch: Stretch,
     variant: TabVariant,
   )
+}
+
+/// DisableSwipe is whether to disable swipe gestures for switching tabs.
+///
+pub type DisableSwipe {
+  IsDisableSwipe
+  IsNotDisableSwipe
 }
 
 /// Stretch is whether tabs are stretched to fill the header.
@@ -46,6 +55,8 @@ pub type Stretch {
 // --- Defaults ---
 
 pub const default_disable_pagination: String = ""
+
+pub const default_disable_swipe: DisableSwipe = IsNotDisableSwipe
 
 pub const default_header_position: TabHeaderPosition = tab_header_position.Before
 
@@ -75,6 +86,7 @@ pub type Slot {
 pub type Config {
   Config(
     disable_pagination: String,
+    disable_swipe: DisableSwipe,
     header_position: TabHeaderPosition,
     next_page_label: String,
     previous_page_label: String,
@@ -88,6 +100,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     disable_pagination: "",
+    disable_swipe: IsNotDisableSwipe,
     header_position: tab_header_position.Before,
     next_page_label: "Next page",
     previous_page_label: "Previous page",
@@ -103,6 +116,7 @@ pub fn default_config() -> Config {
 pub fn from_config(config: Config) -> Tabs {
   Tabs(
     disable_pagination: config.disable_pagination,
+    disable_swipe: config.disable_swipe,
     header_position: config.header_position,
     next_page_label: config.next_page_label,
     previous_page_label: config.previous_page_label,
@@ -123,6 +137,12 @@ pub fn new() -> Tabs {
 ///
 pub fn disable_pagination(record: Tabs, disable_pagination: String) -> Tabs {
   Tabs(..record, disable_pagination: disable_pagination)
+}
+
+/// disable_swipe sets the value of disable_swipe for this Tabs.
+///
+pub fn disable_swipe(record: Tabs, disable_swipe: DisableSwipe) -> Tabs {
+  Tabs(..record, disable_swipe: disable_swipe)
 }
 
 /// header_position sets the value of header_position for this Tabs.
@@ -176,6 +196,7 @@ pub fn render(
           model.disable_pagination,
           default_disable_pagination,
         ),
+        attr.boolean("disable-swipe", model.disable_swipe == IsDisableSwipe),
         attr.with_default(
           "header-position",
           tab_header_position.to_string(model.header_position),

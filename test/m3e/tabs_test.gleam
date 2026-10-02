@@ -18,6 +18,7 @@ pub fn tabs_default_config_test() {
   let cases = [
     Config(
       disable_pagination: "",
+      disable_swipe: tabs.IsNotDisableSwipe,
       header_position: tab_header_position.Before,
       next_page_label: "Next page",
       previous_page_label: "Previous page",
@@ -39,6 +40,7 @@ pub fn tabs_from_config_test() {
     #(
       tabs.Config(
         disable_pagination: "test",
+        disable_swipe: tabs.IsDisableSwipe,
         header_position: tab_header_position.After,
         next_page_label: "test",
         previous_page_label: "test",
@@ -47,6 +49,7 @@ pub fn tabs_from_config_test() {
       ),
       tabs.new()
         |> tabs.disable_pagination("test")
+        |> tabs.disable_swipe(tabs.IsDisableSwipe)
         |> tabs.header_position(tab_header_position.After)
         |> tabs.next_page_label("test")
         |> tabs.previous_page_label("test")
@@ -67,6 +70,7 @@ pub fn tabs_new_test() {
   let cases = [
     tabs.from_config(tabs.Config(
       disable_pagination: "",
+      disable_swipe: tabs.IsNotDisableSwipe,
       header_position: tab_header_position.Before,
       next_page_label: "Next page",
       previous_page_label: "Previous page",
@@ -98,6 +102,25 @@ pub fn tabs_disable_pagination_test() {
     let #(field, expected) = c
 
     tabs.disable_pagination(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn tabs_disable_swipe_test() {
+  let mod = tabs.new()
+  let cases = [
+    #(
+      tabs.IsDisableSwipe,
+      tabs.from_config(
+        tabs.Config(..tabs.default_config(), disable_swipe: tabs.IsDisableSwipe),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    tabs.disable_swipe(mod, field)
     |> should.equal(expected)
   })
 }
@@ -204,6 +227,7 @@ pub fn tabs_render_test() {
   let mod = tabs.new()
 
   let mod_disable_pagination = tabs.new() |> tabs.disable_pagination("test")
+  let mod_disable_swipe = tabs.new() |> tabs.disable_swipe(tabs.IsDisableSwipe)
   let mod_header_position =
     tabs.new() |> tabs.header_position(tab_header_position.After)
   let mod_next_page_label = tabs.new() |> tabs.next_page_label("test")
@@ -224,6 +248,14 @@ pub fn tabs_render_test() {
       element.element(
         "m3e-tabs",
         [attribute.attribute("disable-pagination", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_disable_swipe, [], []),
+      element.element(
+        "m3e-tabs",
+        [attribute.attribute("disable-swipe", "")],
         [],
       ),
     ),

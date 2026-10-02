@@ -27,6 +27,9 @@ import m3e/pointer_type.{type PointerType}
 /// - pointer_types: Which types of pointers can be used to recognize gestures.
 /// - disabled: Whether gesture recognition is disabled.
 /// - priority: The priority in which to recognize gestures.
+/// - discrete: Whether the gesture is discrete. If `true`, starts after `minDuration`
+///     while pointers stay down and ends on pointer-up. If `false`, starts
+///     immediately when pointers are down and ends after `minDuration`.
 /// - pointers: Number of pointers required for the gesture to be recognized.
 /// - max_displacement: Maximum allowed movement (px).
 /// - min_duration: Minimum time (ms) a pointer must remain pressed.
@@ -39,6 +42,7 @@ pub opaque type LongPressGesture {
     pointer_types: List(PointerType),
     disabled: Disabled,
     priority: String,
+    discrete: Discrete,
     pointers: Float,
     max_displacement: Float,
     min_duration: Float,
@@ -51,6 +55,15 @@ pub opaque type LongPressGesture {
 pub type Disabled {
   IsDisabled
   IsNotDisabled
+}
+
+/// Discrete is whether the gesture is discrete. If `true`, starts after `minDuration`
+///     while pointers stay down and ends on pointer-up. If `false`, starts
+///     immediately when pointers are down and ends after `minDuration`.
+///
+pub type Discrete {
+  IsDiscrete
+  IsNotDiscrete
 }
 
 // --- Defaults ---
@@ -71,6 +84,8 @@ pub const default_disabled: Disabled = IsNotDisabled
 
 pub const default_priority: String = "1"
 
+pub const default_discrete: Discrete = IsNotDiscrete
+
 pub const default_pointers: Float = 1.0
 
 pub const default_max_displacement: Float = 4.0
@@ -90,6 +105,7 @@ pub type Config {
     pointer_types: List(PointerType),
     disabled: Disabled,
     priority: String,
+    discrete: Discrete,
     pointers: Float,
     max_displacement: Float,
     min_duration: Float,
@@ -106,6 +122,7 @@ pub fn default_config() -> Config {
     pointer_types: [pointer_type.Mouse, pointer_type.Pen, pointer_type.Touch],
     disabled: IsNotDisabled,
     priority: "1",
+    discrete: IsNotDiscrete,
     pointers: 1.0,
     max_displacement: 4.0,
     min_duration: 500.0,
@@ -124,6 +141,7 @@ pub fn from_config(config: Config) -> LongPressGesture {
     pointer_types: config.pointer_types,
     disabled: config.disabled,
     priority: config.priority,
+    discrete: config.discrete,
     pointers: config.pointers,
     max_displacement: config.max_displacement,
     min_duration: config.min_duration,
@@ -179,6 +197,15 @@ pub fn priority(
   priority: String,
 ) -> LongPressGesture {
   LongPressGesture(..record, priority: priority)
+}
+
+/// discrete sets the value of discrete for this LongPressGesture.
+///
+pub fn discrete(
+  record: LongPressGesture,
+  discrete: Discrete,
+) -> LongPressGesture {
+  LongPressGesture(..record, discrete: discrete)
 }
 
 /// pointers sets the value of pointers for this LongPressGesture.
@@ -251,6 +278,7 @@ pub fn render(
         ),
         attr.boolean("disabled", model.disabled == IsDisabled),
         attr.with_default("priority", model.priority, default_priority),
+        attr.boolean("discrete", model.discrete == IsDiscrete),
         attr.with_default(
           "pointers",
           float.to_string(model.pointers),

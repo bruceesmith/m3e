@@ -3,7 +3,11 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.12 of this software is aligned with v2.8.0 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.13 of this software is aligned with v2.8.3 of [M3E](https://github.com/matraic/m3e).
+
+## 2.3.13
+
+- further gesture-related updates
 
 ## 2.3.12
 
