@@ -60,9 +60,9 @@ pub const default_scheme: ColorScheme = color_scheme.Auto
 
 pub const default_strong_focus: StrongFocus = IsNotStrongFocus
 
-pub const default_variant: ThemeVariant = theme_variant.Neutral
+pub const default_variant: ThemeVariant = theme_variant.TonalSpot
 
-pub const default_motion: MotionScheme = motion_scheme.Standard
+pub const default_motion: MotionScheme = motion_scheme.Expressive
 
 // --- Configuration ---
 
@@ -89,8 +89,8 @@ pub fn default_config() -> Config {
     density: 0.0,
     scheme: color_scheme.Auto,
     strong_focus: IsNotStrongFocus,
-    variant: theme_variant.Neutral,
-    motion: motion_scheme.Standard,
+    variant: theme_variant.TonalSpot,
+    motion: motion_scheme.Expressive,
   )
 }
 

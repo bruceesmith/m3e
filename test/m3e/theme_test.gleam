@@ -24,8 +24,8 @@ pub fn theme_default_config_test() {
       density: 0.0,
       scheme: color_scheme.Auto,
       strong_focus: theme.IsNotStrongFocus,
-      variant: theme_variant.Neutral,
-      motion: motion_scheme.Standard,
+      variant: theme_variant.TonalSpot,
+      motion: motion_scheme.Expressive,
     ),
   ]
 
@@ -47,7 +47,7 @@ pub fn theme_from_config_test() {
         scheme: color_scheme.Light,
         strong_focus: theme.IsStrongFocus,
         variant: theme_variant.Monochrome,
-        motion: motion_scheme.Expressive,
+        motion: motion_scheme.Standard,
       ),
       theme.new()
         |> theme.color("test")
@@ -56,7 +56,7 @@ pub fn theme_from_config_test() {
         |> theme.scheme(color_scheme.Light)
         |> theme.strong_focus(theme.IsStrongFocus)
         |> theme.variant(theme_variant.Monochrome)
-        |> theme.motion(motion_scheme.Expressive),
+        |> theme.motion(motion_scheme.Standard),
     ),
   ]
 
@@ -76,8 +76,8 @@ pub fn theme_new_test() {
       density: 0.0,
       scheme: color_scheme.Auto,
       strong_focus: theme.IsNotStrongFocus,
-      variant: theme_variant.Neutral,
-      motion: motion_scheme.Standard,
+      variant: theme_variant.TonalSpot,
+      motion: motion_scheme.Expressive,
     )),
   ]
 
@@ -209,9 +209,9 @@ pub fn theme_motion_test() {
   let mod = theme.new()
   let cases = [
     #(
-      motion_scheme.Expressive,
+      motion_scheme.Standard,
       theme.from_config(
-        theme.Config(..theme.default_config(), motion: motion_scheme.Expressive),
+        theme.Config(..theme.default_config(), motion: motion_scheme.Standard),
       ),
     ),
   ]
@@ -233,7 +233,7 @@ pub fn theme_render_test() {
   let mod_scheme = theme.new() |> theme.scheme(color_scheme.Light)
   let mod_strong_focus = theme.new() |> theme.strong_focus(theme.IsStrongFocus)
   let mod_variant = theme.new() |> theme.variant(theme_variant.Monochrome)
-  let mod_motion = theme.new() |> theme.motion(motion_scheme.Expressive)
+  let mod_motion = theme.new() |> theme.motion(motion_scheme.Standard)
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-theme", [], [])),
@@ -308,7 +308,7 @@ pub fn theme_render_test() {
         [
           attribute.attribute(
             "motion",
-            motion_scheme.to_string(motion_scheme.Expressive),
+            motion_scheme.to_string(motion_scheme.Standard),
           ),
         ],
         [],

@@ -20,12 +20,14 @@ import m3e/collapsible_orientation.{type CollapsibleOrientation}
 /// - open: Whether content is visible.
 /// - orientation: Orientation of collapsible content.
 /// - no_animate: Whether to disable animation.
+/// - slide: Whether content slides into view.
 ///
 pub opaque type Collapsible {
   Collapsible(
     open: Open,
     orientation: CollapsibleOrientation,
     no_animate: NoAnimate,
+    slide: Slide,
   )
 }
 
@@ -43,6 +45,13 @@ pub type NoAnimate {
   IsNotNoAnimate
 }
 
+/// Slide is whether content slides into view.
+///
+pub type Slide {
+  IsSlide
+  IsNotSlide
+}
+
 // --- Defaults ---
 
 pub const default_open: Open = IsNotOpen
@@ -51,12 +60,19 @@ pub const default_orientation: CollapsibleOrientation = collapsible_orientation.
 
 pub const default_no_animate: NoAnimate = IsNotNoAnimate
 
+pub const default_slide: Slide = IsNotSlide
+
 // --- Configuration ---
 
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(open: Open, orientation: CollapsibleOrientation, no_animate: NoAnimate)
+  Config(
+    open: Open,
+    orientation: CollapsibleOrientation,
+    no_animate: NoAnimate,
+    slide: Slide,
+  )
 }
 
 /// default_config is the default configuration for this component.
@@ -66,6 +82,7 @@ pub fn default_config() -> Config {
     open: IsNotOpen,
     orientation: collapsible_orientation.Vertical,
     no_animate: IsNotNoAnimate,
+    slide: IsNotSlide,
   )
 }
 
@@ -78,6 +95,7 @@ pub fn from_config(config: Config) -> Collapsible {
     open: config.open,
     orientation: config.orientation,
     no_animate: config.no_animate,
+    slide: config.slide,
   )
 }
 
@@ -110,6 +128,12 @@ pub fn no_animate(record: Collapsible, no_animate: NoAnimate) -> Collapsible {
   Collapsible(..record, no_animate: no_animate)
 }
 
+/// slide sets the value of slide for this Collapsible.
+///
+pub fn slide(record: Collapsible, slide: Slide) -> Collapsible {
+  Collapsible(..record, slide: slide)
+}
+
 // --- Renderers ---
 
 /// render creates a Lustre Element for a Collapsible
@@ -130,6 +154,7 @@ pub fn render(
           collapsible_orientation.to_string(default_orientation),
         ),
         attr.boolean("no-animate", model.no_animate == IsNoAnimate),
+        attr.boolean("slide", model.slide == IsSlide),
       ],
       attributes,
     ])

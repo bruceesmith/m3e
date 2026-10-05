@@ -3,7 +3,12 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.13 of this software is aligned with v2.8.3 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.14 of this software is aligned with v2.9.1 of [M3E](https://github.com/matraic/m3e).
+
+## 2.3.14
+
+- slide added to Collapsible
+- defaults changed in Theme for Variant and Motion
 
 ## 2.3.13
 

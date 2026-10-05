@@ -19,6 +19,7 @@ pub fn collapsible_default_config_test() {
       open: collapsible.IsNotOpen,
       orientation: collapsible_orientation.Vertical,
       no_animate: collapsible.IsNotNoAnimate,
+      slide: collapsible.IsNotSlide,
     ),
   ]
 
@@ -37,11 +38,13 @@ pub fn collapsible_from_config_test() {
         open: collapsible.IsOpen,
         orientation: collapsible_orientation.Horizontal,
         no_animate: collapsible.IsNoAnimate,
+        slide: collapsible.IsSlide,
       ),
       collapsible.new()
         |> collapsible.open(collapsible.IsOpen)
         |> collapsible.orientation(collapsible_orientation.Horizontal)
-        |> collapsible.no_animate(collapsible.IsNoAnimate),
+        |> collapsible.no_animate(collapsible.IsNoAnimate)
+        |> collapsible.slide(collapsible.IsSlide),
     ),
   ]
 
@@ -59,6 +62,7 @@ pub fn collapsible_new_test() {
       open: collapsible.IsNotOpen,
       orientation: collapsible_orientation.Vertical,
       no_animate: collapsible.IsNotNoAnimate,
+      slide: collapsible.IsNotSlide,
     )),
   ]
 
@@ -136,6 +140,28 @@ pub fn collapsible_no_animate_test() {
   })
 }
 
+pub fn collapsible_slide_test() {
+  let mod = collapsible.new()
+  let cases = [
+    #(
+      collapsible.IsSlide,
+      collapsible.from_config(
+        collapsible.Config(
+          ..collapsible.default_config(),
+          slide: collapsible.IsSlide,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    collapsible.slide(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn collapsible_render_test() {
   let mod = collapsible.new()
 
@@ -145,6 +171,7 @@ pub fn collapsible_render_test() {
     |> collapsible.orientation(collapsible_orientation.Horizontal)
   let mod_no_animate =
     collapsible.new() |> collapsible.no_animate(collapsible.IsNoAnimate)
+  let mod_slide = collapsible.new() |> collapsible.slide(collapsible.IsSlide)
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-collapsible", [], [])),
@@ -183,6 +210,10 @@ pub fn collapsible_render_test() {
         [attribute.attribute("no-animate", "")],
         [],
       ),
+    ),
+    #(
+      #(mod_slide, [], []),
+      element.element("m3e-collapsible", [attribute.attribute("slide", "")], []),
     ),
   ]
 
