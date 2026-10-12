@@ -56,7 +56,8 @@ pub type Slide {
 
 pub const default_open: Open = IsNotOpen
 
-pub const default_orientation: CollapsibleOrientation = collapsible_orientation.Vertical
+pub const default_orientation: CollapsibleOrientation =
+  collapsible_orientation.Vertical
 
 pub const default_no_animate: NoAnimate = IsNotNoAnimate
 

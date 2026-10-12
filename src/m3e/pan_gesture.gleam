@@ -81,7 +81,8 @@ pub const default_priority: String = "1"
 
 pub const default_pointers: Float = 1.0
 
-pub const default_activation_mode: PanGestureActivationMode = pan_gesture_activation_mode.Press
+pub const default_activation_mode: PanGestureActivationMode =
+  pan_gesture_activation_mode.Press
 
 pub const default_min_displacement: Float = 4.0
 

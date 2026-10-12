@@ -108,7 +108,8 @@ pub const default_value: String = ""
 
 pub const default_type_: FormSubmitterType = form_submitter_type.Button
 
-pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+pub const default_disabled_interactive: DisabledInteractive =
+  IsNotDisabledInteractive
 
 pub const default_disabled: Disabled = IsNotDisabled
 

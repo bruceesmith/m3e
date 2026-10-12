@@ -62,7 +62,8 @@ pub const default_disabled: Disabled = IsNotDisabled
 
 pub const default_disable_highlight: DisableHighlight = IsNotDisableHighlight
 
-pub const default_highlight_mode: TextHighlightMode = text_highlight_mode.Contains
+pub const default_highlight_mode: TextHighlightMode =
+  text_highlight_mode.Contains
 
 pub const default_selected: Selected = IsNotSelected
 

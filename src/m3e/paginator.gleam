@@ -90,17 +90,18 @@ pub const default_next_page_label: String = "Next page"
 
 pub const default_page_index: Float = 0.0
 
-pub const default_page_size: number_string.NumberString = number_string.NumberVal(
-  50.0,
-)
+pub const default_page_size: number_string.NumberString =
+  number_string.NumberVal(50.0)
 
 pub const default_page_sizes: String = "5,10,25,50,100"
 
-pub const default_page_size_variant: FormFieldVariant = form_field_variant.Outlined
+pub const default_page_size_variant: FormFieldVariant =
+  form_field_variant.Outlined
 
 pub const default_previous_page_label: String = "Previous page"
 
-pub const default_show_first_last_buttons: ShowFirstLastButtons = IsNotShowFirstLastButtons
+pub const default_show_first_last_buttons: ShowFirstLastButtons =
+  IsNotShowFirstLastButtons
 
 /// Slots are used in child elements to insert content into this component
 ///

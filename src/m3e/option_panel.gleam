@@ -39,7 +39,8 @@ pub type FitAnchorWidth {
 
 // --- Defaults ---
 
-pub const default_scroll_strategy: FloatingPanelScrollStrategy = floating_panel_scroll_strategy.Hide
+pub const default_scroll_strategy: FloatingPanelScrollStrategy =
+  floating_panel_scroll_strategy.Hide
 
 pub const default_fit_anchor_width: FitAnchorWidth = IsNotFitAnchorWidth
 

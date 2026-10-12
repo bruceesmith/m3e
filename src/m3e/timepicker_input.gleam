@@ -94,7 +94,8 @@ pub const default_second: Option(Float) = None
 
 pub const default_show_seconds: ShowSeconds = IsNotShowSeconds
 
-pub const default_orientation: TimepickerOrientation = timepicker_orientation.Horizontal
+pub const default_orientation: TimepickerOrientation =
+  timepicker_orientation.Horizontal
 
 pub const default_period: TimepickerPeriod = timepicker_period.Am
 

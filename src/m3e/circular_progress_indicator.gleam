@@ -47,7 +47,8 @@ pub const default_max: Float = 100.0
 
 pub const default_value: Float = 0.0
 
-pub const default_variant: ProgressIndicatorVariant = progress_indicator_variant.Flat
+pub const default_variant: ProgressIndicatorVariant =
+  progress_indicator_variant.Flat
 
 // --- Configuration ---
 

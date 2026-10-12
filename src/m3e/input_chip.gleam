@@ -60,7 +60,8 @@ pub type Removable {
 
 pub const default_disabled: Disabled = IsNotDisabled
 
-pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+pub const default_disabled_interactive: DisabledInteractive =
+  IsNotDisabledInteractive
 
 pub const default_removable: Removable = IsNotRemovable
 

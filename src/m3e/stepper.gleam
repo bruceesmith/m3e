@@ -42,13 +42,15 @@ pub type Linear {
 
 // --- Defaults ---
 
-pub const default_header_position: StepHeaderPosition = step_header_position.Above
+pub const default_header_position: StepHeaderPosition =
+  step_header_position.Above
 
 pub const default_label_position: StepLabelPosition = step_label_position.End
 
 pub const default_linear: Linear = IsNotLinear
 
-pub const default_orientation: StepperOrientation = stepper_orientation.Horizontal
+pub const default_orientation: StepperOrientation =
+  stepper_orientation.Horizontal
 
 /// Slots are used in child elements to insert content into this component
 ///

@@ -31,7 +31,8 @@ pub type DisableRestoreFocus {
 
 // --- Defaults ---
 
-pub const default_disable_restore_focus: DisableRestoreFocus = IsNotDisableRestoreFocus
+pub const default_disable_restore_focus: DisableRestoreFocus =
+  IsNotDisableRestoreFocus
 
 // --- Constructors ---
 

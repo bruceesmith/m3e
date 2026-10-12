@@ -56,7 +56,8 @@ pub type Disabled {
 
 // --- Defaults ---
 
-pub const default_hide_selection_indicator: HideSelectionIndicator = IsNotHideSelectionIndicator
+pub const default_hide_selection_indicator: HideSelectionIndicator =
+  IsNotHideSelectionIndicator
 
 pub const default_multi: Multi = IsNotMulti
 

@@ -58,7 +58,8 @@ pub const default_position: TooltipPosition = tooltip_position.Below
 
 pub const default_show_delay: Float = 0.0
 
-pub const default_touch_gestures: TooltipTouchGestures = tooltip_touch_gestures.Auto
+pub const default_touch_gestures: TooltipTouchGestures =
+  tooltip_touch_gestures.Auto
 
 // --- Configuration ---
 

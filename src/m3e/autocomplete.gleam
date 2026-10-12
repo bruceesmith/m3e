@@ -106,9 +106,11 @@ pub const default_auto_activate: AutoActivate = IsNotAutoActivate
 
 pub const default_case_sensitive: CaseSensitive = IsNotCaseSensitive
 
-pub const default_filter: AutocompleteFilterMode = autocomplete_filter_mode.Contains
+pub const default_filter: AutocompleteFilterMode =
+  autocomplete_filter_mode.Contains
 
-pub const default_hide_selection_indicator: HideSelectionIndicator = IsNotHideSelectionIndicator
+pub const default_hide_selection_indicator: HideSelectionIndicator =
+  IsNotHideSelectionIndicator
 
 pub const default_hide_loading: HideLoading = IsNotHideLoading
 

@@ -45,7 +45,8 @@ pub const default_mode: LinearProgressMode = linear_progress_mode.Determinate
 
 pub const default_value: Float = 0.0
 
-pub const default_variant: ProgressIndicatorVariant = progress_indicator_variant.Flat
+pub const default_variant: ProgressIndicatorVariant =
+  progress_indicator_variant.Flat
 
 // --- Configuration ---
 

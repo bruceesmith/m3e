@@ -54,11 +54,13 @@ pub const default_for: Option(String) = None
 
 pub const default_hide_delay: Float = 200.0
 
-pub const default_position: RichTooltipPosition = rich_tooltip_position.BelowAfter
+pub const default_position: RichTooltipPosition =
+  rich_tooltip_position.BelowAfter
 
 pub const default_show_delay: Float = 0.0
 
-pub const default_touch_gestures: TooltipTouchGestures = tooltip_touch_gestures.Auto
+pub const default_touch_gestures: TooltipTouchGestures =
+  tooltip_touch_gestures.Auto
 
 /// Slots are used in child elements to insert content into this component
 ///

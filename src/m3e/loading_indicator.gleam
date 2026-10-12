@@ -25,7 +25,8 @@ pub opaque type LoadingIndicator {
 
 // --- Defaults ---
 
-pub const default_variant: LoadingIndicatorVariant = loading_indicator_variant.Uncontained
+pub const default_variant: LoadingIndicatorVariant =
+  loading_indicator_variant.Uncontained
 
 // --- Constructors ---
 

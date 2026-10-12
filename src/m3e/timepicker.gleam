@@ -88,7 +88,8 @@ pub const default_variant: TimepickerVariant = timepicker_variant.Docked
 
 pub const default_mode: TimepickerMode = timepicker_mode.Dial
 
-pub const default_orientation: TimepickerOrientation = timepicker_orientation.Vertical
+pub const default_orientation: TimepickerOrientation =
+  timepicker_orientation.Vertical
 
 pub const default_date: Option(Date) = None
 

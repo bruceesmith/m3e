@@ -58,7 +58,8 @@ pub type Selected {
 
 pub const default_disabled: Disabled = IsNotDisabled
 
-pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+pub const default_disabled_interactive: DisabledInteractive =
+  IsNotDisabledInteractive
 
 pub const default_selected: Selected = IsNotSelected
 

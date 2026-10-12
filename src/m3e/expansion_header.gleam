@@ -50,9 +50,11 @@ pub type Disabled {
 
 pub const default_hide_toggle: HideToggle = IsNotHideToggle
 
-pub const default_toggle_direction: ExpansionToggleDirection = expansion_toggle_direction.Vertical
+pub const default_toggle_direction: ExpansionToggleDirection =
+  expansion_toggle_direction.Vertical
 
-pub const default_toggle_position: ExpansionTogglePosition = expansion_toggle_position.After
+pub const default_toggle_position: ExpansionTogglePosition =
+  expansion_toggle_position.After
 
 pub const default_disabled: Disabled = IsNotDisabled
 

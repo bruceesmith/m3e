@@ -53,7 +53,8 @@ pub type Error {
 
 pub const default_float_label: FloatLabelType = float_label_type.Auto
 
-pub const default_hide_required_marker: HideRequiredMarker = IsNotHideRequiredMarker
+pub const default_hide_required_marker: HideRequiredMarker =
+  IsNotHideRequiredMarker
 
 pub const default_hide_subscript: HideSubscriptType = hide_subscript_type.Auto
 

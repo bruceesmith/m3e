@@ -101,7 +101,8 @@ pub const default_type_: DateInputType = date_input_type.Date
 
 pub const default_show_seconds: ShowSeconds = IsNotShowSeconds
 
-pub const default_time_format: DateInputTimeFormat = date_input_time_format.OneTwo
+pub const default_time_format: DateInputTimeFormat =
+  date_input_time_format.OneTwo
 
 pub const default_min_date: Option(Date) = None
 

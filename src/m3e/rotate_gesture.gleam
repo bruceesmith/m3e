@@ -72,7 +72,8 @@ pub const default_disabled: Disabled = IsNotDisabled
 
 pub const default_priority: String = "1"
 
-pub const default_activation_mode: PanGestureActivationMode = pan_gesture_activation_mode.Press
+pub const default_activation_mode: PanGestureActivationMode =
+  pan_gesture_activation_mode.Press
 
 pub const default_pointers: Float = 2.0
 

@@ -65,7 +65,8 @@ pub type DisabledInteractive {
 
 pub const default_disabled: Disabled = IsNotDisabled
 
-pub const default_disabled_interactive: DisabledInteractive = IsNotDisabledInteractive
+pub const default_disabled_interactive: DisabledInteractive =
+  IsNotDisabledInteractive
 
 pub const default_download: Option(String) = None
 

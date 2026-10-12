@@ -63,9 +63,11 @@ pub const default_hide_toggle: HideToggle = IsNotHideToggle
 
 pub const default_open: Open = IsNotOpen
 
-pub const default_toggle_direction: ExpansionToggleDirection = expansion_toggle_direction.Vertical
+pub const default_toggle_direction: ExpansionToggleDirection =
+  expansion_toggle_direction.Vertical
 
-pub const default_toggle_position: ExpansionTogglePosition = expansion_toggle_position.After
+pub const default_toggle_position: ExpansionTogglePosition =
+  expansion_toggle_position.After
 
 /// Slots are used in child elements to insert content into this component
 ///

@@ -70,7 +70,8 @@ pub const default_max: Float = 100.0
 
 pub const default_min: Float = 0.0
 
-pub const default_orientation: SplitPaneOrientation = split_pane_orientation.Horizontal
+pub const default_orientation: SplitPaneOrientation =
+  split_pane_orientation.Horizontal
 
 pub const default_overshoot_limit: Float = 4.0
 
