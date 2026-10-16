@@ -6,16 +6,115 @@
 ////
 
 import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
-import m3e/loading_indicator
+import m3e/loading_indicator.{Config}
 import m3e/loading_indicator_variant
 
-pub fn loading_indicator_render_test() {
-  let mod = loading_indicator.new(loading_indicator_variant.Uncontained)
-  let mod_variant = loading_indicator.new(loading_indicator_variant.Contained)
+pub fn loading_indicator_default_config_test() {
+  let cases = [
+    Config(variant: loading_indicator_variant.Uncontained, pull_progress: None),
+  ]
 
+  list.each(cases, fn(c) {
+    let expected = c
+
+    loading_indicator.default_config()
+    |> should.equal(expected)
+  })
+}
+
+pub fn loading_indicator_from_config_test() {
+  let cases = [
+    #(
+      loading_indicator.Config(
+        variant: loading_indicator_variant.Contained,
+        pull_progress: Some(42.0),
+      ),
+      loading_indicator.new()
+        |> loading_indicator.variant(loading_indicator_variant.Contained)
+        |> loading_indicator.pull_progress(Some(42.0)),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(config, expected) = c
+
+    loading_indicator.from_config(config)
+    |> should.equal(expected)
+  })
+}
+
+pub fn loading_indicator_new_test() {
+  let cases = [
+    loading_indicator.from_config(loading_indicator.Config(
+      variant: loading_indicator_variant.Uncontained,
+      pull_progress: None,
+    )),
+  ]
+
+  list.each(cases, fn(c) {
+    let expected = c
+
+    loading_indicator.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn loading_indicator_variant_test() {
+  let mod = loading_indicator.new()
+  let cases = [
+    #(
+      loading_indicator_variant.Contained,
+      loading_indicator.from_config(
+        loading_indicator.Config(
+          ..loading_indicator.default_config(),
+          variant: loading_indicator_variant.Contained,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    loading_indicator.variant(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn loading_indicator_pull_progress_test() {
+  let mod = loading_indicator.new()
+  let cases = [
+    #(
+      Some(42.0),
+      loading_indicator.from_config(
+        loading_indicator.Config(
+          ..loading_indicator.default_config(),
+          pull_progress: Some(42.0),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    loading_indicator.pull_progress(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn loading_indicator_render_test() {
+  let mod = loading_indicator.new()
+
+  let mod_variant =
+    loading_indicator.new()
+    |> loading_indicator.variant(loading_indicator_variant.Contained)
+  let mod_pull_progress =
+    loading_indicator.new() |> loading_indicator.pull_progress(Some(42.0))
   let cases = [
     #(#(mod, []), element.element("m3e-loading-indicator", [], [])),
     #(
@@ -35,6 +134,14 @@ pub fn loading_indicator_render_test() {
             ),
           ),
         ],
+        [],
+      ),
+    ),
+    #(
+      #(mod_pull_progress, []),
+      element.element(
+        "m3e-loading-indicator",
+        [attribute.attribute("pull-progress", "42.0")],
         [],
       ),
     ),

@@ -5,7 +5,9 @@
 ////          DO NOT EDIT
 ////
 
+import gleam/float
 import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
@@ -18,9 +20,14 @@ import m3e/loading_indicator_variant.{type LoadingIndicatorVariant}
 /// ## Fields:
 ///
 /// - variant: The appearance variant of the indicator.
+/// - pull_progress: Pull-to-refresh progress in turns; each increment of 1 rotates the indicator one full turn. Set to `null` when no
+///     pull gesture is active.
 ///
 pub opaque type LoadingIndicator {
-  LoadingIndicator(variant: LoadingIndicatorVariant)
+  LoadingIndicator(
+    variant: LoadingIndicatorVariant,
+    pull_progress: Option(Float),
+  )
 }
 
 // --- Defaults ---
@@ -28,12 +35,34 @@ pub opaque type LoadingIndicator {
 pub const default_variant: LoadingIndicatorVariant =
   loading_indicator_variant.Uncontained
 
+pub const default_pull_progress: Option(Float) = None
+
+// --- Configuration ---
+
+/// Config is a public record for configuring this component.
+///
+pub type Config {
+  Config(variant: LoadingIndicatorVariant, pull_progress: Option(Float))
+}
+
+/// default_config is the default configuration for this component.
+///
+pub fn default_config() -> Config {
+  Config(variant: loading_indicator_variant.Uncontained, pull_progress: None)
+}
+
 // --- Constructors ---
+
+/// from_config creates a new LoadingIndicator from the given configuration.
+///
+pub fn from_config(config: Config) -> LoadingIndicator {
+  LoadingIndicator(variant: config.variant, pull_progress: config.pull_progress)
+}
 
 /// new creates a new LoadingIndicator with the default configuration.
 ///
-pub fn new(variant: LoadingIndicatorVariant) -> LoadingIndicator {
-  LoadingIndicator(variant: variant)
+pub fn new() -> LoadingIndicator {
+  from_config(default_config())
 }
 
 // --- Setters ---
@@ -41,10 +70,19 @@ pub fn new(variant: LoadingIndicatorVariant) -> LoadingIndicator {
 /// variant sets the value of variant for this LoadingIndicator.
 ///
 pub fn variant(
-  _: LoadingIndicator,
+  record: LoadingIndicator,
   variant: LoadingIndicatorVariant,
 ) -> LoadingIndicator {
-  LoadingIndicator(variant: variant)
+  LoadingIndicator(..record, variant: variant)
+}
+
+/// pull_progress sets the value of pull_progress for this LoadingIndicator.
+///
+pub fn pull_progress(
+  record: LoadingIndicator,
+  pull_progress: Option(Float),
+) -> LoadingIndicator {
+  LoadingIndicator(..record, pull_progress: pull_progress)
 }
 
 // --- Renderers ---
@@ -64,10 +102,25 @@ pub fn render(
           loading_indicator_variant.to_string(model.variant),
           loading_indicator_variant.to_string(default_variant),
         ),
+        attr.option(
+          model.pull_progress,
+          fn(_) { "pull-progress" },
+          float.to_string,
+          default_pull_progress,
+        ),
       ],
       attributes,
     ])
       |> list.filter(fn(a) { a != attribute.none() }),
     [],
   )
+}
+
+/// render_config creates a Lustre Element from a LoadingIndicator Config
+///
+pub fn render_config(
+  c: Config,
+  attributes: List(Attribute(msg)),
+) -> Element(msg) {
+  render(from_config(c), attributes)
 }
