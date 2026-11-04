@@ -39,28 +39,29 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 		}
 	}()
 
+	var deferred = make(map[string][]string)
+
+	// Extract the external declaration of each TypeScript union type
 	for enum := range enumerations {
-		cenum := strcase.ToCamel(enum)
-		foundIn, err := internal.GrepLR(m3eSource, "export type "+cenum)
+		types, err := d.getTSTypes(root, enum, typeBuf)
 		if err != nil {
-			slog.Warn("did not find TypeScript declaration", "type", enum, "error", err)
-			return fmt.Errorf("did not find TypeScript declaration %s: %w", enum, err)
-		}
-		if foundIn == "" {
-			slog.Warn("error extracing enumeration declaration filename", "type", enum, "file", foundIn, "error", err)
-			return fmt.Errorf("error extracing enumeration declaration filename for %s from %s: %w", cenum, foundIn, err)
-		}
-		var types []tsTypeDef
-		types, err = typeDefinitions(root, foundIn, cenum, typeBuf)
-		if err != nil {
-			slog.Warn("failed to parse enumeration declaration file", "file", foundIn, "error", err)
-			return fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", foundIn, cenum, err)
+			return fmt.Errorf("failed to parse enumeration declaration file for %s: %w", enum, err)
 		}
 		for _, tipe := range types {
 			if len(tipe.Values) == 0 {
 				continue
 			}
 			def := make([]Enumeration, 0, len(tipe.Values))
+			if tipe.Deferred != nil {
+				for _, v := range tipe.Deferred {
+					_, ok := deferred[v]
+					if !ok {
+						deferred[v] = []string{tipe.Name}
+					} else {
+						deferred[v] = append(deferred[v], tipe.Name)
+					}
+				}
+			}
 			for _, value := range tipe.Values {
 				value = strings.Trim(value, `"`)
 				name := internal.MapDigits(strcase.ToCamel(value), buf)
@@ -70,6 +71,57 @@ func (d *Definition) enumerations(m3eSource string, enumerations map[string]stru
 				})
 			}
 			d.Enumerations[tipe.Name] = def
+		}
+	}
+
+	// Some union types embed others, for example:
+	// 		export type SwipeRevealDismiss = SwipeRevealSide | "both" | "none";
+	// At this point the definition of the embedded union may or may not be known. If not
+	// then try to discover it now. Once discovered, update the enumerations which embedded the union
+	for name, embedees := range deferred {
+		knownEnum, ok := d.Enumerations[name]
+		if ok {
+			/// The embedded union has already been discovered (it was used standalone in the TypeScript code)
+			for _, embedee := range embedees {
+				_, ok := d.Enumerations[embedee]
+				if !ok {
+					continue
+				}
+				d.Enumerations[embedee] = append(d.Enumerations[embedee], knownEnum...)
+			}
+			continue
+		}
+		// } else {
+		/// We must discover the embedded union (it apparently is only referenced by embedding inside other unions)
+		types, err := d.getTSTypes(root, name, typeBuf)
+		if err != nil {
+			slog.Warn("failed to parse enumeration declaration file", "enum", name, "error", err)
+		}
+		for _, tipe := range types {
+			if len(tipe.Values) == 0 {
+				continue
+			}
+			def := make([]Enumeration, 0, len(tipe.Values))
+			if tipe.Deferred != nil {
+				// TODO - handle the recursive case where a previously undiscovered union type itself
+				// embeds another also-undiscovered union type
+			}
+			for _, value := range tipe.Values {
+				value = strings.Trim(value, `"`)
+				name := internal.MapDigits(strcase.ToCamel(value), buf)
+				def = append(def, Enumeration{
+					Name:      name,
+					Attribute: value,
+				})
+			}
+			// Include this union type in the known enumerations
+			d.Enumerations[tipe.Name] = def
+			// Add this union types values to the other union types which embed it
+			for _, embedee := range embedees {
+				d.Enumerations[embedee] = append(d.Enumerations[embedee], def...)
+			}
+
+			// }
 		}
 	}
 	return
@@ -102,4 +154,23 @@ func (d *Definition) module(declaration cem.JavaScriptModuleDeclarationsElem) (e
 	logger.TraceID("module", fmt.Sprintf("Module %s", name))
 	d.Modules[name] = mod
 	return externalModules
+}
+
+func (d *Definition) getTSTypes(root *os.Root, name string, typeBuf []tsTypeDef) (types []tsTypeDef, err error) {
+	cenum := strcase.ToCamel(name)
+	foundIn, err := internal.GrepLR(root, "export type "+cenum)
+	if err != nil {
+		slog.Warn("did not find TypeScript declaration", "type", name, "error", err)
+		return nil, fmt.Errorf("did not find TypeScript declaration %s: %w", name, err)
+	}
+	if foundIn == "" {
+		slog.Warn("error extracing enumeration declaration filename", "type", name, "file", foundIn, "error", err)
+		return nil, fmt.Errorf("error extracing enumeration declaration filename for %s from %s: %w", cenum, foundIn, err)
+	}
+	types, err = typeDefinitions(root, foundIn, cenum, typeBuf)
+	if err != nil {
+		slog.Warn("failed to parse enumeration declaration file", "file", foundIn, "error", err)
+		return nil, fmt.Errorf("failed to parse enumeration declaration file %s for %s: %w", foundIn, cenum, err)
+	}
+	return types, nil
 }

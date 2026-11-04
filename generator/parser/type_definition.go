@@ -15,8 +15,9 @@ type walker struct {
 }
 
 type tsTypeDef struct {
-	Name   string
-	Values []string
+	Name     string
+	Deferred []string
+	Values   []string
 }
 
 func typeDefinitions(root *os.Root, fileName string, identifier string, buf []tsTypeDef) (types []tsTypeDef, err error) {
@@ -79,7 +80,11 @@ func (w *walker) handleNode(node tree_sitter.Node, fileName string, typeName str
 			return fmt.Errorf("failed to handle a %s node: %w", kind, err)
 		}
 	case "type_identifier":
-		td.Name = string(w.code[start:end])
+		if td.Name == "" {
+			td.Name = string(w.code[start:end])
+		} else {
+			td.Deferred = append(td.Deferred, string(w.code[start:end]))
+		}
 	case ";":
 		w.types = append(w.types, *td)
 		td = &tsTypeDef{}
