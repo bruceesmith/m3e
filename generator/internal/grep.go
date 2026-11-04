@@ -3,7 +3,6 @@ package internal
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"io/fs"
 	"log/slog"
 	"os"
@@ -12,20 +11,8 @@ import (
 )
 
 // GrepLR mimics: grep -r -l pattern m3eSource
-func GrepLR(m3eSource, pattern string) (foundIn string, err error) {
+func GrepLR(root *os.Root, pattern string) (foundIn string, err error) {
 	target := []byte(pattern)
-
-	// Open the base folder securely as an os.Root filesystem
-	root, err := os.OpenRoot(m3eSource)
-	if err != nil {
-		return "", fmt.Errorf("failed to open root path: %w", err)
-	}
-	defer func() {
-		if err := root.Close(); err != nil {
-			slog.Error("failed to closed root filesystem", "root", m3eSource, "error", err)
-		}
-	}()
-
 	// Walk the folder structure looking for a file that contains the pattern
 	err = fs.WalkDir(root.FS(), ".", func(path string, d fs.DirEntry, err error) error {
 		// Early exit (initial Stat on the root directory failed, a directory's ReadDir method failed)
