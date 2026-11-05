@@ -1,0 +1,22 @@
+//// SwipeRevealDefaults pecifies default values for swipe-reveal and swipe-reveal-group properties
+////
+
+import m3e/swipe_reveal_dismiss.{type SwipeRevealDismiss}
+import m3e/swipe_reveal_elastic.{type SwipeRevealElastic}
+import m3e/swipe_reveal_trigger.{type SwipeRevealTrigger}
+
+pub const stagger: Float = 0.0
+
+pub const stagger_count: Float = 3.0
+
+pub const threshold: Float = 0.5
+
+pub const overshoot: Float = 8.0
+
+pub const triggers: SwipeRevealTrigger = swipe_reveal_trigger.Swipe
+
+pub const triggers_non_default: SwipeRevealTrigger = swipe_reveal_trigger.Tap
+
+pub const dismissible: SwipeRevealDismiss = swipe_reveal_dismiss.None
+
+pub const elastic: SwipeRevealElastic = swipe_reveal_elastic.Both

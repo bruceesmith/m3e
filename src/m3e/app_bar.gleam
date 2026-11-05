@@ -10,6 +10,7 @@ import gleam/list
 import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
+import m3e/app_bar_scroll_behavior.{type AppBarScrollBehavior}
 import m3e/app_bar_size.{type AppBarSize}
 import m3e/attr
 
@@ -21,10 +22,16 @@ import m3e/attr
 ///
 /// - centered: Whether the title and subtitle are centered.
 /// - for: The identifier of the interactive control to which this element is attached.
+/// - scroll_behavior: The behavior applied when the attached scroll container is scrolled.
 /// - size: The size of the bar.
 ///
 pub opaque type AppBar {
-  AppBar(centered: Centered, for: Option(String), size: AppBarSize)
+  AppBar(
+    centered: Centered,
+    for: Option(String),
+    scroll_behavior: AppBarScrollBehavior,
+    size: AppBarSize,
+  )
 }
 
 /// Centered is whether the title and subtitle are centered.
@@ -39,6 +46,9 @@ pub type Centered {
 pub const default_centered: Centered = IsNotCentered
 
 pub const default_for: Option(String) = None
+
+pub const default_scroll_behavior: AppBarScrollBehavior =
+  app_bar_scroll_behavior.Elevate
 
 pub const default_size: AppBarSize = app_bar_size.Small
 
@@ -64,13 +74,23 @@ pub type Slot {
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(centered: Centered, for: Option(String), size: AppBarSize)
+  Config(
+    centered: Centered,
+    for: Option(String),
+    scroll_behavior: AppBarScrollBehavior,
+    size: AppBarSize,
+  )
 }
 
 /// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(centered: IsNotCentered, for: None, size: app_bar_size.Small)
+  Config(
+    centered: IsNotCentered,
+    for: None,
+    scroll_behavior: app_bar_scroll_behavior.Elevate,
+    size: app_bar_size.Small,
+  )
 }
 
 // --- Constructors ---
@@ -78,7 +98,12 @@ pub fn default_config() -> Config {
 /// from_config creates a new AppBar from the given configuration.
 ///
 pub fn from_config(config: Config) -> AppBar {
-  AppBar(centered: config.centered, for: config.for, size: config.size)
+  AppBar(
+    centered: config.centered,
+    for: config.for,
+    scroll_behavior: config.scroll_behavior,
+    size: config.size,
+  )
 }
 
 /// new creates a new AppBar with the default configuration.
@@ -99,6 +124,15 @@ pub fn centered(record: AppBar, centered: Centered) -> AppBar {
 ///
 pub fn for(record: AppBar, for: Option(String)) -> AppBar {
   AppBar(..record, for: for)
+}
+
+/// scroll_behavior sets the value of scroll_behavior for this AppBar.
+///
+pub fn scroll_behavior(
+  record: AppBar,
+  scroll_behavior: AppBarScrollBehavior,
+) -> AppBar {
+  AppBar(..record, scroll_behavior: scroll_behavior)
 }
 
 /// size sets the value of size for this AppBar.
@@ -122,6 +156,11 @@ pub fn render(
       [
         attr.boolean("centered", model.centered == IsCentered),
         attr.option(model.for, fn(_) { "for" }, function.identity, default_for),
+        attr.with_default(
+          "scroll-behavior",
+          app_bar_scroll_behavior.to_string(model.scroll_behavior),
+          app_bar_scroll_behavior.to_string(default_scroll_behavior),
+        ),
         attr.with_default(
           "size",
           app_bar_size.to_string(model.size),

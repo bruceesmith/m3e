@@ -12,11 +12,17 @@ import lustre/attribute
 import lustre/element
 import lustre/element/html
 import m3e/app_bar.{Config}
+import m3e/app_bar_scroll_behavior
 import m3e/app_bar_size
 
 pub fn app_bar_default_config_test() {
   let cases = [
-    Config(centered: app_bar.IsNotCentered, for: None, size: app_bar_size.Small),
+    Config(
+      centered: app_bar.IsNotCentered,
+      for: None,
+      scroll_behavior: app_bar_scroll_behavior.Elevate,
+      size: app_bar_size.Small,
+    ),
   ]
 
   list.each(cases, fn(c) {
@@ -33,11 +39,13 @@ pub fn app_bar_from_config_test() {
       app_bar.Config(
         centered: app_bar.IsCentered,
         for: Some("test"),
+        scroll_behavior: app_bar_scroll_behavior.Compress,
         size: app_bar_size.Medium,
       ),
       app_bar.new()
         |> app_bar.centered(app_bar.IsCentered)
         |> app_bar.for(Some("test"))
+        |> app_bar.scroll_behavior(app_bar_scroll_behavior.Compress)
         |> app_bar.size(app_bar_size.Medium),
     ),
   ]
@@ -55,6 +63,7 @@ pub fn app_bar_new_test() {
     app_bar.from_config(app_bar.Config(
       centered: app_bar.IsNotCentered,
       for: None,
+      scroll_behavior: app_bar_scroll_behavior.Elevate,
       size: app_bar_size.Small,
     )),
   ]
@@ -105,6 +114,28 @@ pub fn app_bar_for_test() {
   })
 }
 
+pub fn app_bar_scroll_behavior_test() {
+  let mod = app_bar.new()
+  let cases = [
+    #(
+      app_bar_scroll_behavior.Compress,
+      app_bar.from_config(
+        app_bar.Config(
+          ..app_bar.default_config(),
+          scroll_behavior: app_bar_scroll_behavior.Compress,
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    app_bar.scroll_behavior(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn app_bar_size_test() {
   let mod = app_bar.new()
   let cases = [
@@ -129,6 +160,8 @@ pub fn app_bar_render_test() {
 
   let mod_centered = app_bar.new() |> app_bar.centered(app_bar.IsCentered)
   let mod_for = app_bar.new() |> app_bar.for(Some("test"))
+  let mod_scroll_behavior =
+    app_bar.new() |> app_bar.scroll_behavior(app_bar_scroll_behavior.Compress)
   let mod_size = app_bar.new() |> app_bar.size(app_bar_size.Medium)
 
   let cases = [
@@ -149,6 +182,19 @@ pub fn app_bar_render_test() {
     #(
       #(mod_for, [], []),
       element.element("m3e-app-bar", [attribute.attribute("for", "test")], []),
+    ),
+    #(
+      #(mod_scroll_behavior, [], []),
+      element.element(
+        "m3e-app-bar",
+        [
+          attribute.attribute(
+            "scroll-behavior",
+            app_bar_scroll_behavior.to_string(app_bar_scroll_behavior.Compress),
+          ),
+        ],
+        [],
+      ),
     ),
     #(
       #(mod_size, [], []),
