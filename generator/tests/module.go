@@ -111,20 +111,20 @@ func enumerationTestValues(module *parser.Module, enumerations map[string][]pars
 	for _, v := range module.Attributes {
 		attr := v
 		if !v.IsStandard() && !v.IsSemBool() && v.Type != "Date" && v.Type != "number_string.NumberString" && v.Type != "selected.Selected" {
-			if attr.IsOptional() {
+			if v.IsOptional() {
 				if v.BaseType == "TimeParts" {
 					attr.Test.Value, attr.Test.AttributeValue = "Some(time_parts.zero())", "time_parts.zero_string()"
 				} else if v.BaseType != "Date" {
 					attr.Test.Value, attr.Test.AttributeValue = anyValue(attr.BaseType, enumerations)
 				}
-			} else if attr.IsList() {
+			} else if v.IsList() {
 				if v.BaseType != "String" {
-					val, attrVal := nonDefaultValue(attr.BaseType, attr.Default, enumerations)
+					val, attrVal := nonDefaultValue(attr.BaseType, &attr, enumerations)
 					attr.Test.Value = "[" + val + "]"
 					attr.Test.AttributeValue = attrVal
 				}
 			} else {
-				attr.Test.Value, attr.Test.AttributeValue = nonDefaultValue(attr.Type, attr.Default, enumerations)
+				attr.Test.Value, attr.Test.AttributeValue = nonDefaultValue(attr.Type, &attr, enumerations)
 			}
 		}
 		renderAttributes = append(renderAttributes, attr)
@@ -144,15 +144,20 @@ func anyValue(lookup string, enumerations map[string][]parser.Enumeration) (valu
 		strcase.ToSnake(lookup) + ".to_string(" + strcase.ToSnake(lookup) + "." + values[0].Name + ")"
 }
 
-func nonDefaultValue(lookup string, defawlt string, enumerations map[string][]parser.Enumeration) (value, attribute string) {
-	values, ok := enumerations[lookup]
+func nonDefaultValue(typeLookup string, attr *parser.Attribute, enumerations map[string][]parser.Enumeration) (value, attribute string) {
+	values, ok := enumerations[typeLookup]
 	if !ok || len(values) == 0 {
-		slog.Error("nonDefaultValue cannot find external type in enumerations", "type", lookup)
+		slog.Error("nonDefaultValue cannot find external type in enumerations", "type", typeLookup)
 		return "Unknown", "unknown"
 	}
-	parts := strings.Split(strings.Trim(defawlt, "[]"), ".")
+	if attr.AdditionalImportModules != nil {
+		// The default is a reference to an externally defined constant.
+		def := strings.Trim(attr.Default, "[]") + "_non_default"
+		return def, attr.BaseTypeModule + ".to_string(" + def + ")"
+	}
+	parts := strings.Split(strings.Trim(attr.Default, "[]"), ".")
 	if len(parts) < 2 {
-		slog.Info(fmt.Sprintf("default value %s should be qualified", defawlt))
+		slog.Info(fmt.Sprintf("default value %s should be qualified", attr.Default))
 	}
 	for _, v := range values {
 		if v.Name != parts[1] {
@@ -163,6 +168,6 @@ func nonDefaultValue(lookup string, defawlt string, enumerations map[string][]pa
 	if value == "" {
 		return "Unknown", "unknown"
 	}
-	return strcase.ToSnake(lookup) + "." + value,
-		strcase.ToSnake(lookup) + ".to_string(" + strcase.ToSnake(lookup) + "." + value + ")"
+	return strcase.ToSnake(typeLookup) + "." + value,
+		strcase.ToSnake(typeLookup) + ".to_string(" + strcase.ToSnake(typeLookup) + "." + value + ")"
 }

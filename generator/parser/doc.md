@@ -35,7 +35,7 @@ Several TS types deserve special mention.
 
 
 <a name="Attribute"></a>
-## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L44-L77>)
+## type [Attribute](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L44-L79>)
 
 Attribute is an internal representation of a cem Attribute
 
@@ -73,11 +73,13 @@ type Attribute struct {
     BaseTypeModule string
     // Properties of an Attribute
     Properties set.Set[Property]
+    // Additional modules to import (beside the one in BaseTypeModule)
+    AdditionalImportModules []string
 }
 ```
 
 <a name="Attribute.IsList"></a>
-### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L694>)
+### func \(\*Attribute\) [IsList](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L720>)
 
 ```go
 func (attr *Attribute) IsList() bool
@@ -86,7 +88,7 @@ func (attr *Attribute) IsList() bool
 IsList returns true if the Attribute is declared as a Gleam List
 
 <a name="Attribute.IsOptional"></a>
-### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L689>)
+### func \(\*Attribute\) [IsOptional](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L715>)
 
 ```go
 func (attr *Attribute) IsOptional() bool
@@ -95,7 +97,7 @@ func (attr *Attribute) IsOptional() bool
 IsOptional returns true if the Attribute's type is Option\(something\)
 
 <a name="Attribute.IsSemBool"></a>
-### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L699>)
+### func \(\*Attribute\) [IsSemBool](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L725>)
 
 ```go
 func (attr *Attribute) IsSemBool() bool
@@ -104,7 +106,7 @@ func (attr *Attribute) IsSemBool() bool
 IsSemBool returns true if the Attribute is a semantic boolean
 
 <a name="Attribute.IsStandard"></a>
-### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L704>)
+### func \(\*Attribute\) [IsStandard](<https://github.com/bruceesmith/m3e/blob/main/generator/parser/attributes.go#L730>)
 
 ```go
 func (attr *Attribute) IsStandard() bool

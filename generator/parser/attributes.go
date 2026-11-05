@@ -74,6 +74,8 @@ type Attribute struct {
 	BaseTypeModule string
 	// Properties of an Attribute
 	Properties set.Set[Property]
+	// Additional modules to import (beside the one in BaseTypeModule)
+	AdditionalImportModules []string
 }
 
 var (
@@ -148,6 +150,14 @@ func makeAttributes(modName string, attrs []cem.Attribute) (
 		attribute.name(attr.Name)
 		attribute.description(attr.Description)
 		attribute.defawlt(attr.Default, modName)
+		if attribute.AdditionalImportModules != nil {
+			imports := make(map[string]string)
+			for _, module := range attribute.AdditionalImportModules {
+				imports["m3e/"+strcase.ToSnake(module)] = ""
+			}
+			maps.Copy(moduleImports, imports)
+			maps.Copy(testModuleImports, imports)
+		}
 		attribute.testValues(modName)
 		refined = append(refined, attribute)
 	}
@@ -226,6 +236,13 @@ var defaultTransformRules = []defaultTransformFunc{
 				return "[]", true
 			}
 			d = strings.ReplaceAll((strings.ReplaceAll(strings.Trim(d, `[]`), `"`, "")), " ", "")
+			if strings.HasPrefix(d, "...") && strings.Contains(d, ".") {
+				d, _ = strings.CutPrefix(d, "...")
+				base, value, _ := strings.Cut(d, ".")
+				a.addAdditional(base)
+				slog.Info("an externally defined constant is in use, manual intervention may be required", "constant", d)
+				return "[" + strcase.ToSnake(base) + "." + value + "]", true
+			}
 			if !strings.Contains(d, ",") {
 				return "[" + strcase.ToSnake(a.BaseTypeModule) + "." + strcase.ToCamel(d) + "]", true
 			}
@@ -318,6 +335,15 @@ func (attr *Attribute) computeDefault(def string) string {
 
 	slog.Warn(fmt.Sprintf("unhandled default %s for %s of type %s", def, attr.SnakeName, attr.Type))
 	return def
+}
+
+// addAdditional adds an extra import module
+func (attr *Attribute) addAdditional(module string) {
+	if attr.AdditionalImportModules == nil {
+		attr.AdditionalImportModules = []string{module}
+	} else {
+		attr.AdditionalImportModules = append(attr.AdditionalImportModules, module)
+	}
 }
 
 // nilDefault handles the case where the manifest does not define a default value for the attribute
