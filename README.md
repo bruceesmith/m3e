@@ -3,7 +3,11 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.15 of this software is aligned with v2.10.0 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.16 of this software is aligned with v2.11.2 of [M3E](https://github.com/matraic/m3e).
+
+## 2.3.16
+
+- support for the SwipeReveal and AppBar changes in M3E version 2.11
 
 ## 2.3.15
 
