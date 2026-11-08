@@ -31,7 +31,7 @@ import m3e/swipe_gesture_direction.{type SwipeGestureDirection}
 /// - pointers: Number of pointers required for the gesture to be recognized.
 /// - start_threshold: Minimum distance (px) a pointer must move before the gesture starts.
 /// - min_displacement: * Minimum distance (px) a pointer must move before the gesture can be recognized.
-/// - min_velocity: Minimum velocity (px/ms) required before the gesture fails.
+/// - min_velocity: Minimum release velocity (px/ms) required before the gesture fails.
 /// - direction_threshold: Minimum displacement (px) required before direction is considered valid.
 /// - direction_grace_period: Maximum amount of time (ms) a pointer can move in an uncommitted or
 ///     disallowed direction before the gesture is rejected. When set to 0,

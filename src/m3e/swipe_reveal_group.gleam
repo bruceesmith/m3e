@@ -22,7 +22,7 @@ import m3e/swipe_reveal_trigger.{type SwipeRevealTrigger}
 /// ## Fields:
 ///
 /// - dismissible: The sides whose swipe can continue past the actions to dismiss the item.
-/// - dismiss_threshold: The fraction (0 to 1) of the item's width it must be dragged to dismiss it on release.
+/// - dismiss_threshold: The baseline fraction (0 to 1) of an item's width for dismissal. The snap zone starts after full reveal.
 /// - elastic: The sides whose actions squish and grow as content is dragged.
 /// - overshoot: The maximum distance (px) content can be dragged past fully revealing its actions.
 ///     Buttons grow with the overshoot. Set to `0` to disable.
@@ -50,7 +50,7 @@ pub opaque type SwipeRevealGroup {
 
 pub const default_dismissible: SwipeRevealDismiss = swipe_reveal_dismiss.None
 
-pub const default_dismiss_threshold: Float = 0.6
+pub const default_dismiss_threshold: Float = 0.5
 
 pub const default_elastic: SwipeRevealElastic = swipe_reveal_elastic.Both
 
@@ -88,7 +88,7 @@ pub type Config {
 pub fn default_config() -> Config {
   Config(
     dismissible: swipe_reveal_dismiss.None,
-    dismiss_threshold: 0.6,
+    dismiss_threshold: 0.5,
     elastic: swipe_reveal_elastic.Both,
     overshoot: 8.0,
     stagger: 0.0,

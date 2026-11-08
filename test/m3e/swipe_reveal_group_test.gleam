@@ -20,7 +20,7 @@ pub fn swipe_reveal_group_default_config_test() {
   let cases = [
     Config(
       dismissible: swipe_reveal_dismiss.None,
-      dismiss_threshold: 0.6,
+      dismiss_threshold: 0.5,
       elastic: swipe_reveal_elastic.Both,
       overshoot: 8.0,
       stagger: 0.0,
@@ -78,7 +78,7 @@ pub fn swipe_reveal_group_new_test() {
     swipe_reveal_group.from_config(
       swipe_reveal_group.Config(
         dismissible: swipe_reveal_dismiss.None,
-        dismiss_threshold: 0.6,
+        dismiss_threshold: 0.5,
         elastic: swipe_reveal_elastic.Both,
         overshoot: 8.0,
         stagger: 0.0,

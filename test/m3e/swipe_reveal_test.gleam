@@ -20,7 +20,7 @@ pub fn swipe_reveal_default_config_test() {
     Config(
       dismissible: swipe_reveal_dismiss.None,
       elastic: swipe_reveal_elastic.Both,
-      dismiss_threshold: 0.6,
+      dismiss_threshold: 0.5,
       overshoot: 8.0,
       stagger: 0.0,
       stagger_count: 3.0,
@@ -76,7 +76,7 @@ pub fn swipe_reveal_new_test() {
       swipe_reveal.Config(
         dismissible: swipe_reveal_dismiss.None,
         elastic: swipe_reveal_elastic.Both,
-        dismiss_threshold: 0.6,
+        dismiss_threshold: 0.5,
         overshoot: 8.0,
         stagger: 0.0,
         stagger_count: 3.0,
