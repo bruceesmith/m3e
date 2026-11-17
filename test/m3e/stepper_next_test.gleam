@@ -16,14 +16,14 @@ pub fn stepper_next_render_test() {
   let mod = stepper_next.new()
 
   let cases = [
-    #(#(mod, [], []), element.element("m3e-stepper-previous", [], [])),
+    #(#(mod, [], []), element.element("m3e-stepper-next", [], [])),
     #(
       #(mod, [attribute.id("id")], []),
-      element.element("m3e-stepper-previous", [attribute.id("id")], []),
+      element.element("m3e-stepper-next", [attribute.id("id")], []),
     ),
     #(
       #(mod, [], [html.br([])]),
-      element.element("m3e-stepper-previous", [], [html.br([])]),
+      element.element("m3e-stepper-next", [], [html.br([])]),
     ),
   ]
 

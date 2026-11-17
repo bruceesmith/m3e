@@ -3,7 +3,12 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.17 of this software is aligned with v2.11.7 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.18 of this software is aligned with v2.13.0 of [M3E](https://github.com/matraic/m3e).
+
+## 2.3.18
+
+- fixes to Stepper
+- addition of Carousel
 
 ## 2.3.17
 

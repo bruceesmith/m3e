@@ -37,5 +37,5 @@ pub fn render(
   attributes: List(Attribute(msg)),
   children: List(Element(msg)),
 ) -> Element(msg) {
-  element.element("m3e-stepper-previous", attributes, children)
+  element.element("m3e-stepper-next", attributes, children)
 }
