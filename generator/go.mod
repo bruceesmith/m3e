@@ -10,6 +10,7 @@ require (
 	github.com/tree-sitter/go-tree-sitter v0.25.0
 	github.com/tree-sitter/tree-sitter-typescript v0.23.2
 	github.com/urfave/cli/v3 v3.14.0
+	golang.org/x/net v0.62.0
 )
 
 require (
