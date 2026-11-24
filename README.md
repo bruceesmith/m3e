@@ -3,7 +3,11 @@
 [![Package Version](https://img.shields.io/hexpm/v/m3e)](https://hex.pm/packages/m3e)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/m3e/)
 
-Version 2.3.18 of this software is aligned with v2.13.0 of [M3E](https://github.com/matraic/m3e).
+Version 2.3.19 of this software is aligned with v2.13.7 of [M3E](https://github.com/matraic/m3e).
+
+## 2.3.19
+
+- features of M3E from 2.13.1 through 2.13.7
 
 ## 2.3.18
 
