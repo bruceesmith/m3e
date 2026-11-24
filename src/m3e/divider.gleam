@@ -16,13 +16,15 @@ import m3e/attr
 ///
 /// ## Fields:
 ///
+/// - role: 
 /// - inset: Whether the divider is indented with equal padding on both sides.
 /// - inset_start: Whether the divider is indented with padding on the leading side.
 /// - inset_end: Whether the divider is indented with padding on the trailing side.
-/// - vertical: Whether the divider is vertically aligned with adjacent content.
+/// - vertical: Whether the element is oriented vertically.
 ///
 pub opaque type Divider {
   Divider(
+    role: String,
     inset: Inset,
     inset_start: InsetStart,
     inset_end: InsetEnd,
@@ -51,7 +53,7 @@ pub type InsetEnd {
   IsNotInsetEnd
 }
 
-/// Vertical is whether the divider is vertically aligned with adjacent content.
+/// Vertical is whether the element is oriented vertically.
 ///
 pub type Vertical {
   IsVertical
@@ -59,6 +61,8 @@ pub type Vertical {
 }
 
 // --- Defaults ---
+
+pub const default_role: String = ""
 
 pub const default_inset: Inset = IsNotInset
 
@@ -74,6 +78,7 @@ pub const default_vertical: Vertical = IsNotVertical
 ///
 pub type Config {
   Config(
+    role: String,
     inset: Inset,
     inset_start: InsetStart,
     inset_end: InsetEnd,
@@ -85,6 +90,7 @@ pub type Config {
 ///
 pub fn default_config() -> Config {
   Config(
+    role: "",
     inset: IsNotInset,
     inset_start: IsNotInsetStart,
     inset_end: IsNotInsetEnd,
@@ -98,6 +104,7 @@ pub fn default_config() -> Config {
 ///
 pub fn from_config(config: Config) -> Divider {
   Divider(
+    role: config.role,
     inset: config.inset,
     inset_start: config.inset_start,
     inset_end: config.inset_end,
@@ -112,6 +119,12 @@ pub fn new() -> Divider {
 }
 
 // --- Setters ---
+
+/// role sets the value of role for this Divider.
+///
+pub fn role(record: Divider, role: String) -> Divider {
+  Divider(..record, role: role)
+}
 
 /// inset sets the value of inset for this Divider.
 ///
@@ -149,6 +162,7 @@ pub fn render(
     "m3e-divider",
     list.flatten([
       [
+        attr.with_default("role", model.role, default_role),
         attr.boolean("inset", model.inset == IsInset),
         attr.boolean("inset-start", model.inset_start == IsInsetStart),
         attr.boolean("inset-end", model.inset_end == IsInsetEnd),

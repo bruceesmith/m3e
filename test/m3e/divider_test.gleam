@@ -14,6 +14,7 @@ import m3e/divider.{Config}
 pub fn divider_default_config_test() {
   let cases = [
     Config(
+      role: "",
       inset: divider.IsNotInset,
       inset_start: divider.IsNotInsetStart,
       inset_end: divider.IsNotInsetEnd,
@@ -33,12 +34,14 @@ pub fn divider_from_config_test() {
   let cases = [
     #(
       divider.Config(
+        role: "test",
         inset: divider.IsInset,
         inset_start: divider.IsInsetStart,
         inset_end: divider.IsInsetEnd,
         vertical: divider.IsVertical,
       ),
       divider.new()
+        |> divider.role("test")
         |> divider.inset(divider.IsInset)
         |> divider.inset_start(divider.IsInsetStart)
         |> divider.inset_end(divider.IsInsetEnd)
@@ -57,6 +60,7 @@ pub fn divider_from_config_test() {
 pub fn divider_new_test() {
   let cases = [
     divider.from_config(divider.Config(
+      role: "",
       inset: divider.IsNotInset,
       inset_start: divider.IsNotInsetStart,
       inset_end: divider.IsNotInsetEnd,
@@ -68,6 +72,25 @@ pub fn divider_new_test() {
     let expected = c
 
     divider.new()
+    |> should.equal(expected)
+  })
+}
+
+pub fn divider_role_test() {
+  let mod = divider.new()
+  let cases = [
+    #(
+      "test",
+      divider.from_config(
+        divider.Config(..divider.default_config(), role: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    divider.role(mod, field)
     |> should.equal(expected)
   })
 }
@@ -157,6 +180,7 @@ pub fn divider_vertical_test() {
 pub fn divider_render_test() {
   let mod = divider.new()
 
+  let mod_role = divider.new() |> divider.role("test")
   let mod_inset = divider.new() |> divider.inset(divider.IsInset)
   let mod_inset_start =
     divider.new() |> divider.inset_start(divider.IsInsetStart)
@@ -169,6 +193,10 @@ pub fn divider_render_test() {
       element.element("m3e-divider", [attribute.id("id")], []),
     ),
 
+    #(
+      #(mod_role, []),
+      element.element("m3e-divider", [attribute.attribute("role", "test")], []),
+    ),
     #(
       #(mod_inset, []),
       element.element("m3e-divider", [attribute.attribute("inset", "")], []),

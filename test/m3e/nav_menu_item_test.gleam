@@ -6,18 +6,24 @@
 ////
 
 import gleam/list
+import gleam/option.{None, Some}
 import gleeunit/should
 import lustre/attribute
 import lustre/element
 import lustre/element/html
+import m3e/link_target
 import m3e/nav_menu_item.{Config}
 
 pub fn nav_menu_item_default_config_test() {
   let cases = [
     Config(
       disabled: nav_menu_item.IsNotDisabled,
+      download: None,
+      href: "",
       open: nav_menu_item.IsNotOpen,
+      rel: "",
       selected: nav_menu_item.IsNotSelected,
+      target: None,
     ),
   ]
 
@@ -34,13 +40,21 @@ pub fn nav_menu_item_from_config_test() {
     #(
       nav_menu_item.Config(
         disabled: nav_menu_item.IsDisabled,
+        download: Some("test"),
+        href: "test",
         open: nav_menu_item.IsOpen,
+        rel: "test",
         selected: nav_menu_item.IsSelected,
+        target: Some(link_target.Self),
       ),
       nav_menu_item.new()
         |> nav_menu_item.disabled(nav_menu_item.IsDisabled)
+        |> nav_menu_item.download(Some("test"))
+        |> nav_menu_item.href("test")
         |> nav_menu_item.open(nav_menu_item.IsOpen)
-        |> nav_menu_item.selected(nav_menu_item.IsSelected),
+        |> nav_menu_item.rel("test")
+        |> nav_menu_item.selected(nav_menu_item.IsSelected)
+        |> nav_menu_item.target(Some(link_target.Self)),
     ),
   ]
 
@@ -56,8 +70,12 @@ pub fn nav_menu_item_new_test() {
   let cases = [
     nav_menu_item.from_config(nav_menu_item.Config(
       disabled: nav_menu_item.IsNotDisabled,
+      download: None,
+      href: "",
       open: nav_menu_item.IsNotOpen,
+      rel: "",
       selected: nav_menu_item.IsNotSelected,
+      target: None,
     )),
   ]
 
@@ -91,6 +109,47 @@ pub fn nav_menu_item_disabled_test() {
   })
 }
 
+pub fn nav_menu_item_download_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      Some("test"),
+      nav_menu_item.from_config(
+        nav_menu_item.Config(
+          ..nav_menu_item.default_config(),
+          download: Some("test"),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.download(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_menu_item_href_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      "test",
+      nav_menu_item.from_config(
+        nav_menu_item.Config(..nav_menu_item.default_config(), href: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.href(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn nav_menu_item_open_test() {
   let mod = nav_menu_item.new()
   let cases = [
@@ -109,6 +168,25 @@ pub fn nav_menu_item_open_test() {
     let #(field, expected) = c
 
     nav_menu_item.open(mod, field)
+    |> should.equal(expected)
+  })
+}
+
+pub fn nav_menu_item_rel_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      "test",
+      nav_menu_item.from_config(
+        nav_menu_item.Config(..nav_menu_item.default_config(), rel: "test"),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.rel(mod, field)
     |> should.equal(expected)
   })
 }
@@ -135,14 +213,41 @@ pub fn nav_menu_item_selected_test() {
   })
 }
 
+pub fn nav_menu_item_target_test() {
+  let mod = nav_menu_item.new()
+  let cases = [
+    #(
+      Some(link_target.Self),
+      nav_menu_item.from_config(
+        nav_menu_item.Config(
+          ..nav_menu_item.default_config(),
+          target: Some(link_target.Self),
+        ),
+      ),
+    ),
+  ]
+
+  list.each(cases, fn(c) {
+    let #(field, expected) = c
+
+    nav_menu_item.target(mod, field)
+    |> should.equal(expected)
+  })
+}
+
 pub fn nav_menu_item_render_test() {
   let mod = nav_menu_item.new()
 
   let mod_disabled =
     nav_menu_item.new() |> nav_menu_item.disabled(nav_menu_item.IsDisabled)
+  let mod_download = nav_menu_item.new() |> nav_menu_item.download(Some("test"))
+  let mod_href = nav_menu_item.new() |> nav_menu_item.href("test")
   let mod_open = nav_menu_item.new() |> nav_menu_item.open(nav_menu_item.IsOpen)
+  let mod_rel = nav_menu_item.new() |> nav_menu_item.rel("test")
   let mod_selected =
     nav_menu_item.new() |> nav_menu_item.selected(nav_menu_item.IsSelected)
+  let mod_target =
+    nav_menu_item.new() |> nav_menu_item.target(Some(link_target.Self))
 
   let cases = [
     #(#(mod, [], []), element.element("m3e-nav-menu-item", [], [])),
@@ -164,6 +269,22 @@ pub fn nav_menu_item_render_test() {
       ),
     ),
     #(
+      #(mod_download, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("download", "test")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_href, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("href", "test")],
+        [],
+      ),
+    ),
+    #(
       #(mod_open, [], []),
       element.element(
         "m3e-nav-menu-item",
@@ -172,10 +293,26 @@ pub fn nav_menu_item_render_test() {
       ),
     ),
     #(
+      #(mod_rel, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("rel", "test")],
+        [],
+      ),
+    ),
+    #(
       #(mod_selected, [], []),
       element.element(
         "m3e-nav-menu-item",
         [attribute.attribute("selected", "")],
+        [],
+      ),
+    ),
+    #(
+      #(mod_target, [], []),
+      element.element(
+        "m3e-nav-menu-item",
+        [attribute.attribute("target", link_target.to_string(link_target.Self))],
         [],
       ),
     ),

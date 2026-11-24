@@ -5,10 +5,13 @@
 ////          DO NOT EDIT
 ////
 
+import gleam/function
 import gleam/list
+import gleam/option.{type Option, None}
 import lustre/attribute.{type Attribute}
 import lustre/element.{type Element}
 import m3e/attr
+import m3e/link_target.{type LinkTarget}
 
 // --- Types ---
 
@@ -17,11 +20,23 @@ import m3e/attr
 /// ## Fields:
 ///
 /// - disabled: Whether the element is disabled.
+/// - download: Whether the `target` of the link button will be downloaded, optionally specifying the new name of the file.
+/// - href: The URL to which the link button points.
 /// - open: Whether the item is expanded.
+/// - rel: The relationship between the `target` of the link button and the document.
 /// - selected: Whether the item is selected.
+/// - target: The target of the link button.
 ///
 pub opaque type NavMenuItem {
-  NavMenuItem(disabled: Disabled, open: Open, selected: Selected)
+  NavMenuItem(
+    disabled: Disabled,
+    download: Option(String),
+    href: String,
+    open: Open,
+    rel: String,
+    selected: Selected,
+    target: Option(LinkTarget),
+  )
 }
 
 /// Disabled is whether the element is disabled.
@@ -49,9 +64,17 @@ pub type Selected {
 
 pub const default_disabled: Disabled = IsNotDisabled
 
+pub const default_download: Option(String) = None
+
+pub const default_href: String = ""
+
 pub const default_open: Open = IsNotOpen
 
+pub const default_rel: String = ""
+
 pub const default_selected: Selected = IsNotSelected
+
+pub const default_target: Option(LinkTarget) = None
 
 /// Slots are used in child elements to insert content into this component
 ///
@@ -73,13 +96,29 @@ pub type Slot {
 /// Config is a public record for configuring this component.
 ///
 pub type Config {
-  Config(disabled: Disabled, open: Open, selected: Selected)
+  Config(
+    disabled: Disabled,
+    download: Option(String),
+    href: String,
+    open: Open,
+    rel: String,
+    selected: Selected,
+    target: Option(LinkTarget),
+  )
 }
 
 /// default_config is the default configuration for this component.
 ///
 pub fn default_config() -> Config {
-  Config(disabled: IsNotDisabled, open: IsNotOpen, selected: IsNotSelected)
+  Config(
+    disabled: IsNotDisabled,
+    download: None,
+    href: "",
+    open: IsNotOpen,
+    rel: "",
+    selected: IsNotSelected,
+    target: None,
+  )
 }
 
 // --- Constructors ---
@@ -89,8 +128,12 @@ pub fn default_config() -> Config {
 pub fn from_config(config: Config) -> NavMenuItem {
   NavMenuItem(
     disabled: config.disabled,
+    download: config.download,
+    href: config.href,
     open: config.open,
+    rel: config.rel,
     selected: config.selected,
+    target: config.target,
   )
 }
 
@@ -108,16 +151,40 @@ pub fn disabled(record: NavMenuItem, disabled: Disabled) -> NavMenuItem {
   NavMenuItem(..record, disabled: disabled)
 }
 
+/// download sets the value of download for this NavMenuItem.
+///
+pub fn download(record: NavMenuItem, download: Option(String)) -> NavMenuItem {
+  NavMenuItem(..record, download: download)
+}
+
+/// href sets the value of href for this NavMenuItem.
+///
+pub fn href(record: NavMenuItem, href: String) -> NavMenuItem {
+  NavMenuItem(..record, href: href)
+}
+
 /// open sets the value of open for this NavMenuItem.
 ///
 pub fn open(record: NavMenuItem, open: Open) -> NavMenuItem {
   NavMenuItem(..record, open: open)
 }
 
+/// rel sets the value of rel for this NavMenuItem.
+///
+pub fn rel(record: NavMenuItem, rel: String) -> NavMenuItem {
+  NavMenuItem(..record, rel: rel)
+}
+
 /// selected sets the value of selected for this NavMenuItem.
 ///
 pub fn selected(record: NavMenuItem, selected: Selected) -> NavMenuItem {
   NavMenuItem(..record, selected: selected)
+}
+
+/// target sets the value of target for this NavMenuItem.
+///
+pub fn target(record: NavMenuItem, target: Option(LinkTarget)) -> NavMenuItem {
+  NavMenuItem(..record, target: target)
 }
 
 // --- Renderers ---
@@ -134,8 +201,22 @@ pub fn render(
     list.flatten([
       [
         attr.boolean("disabled", model.disabled == IsDisabled),
+        attr.option(
+          model.download,
+          fn(_) { "download" },
+          function.identity,
+          default_download,
+        ),
+        attr.with_default("href", model.href, default_href),
         attr.boolean("open", model.open == IsOpen),
+        attr.with_default("rel", model.rel, default_rel),
         attr.boolean("selected", model.selected == IsSelected),
+        attr.option(
+          model.target,
+          fn(_) { "target" },
+          link_target.to_string,
+          default_target,
+        ),
       ],
       attributes,
     ])
